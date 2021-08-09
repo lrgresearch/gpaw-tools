@@ -1,10 +1,15 @@
 # Benchmarks
 Current file is a similar to our electronic structure calculation script.
-For better performance do not use `total number of cores` that your computer provides. Instead, try to use `total number of cores - 1` as general. Use `time` command to measure the time passed as:
+For better performance do not use `total number of cores` that your computer provides. Instead, try to use `total number of cores - 1` as general. Use `time` command to measure the time passed as (prefered version of running GPAW is):
+
+```
+gpaw -P7 python GPAWSimpleBenchmark2021.py
+```
+or (this will take a little bit longer)
 ```
 time mpiexec -n 7 gpaw python GPAWSimpleBenchmark2021.py
 ```
-This will result something like:
+These commands will result something like:
 ```
        Step     Time          Energy         fmax
 *Force-consistent energies used in optimization.

@@ -1,7 +1,7 @@
 from ase import *
 from ase.parallel import paropen, world
 from gpaw import GPAW, PW
-from ase.optimize.bfgs import BFGS
+from ase.optimize.lbfgs import LBFGS
 from ase.io import read, write
 import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
@@ -9,10 +9,12 @@ from pathlib import Path
 
 # Sample Electronic Calculation GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
+# August 2021 - BFGS to LBFGS
 # July 2021 - Corrected version
 # March 2020 - First Version 
-# Usage: $ gpaw -P8 python script.py
-#        $ mpiexec -n 8 gpaw python script.py
+# Usage: Change number (here 7) with core numbers to use. I am suggesting to use total number of cores - 1
+#        $ gpaw -P7 python script.py
+#        $ mpiexec -n 7 gpaw python script.py
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------
@@ -49,7 +51,7 @@ struct = Path(__file__).stem # All files will get their names from this file
 calc = GPAW(mode=PW(cut_off_energy), kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
 bulk_configuration.calc = calc
 
-relax = BFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
 relax.run(fmax=fmaxval)  # Consider much tighter fmax!
 
 bulk_configuration.get_potential_energy()

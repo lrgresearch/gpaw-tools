@@ -2,12 +2,13 @@ from ase import *
 from ase.build import bulk
 from ase.io import read, write
 from ase.io.cif import write_cif
-from gpaw import GPAW, PW
-from ase.optimize.lbfgs import LBFGS
-from ase.constraints import UnitCellFilter
+from asap3 import Atoms, EMT, units
+from asap3.md.verlet import VelocityVerlet
+from asap3.md.langevin import Langevin
+from ase.calculators.kim import KIM
 import sys, os
 
-# Quick Geometric Optimization for CIF Files for LRG Studies
+# Quick Geometric Optimization for LRG Studies
 # by Sefer Bora Lisesivdin
 # August 2021 - First version
 # Usage: $ gpaw python quickoptimize.py ciffilename.cif
@@ -22,10 +23,6 @@ Manualpbc = False # If you need manual constraint axis
 
 # IF Manualpbc is true then change following:
 pbcmanual=[True,True,False]
-# Which components of strain will be relaxed
-# EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
-# Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[True, True, False, False, False, False]
 
 WantCIFexport = True
 
@@ -49,12 +46,22 @@ bulk_configuration = Atoms(
 
 f = open(Filename+'.py', 'w')
 
-calc = GPAW(mode=PW(340), kpts=[2, 2, 1], xc='PBE', txt=Filename+'-Log-GPAW-QuickOptim.txt')
-bulk_configuration.calc = calc
-uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-relax = LBFGS(uf, trajectory=Filename+'-Trajectory-GPAW-QuickOptim.traj')
-relax.run(fmax=0.005)  # Consider much tighter fmax!
+bulk_configuration.set_calculator(KIM('LJ_ElliottAkerson_2015_Universal__MO_959249795837_003', options={"ase_neigh": False}))
 
+# dyn = VelocityVerlet(bulk_configuration, 5.0 * units.fs, trajectory='md.traj', logfile=Filename+'-Log-GPAW-QuickOptim.txt')
+dyn = Langevin(bulk_configuration, timestep=5*units.fs, trajectory='md.traj', logfile=Filename+'-Log-GPAW-QuickOptim.txt', temperature=1*units.kB, friction=0.05)
+
+
+print("")
+print("Energy per atom:")
+print("  %15s %15s %15s" % ("Pot. energy", "Kin. energy", "Total energy"))
+
+for i in range(25):
+    dyn.run(10)
+    epot = bulk_configuration.get_potential_energy()/len(bulk_configuration)
+    ekin = bulk_configuration.get_kinetic_energy()/len(bulk_configuration)
+    print("%15.5f %15.5f %15.5f" % (epot, ekin, epot+ekin))
+    
 # PRINT TO FILE PART -----------------------------------
 f.write("bulk_configuration = Atoms(\n")
 f.write("    [\n")

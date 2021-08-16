@@ -12,9 +12,12 @@ from pathlib import Path
 # August 2021 - BFGS to LBFGS
 # July 2021 - Corrected version
 # March 2020 - First Version 
-# Usage: Change number (here 7) with core numbers to use. I am suggesting to use total number of cores - 1
-#        $ gpaw -P7 python script.py
-#        $ mpiexec -n 7 gpaw python script.py
+# Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
+# Usage: $ gpaw -P8 python GPAWSimpleBenchmark2021.py
+# For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
+#        $ mpirun -n 4 gpaw python GPAWSimpleBenchmark2021.py
+# For using all threads provided by Intel Hyperthreading technology:
+#        $ mpirun --use-hwthread-cpus -n 8 gpaw python GPAWSimpleBenchmark2021.py 
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------

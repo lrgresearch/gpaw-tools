@@ -60,33 +60,10 @@ f.write("    )\n")
 f.close()
 
 # PRINT SCREEEN PART -----------------------------------
-print("bulk_configuration = Atoms(")
-print("    [")
-if Scaled == True:
-    positions = asestruct.get_scaled_positions()
-else:
-    positions = asestruct.get_positions()
-nn=-1
-mm=-1
-
-if SolveDoubleElementProblem == True:
-    for n in asestruct.get_chemical_symbols():
-        nn=nn+1
-        for m in positions:
-            mm=mm+1
-            if mm == nn:
-                 print("    Atom('"+n+"', ( "+str(m[0])+", "+str(m[1])+", "+str(m[2])+" )),")
-        mm=0
-else:
-    for n in asestruct.get_chemical_symbols():
-        for m in positions:
-            print("    Atom('"+n+"', ( "+str(m[0])+", "+str(m[1])+", "+str(m[2])+" )),")
-
-print("    ],")
-print("    cell=[("+str(asestruct.cell[0,0])+", "+str(asestruct.cell[0,1])+", "+str(asestruct.cell[0,2])+"), ("+str(asestruct.cell[1,0])+", "+str(asestruct.cell[1,1])+", "+str(asestruct.cell[1,2])+"), ("+str(asestruct.cell[2,0])+", "+str(asestruct.cell[2,1])+", "+str(asestruct.cell[2,2])+")],")
-if Manualpbc == False:
-    print("    pbc=True,")
-else:
-    print("    pbc=["+str(pbcmanual[0])+","+str(pbcmanual[1])+","+str(pbcmanual[2])+"],")
-print("    )")
-
+print("Result:")
+f = open(os.path.splitext(inFile)[0]+'.py', 'r')
+lines = f.readline()
+while lines:
+    print(lines)
+    lines = f.readline()
+f.close()

@@ -13,7 +13,10 @@ from pathlib import Path
 # July 2021 - Corrected version
 # March 2020 - First Version 
 # Usage: $ gpaw -P8 python GPAWSimpleBenchmark2021.py
-#        $ mpiexec -n 8 gpaw python GPAWSimpleBenchmark2021.py
+# For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
+#        $ mpirun -n 4 gpaw python GPAWSimpleBenchmark2021.py
+# For using all threads provided by Intel Hyperthreading technology:
+#        $ mpirun --use-hwthread-cpus -n 8 gpaw python GPAWSimpleBenchmark2021.py 
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------

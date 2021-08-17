@@ -1,5 +1,5 @@
 from ase import *
-from ase.parallel import paropen, world
+from ase.parallel import paropen, world, parprint
 from gpaw import GPAW, PW
 from ase.optimize.lbfgs import LBFGS
 from ase.io import read, write

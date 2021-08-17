@@ -29,8 +29,7 @@ kpts_z = 1				# kpoints in z direction
 band_path = 'GMKG'	# Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points 
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
-draw_dos = "yes"			# Draw DOS on screen (yes for draw, small letters)
-draw_band = "no"			# Draw band structure on screen (yes for draw, small letters)
+draw_graphs = "no"			# Draw DOS and band structure on screen (yes for draw, small letters)
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
@@ -79,13 +78,15 @@ for x in zip(energies, weights):
     print(*x, sep=", ", file=fd)
 fd.close()
 
-if draw_dos == "yes":
-    ax = plt.gca()
-    ax.plot(energies, weights)
-    ax.set_xlabel('Energy [eV]')
-    ax.set_ylabel('DOS [1/eV]')
-    plt.savefig(struct+'-2-Graph-DOS.png')
-    #plt.show()
+if draw_graphs == "yes":
+    if world.rank == 0:
+	# Draw graphs only on master node
+        ax = plt.gca()
+        ax.plot(energies, weights)
+        ax.set_xlabel('Energy [eV]')
+        ax.set_ylabel('DOS [1/eV]')
+        plt.savefig(struct+'-2-Graph-DOS.png')
+        #plt.show()
 
 # -------------------------------------------------------------
 # Step 3 - BAND STRUCTURE CALCULATION
@@ -105,8 +106,10 @@ parprint('Num of bands:'+str(num_of_bands))
 
 #bs.write(struct+'-3-Result-Band.json')
 calc.write(struct+'-3-Result-Band.gpw')
-if draw_band == "yes":
-    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=energy_max)
+if draw_graphs == "yes":
+    if world.rank == 0:
+	# Draw graphs only on master node
+        bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=energy_max)
 
 # Extract eigenenergies into a file for plotting with some external package
 

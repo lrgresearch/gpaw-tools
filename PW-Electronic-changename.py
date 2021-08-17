@@ -5,11 +5,13 @@ from ase.optimize.lbfgs import LBFGS
 from ase.io import read, write
 import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
+from ase.constraints import UnitCellFilter
+from ase.io.cif import write_cif
 from pathlib import Path
 
 # Sample Electronic Calculation GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
-# August 2021 - BFGS to LBFGS, Small many changes 
+# August 2021 - BFGS to LBFGS, Small many changes, Strain, CIF Export
 # July 2021 - Corrected version
 # March 2020 - First Version 
 # Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
@@ -30,6 +32,13 @@ band_path = 'GMKG'	# Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points 
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 draw_graphs = "no"			# Draw DOS and band structure on screen (yes for draw, small letters)
+
+# Which components of strain will be relaxed
+# EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
+# Example: For a x-y 2D nanosheet only first 2 component will be true
+whichstrain=[True, True, False, False, False, False]
+
+WantCIFexport = True
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
@@ -58,7 +67,8 @@ struct = Path(__file__).stem # All files will get their names from this file
 calc = GPAW(mode=PW(cut_off_energy), kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
 bulk_configuration.calc = calc
 
-relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
 relax.run(fmax=fmaxval)  # Consider much tighter fmax!
 
 bulk_configuration.get_potential_energy()
@@ -156,3 +166,6 @@ for i in range(0, band_npoints, 1):
     stringline = ""
 
 f.close()
+
+if WantCIFexport == True:
+    write_cif(struct+'-4-FinalBulk.cif', bulk_configuration)

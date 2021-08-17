@@ -25,12 +25,11 @@ fmaxval = 0.05 			#
 cut_off_energy = 340 	# eV
 kpts_x = 5 			# kpoints in x direction
 kpts_y = 5				# kpoints in y direction
-kpts_z = 5				# kpoints in z direction
-band_path = 'GXWLGKXUWKL'	# Brillouin zone high symmetry points
+kpts_z = 1				# kpoints in z direction
+band_path = 'GMKG'	# Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points 
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
-num_of_bands = 16		#
-draw_dos = "no"			# Draw DOS on screen (yes for draw, small letters)
+draw_dos = "yes"			# Draw DOS on screen (yes for draw, small letters)
 draw_band = "no"			# Draw band structure on screen (yes for draw, small letters)
 # -------------------------------------------------------------
 # Bulk Configuration
@@ -87,7 +86,6 @@ if draw_dos == "yes":
 # -------------------------------------------------------------
 calc = GPAW(struct+'-1-Result-Ground.gpw',
 	    txt=struct+'-3-Log-Band.txt',
-	    nbands=num_of_bands,
 	    fixdensity=True,
 	    symmetry='off',
 	    kpts={'path': band_path, 'npoints': band_npoints},
@@ -96,6 +94,9 @@ calc = GPAW(struct+'-1-Result-Ground.gpw',
 calc.get_potential_energy()
 bs = calc.band_structure()
 ef = calc.get_fermi_level()
+num_of_bands = calc.get_number_of_bands()
+print('Num of bands:'+str(num_of_bands))
+
 #bs.write(struct+'-3-Result-Band.json')
 calc.write(struct+'-3-Result-Band.gpw')
 if draw_band == "yes":

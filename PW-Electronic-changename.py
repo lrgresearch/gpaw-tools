@@ -8,6 +8,7 @@ from ase.dft.dos import DOS
 from ase.constraints import UnitCellFilter
 from ase.io.cif import write_cif
 from pathlib import Path
+import numpy as np
 
 # Sample Electronic Calculation GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
@@ -25,10 +26,10 @@ from pathlib import Path
 # -------------------------------------------------------------
 fmaxval = 0.05 			#
 cut_off_energy = 340 	# eV
-kpts_x = 5 			# kpoints in x direction
+kpts_x = 5 			    # kpoints in x direction
 kpts_y = 5				# kpoints in y direction
 kpts_z = 1				# kpoints in z direction
-band_path = 'GMKG'	# Brillouin zone high symmetry points
+band_path = 'GMKG'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points 
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 #Exchange-Correlation, choose one:
@@ -36,10 +37,8 @@ energy_max = 15 		# eV. It is the maximum energy value for band structure figure
 XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
-#XC_calc = 'PBE0'
-#XC_calc = 'B3LYP'
-Spin_calc = True        # Spin polarized calculation?
-draw_graphs = "yes"			# Draw DOS and band structure on screen (yes for draw, small letters)
+Spin_calc = False        # Spin polarized calculation?
+draw_graphs = False		# Draw DOS and band structure on screen (yes for draw, small letters)
 
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
@@ -105,16 +104,6 @@ else:
         print(*x, sep=", ", file=fd)
 fd.close()
 
-if draw_graphs == "yes":
-    if world.rank == 0:
-	# Draw graphs only on master node
-        ax = plt.gca()
-        ax.plot(energies, weights)
-        ax.set_xlabel('Energy [eV]')
-        ax.set_ylabel('DOS [1/eV]')
-        plt.savefig(struct+'-2-Graph-DOS.png')
-        #plt.show()
-
 # -------------------------------------------------------------
 # Step 3 - BAND STRUCTURE CALCULATION
 # -------------------------------------------------------------
@@ -133,56 +122,61 @@ parprint('Num of bands:'+str(num_of_bands))
 
 #bs.write(struct+'-3-Result-Band.json')
 calc.write(struct+'-3-Result-Band.gpw')
-if draw_graphs == "yes":
-    if world.rank == 0:
-	# Draw graphs only on master node
-        bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=energy_max)
 
-# Extract eigenenergies into a file for plotting with some external package
+if Spin_calc == True:
+    eps_skn = np.array([[calc.get_eigenvalues(k,s)
+                         for k in range(band_npoints)]
+                        for s in range(2)]) - ef
+    parprint(eps_skn.shape)
+    f1 = open(struct+'-3-Result-Band-Down.dat', 'w')
+    for n1 in range(num_of_bands):
+        for k1 in range(band_npoints):
+            print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
+        print (end="\n", file=f1)
+    f1.close()
+    f2 = open(struct+'-3-Result-Band-Up.dat', 'w')
+    for n2 in range(num_of_bands):
+        for k2 in range(band_npoints):
+            print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
+        print (end="\n", file=f2)
+    f2.close()
+else:
+    eps_skn = np.array([[calc.get_eigenvalues(k,s)
+                         for k in range(band_npoints)]
+                        for s in range(1)]) - ef
+    f = open(struct+'-3-Result-Band.dat', 'w')
+    for n in range(num_of_bands):
+        for k in range(band_npoints):
+            print(k, eps_skn[0, k, n], end="\n", file=f)
+        print (end="\n", file=f)
+    f.close()
 
-import numpy as np
-calc = GPAW(struct+'-3-Result-Band.gpw', txt=None)
-eps_skn = np.array([[calc.get_eigenvalues(k,s)
-                     for k in range(band_npoints)]
-                    for s in range(1)]) - ef
 
-f = open(struct+'-3-Result-Band.dat', 'w')
-for n in range(num_of_bands):
-    for k in range(band_npoints):
-        print(k, eps_skn[0, k, n], end="\n", file=f)
-    print (end="\n", file=f)
-f.close()
-
-
-# - - - - - - - - - COLUMNED OUTPUT - - - - - - - - - - 
-# create a  matrix of zeroes
-arr = [[0 for col in range(2*num_of_bands+1)] for row in range(band_npoints+1)]
-f = open(struct+'-3-Result-Band.dat', 'r')
-lines = f.readlines()
-f.close()
-a = 0 
-
-for i in range(0, num_of_bands, 1):
-   b = 0
-   for a in range (a, a+band_npoints, 1):
-      fields = lines[a].split()
-      arr[b][2*i] = fields[0]
-      arr[b][2*i+1] = fields[1]
-      b = b + 1
-   a = a + 2
-
-# writing to output file
-f = open(struct+'-3-Result-Band-withColumns.dat', 'w')
-stringline = ""
-
-for i in range(0, band_npoints, 1):
-    stringline = stringline + arr[i][0] + " " + arr[i][1] + " "
-    for j in range(1, num_of_bands, 1):
-        stringline = stringline + arr[i][2*j+1] + " "
-    f.write(stringline + "\n")
-    stringline = ""
-
-f.close()
-
+# -------------------------------------------------------------
+# Step 4 - BAND STRUCTURE CIF EXPORT
+# -------------------------------------------------------------
 if WantCIFexport == True:
     write_cif(struct+'-4-FinalBulk.cif', bulk_configuration)
+
+# -------------------------------------------------------------
+# Step 5 - DRAWING BAND STRUCTURE AND DOS
+# -------------------------------------------------------------
+if draw_graphs == True:
+    # Draw graphs only on master node
+    if world.rank == 0:
+        # DOS
+        if Spin_calc == True:
+            ax = plt.gca()
+            ax.plot(energies, -1.0*weights, 'r')
+            ax.plot(energies, weightsup, 'b')
+            ax.set_xlabel('Energy [eV]')
+            ax.set_ylabel('DOS [1/eV]')
+        else:
+            ax = plt.gca()
+            ax.plot(energies, weights, 'b')
+            ax.set_xlabel('Energy [eV]')
+            ax.set_ylabel('DOS [1/eV]')
+        plt.savefig(struct+'-2-Graph-DOS.png')
+        #plt.show()
+        # Band Structure
+        bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=energy_max)

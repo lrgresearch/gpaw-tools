@@ -6,8 +6,9 @@ from ase.io import read, write
 import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
 from gpaw.utilities.dos import RestartLCAODOS, fold
-from ase.constraints import UnitCellFilter
+#from ase.constraints import UnitCellFilter
 from pathlib import Path
+from ase.units import Hartree
 
 # Sample Electronic Calculation GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
@@ -32,13 +33,19 @@ band_path = 'GMKG'	# Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points 
 energy_max = 15         # eV. It is the maximum energy value for band structure figure.
 NumberOfAtomicOrb = 104 # Number of atomic orbitals.	    	
-draw_graphs = "yes"			# Draw DOS and band structure on screen (yes for draw, small letters)
+#Exchange-Correlation, choose one:
+#XC_calc = 'LDA'
+XC_calc = 'PBE'
+#XC_calc = 'revPBE'
+#XC_calc = 'RPBE'
 
+draw_graphs = "yes"			# Draw DOS and band structure on screen (yes for draw, small letters)
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[True, True, False, False, False, False]
+whichstrain=[False, False, False, False, False, False]
 
+WantCIFexport = False
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
@@ -64,11 +71,12 @@ struct = Path(__file__).stem # All files will get their names from this file
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE
 # -------------------------------------------------------------
-calc = GPAW(mode='lcao', basis='dzp', kpts=(5, 5, 1), nbands='110%')
+calc = GPAW(mode='lcao', basis='dzp', kpts=(5, 5, 1), parallel={'domain': world.size})
 bulk_configuration.calc = calc
 
-uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+#uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+#relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
 relax.run(fmax=fmaxval)  # Consider much tighter fmax!
 
 bulk_configuration.get_potential_energy()
@@ -81,9 +89,10 @@ calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt')
 #energies, weights = calc.get_dos(npts=800, width=0)
 dos = RestartLCAODOS(calc)
 energies, weights = dos.get_subspace_pdos(range(NumberOfAtomicOrb))
-
+ef = calc.get_fermi_level()
+e, w = fold(energies * Hartree, weights, 2000, 0.1)
 fd = open(struct+'-2-Result-DOS.txt', "w")
-for x in zip(energies, weights):
+for x in zip(e-ef, w):
     print(*x, sep=", ", file=fd)
 fd.close()
 
@@ -91,7 +100,7 @@ if draw_graphs == "yes":
     if world.rank == 0:
 	# Draw graphs only on master node
         ax = plt.gca()
-        ax.plot(energies, weights)
+        ax.plot(e-ef, w)
         ax.set_xlabel('Energy [eV]')
         ax.set_ylabel('DOS [1/eV]')
         plt.savefig(struct+'-2-Graph-DOS.png')
@@ -105,7 +114,7 @@ calc = GPAW(struct+'-1-Result-Ground.gpw',
 	    fixdensity=True,
 	    symmetry='off',
 	    kpts={'path': band_path, 'npoints': band_npoints},
-	    convergence={'bands': 8})
+	    convergence={'bands': 16})
 
 calc.get_potential_energy()
 bs = calc.band_structure()
@@ -165,3 +174,9 @@ for i in range(0, band_npoints, 1):
     stringline = ""
 
 f.close()
+
+# -------------------------------------------------------------
+# Step 4 - BAND STRUCTURE CIF EXPORT
+# -------------------------------------------------------------
+if WantCIFexport == True:
+    write_cif(struct+'-4-FinalBulk.cif', bulk_configuration)

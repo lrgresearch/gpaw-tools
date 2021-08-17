@@ -11,7 +11,7 @@ from pathlib import Path
 
 # Sample Electronic Calculation GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
-# August 2021 - BFGS to LBFGS, Small many changes, Strain, CIF Export
+# August 2021 - BFGS to LBFGS, Small many changes , Strain, CIF Export, Spin polarized results, Several XC, better parallel computation
 # July 2021 - Corrected version
 # March 2020 - First Version 
 # Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
@@ -31,14 +31,22 @@ kpts_z = 1				# kpoints in z direction
 band_path = 'GMKG'	# Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points 
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
-draw_graphs = "no"			# Draw DOS and band structure on screen (yes for draw, small letters)
+#Exchange-Correlation, choose one:
+#XC_calc = 'LDA'
+XC_calc = 'PBE'
+#XC_calc = 'revPBE'
+#XC_calc = 'RPBE'
+#XC_calc = 'PBE0'
+#XC_calc = 'B3LYP'
+Spin_calc = True        # Spin polarized calculation?
+draw_graphs = "yes"			# Draw DOS and band structure on screen (yes for draw, small letters)
 
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[True, True, False, False, False, False]
+whichstrain=[False, False, False, False, False, False]
 
-WantCIFexport = True
+WantCIFexport = False
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
@@ -64,12 +72,12 @@ struct = Path(__file__).stem # All files will get their names from this file
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE
 # -------------------------------------------------------------
-calc = GPAW(mode=PW(cut_off_energy), kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
 bulk_configuration.calc = calc
 
 uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
 relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-relax.run(fmax=fmaxval)  # Consider much tighter fmax!
+relax.run(fmax=fmaxval)  # Consider tighter fmax!
 
 bulk_configuration.get_potential_energy()
 calc.write(struct+'-1-Result-Ground.gpw')
@@ -80,12 +88,21 @@ calc.write(struct+'-1-Result-Ground.gpw')
 calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt')
 #energies, weights = calc.get_dos(npts=800, width=0)
 dos = DOS(calc, npts=500, width=0)
-energies = dos.get_energies()
-weights = dos.get_dos()
+if Spin_calc == True:
+    energies = dos.get_energies()
+    weights = dos.get_dos(spin=0)
+    weightsup = dos.get_dos(spin=1)
+else:
+    energies = dos.get_energies()
+    weights = dos.get_dos()
 
 fd = open(struct+'-2-Result-DOS.txt', "w")
-for x in zip(energies, weights):
-    print(*x, sep=", ", file=fd)
+if Spin_calc == True:
+    for x in zip(energies, weights, weightsup):
+        print(*x, sep=", ", file=fd)
+else:
+    for x in zip(energies, weights):
+        print(*x, sep=", ", file=fd)
 fd.close()
 
 if draw_graphs == "yes":

@@ -9,7 +9,7 @@ from pathlib import Path
 
 # Sample Electronic Calculation GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
-# August 2021 - BFGS to LBFGS
+# August 2021 - BFGS to LBFGS, Small many changes 
 # July 2021 - Corrected version
 # March 2020 - First Version 
 # Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
@@ -36,10 +36,16 @@ draw_band = "no"			# Draw band structure on screen (yes for draw, small letters)
 # -------------------------------------------------------------
 bulk_configuration = Atoms(
     [
-    Atom('Si', ( 0.0, 0.0, 0.0 )),
-    Atom('Si', ( 1.35765, 1.35765, 1.35765 )),
+    Atom('C', ( 0.0, 0.0, 5.0 )),
+    Atom('C', ( -1.2339999999999995, 2.1373506965399947, 5.0 )),
+    Atom('C', ( 2.4679999999999995, 0.0, 5.0 )),
+    Atom('C', ( 1.234, 2.1373506965399947, 5.0 )),
+    Atom('C', ( 2.468000000230841e-06, 1.424899039459532, 5.0 )),
+    Atom('C', ( -1.2339975319999992, 3.5622497359995267, 5.0 )),
+    Atom('C', ( 2.4680024680000003, 1.424899039459532, 5.0 )),
+    Atom('C', ( 1.234002468000001, 3.5622497359995267, 5.0 )),
     ],
-    cell=[(0.0, 2.7153, 2.7153), (2.7153, 0.0, 2.7153), (2.7153, 2.7153, 0.0)],
+    cell=[(4.936, 0.0, 0.0), (-2.467999999999999, 4.274701393079989, 0.0), (0.0, 0.0, 20.0)],
     pbc=True,
     )
 
@@ -95,7 +101,7 @@ calc.get_potential_energy()
 bs = calc.band_structure()
 ef = calc.get_fermi_level()
 num_of_bands = calc.get_number_of_bands()
-print('Num of bands:'+str(num_of_bands))
+parprint('Num of bands:'+str(num_of_bands))
 
 #bs.write(struct+'-3-Result-Band.json')
 calc.write(struct+'-3-Result-Band.gpw')

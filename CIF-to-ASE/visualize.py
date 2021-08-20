@@ -1,11 +1,11 @@
 from ase import *
 from ase import Atoms
 import sys, os
-#from ase.io import read, write
-# Converting CIF files to ASE Atoms object to use in GPAW Input for LRG Studies
+
+# visualize.py: A visualization script for ciftoase.py outputs
 # by Sefer Bora Lisesivdin
-# August 2021 - First version
-# Usage: $ python ciftoase.py file.cif
+# 
+# Usage: $ python visualize.py
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------
@@ -48,6 +48,8 @@ bulk_configuration = Atoms(
     pbc=True,
     )
 
-
+# -------------------------------------------------------------
+# ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\ 
+# -------------------------------------------------------------
 from ase.visualize import view
 view(bulk_configuration)

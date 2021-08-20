@@ -43,8 +43,8 @@ for ecut in range(cutoff_min, cutoff_max+1, cutoff_step):
                               kpts=(kpts_x, kpts_y, kpts_z),
                               parallel={'domain': world.size},
                               basis='dzp',
-                              txt='Optimize-0-1-CutOff-%d.txt' % ecut)
-    parprint ("Cut-off energy:"+str(ecut)+"  Potential Energy:"+str(bulk_configuration.get_potential_energy())
+                              txt='Optimize-CutOff_%d.txt' % ecut)
+    parprint ("Cut-off energy:"+str(ecut)+"  Potential Energy:"+str(bulk_configuration.get_potential_energy()))
     f.write(str(ecut)+'  '+str(bulk_configuration.get_potential_energy())+'\n')
 f.close()
 

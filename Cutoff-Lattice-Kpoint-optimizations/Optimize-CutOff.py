@@ -35,7 +35,7 @@ bulk_configuration = Atoms(
 # -------------------------------------------------------------
 # DO NOT NEED TO CHANGE ANYTHING UNDER THIS POINT
 # -------------------------------------------------------------
-f = paropen('Table-CutOff.txt', 'a')
+f = paropen('Optimize-CutOff_Table-CutOff.txt', 'a')
 f.write('Cut-off_Energy  Total_Energy\n')
 for ecut in range(cutoff_min, cutoff_max+1, cutoff_step):
     bulk_configuration.calc = GPAW(mode=PW(ecut),

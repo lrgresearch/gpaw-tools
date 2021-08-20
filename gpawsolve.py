@@ -12,27 +12,36 @@ from gpaw.response.df import DielectricFunction
 import numpy as np
 import sys, os
 
-# Electronic / Optical Calculation Script for GPAW for LRG Studies
-# by Sefer Bora Lisesivdin
+# gpawsolve.py: Easy PW/LCAO Calculation Script for GPAW
+# --------------------------------------------------------
 # August 2021 - BFGS to LBFGS, Small many changes , Strain, CIF Export, Spin polarized results, 
 #               Several XC, better parallel computation, all-electron density, electronic-optical together
 #               Can choose the calculations
 # July 2021 - Corrected version
 # March 2020 - First Version 
 # Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
-# Usage: $ gpaw -P8 python GPAWSimpleBenchmark2021.py
+# Usage: $ gpaw -P8 python gpawsolve.py
 # For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
-#        $ mpirun -n 4 gpaw python GPAWSimpleBenchmark2021.py
+#        $ mpirun -n 4 gpaw python gpawsolve.py
 # For using all threads provided by Intel Hyperthreading technology:
-#        $ mpirun --use-hwthread-cpus -n 8 gpaw python GPAWSimpleBenchmark2021.py 
+#        $ mpirun --use-hwthread-cpus -n 8 gpaw python gpawsolve.py 
 
 # -------------------------------------------------------------
 # Calculation selector
 # -------------------------------------------------------------
-DOS_calc = False         # DOS calculation
-Band_calc = False        # Band structure calculation
-Density_calc = False    # Calculate the all-electron density?
-Optical_calc = True     # Calculate the optical properties
+#
+# | Method | Strain_minimization | Several XCs | Spin polarized | DOS | Band | Electron Density | Optical |
+# | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
+# |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
+# |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No     |
+#
+# -------------------------------------------------------------
+Use_PW = True          # Use PW or LCAO? (PW is more accurate, LCAO is quicker mostly.)
+# -------------------------------------------------------------
+DOS_calc = True         # DOS calculation
+Band_calc = True        # Band structure calculation
+Density_calc = True    # Calculate the all-electron density?
+Optical_calc = False     # Calculate the optical properties
 
 # -------------------------------------------------------------
 # Parameters
@@ -107,21 +116,33 @@ else:
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE
 # -------------------------------------------------------------
-parprint("Starting ground state calculation...")
-calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
-bulk_configuration.calc = calc
+if Use_PW == True:
+    parprint("Starting PW ground state calculation...")
+    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+    bulk_configuration.calc = calc
 
-uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-relax.run(fmax=fmaxval)  # Consider tighter fmax!
+    uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+    relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+    relax.run(fmax=fmaxval)  # Consider tighter fmax!
 
-bulk_configuration.get_potential_energy()
-if Density_calc == True:
-    #This line makes huge GPW files. Therefore it is better to use this if else
-    calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+    bulk_configuration.get_potential_energy()
+    if Density_calc == True:
+        #This line makes huge GPW files. Therefore it is better to use this if else
+        calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+    else:
+        calc.write(struct+'-1-Result-Ground.gpw')
 else:
-    calc.write(struct+'-1-Result-Ground.gpw')
+    parprint("Starting LCAO ground state calculation...")
+    calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
+    bulk_configuration.calc = calc
 
+    relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+    relax.run(fmax=fmaxval)  # Consider much tighter fmax!
+
+    bulk_configuration.get_potential_energy()
+    calc.write(struct+'-1-Result-Ground.gpw', mode='all')
+
+    
 if WantCIFexport == True:
     write_cif(struct+'-Final.cif', bulk_configuration)
     
@@ -218,30 +239,33 @@ if Density_calc == True:
 #      /// RUN SINGLE CORE ONLY!!! \\\
 # -------------------------------------------------------------
 if Optical_calc == True:
-    parprint("Starting optical calculation...")
-    calc = GPAW(struct+'-1-Result-Ground.gpw',
-            parallel={'domain': 1},
-            txt=struct+'-5-Log-Optical.txt',
-            nbands=num_of_bands,
-            fixdensity=True,
-            symmetry='off',
-            occupations=FermiDirac(optFDsmear))
+    if Use_PW == True:
+        parprint("Starting optical calculation...")
+        calc = GPAW(struct+'-1-Result-Ground.gpw',
+                parallel={'domain': 1},
+                txt=struct+'-5-Log-Optical.txt',
+                nbands=num_of_bands,
+                fixdensity=True,
+                symmetry='off',
+                occupations=FermiDirac(optFDsmear))
 
-    calc.get_potential_energy()
+        calc.get_potential_energy()
 
-    calc.diagonalize_full_hamiltonian(nbands=num_of_bands)  # diagonalize Hamiltonian
-    calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
+        calc.diagonalize_full_hamiltonian(nbands=num_of_bands)  # diagonalize Hamiltonian
+        calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
 
-    # Getting absorption spectrum
-    parprint("Starting dielectric function calculation...")
-    df = DielectricFunction(calc=struct+'-5-Result-Optical.gpw',
-                            eta=opteta,
-                            nblocks=world.size,
-                            domega0=optdomega0,
-                            ecut=optecut)
-    df.get_dielectric_function( direction='x', filename=struct+'-5-Result-Optical_abs_xdirection.csv')
-    df.get_dielectric_function( direction='y', filename=struct+'-5-Result-Optical_abs_ydirection.csv')
-    df.get_dielectric_function( direction='z', filename=struct+'-5-Result-Optical_abs_zdirection.csv')
+        # Getting absorption spectrum
+        parprint("Starting dielectric function calculation...")
+        df = DielectricFunction(calc=struct+'-5-Result-Optical.gpw',
+                                eta=opteta,
+                                nblocks=world.size,
+                                domega0=optdomega0,
+                                ecut=optecut)
+        df.get_dielectric_function( direction='x', filename=struct+'-5-Result-Optical_abs_xdirection.csv')
+        df.get_dielectric_function( direction='y', filename=struct+'-5-Result-Optical_abs_ydirection.csv')
+        df.get_dielectric_function( direction='z', filename=struct+'-5-Result-Optical_abs_zdirection.csv')
+    else:
+        parprint('Not implemented in LCAO mode yet.')
 
 # -------------------------------------------------------------
 # Step 5 - DRAWING BAND STRUCTURE AND DOS

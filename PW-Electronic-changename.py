@@ -40,7 +40,7 @@ XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
 Spin_calc = False        # Spin polarized calculation?
-Electron_density = True  # Calculate the all-electron density?
+Electron_density = False  # Calculate the all-electron density?
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 draw_graphs = False		# Draw DOS and band structure on screen (yes for draw, small letters)
 

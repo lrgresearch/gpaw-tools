@@ -30,3 +30,6 @@ Because this is a bunch of scripts, there will be no versioning, no releases. Pl
 
 #### March 2020 
 * First scripts for personal usage.
+
+## Licensing
+This project is licensed under the terms of the MIT license.

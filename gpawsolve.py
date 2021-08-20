@@ -236,7 +236,6 @@ if Density_calc == True:
 
 # -------------------------------------------------------------
 # Step 5 - OPTICAL CALCULATION
-#      /// RUN SINGLE CORE ONLY!!! \\\
 # -------------------------------------------------------------
 if Optical_calc == True:
     if Use_PW == True:
@@ -268,7 +267,7 @@ if Optical_calc == True:
         parprint('Not implemented in LCAO mode yet.')
 
 # -------------------------------------------------------------
-# Step 5 - DRAWING BAND STRUCTURE AND DOS
+# Step Last - DRAWING BAND STRUCTURE AND DOS
 # -------------------------------------------------------------
 if draw_graphs == True:
     # Draw graphs only on master node

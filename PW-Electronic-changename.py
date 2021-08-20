@@ -12,7 +12,8 @@ import numpy as np
 
 # Sample Electronic Calculation GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
-# August 2021 - BFGS to LBFGS, Small many changes , Strain, CIF Export, Spin polarized results, Several XC, better parallel computation
+# August 2021 - BFGS to LBFGS, Small many changes , Strain, CIF Export, Spin polarized results, 
+#               Several XC, better parallel computation, all-electron density
 # July 2021 - Corrected version
 # March 2020 - First Version 
 # Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
@@ -38,6 +39,8 @@ XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
 Spin_calc = False        # Spin polarized calculation?
+Electron_density = False  # Calculate the all-electron density for 3D isosurface graphing? (Huge GPW file size)
+gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 draw_graphs = False		# Draw DOS and band structure on screen (yes for draw, small letters)
 
 # Which components of strain will be relaxed
@@ -79,8 +82,15 @@ relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
 relax.run(fmax=fmaxval)  # Consider tighter fmax!
 
 bulk_configuration.get_potential_energy()
-calc.write(struct+'-1-Result-Ground.gpw')
+if Electron_density == True:
+    #This line makes huge GPW files. Therefore it is better to use this if else
+    calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+else:
+    calc.write(struct+'-1-Result-Ground.gpw')
 
+if WantCIFexport == True:
+    write_cif(struct+'-Final.cif', bulk_configuration)
+    
 # -------------------------------------------------------------
 # Step 2 - DOS CALCULATION
 # -------------------------------------------------------------
@@ -151,12 +161,16 @@ else:
         print (end="\n", file=f)
     f.close()
 
+# -------------------------------------------------------------
+# Step 4 - ALL-ELECTRON DENSITY
+# -------------------------------------------------------------
+calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-4-Log-ElectronDensity.txt')
+bulk_configuration.calc = calc
+np = calc.get_pseudo_density()
+n = calc.get_all_electron_density(gridrefinement=gridref)
 
-# -------------------------------------------------------------
-# Step 4 - BAND STRUCTURE CIF EXPORT
-# -------------------------------------------------------------
-if WantCIFexport == True:
-    write_cif(struct+'-4-FinalBulk.cif', bulk_configuration)
+write(struct+'-4-Result-All-electron_n.cube', bulk_configuration, data=n)
+write(struct+'-4-Result-All-electron_np.cube', bulk_configuration, data=np)
 
 # -------------------------------------------------------------
 # Step 5 - DRAWING BAND STRUCTURE AND DOS

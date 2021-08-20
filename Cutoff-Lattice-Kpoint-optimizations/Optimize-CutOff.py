@@ -1,11 +1,14 @@
 import numpy as np
 from ase import *
 from gpaw import GPAW, PW
+from ase.parallel import paropen, world, parprint
+
 # Sample Cut-off Energy Optimization GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
+# August 2021 - Better parallel computation and its handling
 # July 2021 - Corrected version
 # March 2020 - First Version 
-# Usage: $ gpaw python script.py
+# Usage: $ gpaw -P<core_number> python Optimize-CutOff.py
 #
 #-------------------------------------------------------------
 # ENTER PARAMETERS
@@ -17,8 +20,6 @@ cutoff_step = 50
 kpts_x = 7
 kpts_y = 7
 kpts_z = 7
-
-
 
 # -------------------------------------------------------------
 # Bulk Configuration
@@ -32,23 +33,18 @@ bulk_configuration = Atoms(
     pbc=True,
     )
 # -------------------------------------------------------------
-# CONVERGE CUTOFF
+# DO NOT NEED TO CHANGE ANYTHING UNDER THIS POINT
 # -------------------------------------------------------------
-cell0 = bulk_configuration.cell
-f = open('Table-CutOff.txt', 'a')
+f = paropen('Table-CutOff.txt', 'a')
 f.write('Cut-off_Energy  Total_Energy\n')
 for ecut in range(cutoff_min, cutoff_max+1, cutoff_step):
     bulk_configuration.calc = GPAW(mode=PW(ecut),
                               xc='PBE',
                               kpts=(kpts_x, kpts_y, kpts_z),
-                              parallel={'band': 1},
+                              parallel={'domain': world.size},
                               basis='dzp',
                               txt='Optimize-0-1-CutOff-%d.txt' % ecut)
-    print ("Cut-off energy:"+str(ecut))
-#    for eps in np.linspace(-0.02, 0.02, 5):
-#        bulk_configuration.cell = (1 + eps) * cell0
-#        bulk_configuration.get_potential_energy()
-#        print ("eps:"+str(eps))
+    parprint ("Cut-off energy:"+str(ecut)+"  Potential Energy:"+str(bulk_configuration.get_potential_energy())
     f.write(str(ecut)+'  '+str(bulk_configuration.get_potential_energy())+'\n')
 f.close()
 

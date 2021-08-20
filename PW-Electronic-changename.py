@@ -9,11 +9,12 @@ from ase.constraints import UnitCellFilter
 from ase.io.cif import write_cif
 from pathlib import Path
 import numpy as np
+import sys, os
 
 # Sample Electronic Calculation GPAW Input for LRG Studies
 # by Sefer Bora Lisesivdin
 # August 2021 - BFGS to LBFGS, Small many changes , Strain, CIF Export, Spin polarized results, 
-#               Several XC, better parallel computation, all-electron density
+#               Several XC, better parallel computation, all-electron density, command line options
 # July 2021 - Corrected version
 # March 2020 - First Version 
 # Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
@@ -39,7 +40,7 @@ XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
 Spin_calc = False        # Spin polarized calculation?
-Electron_density = False  # Calculate the all-electron density for 3D isosurface graphing? (Huge GPW file size)
+Electron_density = True  # Calculate the all-electron density?
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 draw_graphs = False		# Draw DOS and band structure on screen (yes for draw, small letters)
 
@@ -70,7 +71,18 @@ bulk_configuration = Atoms(
 # -------------------------------------------------------------
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\ 
 # -------------------------------------------------------------
-struct = Path(__file__).stem # All files will get their names from this file
+
+# If there is a CIF input, use it. Otherwise use the bulk configuration provided above.
+if len(sys.argv) > 1:
+    inFile = sys.argv[1]
+    struct = Path(inFile).stem
+    bulk_configuration = read(inFile, index='-1')
+    parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_number_of_atoms()))
+else:
+    struct = Path(__file__).stem # All files will get their names from this file
+    parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_number_of_atoms()))
+
+
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE
 # -------------------------------------------------------------

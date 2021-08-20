@@ -24,9 +24,9 @@ Because this is a bunch of scripts, there will be no versioning, no releases. Pl
 * Strain minimization in PW only. 
 * BFGS to LBFGS, Small many changes have been done.
 
-# July 2021 
+#### July 2021 
 * `PW-Optical-SingleCoreOnly.py` script for optical calculations.
 * `PW-Electronic-changename.py` script for electronic calculations.
 
-# March 2020 
+#### March 2020 
 * First scripts for personal usage.

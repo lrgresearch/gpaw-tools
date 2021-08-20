@@ -30,3 +30,19 @@ user    62m4.101s
 sys     0m40.817s
 ```
 Here, `real    9m0.0719s` is the benchmark time.
+
+## Some Benchmark Times
+
+### Computers
+| Computer  | CPU                      | Cores | CPU Speed | Memory | Hdd            | CPU GFlops | Memory Bandwidth | HDD Speed |
+| --------- | ------------------------ | ----- | --------- | ------ | -------------- | ---------- | ---------------- | --------- |
+| 1         | 2x Intel Xeon E5-2430 v2 | 24    | 2.5 GHz   | 16Gb   | 300Gb + 1000Gb | 357        | 5 GB/s           | 259 MB/s  |
+
+### Benchmarks
+| Computer  | GPAW Version  | System                  | Used Core | Command                       | Benchmark File             | Time Elapsed |
+| --------- | ------------- | ----------------------- | --------- | ----------------------------- | -------------------------- | ------------ |
+| 1         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 12        | gpaw -P                       | GPAWSimpleBenchmark2021.py | 5m41s        |
+| 1         | 21.6.0        | W10Pro - WSL2 - Ub20.04 | 12        | gpaw -P                       | GPAWSimpleBenchmark2021.py | 5m59s        |
+| 1         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 23        | mpirun --use-hwthread-cpus -n | GPAWSimpleBenchmark2021.py | 5m15s        |
+| 1         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 23        | mpirun --use-hwthread-cpus -n | GPAWSimpleBenchmark2021.py | 5m37s        |
+

@@ -2,8 +2,8 @@ from ase import Atoms
 from ase.io import read, write
 from ase.io.cif import read_cif
 import sys, os
-#from ase.io import read, write
-# Converting CIF files to ASE Atoms object to use in GPAW Input for LRG Studies
+
+# ciftoase.py: Converting CIF files to ASE Atoms object to use in GPAW calculation
 # by Sefer Bora Lisesivdin
 # August 2021 - First version
 # Usage: $ python ciftoase.py file.cif

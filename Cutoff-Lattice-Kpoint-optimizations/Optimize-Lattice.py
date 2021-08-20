@@ -9,7 +9,7 @@ from ase.parallel import paropen, world, parprint
 # August 2021 - Rewritten with using Prof. J. Kortus, R. Wirnata - WS 2019 Course notes
 # July 2021 - Corrected version
 # March 2020 - First Version 
-# Usage: $ gpaw python 0-2-Optimize-0-Lattice.py
+# Usage: $ gpaw -P<core_number> python Optimize-Lattice.py
 # 
 # -------------------------------------------------------------
 # ENTER PARAMETERS
@@ -34,13 +34,13 @@ a_list = a0 * (1 + np.linspace(-percent , +percent , 11)) # do not change this l
 etots = []
 vols = []
 # prepare trajectory object where all cells are stored in
-traj = Trajectory("0-2-Optimize-Lattice-Trajectory.traj", "w")
+traj = Trajectory("Optimize-Lattice_Trajectory.traj", "w")
 
 # print nice header
 parprint(" a      volume total energy")
 parprint("-----------------------------")
 
-f = paropen('Table-LatticeParam.txt', 'w')
+f = paropen('Optimize-Lattice_Table-LatticeParam.txt', 'w')
 
 f.write(' a(Ang)   volume total energy\n')
 f.write('-----------------------------\n')
@@ -66,7 +66,7 @@ for latt_a in a_list:
                                 xc='PBE',
                                 kpts=(kpts_x, kpts_y, kpts_z),
                                 basis='dzp',
-                                txt='Optimize-0-Lattice-%.2f.txt' % latt_a)
+                                txt='Optimize-Lattice_LattParam%.2f.txt' % latt_a)
     # we need volume and energy for E(V)−curve;
     # use corresponding getter functions and append values to lists 
     vol = bulk_configuration.get_volume()

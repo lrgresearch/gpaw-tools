@@ -77,10 +77,10 @@ if len(sys.argv) > 1:
     inFile = sys.argv[1]
     struct = Path(inFile).stem
     bulk_configuration = read(inFile, index='-1')
-    parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_number_of_atoms()))
+    parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
 else:
     struct = Path(__file__).stem # All files will get their names from this file
-    parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_number_of_atoms()))
+    parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_global_number_of_atoms()))
 
 
 # -------------------------------------------------------------

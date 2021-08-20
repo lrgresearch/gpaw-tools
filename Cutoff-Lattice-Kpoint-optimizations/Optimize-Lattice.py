@@ -42,7 +42,7 @@ parprint("-----------------------------")
 
 f = paropen('Optimize-Lattice_Table-LatticeParam.txt', 'w')
 
-f.write(' a(Ang)   volume total energy\n')
+f.write('LattParam volume total_energy\n')
 f.write('-----------------------------\n')
 for latt_a in a_list:
 # -------------------------------------------------------------
@@ -66,7 +66,7 @@ for latt_a in a_list:
                                 xc='PBE',
                                 kpts=(kpts_x, kpts_y, kpts_z),
                                 basis='dzp',
-                                txt='Optimize-Lattice_LattParam%.2f.txt' % latt_a)
+                                txt='Optimize-Lattice_%.2f.txt' % latt_a)
     # we need volume and energy for E(V)−curve;
     # use corresponding getter functions and append values to lists 
     vol = bulk_configuration.get_volume()

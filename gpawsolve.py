@@ -10,31 +10,35 @@ from ase.io.cif import write_cif
 from pathlib import Path
 from gpaw.response.df import DielectricFunction
 import numpy as np
-import sys, os
+import getopt, sys, os
 
 # gpawsolve.py: Easy PW/LCAO Calculation Script for GPAW
 # --------------------------------------------------------
-# August 2021 - BFGS to LBFGS, Small many changes , Strain, CIF Export, Spin polarized results, 
-#               Several XC, better parallel computation, all-electron density, electronic-optical together
-#               Can choose the calculations
-# July 2021 - Corrected version
-# March 2020 - First Version 
-# Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
-# Usage: $ gpaw -P8 python gpawsolve.py
-# For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
-#        $ mpirun -n 4 gpaw python gpawsolve.py
-# For using all threads provided by Intel Hyperthreading technology:
-#        $ mpirun --use-hwthread-cpus -n 8 gpaw python gpawsolve.py 
+HelpText = """ 
+ Command line usage: gpawsolve.py -i <inputfile.cif> -c -o -h
+ Argument list:
+                   -i, --Input  : Use input CIF file
+                   -c, --Config : Use configuration file in the main directory for parameters (config.py)
+                   -o, --Outdir : Save everything to a output directory with naming /inputfile. If there is no input file given and Atoms object is used in
+                      gpawsolve.py file then the directory name will be /gpawsolve. If you change gpawsolve.py name to anyname.py
+                      then the directory name will be /anyname
+                   -h --Help    : Help
+ Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
+ Usage: $ gpaw -P8 python gpawsolve.py
+ For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
+        $ mpirun -n 4 gpaw python gpawsolve.py
+ For using all threads provided by Intel Hyperthreading technology:
+        $ mpirun --use-hwthread-cpus -n 8 gpaw python gpawsolve.py 
+ -------------------------------------------------------------
+ Calculation selector
+ -------------------------------------------------------------
 
-# -------------------------------------------------------------
-# Calculation selector
-# -------------------------------------------------------------
-#
-# | Method | Strain_minimization | Several XCs | Spin polarized | DOS | Band | Electron Density | Optical |
-# | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
-# |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
-# |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No     |
-#
+ | Method | Strain_minimization | Several XCs | Spin polarized | DOS | Band | Electron Density | Optical |
+ | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
+ |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
+ |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No     |
+"""
+# IF YOU WANT TO USE CONFIG FILE, PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
 Use_PW = True          # Use PW or LCAO? (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
@@ -80,6 +84,7 @@ draw_graphs = True		# Draw DOS and band structure on screen (yes for draw, small
 whichstrain=[False, False, False, False, False, False]
 
 WantCIFexport = False
+# <<<<<<< TO HERE TO FILE config.py IN SAME DIRECTORY AND USE -c FLAG WITH COMMAND
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
@@ -101,17 +106,82 @@ bulk_configuration = Atoms(
 # -------------------------------------------------------------
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\ 
 # -------------------------------------------------------------
+# Remove 1st argument from the
+# list of command line arguments
+argumentList = sys.argv[1:]
+ 
+# Options
+options = "ohci:"
+ 
+# Long options
+long_options = ["Outdir", "Help", "Config", " Input ="]
+ 
+try:
+    # Parsing argument
+    arguments, values = getopt.getopt(argumentList, options, long_options)
+     
+    # checking each argument
+    for currentArgument, currentValue in arguments:
+ 
+        if currentArgument in ("-o", "--Outdir"):
+            outdir = True
+        
+        elif currentArgument in ("-h", "--Help"):
+            parprint (HelpText)
+             
+        elif currentArgument in ("-c", "--Config"):
+            import config
+            # There must be some elegant way to do this.
+            Use_PW = config.Use_PW
+            DOS_calc = config.DOS_calc
+            Band_calc = config.Band_calc
+            Density_calc = config.Density_calc
+            Optical_calc = config.Optical_calc
+            fmaxval = config.fmaxval
+            cut_off_energy = config.cut_off_energy
+            kpts_x = config.kpts_x
+            kpts_y = config.kpts_y
+            kpts_z = config.kpts_z
+            band_path = config.band_path
+            band_npoints = config.band_npoints
+            energy_max = config.energy_max
+            XC_calc = config.XC_calc
+            Spin_calc = config.Spin_calc
+            gridref = config.gridref
+            num_of_bands = config.num_of_bands
+            optFDsmear =config.optFDsmear
+            opteta=config.opteta
+            optdomega0=config.optdomega0
+            optecut=config.optecut
+            optnblocks=config.optnblocks
+            draw_graphs = config.draw_graphs
+            whichstrain=config.whichstrain
+            WantCIFexport = config.WantCIFexport
+             
+        elif currentArgument in ("-i", "--Input"):
+            inFile = currentValue
+    
+except getopt.error as err:
+    # output error, and return with an error code
+    parprint (str(err))
 
 # If there is a CIF input, use it. Otherwise use the bulk configuration provided above.
-if len(sys.argv) > 1:
-    inFile = sys.argv[1]
+if inFile is None:
+    struct = Path(__file__).stem # All files will get their names from this file
+    parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_global_number_of_atoms()))
+else:
     struct = Path(inFile).stem
     bulk_configuration = read(inFile, index='-1')
     parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
+    
+# Control if outdir is set or not
+if outdir is None:
+    #No change is necessary
+    parprint("Output directory is the main directory")
 else:
-    struct = Path(__file__).stem # All files will get their names from this file
-    parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_global_number_of_atoms()))
-
+    if not os.path.isdir(struct):
+        os.makedirs(struct)
+    struct = os.path.join(struct,struct)
 
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE

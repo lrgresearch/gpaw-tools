@@ -72,7 +72,6 @@ num_of_bands = 16		#
 optFDsmear = 0.05       # Fermi Dirac smearing for optical calculations
 opteta=0.05             # Eta for Optical calculations
 optdomega0=0.02         # Domega0 for Optical calculations
-optecut=150             #Plane-wave cut-off
 optnblocks=4            # Split matrices in nblocks blocks and distribute them G-vectors or frequencies over processes
 
 #GENERAL
@@ -152,7 +151,6 @@ try:
             optFDsmear =config.optFDsmear
             opteta=config.opteta
             optdomega0=config.optdomega0
-            optecut=config.optecut
             optnblocks=config.optnblocks
             draw_graphs = config.draw_graphs
             whichstrain=config.whichstrain
@@ -329,7 +327,7 @@ if Optical_calc == True:
                                 eta=opteta,
                                 nblocks=world.size,
                                 domega0=optdomega0,
-                                ecut=optecut)
+                                ecut=cut_off_energy)
         df.get_dielectric_function( direction='x', filename=struct+'-5-Result-Optical_abs_xdirection.csv')
         df.get_dielectric_function( direction='y', filename=struct+'-5-Result-Optical_abs_ydirection.csv')
         df.get_dielectric_function( direction='z', filename=struct+'-5-Result-Optical_abs_zdirection.csv')

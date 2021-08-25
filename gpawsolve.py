@@ -178,7 +178,7 @@ if outdir is None:
     parprint("Output directory is the main directory")
 else:
     if not os.path.isdir(struct):
-        os.makedirs(struct)
+        os.makedirs(struct, exist_ok=True)
     struct = os.path.join(struct,struct)
 
 # -------------------------------------------------------------

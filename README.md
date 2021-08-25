@@ -13,6 +13,8 @@ We will add more information soon.
 Because this is a bunch of scripts, there will be no versioning, no releases. Please try to use the latest github repo zip.
 
 #### August 2021
+* `gg.py` which is a GUI for gpaw-tools is added to project. It can do all `gpawsolve.py`'s features in a graphical way!
+* `gpawsolve.py` can be run solely as a command now (This is needed for a GUI project).
 * All three scripts`PW-Electronic.py`, `LCAO-Electronic.py` and `PW-Optical-SingleCoreOnly.py` scripts becomes a single for-all-case script: `gpawsolve.py`.
 * `PW-Electronic-changename.py` script becomes `PW-Electronic.py`.
 * Spin-polarized results in `PW-Electronic-changename.py` script.

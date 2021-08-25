@@ -15,7 +15,7 @@ import getopt, sys, os
 # gpawsolve.py: Easy PW/LCAO Calculation Script for GPAW
 # --------------------------------------------------------
 HelpText = """ 
- Command line usage: gpawsolve.py -ohci <inputfile.cif>
+ Command line usage: gpawsolve.py -ochi <inputfile.cif>
  Argument list:
                    -i, --Input  : Use input CIF file
                    -c, --Config : Use configuration file in the main directory for parameters (config.py)
@@ -44,7 +44,7 @@ Use_PW = True          # Use PW or LCAO? (PW is more accurate, LCAO is quicker m
 # -------------------------------------------------------------
 DOS_calc = True         # DOS calculation
 Band_calc = True        # Band structure calculation
-Density_calc = True    # Calculate the all-electron density?
+Density_calc = False    # Calculate the all-electron density?
 Optical_calc = False     # Calculate the optical properties
 
 # -------------------------------------------------------------
@@ -52,11 +52,11 @@ Optical_calc = False     # Calculate the optical properties
 # -------------------------------------------------------------
 # ELECTRONIC
 fmaxval = 0.05 			#
-cut_off_energy = 340 	# eV
-kpts_x = 5 			    # kpoints in x direction
-kpts_y = 5				# kpoints in y direction
-kpts_z = 1				# kpoints in z direction
-band_path = 'GMKG'	    # Brillouin zone high symmetry points
+cut_off_energy = 240 	# eV
+kpts_x = 3 			    # kpoints in x direction
+kpts_y = 3				# kpoints in y direction
+kpts_z = 3				# kpoints in z direction
+band_path = 'GXWKL'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points 
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 #Exchange-Correlation, choose one:
@@ -114,6 +114,8 @@ options = "ohci:"
  
 # Long options
 long_options = ["Outdir", "Help", "Config", " Input ="]
+
+outdir = None
  
 try:
     # Parsing argument
@@ -129,35 +131,9 @@ try:
             parprint (HelpText)
              
         elif currentArgument in ("-c", "--Config"):
-            # Add path to import config file successfuly in any case
             sys.path.append(os.path.dirname(__file__))
-            import config
-            # There must be some elegant way to do this.
-            Use_PW = config.Use_PW
-            DOS_calc = config.DOS_calc
-            Band_calc = config.Band_calc
-            Density_calc = config.Density_calc
-            Optical_calc = config.Optical_calc
-            fmaxval = config.fmaxval
-            cut_off_energy = config.cut_off_energy
-            kpts_x = config.kpts_x
-            kpts_y = config.kpts_y
-            kpts_z = config.kpts_z
-            band_path = config.band_path
-            band_npoints = config.band_npoints
-            energy_max = config.energy_max
-            XC_calc = config.XC_calc
-            Spin_calc = config.Spin_calc
-            gridref = config.gridref
-            num_of_bands = config.num_of_bands
-            optFDsmear =config.optFDsmear
-            opteta=config.opteta
-            optdomega0=config.optdomega0
-            optnblocks=config.optnblocks
-            draw_graphs = config.draw_graphs
-            whichstrain=config.whichstrain
-            WantCIFexport = config.WantCIFexport
-             
+            from config import *
+                         
         elif currentArgument in ("-i", "--Input"):
             inFile = currentValue
     

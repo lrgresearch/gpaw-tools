@@ -15,7 +15,7 @@ import getopt, sys, os
 # gpawsolve.py: Easy PW/LCAO Calculation Script for GPAW
 # --------------------------------------------------------
 HelpText = """ 
- Command line usage: gpawsolve.py -i <inputfile.cif> -c -o -h
+ Command line usage: gpawsolve.py -ohci <inputfile.cif>
  Argument list:
                    -i, --Input  : Use input CIF file
                    -c, --Config : Use configuration file in the main directory for parameters (config.py)
@@ -129,6 +129,8 @@ try:
             parprint (HelpText)
              
         elif currentArgument in ("-c", "--Config"):
+            # Add path to import config file successfuly in any case
+            sys.path.append(os.path.dirname(__file__))
             import config
             # There must be some elegant way to do this.
             Use_PW = config.Use_PW

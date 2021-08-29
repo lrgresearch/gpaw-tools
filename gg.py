@@ -236,7 +236,7 @@ class gg:
         self.notebookUpper = ttk.Notebook(self.frame2)
         self.frame1 = ttk.Frame(self.notebookUpper)
         self.loadCIFfilettk = ttk.Button(self.frame1)
-        self.loadCIFfilettk.configure(state='normal', text='Load CIF File')
+        self.loadCIFfilettk.configure(state='normal', text='Load Input (CIF, XSF, XSD, XYZ, etc.) File')
         self.loadCIFfilettk.pack(pady='10', side='top')
         self.loadCIFfilettk.configure(command=onOpen)
         self.button2 = ttk.Button(self.frame1)

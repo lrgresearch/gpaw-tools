@@ -35,7 +35,7 @@ Command line usage: `gpawsolve.py -ochi <inputfile.cif>`
 
 Argument list:
 ```
-'-i, --Input'  : Use input CIF file
+-i, --Input  : Use input CIF file
 -c, --Config : Use configuration file in the main directory for parameters (config.py)
 -o, --Outdir : Save everything to a output directory with naming /inputfile. 
                If there is no input file given and Atoms object is used in gpawsolve.py file 

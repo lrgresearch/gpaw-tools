@@ -7,10 +7,68 @@ gpaw-tools is a bunch for python scripts for easy performing of GPAW calculation
 4. And, the main solver script `gpawsolver.py` which can be run in PW or LCAO mode. It can do strain minimization, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties in a very simple and organized way.
 
 ## Usage
-We will add more information soon.
+When you download `gpaw-tools` from GitHub and extract it to a folder you will have a folder structure as:
+
+```
+gpaw-tools/
+└── Benchmarks/
+│   └── GPAWSimpleBenchmark2021.py
+├── CIF-to-ASE/
+│   ├── ciftoase.py
+│   └── visualize.py
+├── Cutoff-Lattice-Kpoint-optimizations/
+│   ├── Optimize-CutOff.py
+│   ├── Optimize-KPoints.py
+│   └── Optimize-Lattice.py
+├── QuickOptimize/
+|   └── quickoptimize.py
+├── gui_files/
+└── gpawsolve.py
+└── gg.py
+└── config.py
+```
+
+### gpawsolve.py
+This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW
+
+Command line usage: `gpawsolve.py -ochi <inputfile.cif>`
+
+Argument list:
+```
+'-i, --Input'  : Use input CIF file
+-c, --Config : Use configuration file in the main directory for parameters (config.py)
+-o, --Outdir : Save everything to a output directory with naming /inputfile. 
+               If there is no input file given and Atoms object is used in gpawsolve.py file 
+               then the directory name will be /gpawsolve. If you change gpawsolve.py name to 
+               anyname.py then the directory name will be /anyname
+-h --Help    : Help
+ ```
+ 
+ #### General command structure:
+ Change <core_number> with core numbers/threads to use. For getting a maximum performance from your PC you can use `total number of cores(or threads) - 1`. or `total RAM/2Gb` as a <core_number>
+
+Usage:
+`$ gpaw -P8 python gpawsolve.py`
+
+For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
+`$ mpirun -n 4 gpaw python gpawsolve.py`
+
+For using all threads provided by Intel Hyperthreading technology
+`$ mpirun --use-hwthread-cpus -n 8 gpaw python gpawsolve.py`
+
+#### Calculation selector
+
+| Method | Strain_minimization | Several XCs | Spin polarized | DOS | Band | Electron Density | Optical |
+| ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
+|   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
+|  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
 
 ## Release notes
-Because this is a bunch of scripts, there will be no versioning, no releases. Please try to use the latest github repo zip.
+Because this is a bunch of scripts, there will be no strict versioning, rolling releases. Please try to use the latest github repo zip.
+
+#### September 2021
+* Comment additions to code.
+* Better README.md
 
 #### August 2021
 * `gg.py` which is a GUI for gpaw-tools is added to project. It can do all `gpawsolve.py`'s features in a graphical way!

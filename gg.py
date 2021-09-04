@@ -21,6 +21,7 @@ class gg:
         global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, WantCIFexportvar
         
         def onOpen():
+            ''' This is the open button's behaviour on the first tab.'''
             global basename
             textfile = filedialog.askopenfilename(initialdir = PROJECT_PATH, title = "Open file", filetypes = (("CIF files","*.cif"),("All files","*.*")))
             textfilenamepath = textfile
@@ -204,20 +205,19 @@ class gg:
             print("draw_graphs = True", end="\n", file=f1)
             print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
             print("WantCIFexport = "+ str(WantCIFexportvar.get()), end="\n", file=f1)
+            
+            # This feature is not used by gpawsolve.py, this is only usable for gg.py
             print("MPIcores = "+ str(self.MPIcoresttk.get()), end="\n", file=f1)
             f1.close()
             
-            #Running the gpawsolve
-            #proc = subprocess.Popen(['gpaw -P '+str(self.MPIcoresttk.get())+' python gpawsolve.py -oci '+str(basename)+'.cif'], shell = True, stdout=subprocess.PIPE)
+            # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
             gpawcommand = 'gpaw -P '+str(self.MPIcoresttk.get())+' python gpawsolve.py -oci '+str(basename)+'.cif'
-            #gpawcommand = 'gpaw python gpawsolve.py -oci '+str(basename)+'.cif'
             proc = Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
-            #proc = subprocess.Popen(['ls -al'], shell = True, stdout=subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
+            
             # Save stdout as a log 
             f2 = open(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-STDOUT-Log.txt", 'w')
             for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):  # or another encoding
-                # do something with line
                 self.text4.insert(tk.END, line)
                 print(line, end="\n", file=f2)
             self.text1.insert(tk.END, "Calculation finished... \n")
@@ -230,7 +230,7 @@ class gg:
             self.text1.insert(tk.END, "Initial and Final Structure PNG files are saved to "+basename+" folder \n")
             
             
-        # build ui
+        # build gui
         self.toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
         self.frame2 = ttk.Frame(self.toplevel1)
         self.notebookUpper = ttk.Notebook(self.frame2)

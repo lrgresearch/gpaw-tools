@@ -5,7 +5,7 @@
 `gpaw-tools` have:
 1. A force-field quick optimization script `quickoptimization.py` for preliminary calculations using ASAP3/OpenKIM potentials. 
 2. `ciftoase.py` script for transform CIF files to ASE's own Atoms object.
-3. To choose better cut off energy, lattice parameter and k points, there are 3 scripts called `Optimize-CutOff.py`, `Optimize-Lattice.py` and `Optimize-KPoints.py`.
+3. To choose better cut off energy, lattice parameter and k points, there are 3 scripts called `optimize_cutoff.py`, `optimize_latticeparam.py` and `optimize_kpoints.py`.
 4. And, the main solver script `gpawsolver.py` which can be run in PW or LCAO mode. It can do strain minimization, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties in a very simple and organized way.
 
 ## Usage
@@ -13,16 +13,14 @@ When you download `gpaw-tools` from GitHub and extract it to a folder you will h
 
 ```
 gpaw-tools/
-└── Benchmarks/
-│   └── GPAWSimpleBenchmark2021.py
-├── CIF-to-ASE/
+└── benchmarks/
+│   └── simple_benchmark_2021.py
+├── optimizations/
 │   ├── ciftoase.py
-│   └── visualize.py
-├── Cutoff-Lattice-Kpoint-optimizations/
-│   ├── Optimize-CutOff.py
-│   ├── Optimize-KPoints.py
-│   └── Optimize-Lattice.py
-├── QuickOptimize/
+│   ├── optimize_cutoff.py
+│   ├── optimize_kpoints.py
+│   └── optimize_latticeparam.py
+├── quick_optimization/
 |   └── quickoptimize.py
 ├── gui_files/
 └── gpawsolve.py
@@ -78,22 +76,23 @@ For using all threads provided by Intel Hyperthreading technology
 ### gg.py
 More information will be here.
 
-### QuickOptimize/quickoptimize.py
+### quick_optimize/quickoptimize.py
 More information will be here.
 
-### Cutoff-Lattice-Kpoint-optimizations/Optimize-CutOff (and KPoints)(and Lattice).py
+### optimizations/ciftoase.py
+More information will be here.
+
+### optimizations/optimize_cutoff (and kpoints)(and latticeparam).py
 More information will be here. These codes are based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. 
 
-### CIF-to-ASE/ciftoase.py
-More information will be here.
-
-### Benchmarks/
+### benchmarks/
 GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/Benchmarks) with some hardware benchmark information. Your timings are always welcomed.
 
 ## Release notes
 Because this is a bunch of scripts, there will be no strict versioning, rolling releases. Please try to use the latest github repo zip.
 
 #### September 2021
+* Many code quality and folder structure improvements.
 * Comment additions to code.
 * Better README.md
 

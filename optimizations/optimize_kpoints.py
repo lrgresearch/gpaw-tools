@@ -1,7 +1,7 @@
 '''
-OptimizeKPoints.py: Sample K-point Optimization with GPAW
+optimize_kpoints.py: Sample K-point Optimization with GPAW
 
-Usage: $ gpaw -P<core_number> python OptimizeKPoints.py
+Usage: $ gpaw -P<core_number> python optimize_kpoints.py
 '''
 
 from ase import *

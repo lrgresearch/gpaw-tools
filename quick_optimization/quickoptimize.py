@@ -1,7 +1,7 @@
 '''
 quickoptimize.py: Quick Geometric Optimization
                   using interatomic potentials.
-Usage: $ gpaw python quickoptimize.py ciffilename.cif
+Usage: $ python quickoptimize.py ciffilename.cif
 '''
 import sys
 from ase import *

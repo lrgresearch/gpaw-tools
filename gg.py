@@ -1,29 +1,33 @@
-import os
+'''
+gg.py: GUI for gpawsolve.py
+Usage: $ python gg.py
+'''
+import os, io
+from shlex import split
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import filedialog, ttk, font, BooleanVar, StringVar
-import os, sys, io
+from tkinter import filedialog, BooleanVar, StringVar
 import pathlib
 import subprocess
 from subprocess import Popen
-import pygubu
-from shlex import split
+
 from ase.io import read, write
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 PROJECT_UI = os.path.join(PROJECT_PATH, "gg.ui")
 
-# gg.py: GUI for gpawsolve.py
-# ----------------------------
-    
 class gg:
+    ''' Main class'''
     def __init__(self, master=None):
-        global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, WantCIFexportvar
-        
+        global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar
+        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, WantCIFexportvar
+
         def onOpen():
             ''' This is the open button's behaviour on the first tab.'''
             global basename
-            textfile = filedialog.askopenfilename(initialdir = PROJECT_PATH, title = "Open file", filetypes = (("CIF files","*.cif"),("All files","*.*")))
+            textfile = filedialog.askopenfilename(initialdir = PROJECT_PATH, title = "Open file",
+                                                  filetypes = (("CIF files","*.cif"),
+                                                  ("All files","*.*")))
             textfilenamepath = textfile
             basename = StringVar()
             print(basename)
@@ -33,7 +37,7 @@ class gg:
             # Opening a working directory
             if not os.path.isdir(basename):
                 os.makedirs(basename, exist_ok=True)
-            print(basename)    
+            print(basename)
             asestruct = read(textfilenamepath, index='-1')
             write(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_InitialStructure.png', asestruct)
             self.structureimage = tk.PhotoImage(file=os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_InitialStructure.png')
@@ -45,40 +49,40 @@ class gg:
                 self.Use_PWttk.current(0)
             else:
                 self.Use_PWttk.current(1)
-            
+
             if config.DOS_calc == True:
                 DOS_calcvar.set(True)
             else:
                 DOS_calcvar.set(False)
-            
+
             if config.Band_calc == True:
                 Band_calcvar.set(True)
             else:
                 Band_calcvar.set(False)
-            
+
             if config.Density_calc == True:
                 Density_calcvar.set(True)
             else:
                 Density_calcvar.set(False)
-            
+
             if config.Optical_calc == True:
                 Optical_calcvar.set(True)
             else:
                 Optical_calcvar.set(False)
-                
+
             self.fmaxvalttk.delete('0', 'end')
             self.fmaxvalttk.insert('0', config.fmaxval)
-            
+
             self.cut_off_energyttk.delete('0', 'end')
             self.cut_off_energyttk.insert('0', config.cut_off_energy)
-            
+
             self.kpts_xttk.delete('0', 'end')
             self.kpts_xttk.insert('0', config.kpts_x)
             self.kpts_yttk.delete('0', 'end')
             self.kpts_yttk.insert('0', config.kpts_y)
             self.kpts_zttk.delete('0', 'end')
             self.kpts_zttk.insert('0', config.kpts_z)
-            
+
             self.band_pathttk.delete('0', 'end')
             self.band_pathttk.insert('0', config.band_path)
 
@@ -87,7 +91,7 @@ class gg:
 
             self.energy_maxttk.delete('0', 'end')
             self.energy_maxttk.insert('0', config.energy_max)
-            
+
             if config.XC_calc == 'LDA':
                 self.XC_calcttk.current(0)
             elif config.XC_calc == 'PBE':
@@ -98,30 +102,30 @@ class gg:
                 self.XC_calcttk.current(3)
             else:
                 self.XC_calcttk.current(0)
-                
+
             if config.Spin_calc == True:
                 Spin_calcvar.set(True)
             else:
                 Spin_calcvar.set(False)
 
             self.gridrefttk.delete('0', 'end')
-            self.gridrefttk.insert('0', config.gridref)             
+            self.gridrefttk.insert('0', config.gridref)        
 
             self.num_of_bandsttk.delete('0', 'end')
             self.num_of_bandsttk.insert('0', config.num_of_bands)
-            
+
             self.optFDsmearttk.delete('0', 'end')
             self.optFDsmearttk.insert('0', config.optFDsmear)
-            
+
             self.optetattk.delete('0', 'end')
             self.optetattk.insert('0', config.opteta)
-            
+
             self.optdomega0ttk.delete('0', 'end')
             self.optdomega0ttk.insert('0', config.optdomega0)
-            
+
             self.optnblocksttk.delete('0', 'end')
             self.optnblocksttk.insert('0', config.optnblocks)
-            
+
             if config.whichstrain[0] == True:
                 EpsXvar.set(True)
             else:
@@ -131,7 +135,7 @@ class gg:
                 EpsYvar.set(True)
             else:
                 EpsYvar.set(False)
-            
+
             if config.whichstrain[2] == True:
                 EpsZvar.set(True)
             else:
@@ -159,79 +163,76 @@ class gg:
 
             self.MPIcoresttk.delete('0', 'end')
             self.MPIcoresttk.insert('0', config.MPIcores)
-            
-            self.text1.insert(tk.END, "Configuration loaded, please continue with Input parameters tab \n")
-            
-        def onCalculate():
-            #Firstly, lets save all options to config file.
-            f1 = open('config.py', 'w')
 
-            if self.Use_PWttk.get() == 'PW':
-                print("Use_PW = True", end="\n", file=f1)
-            else:
-                print("Use_PW = False", end="\n", file=f1)
-            
-            print("DOS_calc = "+ str(DOS_calcvar.get()), end="\n", file=f1)
-            print("Band_calc = "+ str(Band_calcvar.get()), end="\n", file=f1)
-            print("Density_calc = "+ str(Density_calcvar.get()), end="\n", file=f1)
-            print("Optical_calc = "+ str(Optical_calcvar.get()), end="\n", file=f1)
-            print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
-            print("cut_off_energy = "+ str(self.cut_off_energyttk.get()), end="\n", file=f1)
-            print("kpts_x = "+ str(self.kpts_xttk.get()), end="\n", file=f1)
-            print("kpts_y = "+ str(self.kpts_yttk.get()), end="\n", file=f1)
-            print("kpts_z = "+ str(self.kpts_zttk.get()), end="\n", file=f1)
-            print("band_path = '"+ str(self.band_pathttk.get())+"'", end="\n", file=f1)
-            print("band_npoints = "+ str(self.band_npointsttk.get()), end="\n", file=f1)
-            print("energy_max = "+ str(self.energy_maxttk.get()), end="\n", file=f1)
-            
-            if self.XC_calcttk.get() == 'LDA':
-                print("XC_calc = 'LDA'", end="\n", file=f1)
-            elif self.XC_calcttk.get() == 'PBE':
-                print("XC_calc = 'PBE'", end="\n", file=f1)
-            elif self.XC_calcttk.get() == 'revPBE':
-                print("XC_calc = 'revPBE'", end="\n", file=f1)
-            elif self.XC_calcttk.get() == 'RPBE':
-                print("XC_calc = 'RPBE'", end="\n", file=f1)
-            else:
-                print("XC_calc = 'LDA'", end="\n", file=f1)
-            
-            print("Spin_calc = "+ str(Spin_calcvar.get()), end="\n", file=f1)
-            print("gridref = "+ str(self.gridrefttk.get()), end="\n", file=f1)
-            print("num_of_bands = "+ str(self.num_of_bandsttk.get()), end="\n", file=f1)
-            print("optFDsmear = "+ str(self.optFDsmearttk.get()), end="\n", file=f1)
-            print("opteta = "+ str(self.optetattk.get()), end="\n", file=f1)
-            print("optdomega0 = "+ str(self.optdomega0ttk.get()), end="\n", file=f1)
-            print("optnblocks = "+ str(self.optnblocksttk.get()), end="\n", file=f1)
-            print("draw_graphs = True", end="\n", file=f1)
-            print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
-            print("WantCIFexport = "+ str(WantCIFexportvar.get()), end="\n", file=f1)
-            
-            # This feature is not used by gpawsolve.py, this is only usable for gg.py
-            print("MPIcores = "+ str(self.MPIcoresttk.get()), end="\n", file=f1)
-            f1.close()
-            
+            self.text1.insert(tk.END, "Configuration loaded, please continue with Input parameters tab \n")
+
+        def onCalculate():
+            '''Calculate button's behaviour'''
+            #Firstly, lets save all options to config file.
+            with open('config.py', 'w') as f1:
+                if self.Use_PWttk.get() == 'PW':
+                    print("Use_PW = True", end="\n", file=f1)
+                else:
+                    print("Use_PW = False", end="\n", file=f1)
+
+                print("DOS_calc = "+ str(DOS_calcvar.get()), end="\n", file=f1)
+                print("Band_calc = "+ str(Band_calcvar.get()), end="\n", file=f1)
+                print("Density_calc = "+ str(Density_calcvar.get()), end="\n", file=f1)
+                print("Optical_calc = "+ str(Optical_calcvar.get()), end="\n", file=f1)
+                print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
+                print("cut_off_energy = "+ str(self.cut_off_energyttk.get()), end="\n", file=f1)
+                print("kpts_x = "+ str(self.kpts_xttk.get()), end="\n", file=f1)
+                print("kpts_y = "+ str(self.kpts_yttk.get()), end="\n", file=f1)
+                print("kpts_z = "+ str(self.kpts_zttk.get()), end="\n", file=f1)
+                print("band_path = '"+ str(self.band_pathttk.get())+"'", end="\n", file=f1)
+                print("band_npoints = "+ str(self.band_npointsttk.get()), end="\n", file=f1)
+                print("energy_max = "+ str(self.energy_maxttk.get()), end="\n", file=f1)
+
+                if self.XC_calcttk.get() == 'LDA':
+                    print("XC_calc = 'LDA'", end="\n", file=f1)
+                elif self.XC_calcttk.get() == 'PBE':
+                    print("XC_calc = 'PBE'", end="\n", file=f1)
+                elif self.XC_calcttk.get() == 'revPBE':
+                    print("XC_calc = 'revPBE'", end="\n", file=f1)
+                elif self.XC_calcttk.get() == 'RPBE':
+                    print("XC_calc = 'RPBE'", end="\n", file=f1)
+                else:
+                    print("XC_calc = 'LDA'", end="\n", file=f1)
+
+                print("Spin_calc = "+ str(Spin_calcvar.get()), end="\n", file=f1)
+                print("gridref = "+ str(self.gridrefttk.get()), end="\n", file=f1)
+                print("num_of_bands = "+ str(self.num_of_bandsttk.get()), end="\n", file=f1)
+                print("optFDsmear = "+ str(self.optFDsmearttk.get()), end="\n", file=f1)
+                print("opteta = "+ str(self.optetattk.get()), end="\n", file=f1)
+                print("optdomega0 = "+ str(self.optdomega0ttk.get()), end="\n", file=f1)
+                print("optnblocks = "+ str(self.optnblocksttk.get()), end="\n", file=f1)
+                print("draw_graphs = True", end="\n", file=f1)
+                print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
+                print("WantCIFexport = "+ str(WantCIFexportvar.get()), end="\n", file=f1)
+
+                # This feature is not used by gpawsolve.py, this is only usable for gg.py
+                print("MPIcores = "+ str(self.MPIcoresttk.get()), end="\n", file=f1)
+
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
             gpawcommand = 'gpaw -P '+str(self.MPIcoresttk.get())+' python gpawsolve.py -oci '+str(basename)+'.cif'
             proc = Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
-            
-            # Save stdout as a log 
-            f2 = open(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-STDOUT-Log.txt", 'w')
-            for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):  # or another encoding
-                self.text4.insert(tk.END, line)
-                print(line, end="\n", file=f2)
-            self.text1.insert(tk.END, "Calculation finished... \n")
-            f2.close()
+
+            # Save stdout as a log
+            with open(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-STDOUT-Log.txt", 'w') as f2:
+                for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):  # or another encoding
+                    self.text4.insert(tk.END, line)
+                    print(line, end="\n", file=f2)
+                self.text1.insert(tk.END, "Calculation finished... \n")
             self.text1.insert(tk.END, "STDOUT is also saved as log file. \n")
-            
+
             # If there is a final cif file in the folder:
             if read(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-Final.cif", index='-1'):
                 asestruct = read(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-Final.cif", index='-1')
                 write(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_FinalStructure.png', asestruct)
                 proc = Popen(split('mv '+basename+'_FinalStructure.png '+basename), shell=False)
                 self.text1.insert(tk.END, "Initial and Final Structure PNG files are saved to "+basename+" folder \n")
-            
-            
+
         # build gui
         self.toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
         self.frame2 = ttk.Frame(self.toplevel1)
@@ -356,12 +357,10 @@ class gg:
         self.label11 = ttk.Label(self.frame14)
         self.label11.configure(text='Exchange Correlation')
         self.label11.pack(side='left')
-        
         self.XC_calcttk = ttk.Combobox(self.frame14)
         self.XC_calcttk.configure(values=('LDA', 'PBE', 'revPBE', 'RPBE'), state='readonly')
         self.XC_calcttk.pack(side='top')
         self.XC_calcttk.current(0)
-        
         self.frame14.configure(height='200', width='200')
         self.frame14.pack(side='top')
         self.frame15 = ttk.Frame(self.labelframe2)
@@ -553,11 +552,11 @@ For more information, please refer to LICENSE file.'''
 
         # Main widget
         self.mainwindow = self.toplevel1
-    
+
 
     def run(self):
+        '''Running the mainloop'''
         self.mainwindow.mainloop()
-
 
 if __name__ == '__main__':
     app = gg()

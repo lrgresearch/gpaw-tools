@@ -1,3 +1,13 @@
+'''
+gpaw-tools: Simple Benchmark Calculation for GPAW
+Usage: 
+  $ gpaw -P8 python simple_benchmark_2021.py
+For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
+  $ mpirun -n 4 gpaw python simple_benchmark_2021.py
+For using all threads provided by Intel Hyperthreading technology:
+  $ mpirun --use-hwthread-cpus -n 8 gpaw python simple_benchmark_2021.py
+'''
+
 from ase import *
 from ase.parallel import paropen, world
 from gpaw import GPAW, PW
@@ -7,16 +17,6 @@ import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
 from pathlib import Path
 
-# Simple Benchmark Calculation for GPAW
-# by Sefer Bora Lisesivdin
-# August 2021 - Derived from LRG's calculation files
-# July 2021 - Corrected version
-# March 2020 - First Version 
-# Usage: $ gpaw -P8 python GPAWSimpleBenchmark2021.py
-# For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
-#        $ mpirun -n 4 gpaw python GPAWSimpleBenchmark2021.py
-# For using all threads provided by Intel Hyperthreading technology:
-#        $ mpirun --use-hwthread-cpus -n 8 gpaw python GPAWSimpleBenchmark2021.py 
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------

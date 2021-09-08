@@ -1,7 +1,7 @@
 '''
-OptimizeCutOff.py: Sample Cut-off Energy Optimization with GPAW
+optimize_cutoff.py: Sample Cut-off Energy Optimization with GPAW
 
-Usage: $ gpaw -P<core_number> python Optimize-CutOff.py
+Usage: $ gpaw -P<core_number> python optimize_cutoff.py
 '''
 from ase import *
 from gpaw import GPAW, PW

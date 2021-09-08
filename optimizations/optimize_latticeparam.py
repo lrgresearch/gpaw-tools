@@ -1,7 +1,7 @@
 '''
-OptimizeKPoints.py: Sample Lattice Paramater Optimization with GPAW
+optimize_latticeparam.py: Sample Lattice Paramater Optimization with GPAW
 
-Usage: $ gpaw -P<core_number> python OptimizeLattice.py
+Usage: $ gpaw -P<core_number> python optimize_latticeparam.py
 '''
 
 import numpy as np
@@ -10,13 +10,6 @@ from gpaw import GPAW, PW
 from ase.io import Trajectory
 from ase.parallel import paropen, world, parprint
 
-# Sample Lattice Parameter Optimization GPAW Input for LRG Studies
-# by Sefer Bora Lisesivdin
-# August 2021 - Rewritten with using Prof. J. Kortus, R. Wirnata - WS 2019 Course notes
-# July 2021 - Corrected version
-# March 2020 - First Version
-# Usage: $ gpaw -P<core_number> python Optimize-Lattice.py
-#
 # -------------------------------------------------------------
 # ENTER PARAMETERS
 # -------------------------------------------------------------

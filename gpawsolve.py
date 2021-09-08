@@ -1,3 +1,8 @@
+'''
+gpawsolve.py: High-level Calculation Script for GPAW
+More information: $ python gpawsolve.p -h
+ '''
+import getopt, sys, os
 from ase import *
 from ase.parallel import paropen, world, parprint
 from gpaw import GPAW, PW, FermiDirac
@@ -10,12 +15,9 @@ from ase.io.cif import write_cif
 from pathlib import Path
 from gpaw.response.df import DielectricFunction
 import numpy as np
-import getopt, sys, os
 
-# gpawsolve.py: Easy PW/LCAO Calculation Script for GPAW
-# --------------------------------------------------------
-HelpText = """ 
- Command line usage: gpawsolve.py -ochi <inputfile.cif>
+HelpText = """
+ Command line usage: python gpawsolve.py -ochi <inputfile.cif>
  Argument list:
                    -i, --Input  : Use input CIF file
                    -c, --Config : Use configuration file in the main directory for parameters (config.py)
@@ -57,7 +59,7 @@ kpts_x = 3 			    # kpoints in x direction
 kpts_y = 3				# kpoints in y direction
 kpts_z = 3				# kpoints in z direction
 band_path = 'GXWKL'	    # Brillouin zone high symmetry points
-band_npoints = 40		# Number of points between high symmetry points 
+band_npoints = 40		# Number of points between high symmetry points
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 #Exchange-Correlation, choose one:
 #XC_calc = 'LDA'
@@ -72,7 +74,8 @@ num_of_bands = 16		#
 optFDsmear = 0.05       # Fermi Dirac smearing for optical calculations
 opteta=0.05             # Eta for Optical calculations
 optdomega0=0.02         # Domega0 for Optical calculations
-optnblocks=4            # Split matrices in nblocks blocks and distribute them G-vectors or frequencies over processes
+optnblocks=4            # Split matrices in nblocks blocks and distribute them G-vectors
+                        # or frequencies over processes
 
 #GENERAL
 draw_graphs = True		# Draw DOS and band structure on screen (yes for draw, small letters)
@@ -103,40 +106,40 @@ bulk_configuration = Atoms(
     )
 
 # -------------------------------------------------------------
-# ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\ 
+# ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
 # Remove 1st argument from the
 # list of command line arguments
 argumentList = sys.argv[1:]
- 
+
 # Options
 options = "ohci:"
- 
+
 # Long options
 long_options = ["Outdir", "Help", "Config", " Input ="]
 
 outdir = None
- 
+
 try:
     # Parsing argument
     arguments, values = getopt.getopt(argumentList, options, long_options)
-     
+
     # checking each argument
     for currentArgument, currentValue in arguments:
- 
+
         if currentArgument in ("-o", "--Outdir"):
             outdir = True
-        
+
         elif currentArgument in ("-h", "--Help"):
             parprint (HelpText)
-             
+
         elif currentArgument in ("-c", "--Config"):
             sys.path.append(os.path.dirname(__file__))
             from config import *
-                         
+
         elif currentArgument in ("-i", "--Input"):
             inFile = currentValue
-    
+
 except getopt.error as err:
     # output error, and return with an error code
     parprint (str(err))
@@ -149,7 +152,7 @@ else:
     struct = Path(inFile).stem
     bulk_configuration = read(inFile, index='-1')
     parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
-    
+
 # Control if outdir is set or not
 if outdir is None:
     #No change is necessary
@@ -188,14 +191,14 @@ else:
     bulk_configuration.get_potential_energy()
     calc.write(struct+'-1-Result-Ground.gpw', mode='all')
 
-    
+
 if WantCIFexport == True:
     write_cif(struct+'-Final.cif', bulk_configuration)
-    
+
 # -------------------------------------------------------------
 # Step 2 - DOS CALCULATION
 # -------------------------------------------------------------
-if DOS_calc== True:
+if DOS_calc == True:
     parprint("Starting DOS calculation...")
     calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt')
     #energies, weights = calc.get_dos(npts=800, width=0)
@@ -208,14 +211,13 @@ if DOS_calc== True:
         energies = dos.get_energies()
         weights = dos.get_dos()
 
-    fd = open(struct+'-2-Result-DOS.txt', "w")
-    if Spin_calc == True:
-        for x in zip(energies, weights, weightsup):
-            print(*x, sep=", ", file=fd)
-    else:
-        for x in zip(energies, weights):
-            print(*x, sep=", ", file=fd)
-    fd.close()
+    with open(struct+'-2-Result-DOS.txt', "w") as fd:
+        if Spin_calc == True:
+            for x in zip(energies, weights, weightsup):
+                print(*x, sep=", ", file=fd)
+        else:
+            for x in zip(energies, weights):
+                print(*x, sep=", ", file=fd)
 
 # -------------------------------------------------------------
 # Step 3 - BAND STRUCTURE CALCULATION
@@ -243,28 +245,28 @@ if Band_calc == True:
                             for k in range(band_npoints)]
                             for s in range(2)]) - ef
         parprint(eps_skn.shape)
-        f1 = open(struct+'-3-Result-Band-Down.dat', 'w')
-        for n1 in range(num_of_bands):
-            for k1 in range(band_npoints):
-                print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
-            print (end="\n", file=f1)
-        f1.close()
-        f2 = open(struct+'-3-Result-Band-Up.dat', 'w')
-        for n2 in range(num_of_bands):
-            for k2 in range(band_npoints):
-                print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
-            print (end="\n", file=f2)
-        f2.close()
+        with open(struct+'-3-Result-Band-Down.dat', 'w') as f1:
+            for n1 in range(num_of_bands):
+                for k1 in range(band_npoints):
+                    print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
+                print (end="\n", file=f1)
+
+        with open(struct+'-3-Result-Band-Up.dat', 'w') as f2:
+            for n2 in range(num_of_bands):
+                for k2 in range(band_npoints):
+                    print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
+                print (end="\n", file=f2)
+
     else:
         eps_skn = np.array([[calc.get_eigenvalues(k,s)
                             for k in range(band_npoints)]
                             for s in range(1)]) - ef
-        f = open(struct+'-3-Result-Band.dat', 'w')
-        for n in range(num_of_bands):
-            for k in range(band_npoints):
-                print(k, eps_skn[0, k, n], end="\n", file=f)
-            print (end="\n", file=f)
-        f.close()
+        with open(struct+'-3-Result-Band.dat', 'w') as f:
+            for n in range(num_of_bands):
+                for k in range(band_npoints):
+                    print(k, eps_skn[0, k, n], end="\n", file=f)
+                print (end="\n", file=f)
+
 
 # -------------------------------------------------------------
 # Step 4 - ALL-ELECTRON DENSITY
@@ -306,9 +308,12 @@ if Optical_calc == True:
                                 nblocks=world.size,
                                 domega0=optdomega0,
                                 ecut=cut_off_energy)
-        df.get_dielectric_function( direction='x', filename=struct+'-5-Result-Optical_abs_xdirection.csv')
-        df.get_dielectric_function( direction='y', filename=struct+'-5-Result-Optical_abs_ydirection.csv')
-        df.get_dielectric_function( direction='z', filename=struct+'-5-Result-Optical_abs_zdirection.csv')
+        df.get_dielectric_function( direction='x', 
+                                    filename=struct+'-5-Result-Optical_abs_xdirection.csv')
+        df.get_dielectric_function( direction='y',
+                                    filename=struct+'-5-Result-Optical_abs_ydirection.csv')
+        df.get_dielectric_function( direction='z',
+                                    filename=struct+'-5-Result-Optical_abs_zdirection.csv')
     else:
         parprint('Not implemented in LCAO mode yet.')
 

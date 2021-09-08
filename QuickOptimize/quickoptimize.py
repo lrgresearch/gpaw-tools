@@ -1,17 +1,18 @@
+'''
+quickoptimize.py: Quick Geometric Optimization
+                  using interatomic potentials.
+Usage: $ gpaw python quickoptimize.py ciffilename.cif
+'''
+import sys
 from ase import *
-from ase.build import bulk
-from ase.io import read, write
+from ase.io import read
 from ase.io.cif import write_cif
-from asap3 import Atoms, EMT, units
+from asap3 import Atoms, units
 from asap3.md.verlet import VelocityVerlet
 from asap3.md.langevin import Langevin
 from ase.calculators.kim import KIM
-import sys, os
 
-# Quick Geometric Optimization for LRG Studies
-# by Sefer Bora Lisesivdin
-# August 2021 - First version
-# Usage: $ gpaw python quickoptimize.py ciffilename.cif
+
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------
@@ -41,10 +42,8 @@ bulk_configuration = Atoms(
 
 
 # -------------------------------------------------------------
-# ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\ 
+# ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
-
-f = open(Filename+'.py', 'w')
 
 bulk_configuration.set_calculator(KIM('LJ_ElliottAkerson_2015_Universal__MO_959249795837_003', options={"ase_neigh": False}))
 
@@ -61,32 +60,33 @@ for i in range(25):
     epot = bulk_configuration.get_potential_energy()/len(bulk_configuration)
     ekin = bulk_configuration.get_kinetic_energy()/len(bulk_configuration)
     print("%15.5f %15.5f %15.5f" % (epot, ekin, epot+ekin))
-    
+
 # PRINT TO FILE PART -----------------------------------
-f.write("bulk_configuration = Atoms(\n")
-f.write("    [\n")
-if Scaled == True:
-    positions = bulk_configuration.get_scaled_positions()
-else:
-    positions = bulk_configuration.get_positions()
-nn=-1
-mm=-1
-for n in bulk_configuration.get_chemical_symbols():
-    nn=nn+1
-    for m in positions:
-        mm=mm+1
-        if mm == nn:
-            if (mm % 2) != 0:
-                f.write("    Atom('"+n+"', ( "+str(m[0])+", "+str(m[1])+", "+str(m[2])+" )),\n")
-    mm=0
-f.write("    ],\n")
-f.write("    cell=[("+str(bulk_configuration.cell[0,0])+", "+str(bulk_configuration.cell[0,1])+", "+str(bulk_configuration.cell[0,2])+"), ("+str(bulk_configuration.cell[1,0])+", "+str(bulk_configuration.cell[1,1])+", "+str(bulk_configuration.cell[1,2])+"), ("+str(bulk_configuration.cell[2,0])+", "+str(bulk_configuration.cell[2,1])+", "+str(bulk_configuration.cell[2,2])+")],\n")
-if Manualpbc == False:
-    f.write("    pbc=True,\n")
-else:
-    f.write("    pbc=["+str(pbcmanual[0])+","+str(pbcmanual[1])+","+str(pbcmanual[2])+"],\n")
-f.write("    )\n")
-f.close()
+with open(Filename+'.py', 'w') as f:
+    f.write("bulk_configuration = Atoms(\n")
+    f.write("    [\n")
+    if Scaled == True:
+        positions = bulk_configuration.get_scaled_positions()
+    else:
+        positions = bulk_configuration.get_positions()
+    nn=-1
+    mm=-1
+    for n in bulk_configuration.get_chemical_symbols():
+        nn=nn+1
+        for m in positions:
+            mm=mm+1
+            if mm == nn:
+                if (mm % 2) != 0:
+                    f.write("    Atom('"+n+"', ( "+str(m[0])+", "+str(m[1])+", "+str(m[2])+" )),\n")
+        mm=0
+    f.write("    ],\n")
+    f.write("    cell=[("+str(bulk_configuration.cell[0,0])+", "+str(bulk_configuration.cell[0,1])+", "+str(bulk_configuration.cell[0,2])+"), ("+str(bulk_configuration.cell[1,0])+", "+str(bulk_configuration.cell[1,1])+", "+str(bulk_configuration.cell[1,2])+"), ("+str(bulk_configuration.cell[2,0])+", "+str(bulk_configuration.cell[2,1])+", "+str(bulk_configuration.cell[2,2])+")],\n")
+    if Manualpbc == False:
+        f.write("    pbc=True,\n")
+    else:
+        f.write("    pbc=["+str(pbcmanual[0])+","+str(pbcmanual[1])+","+str(pbcmanual[2])+"],\n")
+    f.write("    )\n")
+
 
 # PRINT SCREEEN PART -----------------------------------
 print("bulk_configuration = Atoms(")

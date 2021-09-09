@@ -230,7 +230,6 @@ class gg:
             if read(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-Final.cif", index='-1'):
                 asestruct = read(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-Final.cif", index='-1')
                 write(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_FinalStructure.png', asestruct)
-                proc = Popen(split('mv '+basename+'_FinalStructure.png '+basename), shell=False)
                 self.text1.insert(tk.END, "Initial and Final Structure PNG files are saved to "+basename+" folder \n")
 
         # build gui

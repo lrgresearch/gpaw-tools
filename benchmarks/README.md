@@ -2,13 +2,13 @@
 Current file is a similar to our electronic structure calculation script.
 For better performance do not use `total number of cores` that your computer provides. Instead, try to use `total number of cores - 1` as general. Use `time` command to measure the time passed as (prefered version of running GPAW is):
 
-```
-gpaw -P7 python GPAWSimpleBenchmark2021.py
-```
+
+       gpaw -P7 python simple_benchmark_2021.py
+
 or (this will take a little bit longer)
-```
-time mpiexec -n 7 gpaw python GPAWSimpleBenchmark2021.py
-```
+
+       time mpiexec -n 7 gpaw python simple_benchmark_2021.py
+
 These commands will result something like:
 ```
        Step     Time          Energy         fmax
@@ -37,12 +37,18 @@ Here, `real    9m0.0719s` is the benchmark time.
 | Computer  | CPU                      | Cores | CPU Speed | Memory | Hdd            | CPU GFlops | Memory Bandwidth | HDD Speed |
 | --------- | ------------------------ | ----- | --------- | ------ | -------------- | ---------- | ---------------- | --------- |
 | 1         | 2x Intel Xeon E5-2430 v2 | 24    | 2.5 GHz   | 16Gb   | 300Gb + 1000Gb | 357        | 5 GB/s           | 259 MB/s  |
+| 2         | Intel Core i7-8550u      | 4     | 1.8GHz    | 8Gb    | 512SSD         | 81         | 12 GB/s          | 1GB/s     |
+| 3         | AMD Ryzen 5 4500u        | 6     | 2.38GHz   | 8Gb    | 256SSD         | 86         | 9 GB/s           | 0.8GB/s   |
+| 4         | Intel Core i7-8700       | 12    | 3.2 GHz   | 8 Gb   | 1000 Gb        | 302        | 10 GB/s          | 195 MB/s  |
 
 ### Benchmarks
 | Computer  | GPAW Version  | System                  | Used Core | Command                       | Benchmark File             | Time Elapsed |
 | --------- | ------------- | ----------------------- | --------- | ----------------------------- | -------------------------- | ------------ |
-| 1         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 12        | gpaw -P                       | GPAWSimpleBenchmark2021.py | 5m41s        |
-| 1         | 21.6.0        | W10Pro - WSL2 - Ub20.04 | 12        | gpaw -P                       | GPAWSimpleBenchmark2021.py | 5m59s        |
-| 1         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 23        | mpirun --use-hwthread-cpus -n | GPAWSimpleBenchmark2021.py | 5m15s        |
-| 1         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 23        | mpirun --use-hwthread-cpus -n | GPAWSimpleBenchmark2021.py | 5m37s        |
-
+| 1         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 12        | gpaw -P                       | simple_benchmark_2021.py   | 5m41s        |
+| 1         | 21.6.0        | W10Pro - WSL2 - Ub20.04 | 12        | gpaw -P                       | simple_benchmark_2021.py   | 5m59s        |
+| 1         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 23        | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 5m15s        |
+| 1         | 21.6.0        | W10Pro - WSL2 - Ub20.04 | 23        | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 5m37s        |
+| 2         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 7         | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 7m24s        |
+| 2         | 21.6.0        | W10Pro - WSL2 - Ub20.04 | 7         | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 9m00s        |
+| 3         | 21.6.0        | W10 - WSL1 - Ub20.04    | 5         | gpaw -P                       | simple_benchmark_2021.py   | 4m26s        |
+| 4         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 11        | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 5m22s        |

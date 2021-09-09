@@ -54,7 +54,7 @@ Optical_calc = False     # Calculate the optical properties
 # -------------------------------------------------------------
 # ELECTRONIC
 fmaxval = 0.05 			#
-cut_off_energy = 240 	# eV
+cut_off_energy = 340 	# eV
 kpts_x = 3 			    # kpoints in x direction
 kpts_y = 3				# kpoints in y direction
 kpts_z = 3				# kpoints in z direction
@@ -66,7 +66,7 @@ energy_max = 15 		# eV. It is the maximum energy value for band structure figure
 XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
-Spin_calc = False        # Spin polarized calculation?
+Spin_calc = True        # Spin polarized calculation?
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 # OPTICAL

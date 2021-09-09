@@ -4,6 +4,7 @@ quickoptimize.py: Quick Geometric Optimization
 Usage: $ python quickoptimize.py inputfilename.cif
 '''
 import sys, os
+from pathlib import Path
 from ase import *
 from ase.io import read
 from ase.io.cif import write_cif
@@ -13,9 +14,18 @@ from asap3.md.langevin import Langevin
 from ase.calculators.kim import KIM
 
 
-inFile = sys.argv[1]
-bulk_configuration = read(inFile, index='-1')
-Filename = os.path.splitext(inFile)[0]
+# -------------------------------------------------------------
+# Bulk Configuration
+# -------------------------------------------------------------
+
+bulk_configuration = Atoms(
+    [
+    Atom('Ge', ( 1.222474e-31, 4.094533468076675e-32, 5.02 )),
+    Atom('Ge', ( -1.9999999993913775e-06, 2.3094022314590417, 4.98 )),
+    ],
+    cell=[(4.0, 0.0, 0.0), (-1.9999999999999991, 3.464101615137755, 0.0), (0.0, 0.0, 20.0)],
+    pbc=True,
+    )
 
 # -------------------------------------------------------------
 # Parameters
@@ -29,13 +39,31 @@ Manualpbc = False # If you need manual constraint axis
 # IF Manualpbc is true then change following:
 pbcmanual=[True,True,False]
 
+# If you have double number of elements in your final file
+SolveDoubleElementProblem = True
 # -------------------------------------------------------------
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
+asestruct = bulk_configuration
 
-bulk_configuration.set_calculator(KIM(PotentialUsed, options={"ase_neigh": False}))
+# Basic argument triage
+if len(sys.argv) == 1:
+    Filename = 'Optimized'
+    print("Number of atoms provided in Atoms object:"+str(asestruct.get_global_number_of_atoms()))
+elif len(sys.argv) == 2:
+    inFile = sys.argv[1]
+    asestruct = read(inFile, index='-1')
+    Filename = os.path.splitext(inFile)[0]
+    struct = Path(inFile).stem
+    asestruct = read(inFile, index='-1')
+    print("Number of atoms imported from CIF file:"+str(asestruct.get_global_number_of_atoms()))
+else:
+    print("Wrong number of argument. Usage: python quickoptimize.py inputfile.cif")
+    quit()
 
-dyn = Langevin(bulk_configuration, timestep=5*units.fs, trajectory='md.traj', logfile=Filename+'-Log-GPAW-QuickOptim.txt', temperature=1*units.kB, friction=0.05)
+asestruct.set_calculator(KIM(PotentialUsed, options={"ase_neigh": False}))
+
+dyn = Langevin(asestruct, timestep=5*units.fs, trajectory='md.traj', logfile=Filename+'-Log-GPAW-QuickOptim.txt', temperature=1*units.kB, friction=0.05)
 
 
 print("")
@@ -44,8 +72,8 @@ print("  %15s %15s %15s" % ("Pot. energy", "Kin. energy", "Total energy"))
 
 for i in range(25):
     dyn.run(10)
-    epot = bulk_configuration.get_potential_energy()/len(bulk_configuration)
-    ekin = bulk_configuration.get_kinetic_energy()/len(bulk_configuration)
+    epot = asestruct.get_potential_energy()/len(asestruct)
+    ekin = asestruct.get_kinetic_energy()/len(asestruct)
     print("%15.5f %15.5f %15.5f" % (epot, ekin, epot+ekin))
 
 # PRINT TO FILE PART -----------------------------------
@@ -53,54 +81,47 @@ with open(Filename+'.py', 'w') as f:
     f.write("bulk_configuration = Atoms(\n")
     f.write("    [\n")
     if Scaled == True:
-        positions = bulk_configuration.get_scaled_positions()
+        positions = asestruct.get_scaled_positions()
     else:
-        positions = bulk_configuration.get_positions()
-    nn=-1
-    mm=-1
-    for n in bulk_configuration.get_chemical_symbols():
-        nn=nn+1
-        for m in positions:
-            mm=mm+1
-            if mm == nn:
-                if (mm % 2) != 0:
+        positions = asestruct.get_positions()
+    nn=0
+    mm=0
+
+    if SolveDoubleElementProblem == True:
+        for n in asestruct.get_chemical_symbols():
+            nn=nn+1
+            for m in positions:
+                mm=mm+1
+                if mm == nn:
                     f.write("    Atom('"+n+"', ( "+str(m[0])+", "+str(m[1])+", "+str(m[2])+" )),\n")
-        mm=0
+            mm=0
+    else:
+        for n in asestruct.get_chemical_symbols():
+            for m in positions:
+                f.write("    Atom('"+n+"', ( "+str(m[0])+", "+str(m[1])+", "+str(m[2])+" )),\n")
     f.write("    ],\n")
-    f.write("    cell=[("+str(bulk_configuration.cell[0,0])+", "+str(bulk_configuration.cell[0,1])+", "+str(bulk_configuration.cell[0,2])+"), ("+str(bulk_configuration.cell[1,0])+", "+str(bulk_configuration.cell[1,1])+", "+str(bulk_configuration.cell[1,2])+"), ("+str(bulk_configuration.cell[2,0])+", "+str(bulk_configuration.cell[2,1])+", "+str(bulk_configuration.cell[2,2])+")],\n")
+    f.write("    cell=[("+str(asestruct.cell[0,0])+", "+str(asestruct.cell[0,1])+", "+str(asestruct.cell[0,2])+"), ("+str(asestruct.cell[1,0])+", "+str(asestruct.cell[1,1])+", "+str(asestruct.cell[1,2])+"), ("+str(asestruct.cell[2,0])+", "+str(asestruct.cell[2,1])+", "+str(asestruct.cell[2,2])+")],\n")
     if Manualpbc == False:
         f.write("    pbc=True,\n")
     else:
         f.write("    pbc=["+str(pbcmanual[0])+","+str(pbcmanual[1])+","+str(pbcmanual[2])+"],\n")
     f.write("    )\n")
 
-
 # PRINT SCREEEN PART -----------------------------------
-print("bulk_configuration = Atoms(")
-print("    [")
-if Scaled == True:
-    positions = bulk_configuration.get_scaled_positions()
-else:
-    positions = bulk_configuration.get_positions()
-nn=-1
-mm=-1
-for n in bulk_configuration.get_chemical_symbols():
-    nn=nn+1
-    for m in positions:
-        mm=mm+1
-        if mm == nn:
-            if (mm % 2) != 0:
-                print("    Atom('"+n+"', ( "+str(m[0])+", "+str(m[1])+", "+str(m[2])+" )),")
-    mm=0
-print("    ],")
-print("    cell=[("+str(bulk_configuration.cell[0,0])+", "+str(bulk_configuration.cell[0,1])+", "+str(bulk_configuration.cell[0,2])+"), ("+str(bulk_configuration.cell[1,0])+", "+str(bulk_configuration.cell[1,1])+", "+str(bulk_configuration.cell[1,2])+"), ("+str(bulk_configuration.cell[2,0])+", "+str(bulk_configuration.cell[2,1])+", "+str(bulk_configuration.cell[2,2])+")],")
-if Manualpbc == False:
-    print("    pbc=True,")
-else:
-    print("    pbc=["+str(pbcmanual[0])+","+str(pbcmanual[1])+","+str(pbcmanual[2])+"],")
+print("Result:")
+with open(Filename+'.py', 'r') as f:
+    lines = f.readline()
+    while lines:
+        print(lines)
+        lines = f.readline()
+
+
+
 print("    )")
 print("ATTENTION: If you have double number of atoms, it may be caused by ")
 print("           repeating ASE bug https://gitlab.com/ase/ase/-/issues/169 ")
-print("           Please remove repeating atoms manually with VESTA. Sorry for any inconvenience.")
+print("           Please assign SolveDoubleElementProblem variable as True in this script if necessary.")
+
+
 # CIF export
 write_cif(Filename+'-Optimized.cif', bulk_configuration)

@@ -74,24 +74,48 @@ For using all threads provided by Intel Hyperthreading technology
 |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
 
 ### gg.py
-More information will be here.
+Basic DFT calculations can be done graphically with the script `gg.py`. This script is behaving as a GUI to run `gpawsolve.py` script. To execute the GUI, type simply:
+  python gg.py
 
 ### quick_optimize/quickoptimize.py
-More information will be here.
+Inter-atomic potentials are useful tool to perform a quick geometric optimization of the studied system before starting a precise DFT calculation. The `quickoptimize.py` script is written for geometric optimizations with inter-atomic potentials. The bulk configuration of atoms can be provided by the user in the script as an ASE Atoms object or given as an argument for the CIF file. A general potential is given for any calculation. However, user can provide the necessary OpenKIM potentialby changing the related line in the script.
+
+Mainly, quickoptimize.py is not related to GPAW. However it is dependent to ASAP3/OpenKIM and Kimpy. Therefore, the user must install necessary libraries before using the script:
+
+    pip install --upgrade --user ase asap3
+    sudo add-apt-repository ppa:openkim/latest
+    sudo apt-get update
+    sudo apt-get install libkim-api-dev openkim-models libkim-api2 pkg-config
+    pip3 install kimpy
+
+The script can be called as: from the command line  in the script itself:
+
+    python quickoptimize.py                   (if the user wants to provide structure as ASE Atoms object)
+    python quickoptimize.py <inputfile.cif>   (if the user wants to provide structure as a CIF file
+
 
 ### optimizations/ciftoase.py
-More information will be here.
+For `quickoptimize.py` or other optimization scripts, user may need to give ASE Atoms object instead of using a CIF file. This script changes a CIF file information to ASE Atoms object. Because there is a problem in the read method of ASE.io, sometimes it can give a double number of atoms. If the user lives this kind of problem, there is a setting inside the script. User can run the script like:
+
+    python ciftoase.py <inputfile.cif>
+
+Result will be printed to screen and will be saved as `inputfile.py` in the same folder.
 
 ### optimizations/optimize_cutoff (and kpoints)(and latticeparam).py
-More information will be here. These codes are based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. 
+Users must provide ASE Atoms object and simply insert the object inside these scripts. With the scripts, the user can do convergence tests for cut-off energy, k-points and can calculate the energy dependent lattice parameter values. These codes are mainly based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. Scripts can easily called with MPI as:
+
+    gpaw -P <core_number> python optimize_cutoff.py
+    gpaw -P <core_number> python optimize_kpoints.py
+    gpaw -P <core_number> python optimize_latticeparam.py
 
 ### benchmarks/
-GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/Benchmarks) with some hardware benchmark information. Your timings are always welcomed.
+GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcomed.
 
 ## Release notes
-Because this is a bunch of scripts, there will be no strict versioning, rolling releases. Please try to use the latest github repo zip.
 
+### Version 21.9.0
 #### September 2021
+* Corrected `quickoptimize.py` behaviour
 * Many code quality and folder structure improvements.
 * Comment additions to code.
 * Better README.md

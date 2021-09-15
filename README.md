@@ -5,6 +5,8 @@
 [![Latest version:](https://img.shields.io/github/v/release/lrgresearch/gpaw-tools)](https://github.com/lrgresearch/gpaw-tools/releases/)
 ![Release date:](https://img.shields.io/github/release-date/lrgresearch/gpaw-tools)
 [![Commits:](https://img.shields.io/github/commit-activity/m/lrgresearch/gpaw-tools)](https://github.com/lrgresearch/gpaw-tools/commits/main)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/lrgresearch/gpaw-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lrgresearch/gpaw-tools/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/lrgresearch/gpaw-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lrgresearch/gpaw-tools/context:python)
 ## Introduction
 *gpaw-tools* is a bunch for python scripts for easy performing of GPAW calculations. It is mostly written for new DFT users who are running codes in their own PCs or on small group clusters.
 
@@ -148,4 +150,4 @@ GPAW has many test scripts for many cases. However, new users may need something
 * First scripts for personal usage.
 
 ## Licensing
-This project is licensed under the terms of the MIT license.
+This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).

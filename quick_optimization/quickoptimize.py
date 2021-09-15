@@ -9,7 +9,6 @@ from ase import *
 from ase.io import read
 from ase.io.cif import write_cif
 from asap3 import Atoms, units
-from asap3.md.verlet import VelocityVerlet
 from asap3.md.langevin import Langevin
 from ase.calculators.kim import KIM
 
@@ -52,7 +51,6 @@ if len(sys.argv) == 1:
     print("Number of atoms provided in Atoms object:"+str(asestruct.get_global_number_of_atoms()))
 elif len(sys.argv) == 2:
     inFile = sys.argv[1]
-    asestruct = read(inFile, index='-1')
     Filename = os.path.splitext(inFile)[0]
     struct = Path(inFile).stem
     asestruct = read(inFile, index='-1')

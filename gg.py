@@ -9,7 +9,6 @@ import tkinter.ttk as ttk
 from tkinter import filedialog, BooleanVar, StringVar
 import pathlib
 import subprocess
-from subprocess import Popen
 
 from ase.io import read, write
 
@@ -215,7 +214,7 @@ class gg:
 
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
             gpawcommand = 'gpaw -P '+str(self.MPIcoresttk.get())+' python gpawsolve.py -oci '+str(basename)+'.cif'
-            proc = Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
+            proc = subprocess.Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
 
             # Save stdout as a log

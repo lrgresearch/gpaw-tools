@@ -211,7 +211,7 @@ if DOS_calc == True:
         energies = dos.get_energies()
         weights = dos.get_dos()
 
-    with open(struct+'-2-Result-DOS.txt', "w") as fd:
+    with paropen(struct+'-2-Result-DOS.txt', "w") as fd:
         if Spin_calc == True:
             for x in zip(energies, weights, weightsup):
                 print(*x, sep=", ", file=fd)
@@ -245,13 +245,13 @@ if Band_calc == True:
                             for k in range(band_npoints)]
                             for s in range(2)]) - ef
         parprint(eps_skn.shape)
-        with open(struct+'-3-Result-Band-Down.dat', 'w') as f1:
+        with paropen(struct+'-3-Result-Band-Down.dat', 'w') as f1:
             for n1 in range(num_of_bands):
                 for k1 in range(band_npoints):
                     print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
                 print (end="\n", file=f1)
 
-        with open(struct+'-3-Result-Band-Up.dat', 'w') as f2:
+        with paropen(struct+'-3-Result-Band-Up.dat', 'w') as f2:
             for n2 in range(num_of_bands):
                 for k2 in range(band_npoints):
                     print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
@@ -261,7 +261,7 @@ if Band_calc == True:
         eps_skn = np.array([[calc.get_eigenvalues(k,s)
                             for k in range(band_npoints)]
                             for s in range(1)]) - ef
-        with open(struct+'-3-Result-Band.dat', 'w') as f:
+        with paropen(struct+'-3-Result-Band.dat', 'w') as f:
             for n in range(num_of_bands):
                 for k in range(band_npoints):
                     print(k, eps_skn[0, k, n], end="\n", file=f)

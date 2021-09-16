@@ -44,10 +44,12 @@ class gg:
             # Loading config file
             import config
             # There must be some elegant way to do this.
-            if config.Use_PW == True:
-                self.Use_PWttk.current(0)
+            if config.Basis == 'PW':
+                self.Basisttk.current(0)
+            elif config.Basis == 'LCAO':
+                self.Basisttk.current(1)
             else:
-                self.Use_PWttk.current(1)
+                self.Basisttk.current(2)
 
             if config.DOS_calc == True:
                 DOS_calcvar.set(True)
@@ -169,10 +171,12 @@ class gg:
             '''Calculate button's behaviour'''
             #Firstly, lets save all options to config file.
             with open('config.py', 'w') as f1:
-                if self.Use_PWttk.get() == 'PW':
-                    print("Use_PW = True", end="\n", file=f1)
+                if self.Basisttk.get() == 'PW':
+                    print("Basis = 'PW'", end="\n", file=f1)
+                elif self.Basisttk.get() == 'LCAO':
+                    print("Basis = 'LCAO'", end="\n", file=f1)
                 else:
-                    print("Use_PW = False", end="\n", file=f1)
+                    print("Basis = 'FD'", end="\n", file=f1)
 
                 print("DOS_calc = "+ str(DOS_calcvar.get()), end="\n", file=f1)
                 print("Band_calc = "+ str(Band_calcvar.get()), end="\n", file=f1)
@@ -254,10 +258,10 @@ class gg:
         self.label1 = ttk.Label(self.frame6)
         self.label1.configure(text='Calculator')
         self.label1.pack(side='left')
-        self.Use_PWttk = ttk.Combobox(self.frame6)
-        self.Use_PWttk.configure(values=('PW', 'LCAO'), state='readonly')
-        self.Use_PWttk.pack(side='top')
-        self.Use_PWttk.current(0)
+        self.Basisttk = ttk.Combobox(self.frame6)
+        self.Basisttk.configure(values=('PW', 'LCAO', 'FD'), state='readonly')
+        self.Basisttk.pack(side='top')
+        self.Basisttk.current(0)
         self.frame6.configure(height='200', width='200')
         self.frame6.pack(side='top')
         # Setting DOS_calc related checkbutton

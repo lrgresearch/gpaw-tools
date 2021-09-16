@@ -1,4 +1,4 @@
-Use_PW = True
+Basis = 'PW'
 DOS_calc = True
 Band_calc = True
 Density_calc = False
@@ -22,4 +22,4 @@ optnblocks = 4
 draw_graphs = True
 whichstrain = [False, False, False, False, False, False]
 WantCIFexport = True
-MPIcores = 2
+MPIcores = 5

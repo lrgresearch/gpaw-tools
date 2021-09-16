@@ -42,7 +42,7 @@ HelpText = """
 """
 # IF YOU WANT TO USE CONFIG FILE, PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
-Use_PW = True          # Use PW or LCAO? (PW is more accurate, LCAO is quicker mostly.)
+Basis = 'PW'            # Use PW or LCAO? (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = True         # DOS calculation
 Band_calc = True        # Band structure calculation
@@ -55,10 +55,10 @@ Optical_calc = False     # Calculate the optical properties
 # ELECTRONIC
 fmaxval = 0.05 			#
 cut_off_energy = 340 	# eV
-kpts_x = 3 			    # kpoints in x direction
-kpts_y = 3				# kpoints in y direction
-kpts_z = 3				# kpoints in z direction
-band_path = 'GXWKL'	    # Brillouin zone high symmetry points
+kpts_x = 5 			    # kpoints in x direction
+kpts_y = 5				# kpoints in y direction
+kpts_z = 1				# kpoints in z direction
+band_path = 'GMKG'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 #Exchange-Correlation, choose one:
@@ -66,7 +66,7 @@ energy_max = 15 		# eV. It is the maximum energy value for band structure figure
 XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
-Spin_calc = True        # Spin polarized calculation?
+Spin_calc = False        # Spin polarized calculation?
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 # OPTICAL
@@ -83,9 +83,9 @@ draw_graphs = True		# Draw DOS and band structure on screen (yes for draw, small
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[False, False, False, False, False, False]
+whichstrain=[True, True, False, False, False, False]
 
-WantCIFexport = False
+WantCIFexport = True
 # <<<<<<< TO HERE TO FILE config.py IN SAME DIRECTORY AND USE -c FLAG WITH COMMAND
 # -------------------------------------------------------------
 # Bulk Configuration
@@ -165,7 +165,7 @@ else:
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE
 # -------------------------------------------------------------
-if Use_PW == True:
+if Basis == 'PW':
     parprint("Starting PW ground state calculation...")
     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
     bulk_configuration.calc = calc
@@ -180,7 +180,7 @@ if Use_PW == True:
         calc.write(struct+'-1-Result-Ground.gpw', mode="all")
     else:
         calc.write(struct+'-1-Result-Ground.gpw')
-else:
+elif Basis == 'LCAO':
     parprint("Starting LCAO ground state calculation...")
     calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
     bulk_configuration.calc = calc
@@ -190,6 +190,9 @@ else:
 
     bulk_configuration.get_potential_energy()
     calc.write(struct+'-1-Result-Ground.gpw', mode='all')
+else:
+    parprint("FD mode is not implemented in gpaw-tools yet...")
+    quit()
 
 
 if WantCIFexport == True:
@@ -286,7 +289,7 @@ if Density_calc == True:
 # Step 5 - OPTICAL CALCULATION
 # -------------------------------------------------------------
 if Optical_calc == True:
-    if Use_PW == True:
+    if Basis == 'PW':
         parprint("Starting optical calculation...")
         calc = GPAW(struct+'-1-Result-Ground.gpw',
                 parallel={'domain': 1},
@@ -314,8 +317,10 @@ if Optical_calc == True:
                                     filename=struct+'-5-Result-Optical_abs_ydirection.csv')
         df.get_dielectric_function( direction='z',
                                     filename=struct+'-5-Result-Optical_abs_zdirection.csv')
-    else:
+    elif Basis == 'LCAO':
         parprint('Not implemented in LCAO mode yet.')
+    else:
+        parprint('Not implemented in FD mode yet.')
 
 # -------------------------------------------------------------
 # Step Last - DRAWING BAND STRUCTURE AND DOS

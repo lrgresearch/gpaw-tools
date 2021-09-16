@@ -119,6 +119,7 @@ options = "ohci:"
 long_options = ["Outdir", "Help", "Config", " Input ="]
 
 outdir = None
+inFile = None
 
 try:
     # Parsing argument

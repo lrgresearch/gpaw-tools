@@ -1,37 +1,14 @@
-## Welcome to GitHub Pages
+## Welcome to *gpaw-tools*
 
-You can use the [editor on GitHub](https://github.com/lrgresearch/gpaw-tools/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+| Note: |
+| ----- |
+| These pages will be the future website of gpaw-tools. Please visit later. |
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+gpaw-tools is a bunch for python scripts for easy performing of GPAW calculations. It is mostly written for new DFT users who are running codes in their own PCs or on small group clusters.
 
-### Markdown
+gpaw-tools have:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/lrgresearch/gpaw-tools/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+A force-field quick optimization script quickoptimization.py for preliminary calculations using ASAP3/OpenKIM potentials.
+ciftoase.py script for transform CIF files to ASE's own Atoms object.
+To choose better cut off energy, lattice parameter and k points, there are 3 scripts called optimize_cutoff.py, optimize_latticeparam.py and optimize_kpoints.py.
+And, the main solver script gpawsolver.py which can be run in PW or LCAO mode. It can do strain minimization, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties in a very simple and organized way.

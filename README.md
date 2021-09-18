@@ -80,6 +80,7 @@ For using all threads provided by Intel Hyperthreading technology
 | Method | Strain_minimization | Several XCs | Spin polarized | DOS | Band | Electron Density | Optical |
 | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
 |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
+| PW-G0W0| Yes                 | Yes         | No             | No  | Yes  | No               | No      |
 |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
 
 ### gg.py

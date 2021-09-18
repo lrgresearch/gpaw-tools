@@ -14,6 +14,8 @@ from ase.constraints import UnitCellFilter
 from ase.io.cif import write_cif
 from pathlib import Path
 from gpaw.response.df import DielectricFunction
+from gpaw.response.g0w0 import G0W0
+from gpaw.response.gw_bands import GWBands
 import numpy as np
 
 HelpText = """
@@ -38,13 +40,14 @@ HelpText = """
  | Method | Strain_minimization | Several XCs | Spin polarized | DOS | Band | Electron Density | Optical |
  | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
  |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
- |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No     |
+ | PW-G0W0| Yes                 | Yes         | No             | No  | Yes  | No               | No      |
+ |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
 """
 # IF YOU WANT TO USE CONFIG FILE, PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
-Basis = 'PW'            # Use PW or LCAO? (PW is more accurate, LCAO is quicker mostly.)
+Basis = 'PW'            # Use PW, PW-G0W0 LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
-DOS_calc = True         # DOS calculation
+DOS_calc = False         # DOS calculation
 Band_calc = True        # Band structure calculation
 Density_calc = False    # Calculate the all-electron density?
 Optical_calc = False     # Calculate the optical properties
@@ -68,6 +71,16 @@ XC_calc = 'PBE'
 #XC_calc = 'RPBE'
 Spin_calc = False        # Spin polarized calculation?
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
+
+#GW Parameters
+GWkpoints = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
+GWtruncation = '2D'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
+GWcut_off_energy = 50   # Cut-off energy
+GWbandVB = 8            # Valence band number
+GWbandCB = 18           # Conduction band number
+GWppa = True            # Plasmon Pole Approximation
+GWq0correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
+GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
 
 # OPTICAL
 num_of_bands = 16		#
@@ -167,6 +180,7 @@ else:
 # Step 1 - GROUND STATE
 # -------------------------------------------------------------
 if Basis == 'PW':
+    # PW Ground State Calculations
     parprint("Starting PW ground state calculation...")
     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
     bulk_configuration.calc = calc
@@ -181,6 +195,30 @@ if Basis == 'PW':
         calc.write(struct+'-1-Result-Ground.gpw', mode="all")
     else:
         calc.write(struct+'-1-Result-Ground.gpw')
+elif Basis == 'PW-G0W0':
+    # PW Ground State Calculations with G0W0 Approximation
+    parprint("Starting PW only ground state calculation...")
+    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': True}, txt=struct+'-1-Log-Ground.txt')
+    bulk_configuration.calc = calc
+
+    uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+    relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+    relax.run(fmax=fmaxval)  # Consider tighter fmax!
+
+    bulk_configuration.get_potential_energy()
+    calc.diagonalize_full_hamiltonian()
+    calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+
+    # We start by setting up a G0W0 calculator object
+    gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB), 
+              method='GW0',truncation=GWtruncation, nblocksmax=GWnblock,
+              maxiter=5, q0_correction=GWq0correction,
+              mixing=0.5,savepckl=True,
+              ecut=GWcut_off_energy, ppa=GWppa)
+    parprint("Starting PW ground state calculation with G0W0 approximation...")
+    gw.calculate()
+
+
 elif Basis == 'LCAO':
     parprint("Starting LCAO ground state calculation...")
     calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
@@ -228,48 +266,68 @@ if DOS_calc == True:
 # -------------------------------------------------------------
 if Band_calc == True:
     parprint("Starting band structure calculation...")
-    calc = GPAW(struct+'-1-Result-Ground.gpw',
-            txt=struct+'-3-Log-Band.txt',
-            fixdensity=True,
-            symmetry='off',
-            kpts={'path': band_path, 'npoints': band_npoints},
-            convergence={'bands': 8})
+    if Basis == 'PW-G0W0':      
+        GW = GWBands(calc=struct+'-1-Result-Ground.gpw',
+             gw_file=struct+'-1-_results.pckl',kpoints=GWkpoints)
 
-    calc.get_potential_energy()
-    bs = calc.band_structure()
-    ef = calc.get_fermi_level()
-    num_of_bands = calc.get_number_of_bands()
-    parprint('Num of bands:'+str(num_of_bands))
+        # Gettting results without spin-orbit
+        results = GW.get_gw_bands(SO=False, interpolate=True, vac=True)
 
-    #bs.write(struct+'-3-Result-Band.json')
-    calc.write(struct+'-3-Result-Band.gpw')
+        # Extracting data
+        X = results['X']
+        ef = results['ef']
+        xdata = results['x_k']
+        banddata = results['e_kn']
 
-    if Spin_calc == True:
-        eps_skn = np.array([[calc.get_eigenvalues(k,s)
-                            for k in range(band_npoints)]
-                            for s in range(2)]) - ef
-        parprint(eps_skn.shape)
-        with paropen(struct+'-3-Result-Band-Down.dat', 'w') as f1:
-            for n1 in range(num_of_bands):
-                for k1 in range(band_npoints):
-                    print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
-                print (end="\n", file=f1)
+        np.savetxt(struct+'-3-Result-Band.dat', np.c_[xdata,banddata])
 
-        with paropen(struct+'-3-Result-Band-Up.dat', 'w') as f2:
-            for n2 in range(num_of_bands):
-                for k2 in range(band_npoints):
-                    print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
-                print (end="\n", file=f2)
+        with open(struct+'-3-Result-Band.dat', 'a') as f:
+            print ('Symmetry points: ', X, end="\n", file=f)
+            print ('Fermi Level: ', ef, end="\n", file=f)
 
     else:
-        eps_skn = np.array([[calc.get_eigenvalues(k,s)
-                            for k in range(band_npoints)]
-                            for s in range(1)]) - ef
-        with paropen(struct+'-3-Result-Band.dat', 'w') as f:
-            for n in range(num_of_bands):
-                for k in range(band_npoints):
-                    print(k, eps_skn[0, k, n], end="\n", file=f)
-                print (end="\n", file=f)
+        calc = GPAW(struct+'-1-Result-Ground.gpw',
+                txt=struct+'-3-Log-Band.txt',
+                fixdensity=True,
+                symmetry='off',
+                kpts={'path': band_path, 'npoints': band_npoints},
+                convergence={'bands': 8})
+
+        calc.get_potential_energy()
+        bs = calc.band_structure()
+        ef = calc.get_fermi_level()
+        num_of_bands = calc.get_number_of_bands()
+        parprint('Num of bands:'+str(num_of_bands))
+
+        #bs.write(struct+'-3-Result-Band.json')
+        calc.write(struct+'-3-Result-Band.gpw')
+
+        if Spin_calc == True:
+            eps_skn = np.array([[calc.get_eigenvalues(k,s)
+                                for k in range(band_npoints)]
+                                for s in range(2)]) - ef
+            parprint(eps_skn.shape)
+            with paropen(struct+'-3-Result-Band-Down.dat', 'w') as f1:
+                for n1 in range(num_of_bands):
+                    for k1 in range(band_npoints):
+                        print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
+                    print (end="\n", file=f1)
+
+            with paropen(struct+'-3-Result-Band-Up.dat', 'w') as f2:
+                for n2 in range(num_of_bands):
+                    for k2 in range(band_npoints):
+                        print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
+                    print (end="\n", file=f2)
+
+        else:
+            eps_skn = np.array([[calc.get_eigenvalues(k,s)
+                                for k in range(band_npoints)]
+                                for s in range(1)]) - ef
+            with paropen(struct+'-3-Result-Band.dat', 'w') as f:
+                for n in range(num_of_bands):
+                    for k in range(band_npoints):
+                        print(k, eps_skn[0, k, n], end="\n", file=f)
+                    print (end="\n", file=f)
 
 
 # -------------------------------------------------------------
@@ -346,4 +404,13 @@ if draw_graphs == True:
             #plt.show()
         if Band_calc == True:
             # Band Structure
-            bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=energy_max)
+            if Basis == 'PW-G0W0':
+                f = plt.figure()
+                plt.plot(xdata, banddata, '-b', linewidth=1)
+                plt.xticks(X, GWkpoints, fontsize=8)
+                plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
+                plt.tight_layout()
+                plt.savefig(struct+'-3-Graph-Band.png')
+                plt.show()
+            else:
+                bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=energy_max)

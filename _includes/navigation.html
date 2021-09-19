@@ -1,0 +1,17 @@
+<nav>
+    <ul>
+    {% assign navigation_pages = site.html_pages | sort: 'navigation_weight' %}
+    {% for p in navigation_pages %}
+    {% if p.navigation_weight %}
+        <li>
+            {% capture pageurl %}{{ page.url | absolute_url }}{% endcapture %}
+            {% capture purl %}{{ p.url | absolute_url }}{% endcapture %}
+        <a href="{{ purl }}" {% if purl == pageurl %}class="active"{% endif %}>
+            {{ p.title | upcase }}
+        </a>
+    </li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+
+</nav>

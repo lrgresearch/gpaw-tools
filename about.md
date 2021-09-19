@@ -1,9 +1,11 @@
 ---
 layout: default
+navigation_weight: 2
+title: About
 ---
 
-## Welcome to another page
+## About *gpaw-tools*
 
-_yay_
+Will be here soon.
 
 [back](./)

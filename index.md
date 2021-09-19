@@ -1,3 +1,9 @@
+---
+layout: default
+navigation_weight: 1
+title: Home
+---
+
 ## Welcome to *gpaw-tools*
 
 | Note: |

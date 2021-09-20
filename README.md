@@ -80,6 +80,7 @@ For using all threads provided by Intel Hyperthreading technology
 | Method | Strain_minimization | Several XCs | Spin polarized | DOS | Band | Electron Density | Optical |
 | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
 |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
+| PW-G0W0| Yes                 | Yes         | No             | No  | Yes  | No               | No      |
 |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
 
 ### gg.py
@@ -121,7 +122,9 @@ Users must provide ASE Atoms object and simply insert the object inside these sc
 GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcomed.
 
 ## Release notes
-
+### Development version
+* Adding G0W0 approximation to `gpawsolve.py` (only bands).
+* Some small corrections
 ### Version 21.9.0
 #### September 2021
 * Corrected `quickoptimize.py` behaviour

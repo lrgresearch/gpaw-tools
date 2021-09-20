@@ -1,5 +1,5 @@
 '''
-gpawsolve.py: High-level Calculation Script for GPAW
+gpawsolve.py: High-level Interaction Script for GPAW
 More information: $ python gpawsolve.p -h
  '''
 import getopt, sys, os
@@ -72,7 +72,7 @@ energy_max = 15 		# eV. It is the maximum energy value for band structure figure
 XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
-#Choose for PW-EXX
+#Choose one for PW-EXX (Ground state calculations will be done with PBE):
 #XC_calc = 'PBE0'
 #XC_calc = 'HSE06'
 
@@ -255,8 +255,11 @@ elif Basis == 'LCAO':
 
     bulk_configuration.get_potential_energy()
     calc.write(struct+'-1-Result-Ground.gpw', mode='all')
-else:
+elif Basis == 'FD':
     parprint("FD mode is not implemented in gpaw-tools yet...")
+    quit()
+else:
+    parprint("Please enter correct basis information.")
     quit()
 
 

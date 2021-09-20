@@ -81,7 +81,10 @@ For using all threads provided by Intel Hyperthreading technology
 | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
 |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
 | PW-G0W0| Yes                 | Yes         | No             | No  | Yes  | No               | No      |
+| PW-EXX*| Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
 |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
+
+*: Just some ground state energy calculations for PBE0 and HSE06.
 
 ### gg.py
 Basic DFT calculations can be done graphically with the script `gg.py`. This script is behaving as a GUI to run `gpawsolve.py` script. To execute the GUI, type simply:

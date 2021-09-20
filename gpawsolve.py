@@ -2,7 +2,6 @@
 gpawsolve.py: High-level Calculation Script for GPAW
 More information: $ python gpawsolve.p -h
  '''
-import pickle
 import getopt, sys, os
 from ase import *
 from ase.parallel import paropen, world, parprint
@@ -235,7 +234,7 @@ elif Basis == 'PW-G0W0':
     bulk_configuration.get_potential_energy()
     calc.diagonalize_full_hamiltonian()
     calc.write(struct+'-1-Result-Ground.gpw', mode="all")
-    
+
     # We start by setting up a G0W0 calculator object
     gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB), 
               method='GW0',truncation=GWtruncation, nblocksmax=GWnblock,

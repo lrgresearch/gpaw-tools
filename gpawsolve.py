@@ -16,6 +16,7 @@ from pathlib import Path
 from gpaw.response.df import DielectricFunction
 from gpaw.response.g0w0 import G0W0
 from gpaw.response.gw_bands import GWBands
+from gpaw.xc.exx import EXX
 import numpy as np
 
 HelpText = """
@@ -41,7 +42,9 @@ HelpText = """
  | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
  |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
  | PW-G0W0| Yes                 | Yes         | No             | No  | Yes  | No               | No      |
+ | PW-EXX*| Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
  |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
+ *: Just some ground state energy calculations for PBE0 and HSE06.
 """
 # IF YOU WANT TO USE CONFIG FILE, PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
@@ -69,6 +72,10 @@ energy_max = 15 		# eV. It is the maximum energy value for band structure figure
 XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
+#Choose for PW-EXX
+#XC_calc = 'PBE0'
+#XC_calc = 'HSE06'
+
 Spin_calc = False        # Spin polarized calculation?
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
@@ -184,17 +191,36 @@ if Basis == 'PW':
     parprint("Starting PW ground state calculation...")
     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
     bulk_configuration.calc = calc
-
+    
     uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
     relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
     relax.run(fmax=fmaxval)  # Consider tighter fmax!
-
-    bulk_configuration.get_potential_energy()
+    
     if Density_calc == True:
         #This line makes huge GPW files. Therefore it is better to use this if else
         calc.write(struct+'-1-Result-Ground.gpw', mode="all")
     else:
         calc.write(struct+'-1-Result-Ground.gpw')
+            
+elif Basis == 'PW-EXX':
+    # PW Ground State Calculations
+    parprint("Starting PW ground state calculation with PBE...")
+    calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+    bulk_configuration.calc = calc
+
+    uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+    relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+    relax.run(fmax=fmaxval)  # Consider tighter fmax!
+
+    if XC_calc in ['HSE06', 'PBE0']:
+        parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
+        calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-EXX.txt')
+        bulk_configuration.calc_exx = calc_exx
+        with paropen(struct+'-1-Result-Ground-EXX.txt', "w") as fd:
+            print('Eigenvalue contributions: ',calc_exx.get_eigenvalue_contributions() , file=fd)
+            print('EXX Energy: ',calc_exx.get_exx_energy , file=fd)
+            print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
+
 elif Basis == 'PW-G0W0':
     # PW Ground State Calculations with G0W0 Approximation
     parprint("Starting PW only ground state calculation...")

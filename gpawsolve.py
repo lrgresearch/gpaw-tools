@@ -48,7 +48,7 @@ HelpText = """
 """
 # IF YOU WANT TO USE CONFIG FILE, PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
-Basis = 'PW'            # Use PW, PW-G0W0 LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW'            # Use PW, PW-GW LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = False         # DOS calculation
 Band_calc = True        # Band structure calculation
@@ -80,6 +80,7 @@ Spin_calc = False        # Spin polarized calculation?
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 #GW Parameters
+GWtype = 'GW0'          # GW0 or G0W0
 GWkpoints = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
 GWtruncation = '2D'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
 GWcut_off_energy = 50   # Cut-off energy
@@ -186,7 +187,7 @@ else:
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE
 # -------------------------------------------------------------
-if Basis == 'PW':
+if Mode == 'PW':
     # PW Ground State Calculations
     parprint("Starting PW ground state calculation...")
     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
@@ -202,7 +203,7 @@ if Basis == 'PW':
     else:
         calc.write(struct+'-1-Result-Ground.gpw')
             
-elif Basis == 'PW-EXX':
+elif Mode == 'PW-EXX':
     # PW Ground State Calculations
     parprint("Starting PW ground state calculation with PBE...")
     calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
@@ -221,7 +222,7 @@ elif Basis == 'PW-EXX':
             print('EXX Energy: ',calc_exx.get_exx_energy , file=fd)
             print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
 
-elif Basis == 'PW-G0W0':
+elif Mode == 'PW-GW':
     # PW Ground State Calculations with G0W0 Approximation
     parprint("Starting PW only ground state calculation...")
     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': True}, txt=struct+'-1-Log-Ground.txt')
@@ -237,7 +238,7 @@ elif Basis == 'PW-G0W0':
 
     # We start by setting up a G0W0 calculator object
     gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB), 
-              method='GW0',truncation=GWtruncation, nblocksmax=GWnblock,
+              method=GWtype,truncation=GWtruncation, nblocksmax=GWnblock,
               maxiter=5, q0_correction=GWq0correction,
               mixing=0.5,savepckl=True,
               ecut=GWcut_off_energy, ppa=GWppa)
@@ -245,7 +246,7 @@ elif Basis == 'PW-G0W0':
     gw.calculate()
 
 
-elif Basis == 'LCAO':
+elif Mode == 'LCAO':
     parprint("Starting LCAO ground state calculation...")
     calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
     bulk_configuration.calc = calc
@@ -255,11 +256,11 @@ elif Basis == 'LCAO':
 
     bulk_configuration.get_potential_energy()
     calc.write(struct+'-1-Result-Ground.gpw', mode='all')
-elif Basis == 'FD':
+elif Mode == 'FD':
     parprint("FD mode is not implemented in gpaw-tools yet...")
     quit()
 else:
-    parprint("Please enter correct basis information.")
+    parprint("Please enter correct mode information.")
     quit()
 
 
@@ -295,7 +296,7 @@ if DOS_calc == True:
 # -------------------------------------------------------------
 if Band_calc == True:
     parprint("Starting band structure calculation...")
-    if Basis == 'PW-G0W0':      
+    if Mode == 'PW-GW':      
         GW = GWBands(calc=struct+'-1-Result-Ground.gpw',
              gw_file=struct+'-1-_results.pckl',kpoints=GWkpoints)
 
@@ -377,7 +378,7 @@ if Density_calc == True:
 # Step 5 - OPTICAL CALCULATION
 # -------------------------------------------------------------
 if Optical_calc == True:
-    if Basis == 'PW':
+    if Mode == 'PW':
         parprint("Starting optical calculation...")
         calc = GPAW(struct+'-1-Result-Ground.gpw',
                 parallel={'domain': 1},
@@ -405,7 +406,7 @@ if Optical_calc == True:
                                     filename=struct+'-5-Result-Optical_abs_ydirection.csv')
         df.get_dielectric_function( direction='z',
                                     filename=struct+'-5-Result-Optical_abs_zdirection.csv')
-    elif Basis == 'LCAO':
+    elif Mode == 'LCAO':
         parprint('Not implemented in LCAO mode yet.')
     else:
         parprint('Not implemented in FD mode yet.')
@@ -433,7 +434,7 @@ if draw_graphs == True:
             #plt.show()
         if Band_calc == True:
             # Band Structure
-            if Basis == 'PW-G0W0':
+            if Mode == 'PW-GW':
                 f = plt.figure()
                 plt.plot(xdata, banddata, '-b', linewidth=1)
                 plt.xticks(X, GWkpoints, fontsize=8)

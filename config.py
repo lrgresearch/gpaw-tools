@@ -1,4 +1,4 @@
-Basis = 'PW'
+Mode = 'PW'
 DOS_calc = True
 Band_calc = True
 Density_calc = False

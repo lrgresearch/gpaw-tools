@@ -41,7 +41,7 @@ from gpaw.response.gw_bands import GWBands
 from gpaw.xc.exx import EXX
 import numpy as np
 
- 
+
 # IF YOU WANT TO USE CONFIG FILE, YOU CAN CREATE FROM THIS FILE. PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
@@ -149,11 +149,9 @@ args = parser.parse_args()
 outdir = False
 inFile = None
 
-print (args.configfile,args.outdir,args.inputfile)
 try:
     if args.configfile is not None:
         sys.path.append(args.configfile)
-        
         # Works like from FILE import *
         conf = __import__(Path(args.configfile).stem, globals(), locals(), ['*'])
         for k in dir(conf):
@@ -164,7 +162,7 @@ try:
 
     if args.outdir == True:
         outdir = True
-        
+
 except getopt.error as err:
     # output error, and return with an error code
     parprint (str(err))

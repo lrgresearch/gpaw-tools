@@ -48,7 +48,7 @@ HelpText = """
 """
 # IF YOU WANT TO USE CONFIG FILE, PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
-Mode = 'PW'            # Use PW, PW-GW LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW'            # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = False         # DOS calculation
 Band_calc = True        # Band structure calculation
@@ -190,6 +190,9 @@ else:
 if Mode == 'PW':
     # PW Ground State Calculations
     parprint("Starting PW ground state calculation...")
+    if XC_calc in ['HSE06', 'PBE0']:
+        parprint('Error: '+XC_calc+' can be used only in PW-EXX mode...')
+        quit()
     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
     bulk_configuration.calc = calc
     
@@ -206,7 +209,7 @@ if Mode == 'PW':
 elif Mode == 'PW-EXX':
     # PW Ground State Calculations
     parprint("Starting PW ground state calculation with PBE...")
-    calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+    calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
     bulk_configuration.calc = calc
 
     uf = UnitCellFilter(bulk_configuration, mask=whichstrain)

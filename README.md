@@ -41,13 +41,13 @@ gpaw-tools/
 This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.
 
 #### As a command:
-Command line usage: `gpawsolve.py -ochi <inputfile.cif>`
+Command line usage: `gpawsolve.py -o -c <config.py> -h -i <inputfile.cif>`
 
 Argument list:
 ```
 -i, --Input  : Use input CIF file
 -c, --Config : Use configuration file in the main directory for parameters (config.py) If you do not
-               use this argument, parameters will be taken from the Lines 41-86 of gpawsolve.py
+               use this argument, parameters will be taken from the related lines of gpawsolve.py
 -o, --Outdir : Save everything to a output directory with naming /inputfile. 
                If there is no input file given and Atoms object is used in gpawsolve.py file 
                then the directory name will be /gpawsolve. If you change gpawsolve.py name to 
@@ -56,7 +56,7 @@ Argument list:
  ```
  
  #### As a stand alone script
- * Change the parameters from Line 41 to 86 for each simulation OR change `config.py` once and use `-c` argument.
+ * Change the parameters from related lines for each simulation OR change `config.py` once and use `-c` argument.
  * If you want to use CIF files for structure, use `-i` argument like `gpawsolve.py -i structurefile.cif`.
  * If you want to use ASE atoms method for structure, just copy/paste your `Atoms` info into the part mentioned with "Bulk Structure".
  * If you have CIF file but want to use Atoms method you can use `CIF-to-ASE/ciftoase.py` to convert your CIF files to ASE Atoms.
@@ -125,36 +125,7 @@ Users must provide ASE Atoms object and simply insert the object inside these sc
 GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcomed.
 
 ## Release notes
-### Development version
-* Adding G0W0 approximation to `gpawsolve.py` (only bands).
-* Some small corrections
-### Version 21.9.0
-#### September 2021
-* Corrected `quickoptimize.py` behaviour
-* Many code quality and folder structure improvements.
-* Comment additions to code.
-* Better README.md
-
-#### August 2021
-* `gg.py` which is a GUI for gpaw-tools is added to project. It can do all `gpawsolve.py`'s features in a graphical way!
-* `gpawsolve.py` can be run solely as a command now (This is needed for a GUI project).
-* All three scripts`PW-Electronic.py`, `LCAO-Electronic.py` and `PW-Optical-SingleCoreOnly.py` scripts becomes a single for-all-case script: `gpawsolve.py`.
-* `PW-Electronic-changename.py` script becomes `PW-Electronic.py`.
-* Spin-polarized results in `PW-Electronic-changename.py` script.
-* All-electron density calculations in `PW-Electronic-changename.py`.
-* CIF Export in `PW-Electronic-changename.py` script.
-* Better parallel computation.
-* Several XCs available for PW.
-* `LCAO-Electronic.py` script.
-* Strain minimization in PW only. 
-* BFGS to LBFGS, Small many changes have been done.
-
-#### July 2021 
-* `PW-Optical-SingleCoreOnly.py` script for optical calculations.
-* `PW-Electronic-changename.py` script for electronic calculations.
-
-#### March 2020 
-* First scripts for personal usage.
+Release notes are listed at [here](https://www.lrgresearch.org/gpaw-tools/releasenotes.html).
 
 ## Licensing
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).

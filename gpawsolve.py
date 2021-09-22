@@ -1,33 +1,8 @@
 '''
 gpawsolve.py: High-level Interaction Script for GPAW
 More information: $ python gpawsolve.p -h
- '''
-import getopt, sys, os
-from ase import *
-from ase.parallel import paropen, world, parprint
-from gpaw import GPAW, PW, FermiDirac
-from ase.optimize.lbfgs import LBFGS
-from ase.io import read, write
-import matplotlib.pyplot as plt
-from ase.dft.dos import DOS
-from ase.constraints import UnitCellFilter
-from ase.io.cif import write_cif
-from pathlib import Path
-from gpaw.response.df import DielectricFunction
-from gpaw.response.g0w0 import G0W0
-from gpaw.response.gw_bands import GWBands
-from gpaw.xc.exx import EXX
-import numpy as np
-
-HelpText = """
- Command line usage: python gpawsolve.py -ochi <inputfile.cif>
- Argument list:
-                   -i, --Input  : Use input CIF file
-                   -c, --Config : Use configuration file in the main directory for parameters (config.py)
-                   -o, --Outdir : Save everything to a output directory with naming /inputfile. If there is no input file given and Atoms object is used in
-                      gpawsolve.py file then the directory name will be /gpawsolve. If you change gpawsolve.py name to anyname.py
-                      then the directory name will be /anyname
-                   -h --Help    : Help
+'''
+Description = f''' 
  Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
  Usage: $ gpaw -P8 python gpawsolve.py
  For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
@@ -45,10 +20,31 @@ HelpText = """
  | PW-EXX*| Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
  |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
  *: Just some ground state energy calculations for PBE0 and HSE06.
-"""
-# IF YOU WANT TO USE CONFIG FILE, PLEASE COPY/PASTE FROM HERE:>>>>>>>
+'''
+
+import getopt, sys, os
+import textwrap
+from argparse import ArgumentParser, HelpFormatter
+from ase import *
+from ase.parallel import paropen, world, parprint
+from gpaw import GPAW, PW, FermiDirac
+from ase.optimize.lbfgs import LBFGS
+from ase.io import read, write
+import matplotlib.pyplot as plt
+from ase.dft.dos import DOS
+from ase.constraints import UnitCellFilter
+from ase.io.cif import write_cif
+from pathlib import Path
+from gpaw.response.df import DielectricFunction
+from gpaw.response.g0w0 import G0W0
+from gpaw.response.gw_bands import GWBands
+from gpaw.xc.exx import EXX
+import numpy as np
+
+ 
+# IF YOU WANT TO USE CONFIG FILE, YOU CAN CREATE FROM THIS FILE. PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
-Mode = 'PW'            # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = False         # DOS calculation
 Band_calc = True        # Band structure calculation
@@ -108,6 +104,7 @@ whichstrain=[True, True, False, False, False, False]
 
 WantCIFexport = True
 # <<<<<<< TO HERE TO FILE config.py IN SAME DIRECTORY AND USE -c FLAG WITH COMMAND
+
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
@@ -129,39 +126,45 @@ bulk_configuration = Atoms(
 # -------------------------------------------------------------
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
-# Remove 1st argument from the
-# list of command line arguments
-argumentList = sys.argv[1:]
 
-# Options
-options = "ohci:"
+# To print Description variable with argparse
+class RawFormatter(HelpFormatter):
+    def _fill_text(self, text, width, indent):
+        return "\n".join([textwrap.fill(line, width) for line in textwrap.indent(textwrap.dedent(text), indent).splitlines()])
 
-# Long options
-long_options = ["Outdir", "Help", "Config", " Input ="]
+# Arguments parsing
+parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
 
-outdir = None
+
+parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true', 
+                    help="""Save everything to a output directory with naming /inputfile. If there is no input file given and 
+                    Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
+                    If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
+parser.add_argument("-c", "--config", dest = "configfile", 
+                    help="Use configuration file in the main directory for parameters (config.py)")
+parser.add_argument("-i", "--input",dest ="inputfile", help="Use input CIF file")
+
+args = parser.parse_args()
+
+outdir = False
 inFile = None
 
+print (args.configfile,args.outdir,args.inputfile)
 try:
-    # Parsing argument
-    arguments, values = getopt.getopt(argumentList, options, long_options)
+    if args.configfile is not None:
+        sys.path.append(args.configfile)
+        
+        # Works like from FILE import *
+        conf = __import__(Path(args.configfile).stem, globals(), locals(), ['*'])
+        for k in dir(conf):
+            locals()[k] = getattr(conf, k)
 
-    # checking each argument
-    for currentArgument, currentValue in arguments:
+    if args.inputfile :
+        inFile = args.inputfile
 
-        if currentArgument in ("-o", "--Outdir"):
-            outdir = True
-
-        elif currentArgument in ("-h", "--Help"):
-            parprint (HelpText)
-
-        elif currentArgument in ("-c", "--Config"):
-            sys.path.append(os.path.dirname(__file__))
-            from config import *
-
-        elif currentArgument in ("-i", "--Input"):
-            inFile = currentValue
-
+    if args.outdir == True:
+        outdir = True
+        
 except getopt.error as err:
     # output error, and return with an error code
     parprint (str(err))
@@ -176,10 +179,11 @@ else:
     parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
 
 # Control if outdir is set or not
-if outdir is None:
+if outdir is False:
     #No change is necessary
     parprint("Output directory is the main directory")
 else:
+    print(struct)
     if not os.path.isdir(struct):
         os.makedirs(struct, exist_ok=True)
     struct = os.path.join(struct,struct)

@@ -34,7 +34,7 @@ Argument list:
 ```
 -i, --Input  : Use input CIF file
 -c, --Config : Use configuration file in the main directory for parameters (config.py) If you do not
-               use this argument, parameters will be taken from the Lines 41-86 of gpawsolve.py
+               use this argument, parameters will be taken from the related lines of gpawsolve.py
 -o, --Outdir : Save everything to a output directory with naming /inputfile. 
                If there is no input file given and Atoms object is used in gpawsolve.py file 
                then the directory name will be /gpawsolve. If you change gpawsolve.py name to 

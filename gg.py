@@ -9,6 +9,7 @@ import tkinter.ttk as ttk
 from tkinter import filedialog, BooleanVar, StringVar
 import pathlib
 import subprocess
+from ase.visualize import view
 
 from ase.io import read, write
 
@@ -17,27 +18,32 @@ PROJECT_UI = os.path.join(PROJECT_PATH, "gg.ui")
 
 class gg:
     ''' Main class'''
+    Struct = ""
+    StructLoaded = False
+
     def __init__(self, master=None):
         global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar
         global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, WantCIFexportvar
+        global Struct, StructLoaded
 
         def onOpen():
             ''' This is the open button's behaviour on the first tab.'''
             global basename
+            global Struct, StructLoaded
             textfile = filedialog.askopenfilename(initialdir = PROJECT_PATH, title = "Open file",
                                                   filetypes = (("CIF files","*.cif"),
                                                   ("All files","*.*")))
             textfilenamepath = textfile
             basename = StringVar()
-            print(basename)
             basename = pathlib.Path(textfilenamepath).stem
             #textfile.close()
             self.text1.insert(tk.END, "File opened: "+basename+" \n")
             # Opening a working directory
             if not os.path.isdir(basename):
                 os.makedirs(basename, exist_ok=True)
-            print(basename)
             asestruct = read(textfilenamepath, index='-1')
+            Struct = asestruct
+            StructLoaded = True
             write(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_InitialStructure.png', asestruct)
             self.structureimage = tk.PhotoImage(file=os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_InitialStructure.png')
             self.button2.configure(image=self.structureimage, style='Toolbutton', text='button2')
@@ -164,7 +170,6 @@ class gg:
 
             self.MPIcoresttk.delete('0', 'end')
             self.MPIcoresttk.insert('0', config.MPIcores)
-
             self.text1.insert(tk.END, "Configuration loaded, please continue with Input parameters tab \n")
 
         def onCalculate():
@@ -235,6 +240,13 @@ class gg:
                 write(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_FinalStructure.png', asestruct)
                 self.text1.insert(tk.END, "Initial and Final Structure PNG files are saved to "+basename+" folder \n")
 
+        def onASEload():
+            '''When the user click on the structure image'''
+            global Struct, StructLoaded
+            if StructLoaded == True:
+                # Open ASE GUI
+                view(Struct)
+        
         # build gui
         self.toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
         self.frame2 = ttk.Frame(self.toplevel1)
@@ -248,6 +260,7 @@ class gg:
         self.structureimage = tk.PhotoImage(file='gui_files/gg_full.png')
         self.button2.configure(image=self.structureimage, style='Toolbutton', text='button2')
         self.button2.pack(side='top')
+        self.button2.configure(command=onASEload)
         self.frame1.configure(height='200', width='200')
         self.frame1.pack(side='top')
         self.notebookUpper.add(self.frame1, text='Load Structure')

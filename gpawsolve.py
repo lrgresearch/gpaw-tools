@@ -40,7 +40,7 @@ from gpaw.response.g0w0 import G0W0
 from gpaw.response.gw_bands import GWBands
 from gpaw.xc.exx import EXX
 import numpy as np
-
+from numpy import genfromtxt
 
 # IF YOU WANT TO USE CONFIG FILE, YOU CAN CREATE FROM THIS FILE. PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
@@ -413,6 +413,125 @@ if Optical_calc == True:
                                     filename=struct+'-5-Result-Optical_dielec_ydirection.csv')
         df.get_dielectric_function( direction='z',
                                     filename=struct+'-5-Result-Optical_dielec_zdirection.csv')
+        # Loading dielectric function spectrum to numpy
+        dielec_x = genfromtxt(struct+'-5-Result-Optical_dielec_xdirection.csv', delimiter=',')
+        dielec_y = genfromtxt(struct+'-5-Result-Optical_dielec_ydirection.csv', delimiter=',')
+        dielec_z = genfromtxt(struct+'-5-Result-Optical_dielec_zdirection.csv', delimiter=',')
+
+        # dielec_x.shape[0] will give us the length of data.
+        # c and h
+        c_opt = 29979245800
+        h_opt = 6.58E-16
+        #c_opt = 1
+        #h_opt = 1
+        # ---- NLFC ----
+        # Initialize arrays for NLFC
+        opt_n_nlfc_x = np.array ([1e-6,]*dielec_x.shape[0])
+        opt_k_nlfc_x = np.array ([1e-6,]*dielec_x.shape[0])
+        opt_abs_nlfc_x = np.array([1e-6,]*dielec_x.shape[0])
+        opt_ref_nlfc_x = np.array([1e-6,]*dielec_x.shape[0])
+        opt_n_nlfc_y = np.array ([1e-6,]*dielec_y.shape[0])
+        opt_k_nlfc_y = np.array ([1e-6,]*dielec_y.shape[0])
+        opt_abs_nlfc_y = np.array([1e-6,]*dielec_y.shape[0])
+        opt_ref_nlfc_y = np.array([1e-6,]*dielec_y.shape[0])
+        opt_n_nlfc_z = np.array ([1e-6,]*dielec_z.shape[0])
+        opt_k_nlfc_z = np.array ([1e-6,]*dielec_z.shape[0])
+        opt_abs_nlfc_z = np.array([1e-6,]*dielec_z.shape[0])
+        opt_ref_nlfc_z = np.array([1e-6,]*dielec_z.shape[0])
+
+        # Calculation of other optical spectrum for NLFC
+        for n in range(dielec_x.shape[0]):
+            # NLFC-x
+            opt_n_nlfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))+dielec_x[n][1])/2.0)
+            opt_k_nlfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))-dielec_x[n][1])/2.0)
+            opt_abs_nlfc_x[n] = 2*dielec_x[n][0]*opt_k_nlfc_x[n]/(h_opt*c_opt)
+            opt_ref_nlfc_x[n] = (np.square(1-opt_n_nlfc_x[n])+np.square(opt_k_nlfc_x[n]))/(np.square(1+opt_n_nlfc_x[n])+np.square(opt_k_nlfc_x[n]))
+            # NLFC-y
+            opt_n_nlfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))+dielec_y[n][1])/2.0)
+            opt_k_nlfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))-dielec_y[n][1])/2.0)
+            opt_abs_nlfc_y[n] = 2*dielec_y[n][0]*opt_k_nlfc_y[n]/(h_opt*c_opt)
+            opt_ref_nlfc_y[n] = (np.square(1-opt_n_nlfc_y[n])+np.square(opt_k_nlfc_y[n]))/(np.square(1+opt_n_nlfc_y[n])+np.square(opt_k_nlfc_y[n]))
+            # NLFC-z
+            opt_n_nlfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))+dielec_z[n][1])/2.0)
+            opt_k_nlfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))-dielec_z[n][1])/2.0)
+            opt_abs_nlfc_z[n] = 2*dielec_z[n][0]*opt_k_nlfc_z[n]/(h_opt*c_opt)
+            opt_ref_nlfc_z[n] = (np.square(1-opt_n_nlfc_z[n])+np.square(opt_k_nlfc_z[n]))/(np.square(1+opt_n_nlfc_z[n])+np.square(opt_k_nlfc_z[n]))
+
+        # Saving NLFC other optical spectrum for x-direction
+        with paropen(struct+'-5-Result-Optical-NLFC-AllData_xdirection.dat', 'w') as f1:
+            print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+            for n in range(dielec_x.shape[0]):
+                print(dielec_x[n][0], dielec_x[n][1], dielec_x[n][2], opt_n_nlfc_x[n], opt_k_nlfc_x[n], opt_abs_nlfc_x[n], opt_ref_nlfc_x[n], end="\n", file=f1)
+            print (end="\n", file=f1)
+
+        # Saving NLFC other optical spectrum for y-direction
+        with paropen(struct+'-5-Result-Optical-NLFC-AllData_ydirection.dat', 'w') as f1:
+            print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+            for n in range(dielec_y.shape[0]):
+                print(dielec_y[n][0], dielec_y[n][1], dielec_y[n][2], opt_n_nlfc_y[n], opt_k_nlfc_y[n], opt_abs_nlfc_y[n], opt_ref_nlfc_y[n], end="\n", file=f1)
+            print (end="\n", file=f1)
+
+        # Saving NLFC other optical spectrum for z-direction
+        with paropen(struct+'-5-Result-Optical-NLFC-AllData_zdirection.dat', 'w') as f1:
+            print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+            for n in range(dielec_z.shape[0]):
+                print(dielec_z[n][0], dielec_z[n][1], dielec_z[n][2], opt_n_nlfc_z[n], opt_k_nlfc_z[n], opt_abs_nlfc_z[n], opt_ref_nlfc_z[n], end="\n", file=f1)
+            print (end="\n", file=f1)
+
+        # ---- LFC ----
+        # Initialize arrays for LFC
+        opt_n_lfc_x = np.array ([1e-6,]*dielec_x.shape[0])
+        opt_k_lfc_x = np.array ([1e-6,]*dielec_x.shape[0])
+        opt_abs_lfc_x = np.array([1e-6,]*dielec_x.shape[0])
+        opt_ref_lfc_x = np.array([1e-6,]*dielec_x.shape[0])
+        opt_n_lfc_y = np.array ([1e-6,]*dielec_y.shape[0])
+        opt_k_lfc_y = np.array ([1e-6,]*dielec_y.shape[0])
+        opt_abs_lfc_y = np.array([1e-6,]*dielec_y.shape[0])
+        opt_ref_lfc_y = np.array([1e-6,]*dielec_y.shape[0])
+        opt_n_lfc_z = np.array ([1e-6,]*dielec_z.shape[0])
+        opt_k_lfc_z = np.array ([1e-6,]*dielec_z.shape[0])
+        opt_abs_lfc_z = np.array([1e-6,]*dielec_z.shape[0])
+        opt_ref_lfc_z = np.array([1e-6,]*dielec_z.shape[0])
+
+        # Calculation of other optical spectrum for LFC
+        for n in range(dielec_x.shape[0]):
+            # LFC-x
+            opt_n_lfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][3])+np.square(dielec_x[n][4]))+dielec_x[n][3])/2.0)
+            opt_k_lfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][3])+np.square(dielec_x[n][4]))-dielec_x[n][3])/2.0)
+            opt_abs_lfc_x[n] = 2*dielec_x[n][0]*opt_k_nlfc_x[n]/(h_opt*c_opt)
+            opt_ref_lfc_x[n] = (np.square(1-opt_n_lfc_x[n])+np.square(opt_k_lfc_x[n]))/(np.square(1+opt_n_lfc_x[n])+np.square(opt_k_lfc_x[n]))
+            # LFC-y
+            opt_n_lfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][3])+np.square(dielec_y[n][4]))+dielec_y[n][3])/2.0)
+            opt_k_lfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][3])+np.square(dielec_y[n][4]))-dielec_y[n][3])/2.0)
+            opt_abs_lfc_y[n] = 2*dielec_y[n][0]*opt_k_lfc_y[n]/(h_opt*c_opt)
+            opt_ref_lfc_y[n] = (np.square(1-opt_n_lfc_y[n])+np.square(opt_k_lfc_y[n]))/(np.square(1+opt_n_lfc_y[n])+np.square(opt_k_lfc_y[n]))
+            # LFC-z
+            opt_n_lfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][3])+np.square(dielec_z[n][4]))+dielec_z[n][3])/2.0)
+            opt_k_lfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][3])+np.square(dielec_z[n][4]))-dielec_z[n][3])/2.0)
+            opt_abs_lfc_z[n] = 2*dielec_z[n][0]*opt_k_lfc_z[n]/(h_opt*c_opt)
+            opt_ref_lfc_z[n] = (np.square(1-opt_n_lfc_z[n])+np.square(opt_k_lfc_z[n]))/(np.square(1+opt_n_lfc_z[n])+np.square(opt_k_lfc_z[n]))
+
+        # Saving LFC other optical spectrum for x-direction
+        with paropen(struct+'-5-Result-Optical-LFC-AllData_xdirection.dat', 'w') as f1:
+            print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+            for n in range(dielec_x.shape[0]):
+                print(dielec_x[n][0], dielec_x[n][3], dielec_x[n][4], opt_n_lfc_x[n], opt_k_lfc_x[n], opt_abs_lfc_x[n], opt_ref_lfc_x[n], end="\n", file=f1)
+            print (end="\n", file=f1)
+
+        # Saving LFC other optical spectrum for y-direction
+        with paropen(struct+'-5-Result-Optical-LFC-AllData_ydirection.dat', 'w') as f1:
+            print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+            for n in range(dielec_y.shape[0]):
+                print(dielec_y[n][0], dielec_y[n][3], dielec_y[n][4], opt_n_lfc_y[n], opt_k_lfc_y[n], opt_abs_lfc_y[n], opt_ref_lfc_y[n], end="\n", file=f1)
+            print (end="\n", file=f1)
+
+        # Saving LFC other optical spectrum for z-direction
+        with paropen(struct+'-5-Result-Optical-LFC-AllData_zdirection.dat', 'w') as f1:
+            print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+            for n in range(dielec_z.shape[0]):
+                print(dielec_z[n][0], dielec_z[n][3], dielec_z[n][4], opt_n_lfc_z[n], opt_k_lfc_z[n], opt_abs_lfc_z[n], opt_ref_lfc_z[n], end="\n", file=f1)
+            print (end="\n", file=f1)
+
     elif Mode == 'LCAO':
         parprint('Not implemented in LCAO mode yet.')
     else:

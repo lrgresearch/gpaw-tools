@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 #### September 2021
+* `gg.py` is now openning ase gui when the user clicks the structure image.
 * New argument parsing scheme for better future usages.
 * Very basic PW-EXX mode with HSE06 and PBE06. (Only some ground-state calculations.)
 * Adding GW0 and G0W0-GW0 selector.

@@ -398,19 +398,21 @@ if Optical_calc == True:
         calc.diagonalize_full_hamiltonian(nbands=num_of_bands)  # diagonalize Hamiltonian
         calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
 
-        # Getting absorption spectrum
+        # Getting dielectric function spectrum
         parprint("Starting dielectric function calculation...")
         df = DielectricFunction(calc=struct+'-5-Result-Optical.gpw',
                                 eta=opteta,
                                 nblocks=world.size,
                                 domega0=optdomega0,
                                 ecut=cut_off_energy)
+        # Writing to files as: omega, nlfc.real, nlfc.imag, lfc.real, lfc.imag 
+        # Here lfc is local field correction 
         df.get_dielectric_function( direction='x', 
-                                    filename=struct+'-5-Result-Optical_abs_xdirection.csv')
+                                    filename=struct+'-5-Result-Optical_dielec_xdirection.csv')
         df.get_dielectric_function( direction='y',
-                                    filename=struct+'-5-Result-Optical_abs_ydirection.csv')
+                                    filename=struct+'-5-Result-Optical_dielec_ydirection.csv')
         df.get_dielectric_function( direction='z',
-                                    filename=struct+'-5-Result-Optical_abs_zdirection.csv')
+                                    filename=struct+'-5-Result-Optical_dielec_zdirection.csv')
     elif Mode == 'LCAO':
         parprint('Not implemented in LCAO mode yet.')
     else:

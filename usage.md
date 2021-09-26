@@ -54,13 +54,11 @@ Argument list:
  Change `<core_number>` with core numbers/threads to use. For getting a maximum performance from your PC you can use `total number of cores(or threads) - 1`. or `total RAM/2Gb` as a `<core_number>`
 
 Usage:
-`$ gpaw -P<core_number> python gpawsolve.py`
-
 For AMD CPUs or using Intel CPUs without hyperthreading:
-`$ mpirun -n <core_number> gpaw python gpawsolve.py`
+`$ mpirun -np <core_number> python gpawsolve.py <args>`
 
 For using all threads provided by Intel Hyperthreading technology
-`$ mpirun --use-hwthread-cpus -n <core_number> gpaw python gpawsolve.py`
+`$ mpirun --use-hwthread-cpus -np <core_number> python gpawsolve.py <args>`
 
 ### Calculation selector
 

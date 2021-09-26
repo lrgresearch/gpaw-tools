@@ -4,11 +4,10 @@ More information: $ python gpawsolve.p -h
 '''
 Description = f''' 
  Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
- Usage: $ gpaw -P8 python gpawsolve.py
- For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
-        $ mpirun -n 4 gpaw python gpawsolve.py
+ Usage: For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
+        $ mpirun -n 4 python gpawsolve.py <args>
  For using all threads provided by Intel Hyperthreading technology:
-        $ mpirun --use-hwthread-cpus -n 8 gpaw python gpawsolve.py 
+        $ mpirun --use-hwthread-cpus -n 8 python gpawsolve.py <args>
  -------------------------------------------------------------
  Calculation selector
  -------------------------------------------------------------
@@ -26,7 +25,7 @@ import getopt, sys, os
 import textwrap
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
-from ase.parallel import paropen, world, parprint
+from ase.parallel import paropen, world, parprint, broadcast
 from gpaw import GPAW, PW, FermiDirac
 from ase.optimize.lbfgs import LBFGS
 from ase.io import read, write
@@ -135,16 +134,23 @@ class RawFormatter(HelpFormatter):
 # Arguments parsing
 parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
 
-
 parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true', 
                     help="""Save everything to a output directory with naming /inputfile. If there is no input file given and 
                     Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
                     If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
-parser.add_argument("-c", "--config", dest = "configfile", 
-                    help="Use configuration file in the main directory for parameters (config.py)")
+parser.add_argument("-c", "--config", dest = "configfile", help="Use config file in the main directory for parameters")
 parser.add_argument("-i", "--input",dest ="inputfile", help="Use input CIF file")
 
-args = parser.parse_args()
+args = None
+
+try:
+    if world.rank == 0:
+        args = parser.parse_args()
+finally:
+    args = broadcast(args, root=0, comm=world)
+
+if args is None:
+    exit(0)
 
 outdir = False
 inFile = None
@@ -181,7 +187,6 @@ if outdir is False:
     #No change is necessary
     parprint("Output directory is the main directory")
 else:
-    print(struct)
     if not os.path.isdir(struct):
         os.makedirs(struct, exist_ok=True)
     struct = os.path.join(struct,struct)
@@ -197,17 +202,17 @@ if Mode == 'PW':
         quit()
     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
     bulk_configuration.calc = calc
-    
+
     uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
     relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
     relax.run(fmax=fmaxval)  # Consider tighter fmax!
-    
+
     if Density_calc == True:
         #This line makes huge GPW files. Therefore it is better to use this if else
         calc.write(struct+'-1-Result-Ground.gpw', mode="all")
     else:
         calc.write(struct+'-1-Result-Ground.gpw')
-            
+
 elif Mode == 'PW-EXX':
     # PW Ground State Calculations
     parprint("Starting PW ground state calculation with PBE...")
@@ -250,7 +255,6 @@ elif Mode == 'PW-GW':
     parprint("Starting PW ground state calculation with G0W0 approximation...")
     gw.calculate()
 
-
 elif Mode == 'LCAO':
     parprint("Starting LCAO ground state calculation...")
     calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
@@ -267,7 +271,6 @@ elif Mode == 'FD':
 else:
     parprint("Please enter correct mode information.")
     quit()
-
 
 if WantCIFexport == True:
     write_cif(struct+'-Final.cif', bulk_configuration)
@@ -364,7 +367,6 @@ if Band_calc == True:
                         print(k, eps_skn[0, k, n], end="\n", file=f)
                     print (end="\n", file=f)
 
-
 # -------------------------------------------------------------
 # Step 4 - ALL-ELECTRON DENSITY
 # -------------------------------------------------------------
@@ -377,7 +379,6 @@ if Density_calc == True:
 
     write(struct+'-4-Result-All-electron_n.cube', bulk_configuration, data=n)
     write(struct+'-4-Result-All-electron_np.cube', bulk_configuration, data=np)
-
 
 # -------------------------------------------------------------
 # Step 5 - OPTICAL CALCULATION

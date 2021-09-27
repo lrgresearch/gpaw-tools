@@ -162,6 +162,7 @@ if args is None:
 outdir = False
 inFile = None
 configpath = None
+Outdirname = ''
 
 try:
     if args.configfile is not None:
@@ -184,7 +185,10 @@ except getopt.error as err:
 
 # If there is a CIF input, use it. Otherwise use the bulk configuration provided above.
 if inFile is None:
-    struct = Path(__file__).stem # All files will get their names from this file
+    if Outdirname !='':
+        struct = Outdirname
+    else:
+        struct = 'results' # All files will get their names from this file
     parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_global_number_of_atoms()))
 else:
     struct = Path(inFile).stem
@@ -196,9 +200,14 @@ if outdir is False:
     #No change is necessary
     parprint("Output directory is the main directory")
 else:
-    if not os.path.isdir(struct):
-        os.makedirs(struct, exist_ok=True)
-    struct = os.path.join(struct,struct)
+    if Outdirname != '':
+        structpath = os.path.join(os.getcwd(),Outdirname)
+    else:
+        structpath = os.path.join(os.getcwd(),struct)
+
+    if not os.path.isdir(structpath):
+        os.makedirs(structpath, exist_ok=True)
+    struct = os.path.join(structpath,struct)
 
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE

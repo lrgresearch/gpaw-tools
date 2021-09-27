@@ -1,13 +1,16 @@
+#!/usr/bin/env python
+
 '''
 gpawsolve.py: High-level Interaction Script for GPAW
-More information: $ python gpawsolve.p -h
+More information: $ gpawsolve.py -h
 '''
+
 Description = f''' 
  Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
  Usage: For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
-        $ mpirun -n 4 python gpawsolve.py <args>
+        $ mpirun -np 4 gpawsolve.py <args>
  For using all threads provided by Intel Hyperthreading technology:
-        $ mpirun --use-hwthread-cpus -n 8 python gpawsolve.py <args>
+        $ mpirun --use-hwthread-cpus -np 8 gpawsolve.py <args>
  -------------------------------------------------------------
  Calculation selector
  -------------------------------------------------------------
@@ -40,6 +43,7 @@ from gpaw.response.gw_bands import GWBands
 from gpaw.xc.exx import EXX
 import numpy as np
 from numpy import genfromtxt
+
 
 # IF YOU WANT TO USE CONFIG FILE, YOU CAN CREATE FROM THIS FILE. PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
@@ -89,7 +93,9 @@ GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as m
 num_of_bands = 16		#
 optFDsmear = 0.05       # Fermi Dirac smearing for optical calculations
 opteta=0.05             # Eta for Optical calculations
-optdomega0=0.02         # Domega0 for Optical calculations
+optdomega0=0.05         # Domega0 for Optical calculations
+optomega2=5.0           # Frequency at which the non-lin freq grid has doubled the spacing
+optecut=100             # Cut-off energy for optical calculations
 optnblocks=4            # Split matrices in nblocks blocks and distribute them G-vectors
                         # or frequencies over processes
 
@@ -134,6 +140,7 @@ class RawFormatter(HelpFormatter):
 # Arguments parsing
 parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
 
+
 parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true', 
                     help="""Save everything to a output directory with naming /inputfile. If there is no input file given and 
                     Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
@@ -143,6 +150,7 @@ parser.add_argument("-i", "--input",dest ="inputfile", help="Use input CIF file"
 
 args = None
 
+print (world.size)
 try:
     if world.rank == 0:
         args = parser.parse_args()
@@ -154,17 +162,19 @@ if args is None:
 
 outdir = False
 inFile = None
+configpath = None
 
 try:
     if args.configfile is not None:
-        sys.path.append(args.configfile)
+        configpath = os.path.join(os.getcwd(),args.configfile)
+        sys.path.append(os.getcwd())
         # Works like from FILE import *
-        conf = __import__(Path(args.configfile).stem, globals(), locals(), ['*'])
+        conf = __import__(Path(configpath).stem, globals(), locals(), ['*'])
         for k in dir(conf):
             locals()[k] = getattr(conf, k)
 
     if args.inputfile :
-        inFile = args.inputfile
+        inFile = os.path.join(os.getcwd(),args.inputfile)
 
     if args.outdir == True:
         outdir = True
@@ -387,7 +397,6 @@ if Optical_calc == True:
     if Mode == 'PW':
         parprint("Starting optical calculation...")
         calc = GPAW(struct+'-1-Result-Ground.gpw',
-                parallel={'domain': 1},
                 txt=struct+'-5-Log-Optical.txt',
                 nbands=num_of_bands,
                 fixdensity=True,
@@ -401,13 +410,14 @@ if Optical_calc == True:
 
         # Getting dielectric function spectrum
         parprint("Starting dielectric function calculation...")
+        #from mpi4py import MPI
         df = DielectricFunction(calc=struct+'-5-Result-Optical.gpw',
-                                eta=opteta,
-                                nblocks=world.size,
+                                eta=opteta, nblocks=world.size,
+                                omega2=optomega2,
                                 domega0=optdomega0,
-                                ecut=cut_off_energy)
+                                ecut=optecut)
         # Writing to files as: omega, nlfc.real, nlfc.imag, lfc.real, lfc.imag 
-        # Here lfc is local field correction 
+        # Here lfc is local field correction
         df.get_dielectric_function( direction='x', 
                                     filename=struct+'-5-Result-Optical_dielec_xdirection.csv')
         df.get_dielectric_function( direction='y',
@@ -418,7 +428,6 @@ if Optical_calc == True:
         dielec_x = genfromtxt(struct+'-5-Result-Optical_dielec_xdirection.csv', delimiter=',')
         dielec_y = genfromtxt(struct+'-5-Result-Optical_dielec_ydirection.csv', delimiter=',')
         dielec_z = genfromtxt(struct+'-5-Result-Optical_dielec_zdirection.csv', delimiter=',')
-
         # dielec_x.shape[0] will give us the length of data.
         # c and h
         c_opt = 29979245800

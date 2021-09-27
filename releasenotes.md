@@ -8,12 +8,15 @@ title: Release Notes
 
 ### Development version
 #### September 2021
-* `gg.py` is now openning ase gui when the user clicks the structure image.
+* Add some optical parameters to config files and `gg.py`.
+* Major change: `gpawsolve.py` and `gg.py` are now working as command. Config files can be used like general input file, you can put ASE Atom object plus every parameter that `gpawsolve.py` accepts. If you want, you can provide a CIF file instead of using atom object. You can run `gpawsolve.py` and `gg.py` from any folder.
+* Optical: Refractive index, extinction index, absorbtion and reflectivity calculations.
+* `gg.py` is now opening ase gui when the user clicks the structure image.
 * New argument parsing scheme for better future usages.
 * Very basic PW-EXX mode with HSE06 and PBE06. (Only some ground-state calculations.)
 * Adding GW0 and G0W0-GW0 selector.
 * Adding G0W0 approximation to `gpawsolve.py` (only bands).
-* Some small corrections.
+* Many other small corrections.
 
 ### Version 21.9.0
 

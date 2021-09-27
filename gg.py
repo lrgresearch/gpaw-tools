@@ -1,16 +1,18 @@
+#!/usr/bin/env python
+
 '''
 gg.py: GUI for gpawsolve.py
-Usage: $ python gg.py
+Usage: $ gg.py
 '''
-import os, io
+import os, io, sys
 from shlex import split
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog, BooleanVar, StringVar
 import pathlib
 import subprocess
+import importlib
 from ase.visualize import view
-
 from ase.io import read, write
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -28,27 +30,41 @@ class gg:
 
         def onOpen():
             ''' This is the open button's behaviour on the first tab.'''
-            global basename
+            global basename, basepath, textfilenamepath
             global Struct, StructLoaded
-            textfile = filedialog.askopenfilename(initialdir = PROJECT_PATH, title = "Open file",
+            textfile = filedialog.askopenfilename(initialdir = os.getcwd(), title = "Open file",
                                                   filetypes = (("CIF files","*.cif"),
                                                   ("All files","*.*")))
             textfilenamepath = textfile
+            p = pathlib.PurePath(textfilenamepath)
             basename = StringVar()
             basename = pathlib.Path(textfilenamepath).stem
+            basepath = StringVar()
+            basepath = p.parents[0]
             #textfile.close()
             self.text1.insert(tk.END, "File opened: "+basename+" \n")
             # Opening a working directory
-            if not os.path.isdir(basename):
-                os.makedirs(basename, exist_ok=True)
+            if not os.path.isdir(os.path.join(basepath,basename)):
+                os.makedirs(os.path.join(basepath,basename), exist_ok=True)
             asestruct = read(textfilenamepath, index='-1')
             Struct = asestruct
             StructLoaded = True
-            write(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_InitialStructure.png', asestruct)
-            self.structureimage = tk.PhotoImage(file=os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_InitialStructure.png')
+            write(os.path.join(p.parents[0], basename)+'_InitialStructure.png', asestruct)
+            self.structureimage = tk.PhotoImage(file=os.path.join(os.path.join(p.parents[0], basename)+'_InitialStructure.png'))
             self.button2.configure(image=self.structureimage, style='Toolbutton', text='button2')
+
+            
+        def onConfigOpen():
+            ''' This is the Configuration file open button's behaviour on the first tab.'''
+            global configname
+            textfile = filedialog.askopenfilename(initialdir = os.getcwd(), title = "Open file",
+                                                  filetypes = (("PY files","*.py"),
+                                                  ("All files","*.*")))
+            configname = textfile
             # Loading config file
-            import config
+            sys.path.append(os.path.abspath(configname))
+            config = __import__(pathlib.Path(configname).stem)
+            
             # There must be some elegant way to do this.
             if config.Mode == 'PW':
                 self.Modettk.current(0)
@@ -175,7 +191,7 @@ class gg:
         def onCalculate():
             '''Calculate button's behaviour'''
             #Firstly, lets save all options to config file.
-            with open('config.py', 'w') as f1:
+            with open(configname, 'w') as f1:
                 if self.Modettk.get() == 'PW':
                     print("Mode = 'PW'", end="\n", file=f1)
                 elif self.Modettk.get() == 'LCAO':
@@ -222,7 +238,7 @@ class gg:
                 print("MPIcores = "+ str(self.MPIcoresttk.get()), end="\n", file=f1)
 
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
-            gpawcommand = 'gpaw -P '+str(self.MPIcoresttk.get())+' python gpawsolve.py -oci '+str(basename)+'.cif'
+            gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -c '+str(configname)+' -i '+str(textfilenamepath)
             proc = subprocess.Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
 
@@ -256,8 +272,14 @@ class gg:
         self.loadCIFfilettk.configure(state='normal', text='Load Input (CIF, XSF, XSD, XYZ, etc.) File')
         self.loadCIFfilettk.pack(pady='10', side='top')
         self.loadCIFfilettk.configure(command=onOpen)
+        
+        self.loadConfigfilettk = ttk.Button(self.frame1)
+        self.loadConfigfilettk.configure(state='normal', text='Load Configuration File')
+        self.loadConfigfilettk.pack(pady='10', side='top')
+        self.loadConfigfilettk.configure(command=onConfigOpen)
+
         self.button2 = ttk.Button(self.frame1)
-        self.structureimage = tk.PhotoImage(file='gui_files/gg_full.png')
+        self.structureimage = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gg_full.png'))
         self.button2.configure(image=self.structureimage, style='Toolbutton', text='button2')
         self.button2.pack(side='top')
         self.button2.configure(command=onASEload)
@@ -540,7 +562,7 @@ For more information, please refer to LICENSE file.'''
         self.text2.insert('0.0', _text_)
         self.text2.pack(side='left')
         self.button1 = ttk.Button(self.frame24)
-        self.gg_fullsmall_png = tk.PhotoImage(file='gui_files/gg_fullsmall.png')
+        self.gg_fullsmall_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gg_fullsmall.png'))
         self.button1.configure(image=self.gg_fullsmall_png, state='normal', text='button1')
         self.button1.pack(side='left')
         self.frame24.configure(height='200', width='900')
@@ -559,7 +581,7 @@ For more information, please refer to LICENSE file.'''
         self.notebookBottom.pack(fill='x', side='top')
         self.frame2.configure(height='600', width='900')
         self.frame2.pack(fill='both', side='top')
-        self.gg_png = tk.PhotoImage(file='gui_files/gg.png')
+        self.gg_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gg.png'))
         self.toplevel1.configure(height='600', width='900')
         self.toplevel1.iconphoto(True, self.gg_png)
         self.toplevel1.resizable(False, False)

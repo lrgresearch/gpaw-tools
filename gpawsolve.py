@@ -150,7 +150,6 @@ parser.add_argument("-i", "--input",dest ="inputfile", help="Use input CIF file"
 
 args = None
 
-print (world.size)
 try:
     if world.rank == 0:
         args = parser.parse_args()

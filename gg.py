@@ -68,10 +68,16 @@ class gg:
             # There must be some elegant way to do this.
             if config.Mode == 'PW':
                 self.Modettk.current(0)
-            elif config.Mode == 'LCAO':
+            elif config.Mode == 'PW-GW':
                 self.Modettk.current(1)
-            else:
+            elif config.Mode == 'PW-EXX':
                 self.Modettk.current(2)
+            elif config.Mode == 'LCAO':
+                self.Modettk.current(3)
+            elif config.Mode == 'FD':
+                self.Modettk.current(4)
+            else:
+                self.Modettk.current(0)
 
             if config.DOS_calc == True:
                 DOS_calcvar.set(True)
@@ -123,6 +129,10 @@ class gg:
                 self.XC_calcttk.current(2)
             elif config.XC_calc == 'RPBE':
                 self.XC_calcttk.current(3)
+            elif config.XC_calc == 'PBE0':
+                self.XC_calcttk.current(4)
+            elif config.XC_calc == 'HSE06':
+                self.XC_calcttk.current(5)
             else:
                 self.XC_calcttk.current(0)
 
@@ -148,6 +158,12 @@ class gg:
 
             self.optnblocksttk.delete('0', 'end')
             self.optnblocksttk.insert('0', config.optnblocks)
+            
+            self.optomega2ttk.delete('0', 'end')
+            self.optomega2ttk.insert('0', config.optomega2)
+            
+            self.optecutttk.delete('0', 'end')
+            self.optecutttk.insert('0', config.optecut)
 
             if config.whichstrain[0] == True:
                 EpsXvar.set(True)
@@ -194,10 +210,16 @@ class gg:
             with open(configname, 'w') as f1:
                 if self.Modettk.get() == 'PW':
                     print("Mode = 'PW'", end="\n", file=f1)
+                elif self.Modettk.get() == 'PW-GW':
+                    print("Mode = 'PW-GW'", end="\n", file=f1)
+                elif self.Modettk.get() == 'PW-EXX':
+                    print("Mode = 'PW-EXX'", end="\n", file=f1)
                 elif self.Modettk.get() == 'LCAO':
                     print("Mode = 'LCAO'", end="\n", file=f1)
-                else:
+                elif self.Modettk.get() == 'FD':
                     print("Mode = 'FD'", end="\n", file=f1)
+                else:
+                    print("Mode = 'PW'", end="\n", file=f1)
 
                 print("DOS_calc = "+ str(DOS_calcvar.get()), end="\n", file=f1)
                 print("Band_calc = "+ str(Band_calcvar.get()), end="\n", file=f1)
@@ -220,6 +242,10 @@ class gg:
                     print("XC_calc = 'revPBE'", end="\n", file=f1)
                 elif self.XC_calcttk.get() == 'RPBE':
                     print("XC_calc = 'RPBE'", end="\n", file=f1)
+                elif self.XC_calcttk.get() == 'PBE0':
+                    print("XC_calc = 'PBE0'", end="\n", file=f1)
+                elif self.XC_calcttk.get() == 'HSE06':
+                    print("XC_calc = 'HSE06'", end="\n", file=f1)
                 else:
                     print("XC_calc = 'LDA'", end="\n", file=f1)
 
@@ -230,6 +256,8 @@ class gg:
                 print("opteta = "+ str(self.optetattk.get()), end="\n", file=f1)
                 print("optdomega0 = "+ str(self.optdomega0ttk.get()), end="\n", file=f1)
                 print("optnblocks = "+ str(self.optnblocksttk.get()), end="\n", file=f1)
+                print("optomega2 = "+ str(self.optomega2ttk.get()), end="\n", file=f1)
+                print("optecut = "+ str(self.optecutttk.get()), end="\n", file=f1)
                 print("draw_graphs = True", end="\n", file=f1)
                 print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
                 print("WantCIFexport = "+ str(WantCIFexportvar.get()), end="\n", file=f1)
@@ -294,7 +322,7 @@ class gg:
         self.label1.configure(text='Calculator')
         self.label1.pack(side='left')
         self.Modettk = ttk.Combobox(self.frame6)
-        self.Modettk.configure(values=('PW', 'LCAO', 'FD'), state='readonly')
+        self.Modettk.configure(values=('PW', 'PW-GW', 'PW-EXX', 'LCAO', 'FD'), state='readonly')
         self.Modettk.pack(side='top')
         self.Modettk.current(0)
         self.frame6.configure(height='200', width='200')
@@ -392,10 +420,10 @@ class gg:
         self.frame12.pack(side='top')
         self.frame14 = ttk.Frame(self.labelframe2)
         self.label11 = ttk.Label(self.frame14)
-        self.label11.configure(text='Exchange Correlation')
+        self.label11.configure(text='Exchange Correlation (PBE0 and HSE06 are for PW-EXX)')
         self.label11.pack(side='left')
         self.XC_calcttk = ttk.Combobox(self.frame14)
-        self.XC_calcttk.configure(values=('LDA', 'PBE', 'revPBE', 'RPBE'), state='readonly')
+        self.XC_calcttk.configure(values=('LDA', 'PBE', 'revPBE', 'RPBE' , 'PBE0', 'HSE06'), state='readonly')
         self.XC_calcttk.pack(side='top')
         self.XC_calcttk.current(0)
         self.frame14.configure(height='200', width='200')
@@ -460,6 +488,7 @@ class gg:
         self.optdomega0ttk.pack(side='top')
         self.frame20.configure(height='200', width='200')
         self.frame20.pack(side='top')
+        #optnblocks
         self.frame21 = ttk.Frame(self.labelframe3)
         self.label18 = ttk.Label(self.frame21)
         self.label18.configure(text='n-blocks number')
@@ -470,6 +499,31 @@ class gg:
         self.optnblocksttk.pack(side='top')
         self.frame21.configure(height='200', width='200')
         self.frame21.pack(side='top')
+        #optomega2
+        self.frameoptomega2 = ttk.Frame(self.labelframe3)
+        self.labeloptomega2 = ttk.Label(self.frameoptomega2)
+        self.labeloptomega2.configure(text='omega2')
+        self.labeloptomega2.pack(side='left')
+        self.optomega2ttk = ttk.Entry(self.frameoptomega2)
+        self.optomega2ttk.delete('0', 'end')
+        self.optomega2ttk.insert('0', '0.05')
+        self.optomega2ttk.pack(side='top')
+        self.frameoptomega2.configure(height='200', width='200')
+        self.frameoptomega2.pack(side='top')
+        
+        #optecut
+        self.frameoptecut = ttk.Frame(self.labelframe3)
+        self.labeloptecut = ttk.Label(self.frameoptecut)
+        self.labeloptecut.configure(text='Cut-off en. for opt.')
+        self.labeloptecut.pack(side='left')
+        self.optecutttk = ttk.Entry(self.frameoptecut)
+        self.optecutttk.delete('0', 'end')
+        self.optecutttk.insert('0', '100')
+        self.optecutttk.pack(side='top')
+        self.frameoptecut.configure(height='200', width='200')
+        self.frameoptecut.pack(side='top')
+        # Conf of top frame for opt
+        
         self.labelframe3.configure(height='200', text='Optical Calculation Parameters', width='200')
         self.labelframe3.pack(side='left')
         self.frame5.configure(height='200', width='200')

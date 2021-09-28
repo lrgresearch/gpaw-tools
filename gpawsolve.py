@@ -209,194 +209,196 @@ else:
         os.makedirs(structpath, exist_ok=True)
     struct = os.path.join(structpath,struct)
 
-# -------------------------------------------------------------
-# Step 1 - GROUND STATE
-# -------------------------------------------------------------
-if Mode == 'PW':
-    # PW Ground State Calculations
-    parprint("Starting PW ground state calculation...")
-    if XC_calc in ['HSE06', 'PBE0']:
-        parprint('Error: '+XC_calc+' can be used only in PW-EXX mode...')
-        quit()
-    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
-    bulk_configuration.calc = calc
+if Optical_calc == False:
+    # -------------------------------------------------------------
+    # Step 1 - GROUND STATE
+    # -------------------------------------------------------------
 
-    uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-    relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-    relax.run(fmax=fmaxval)  # Consider tighter fmax!
+    if Mode == 'PW':
+        # PW Ground State Calculations
+        parprint("Starting PW ground state calculation...")
+        if XC_calc in ['HSE06', 'PBE0']:
+            parprint('Error: '+XC_calc+' can be used only in PW-EXX mode...')
+            quit()
+        calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+        bulk_configuration.calc = calc
 
-    if Density_calc == True:
-        #This line makes huge GPW files. Therefore it is better to use this if else
+        uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+        relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+        relax.run(fmax=fmaxval)  # Consider tighter fmax!
+
+        if Density_calc == True:
+            #This line makes huge GPW files. Therefore it is better to use this if else
+            calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+        else:
+            calc.write(struct+'-1-Result-Ground.gpw')
+
+    elif Mode == 'PW-EXX':
+        # PW Ground State Calculations
+        parprint("Starting PW ground state calculation with PBE...")
+        calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+        bulk_configuration.calc = calc
+
+        uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+        relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+        relax.run(fmax=fmaxval)  # Consider tighter fmax!
+
+        if XC_calc in ['HSE06', 'PBE0']:
+            parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
+            calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-EXX.txt')
+            bulk_configuration.calc_exx = calc_exx
+            with paropen(struct+'-1-Result-Ground-EXX.txt', "w") as fd:
+                print('Eigenvalue contributions: ',calc_exx.get_eigenvalue_contributions() , file=fd)
+                print('EXX Energy: ',calc_exx.get_exx_energy , file=fd)
+                print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
+
+    elif Mode == 'PW-GW':
+        # PW Ground State Calculations with G0W0 Approximation
+        parprint("Starting PW only ground state calculation...")
+        calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': True}, txt=struct+'-1-Log-Ground.txt')
+        bulk_configuration.calc = calc
+
+        uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+        relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+        relax.run(fmax=fmaxval)  # Consider tighter fmax!
+
+        bulk_configuration.get_potential_energy()
+        calc.diagonalize_full_hamiltonian()
         calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+
+        # We start by setting up a G0W0 calculator object
+        gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB), 
+                  method=GWtype,truncation=GWtruncation, nblocksmax=GWnblock,
+                  maxiter=5, q0_correction=GWq0correction,
+                  mixing=0.5,savepckl=True,
+                  ecut=GWcut_off_energy, ppa=GWppa)
+        parprint("Starting PW ground state calculation with G0W0 approximation...")
+        gw.calculate()
+
+    elif Mode == 'LCAO':
+        parprint("Starting LCAO ground state calculation...")
+        calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
+        bulk_configuration.calc = calc
+
+        relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+        relax.run(fmax=fmaxval)  # Consider much tighter fmax!
+
+        bulk_configuration.get_potential_energy()
+        calc.write(struct+'-1-Result-Ground.gpw', mode='all')
+    elif Mode == 'FD':
+        parprint("FD mode is not implemented in gpaw-tools yet...")
+        quit()
     else:
-        calc.write(struct+'-1-Result-Ground.gpw')
+        parprint("Please enter correct mode information.")
+        quit()
 
-elif Mode == 'PW-EXX':
-    # PW Ground State Calculations
-    parprint("Starting PW ground state calculation with PBE...")
-    calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
-    bulk_configuration.calc = calc
+    if WantCIFexport == True:
+        write_cif(struct+'-Final.cif', bulk_configuration)
 
-    uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-    relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-    relax.run(fmax=fmaxval)  # Consider tighter fmax!
-
-    if XC_calc in ['HSE06', 'PBE0']:
-        parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
-        calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-EXX.txt')
-        bulk_configuration.calc_exx = calc_exx
-        with paropen(struct+'-1-Result-Ground-EXX.txt', "w") as fd:
-            print('Eigenvalue contributions: ',calc_exx.get_eigenvalue_contributions() , file=fd)
-            print('EXX Energy: ',calc_exx.get_exx_energy , file=fd)
-            print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
-
-elif Mode == 'PW-GW':
-    # PW Ground State Calculations with G0W0 Approximation
-    parprint("Starting PW only ground state calculation...")
-    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': True}, txt=struct+'-1-Log-Ground.txt')
-    bulk_configuration.calc = calc
-
-    uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-    relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-    relax.run(fmax=fmaxval)  # Consider tighter fmax!
-
-    bulk_configuration.get_potential_energy()
-    calc.diagonalize_full_hamiltonian()
-    calc.write(struct+'-1-Result-Ground.gpw', mode="all")
-
-    # We start by setting up a G0W0 calculator object
-    gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB), 
-              method=GWtype,truncation=GWtruncation, nblocksmax=GWnblock,
-              maxiter=5, q0_correction=GWq0correction,
-              mixing=0.5,savepckl=True,
-              ecut=GWcut_off_energy, ppa=GWppa)
-    parprint("Starting PW ground state calculation with G0W0 approximation...")
-    gw.calculate()
-
-elif Mode == 'LCAO':
-    parprint("Starting LCAO ground state calculation...")
-    calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
-    bulk_configuration.calc = calc
-
-    relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
-    relax.run(fmax=fmaxval)  # Consider much tighter fmax!
-
-    bulk_configuration.get_potential_energy()
-    calc.write(struct+'-1-Result-Ground.gpw', mode='all')
-elif Mode == 'FD':
-    parprint("FD mode is not implemented in gpaw-tools yet...")
-    quit()
-else:
-    parprint("Please enter correct mode information.")
-    quit()
-
-if WantCIFexport == True:
-    write_cif(struct+'-Final.cif', bulk_configuration)
-
-# -------------------------------------------------------------
-# Step 2 - DOS CALCULATION
-# -------------------------------------------------------------
-if DOS_calc == True:
-    parprint("Starting DOS calculation...")
-    calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt')
-    #energies, weights = calc.get_dos(npts=800, width=0)
-    dos = DOS(calc, npts=500, width=0)
-    if Spin_calc == True:
-        energies = dos.get_energies()
-        weights = dos.get_dos(spin=0)
-        weightsup = dos.get_dos(spin=1)
-    else:
-        energies = dos.get_energies()
-        weights = dos.get_dos()
-
-    with paropen(struct+'-2-Result-DOS.txt', "w") as fd:
+    # -------------------------------------------------------------
+    # Step 2 - DOS CALCULATION
+    # -------------------------------------------------------------
+    if DOS_calc == True:
+        parprint("Starting DOS calculation...")
+        calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt')
+        #energies, weights = calc.get_dos(npts=800, width=0)
+        dos = DOS(calc, npts=500, width=0)
         if Spin_calc == True:
-            for x in zip(energies, weights, weightsup):
-                print(*x, sep=", ", file=fd)
+            energies = dos.get_energies()
+            weights = dos.get_dos(spin=0)
+            weightsup = dos.get_dos(spin=1)
         else:
-            for x in zip(energies, weights):
-                print(*x, sep=", ", file=fd)
+            energies = dos.get_energies()
+            weights = dos.get_dos()
 
-# -------------------------------------------------------------
-# Step 3 - BAND STRUCTURE CALCULATION
-# -------------------------------------------------------------
-if Band_calc == True:
-    parprint("Starting band structure calculation...")
-    if Mode == 'PW-GW':      
-        GW = GWBands(calc=struct+'-1-Result-Ground.gpw',
-             gw_file=struct+'-1-_results.pckl',kpoints=GWkpoints)
+        with paropen(struct+'-2-Result-DOS.txt', "w") as fd:
+            if Spin_calc == True:
+                for x in zip(energies, weights, weightsup):
+                    print(*x, sep=", ", file=fd)
+            else:
+                for x in zip(energies, weights):
+                    print(*x, sep=", ", file=fd)
 
-        # Gettting results without spin-orbit
-        results = GW.get_gw_bands(SO=False, interpolate=True, vac=True)
+    # -------------------------------------------------------------
+    # Step 3 - BAND STRUCTURE CALCULATION
+    # -------------------------------------------------------------
+    if Band_calc == True:
+        parprint("Starting band structure calculation...")
+        if Mode == 'PW-GW':      
+            GW = GWBands(calc=struct+'-1-Result-Ground.gpw',
+                 gw_file=struct+'-1-_results.pckl',kpoints=GWkpoints)
 
-        # Extracting data
-        X = results['X']
-        ef = results['ef']
-        xdata = results['x_k']
-        banddata = results['e_kn']
+            # Gettting results without spin-orbit
+            results = GW.get_gw_bands(SO=False, interpolate=True, vac=True)
 
-        np.savetxt(struct+'-3-Result-Band.dat', np.c_[xdata,banddata])
+            # Extracting data
+            X = results['X']
+            ef = results['ef']
+            xdata = results['x_k']
+            banddata = results['e_kn']
 
-        with open(struct+'-3-Result-Band.dat', 'a') as f:
-            print ('Symmetry points: ', X, end="\n", file=f)
-            print ('Fermi Level: ', ef, end="\n", file=f)
+            np.savetxt(struct+'-3-Result-Band.dat', np.c_[xdata,banddata])
 
-    else:
-        calc = GPAW(struct+'-1-Result-Ground.gpw',
-                txt=struct+'-3-Log-Band.txt',
-                fixdensity=True,
-                symmetry='off',
-                kpts={'path': band_path, 'npoints': band_npoints},
-                convergence={'bands': 8})
-
-        calc.get_potential_energy()
-        bs = calc.band_structure()
-        ef = calc.get_fermi_level()
-        num_of_bands = calc.get_number_of_bands()
-        parprint('Num of bands:'+str(num_of_bands))
-
-        #bs.write(struct+'-3-Result-Band.json')
-        calc.write(struct+'-3-Result-Band.gpw')
-
-        if Spin_calc == True:
-            eps_skn = np.array([[calc.get_eigenvalues(k,s)
-                                for k in range(band_npoints)]
-                                for s in range(2)]) - ef
-            parprint(eps_skn.shape)
-            with paropen(struct+'-3-Result-Band-Down.dat', 'w') as f1:
-                for n1 in range(num_of_bands):
-                    for k1 in range(band_npoints):
-                        print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
-                    print (end="\n", file=f1)
-
-            with paropen(struct+'-3-Result-Band-Up.dat', 'w') as f2:
-                for n2 in range(num_of_bands):
-                    for k2 in range(band_npoints):
-                        print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
-                    print (end="\n", file=f2)
+            with open(struct+'-3-Result-Band.dat', 'a') as f:
+                print ('Symmetry points: ', X, end="\n", file=f)
+                print ('Fermi Level: ', ef, end="\n", file=f)
 
         else:
-            eps_skn = np.array([[calc.get_eigenvalues(k,s)
-                                for k in range(band_npoints)]
-                                for s in range(1)]) - ef
-            with paropen(struct+'-3-Result-Band.dat', 'w') as f:
-                for n in range(num_of_bands):
-                    for k in range(band_npoints):
-                        print(k, eps_skn[0, k, n], end="\n", file=f)
-                    print (end="\n", file=f)
+            calc = GPAW(struct+'-1-Result-Ground.gpw',
+                    txt=struct+'-3-Log-Band.txt',
+                    fixdensity=True,
+                    symmetry='off',
+                    kpts={'path': band_path, 'npoints': band_npoints},
+                    convergence={'bands': 8})
 
-# -------------------------------------------------------------
-# Step 4 - ALL-ELECTRON DENSITY
-# -------------------------------------------------------------
-if Density_calc == True:
-    parprint("Starting All-electron density calculation...")
-    calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-4-Log-ElectronDensity.txt')
-    bulk_configuration.calc = calc
-    np = calc.get_pseudo_density()
-    n = calc.get_all_electron_density(gridrefinement=gridref)
+            calc.get_potential_energy()
+            bs = calc.band_structure()
+            ef = calc.get_fermi_level()
+            num_of_bands = calc.get_number_of_bands()
+            parprint('Num of bands:'+str(num_of_bands))
 
-    write(struct+'-4-Result-All-electron_n.cube', bulk_configuration, data=n)
-    write(struct+'-4-Result-All-electron_np.cube', bulk_configuration, data=np)
+            #bs.write(struct+'-3-Result-Band.json')
+            calc.write(struct+'-3-Result-Band.gpw')
+
+            if Spin_calc == True:
+                eps_skn = np.array([[calc.get_eigenvalues(k,s)
+                                    for k in range(band_npoints)]
+                                    for s in range(2)]) - ef
+                parprint(eps_skn.shape)
+                with paropen(struct+'-3-Result-Band-Down.dat', 'w') as f1:
+                    for n1 in range(num_of_bands):
+                        for k1 in range(band_npoints):
+                            print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
+                        print (end="\n", file=f1)
+
+                with paropen(struct+'-3-Result-Band-Up.dat', 'w') as f2:
+                    for n2 in range(num_of_bands):
+                        for k2 in range(band_npoints):
+                            print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
+                        print (end="\n", file=f2)
+
+            else:
+                eps_skn = np.array([[calc.get_eigenvalues(k,s)
+                                    for k in range(band_npoints)]
+                                    for s in range(1)]) - ef
+                with paropen(struct+'-3-Result-Band.dat', 'w') as f:
+                    for n in range(num_of_bands):
+                        for k in range(band_npoints):
+                            print(k, eps_skn[0, k, n], end="\n", file=f)
+                        print (end="\n", file=f)
+
+    # -------------------------------------------------------------
+    # Step 4 - ALL-ELECTRON DENSITY
+    # -------------------------------------------------------------
+    if Density_calc == True:
+        parprint("Starting All-electron density calculation...")
+        calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-4-Log-ElectronDensity.txt')
+        bulk_configuration.calc = calc
+        np = calc.get_pseudo_density()
+        n = calc.get_all_electron_density(gridrefinement=gridref)
+
+        write(struct+'-4-Result-All-electron_n.cube', bulk_configuration, data=n)
+        write(struct+'-4-Result-All-electron_np.cube', bulk_configuration, data=np)
 
 # -------------------------------------------------------------
 # Step 5 - OPTICAL CALCULATION
@@ -404,13 +406,18 @@ if Density_calc == True:
 if Optical_calc == True:
     if Mode == 'PW':
         parprint("Starting optical calculation...")
-        calc = GPAW(struct+'-1-Result-Ground.gpw',
-                txt=struct+'-5-Log-Optical.txt',
-                nbands=num_of_bands,
-                fixdensity=True,
-                symmetry='off',
-                occupations=FermiDirac(optFDsmear))
-
+        try:
+            calc = GPAW(struct+'-1-Result-Ground.gpw',
+                    txt=struct+'-5-Log-Optical.txt',
+                    nbands=num_of_bands,
+                    fixdensity=True,
+                    symmetry='off',
+                    occupations=FermiDirac(optFDsmear))
+        except FileNotFoundError as err:
+            # output error, and return with an error code
+            parprint('ERROR: Optical computations must be done separately. Please do ground calculations first.')
+            quit()
+    
         calc.get_potential_energy()
 
         calc.diagonalize_full_hamiltonian(nbands=num_of_bands)  # diagonalize Hamiltonian

@@ -11,6 +11,7 @@ When you download `gpaw-tools` from GitHub and extract it to a folder you will h
 gpaw-tools/
 └── benchmarks/
 │   └── simple_benchmark_2021.py
+├── examples/
 ├── optimizations/
 │   ├── ciftoase.py
 │   ├── optimize_cutoff.py
@@ -69,7 +70,7 @@ For using all threads provided by Intel Hyperthreading technology
 | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
 |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
 | PW-G0W0| Yes                 | Yes         | No             | No  | Yes  | No               | No      |
-| PW-EXX*| Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
+|  EXX*  | Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
 |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
 
 *: Just some ground state energy calculations for PBE0 and HSE06.

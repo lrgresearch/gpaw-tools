@@ -81,14 +81,14 @@ For using all threads provided by Intel Hyperthreading technology
 | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
 |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
 | PW-G0W0| Yes                 | Yes         | No             | No  | Yes  | No               | No      |
-| PW-EXX*| Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
+|  EXX*  | Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
 |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
 
 *: Just some ground state energy calculations for PBE0 and HSE06.
 
 ### gg.py
 Basic DFT calculations can be done graphically with the script `gg.py`. This script is behaving as a GUI to run `gpawsolve.py` script. To execute the GUI, type simply:
-  python gg.py
+  gg.py
 
 ### quick_optimize/quickoptimize.py
 Inter-atomic potentials are useful tool to perform a quick geometric optimization of the studied system before starting a precise DFT calculation. The `quickoptimize.py` script is written for geometric optimizations with inter-atomic potentials. The bulk configuration of atoms can be provided by the user in the script as an ASE Atoms object or given as an argument for the CIF file. A general potential is given for any calculation. However, user can provide the necessary OpenKIM potentialby changing the related line in the script.

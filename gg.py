@@ -157,7 +157,7 @@ class gg:
             self.GWkpointsttk.insert('0', config.GWkpoints)
             
             # GWtruncation
-            if config.GWtruncation == None:
+            if config.GWtruncation is None:
                 self.GWtruncationttk.current(0)
             elif config.GWtruncation == '2D':
                 self.GWtruncationttk.current(1)

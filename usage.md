@@ -28,7 +28,7 @@ gpaw-tools/
 This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.
 
 ### As a command:
-Command line usage: `gpawsolve.py -o -c <configfile.py> -h -i <inputfile.cif>`
+Command line usage: `gpawsolve.py -v -o -c <configfile.py> -h -i <inputfile.cif>`
 
 Argument list:
 ```

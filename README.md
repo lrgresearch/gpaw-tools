@@ -18,10 +18,11 @@
 4. And, the main solver script `gpawsolver.py` which can be run in PW or LCAO mode. It can do strain minimization, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties in a very simple and organized way.
 
 ## Usage
-When you download `gpaw-tools` from GitHub and extract it to a folder you will have a folder structure as:
+### Installation
+When you download `gpaw-tools-main` from GitHub and extract it to a folder you will have a folder structure as:
 
 ```
-gpaw-tools/
+gpaw-tools-main/
 └── benchmarks/
 │   └── simple_benchmark_2021.py
 ├── optimizations/
@@ -36,6 +37,9 @@ gpaw-tools/
 └── gg.py
 └── config.py
 ```
+To make the `gpawsolve.py` and `gg.py` as system-wide commands, user must include the `gpaw-tools-main` folder to the $PATH variable in the `.bashrc` file. In case of user  downloaded and extracted the `gpaw-tools-main` file to user's home directory, and to make the change permanent, user must need to define the $PATH variable in the shell configuration file `.bashrc` as
+
+    export PATH="/home/username/gpaw-tools-main:$PATH"
 
 ### gpawsolve.py
 This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.

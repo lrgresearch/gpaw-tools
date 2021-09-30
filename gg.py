@@ -142,7 +142,59 @@ class gg:
 
             self.gridrefttk.delete('0', 'end')
             self.gridrefttk.insert('0', config.gridref)        
-
+            # ---------GW Parameters---------
+            
+            # GWtype
+            if config.GWtype == 'GW0':
+                self.GWtypettk.current(0)
+            elif config.GWtype == 'G0W0':
+                self.GWtypettk.current(1)
+            else:
+                self.GWtypettk.current(0)
+            
+            # GWkpoints
+            self.GWkpointsttk.delete('0', 'end')
+            self.GWkpointsttk.insert('0', config.GWkpoints)
+            
+            # GWtruncation
+            if config.GWtruncation is None:
+                self.GWtruncationttk.current(0)
+            elif config.GWtruncation == '2D':
+                self.GWtruncationttk.current(1)
+            elif config.GWtruncation == '1D':
+                self.GWtruncationttk.current(2)
+            elif config.GWtruncation == '0D':
+                self.GWtruncationttk.current(3)
+            elif config.GWtruncation == 'wigner-seitz':
+                self.GWtruncationttk.current(4)
+            else:
+                self.GWtypettk.current(4)
+            # GWcut_off_energy
+            self.GWcut_off_energyttk.delete('0', 'end')
+            self.GWcut_off_energyttk.insert('0', config.GWcut_off_energy)
+            # GWbandVB
+            self.GWbandVBttk.delete('0', 'end')
+            self.GWbandVBttk.insert('0', config.GWbandVB)
+            # GWbandCB
+            self.GWbandCBttk.delete('0', 'end')
+            self.GWbandCBttk.insert('0', config.GWbandCB)
+            # GWppa
+            if config.GWppa == True:
+                GWppavar.set(True)
+            else:
+                GWppavar.set(False)
+            # GWq0correction
+            if config.GWq0correction == True:
+                GWq0correctionvar.set(True)
+            else:
+                GWq0correctionvar.set(False)
+            # GWnblock
+            if config.GWnblock == True:
+                GWnblockvar.set(True)
+            else:
+                GWnblockvar.set(False)
+            
+            # ---------Optical------------
             self.num_of_bandsttk.delete('0', 'end')
             self.num_of_bandsttk.insert('0', config.num_of_bands)
 
@@ -250,6 +302,37 @@ class gg:
 
                 print("Spin_calc = "+ str(Spin_calcvar.get()), end="\n", file=f1)
                 print("gridref = "+ str(self.gridrefttk.get()), end="\n", file=f1)
+                # ---------GW Parameters------------
+                # GWtype
+                if self.GWtypettk.get() == 'GW0':
+                    print("GWtype = 'GW0'", end="\n", file=f1)
+                elif self.GWtypettk.get() == 'G0W0':
+                    print("GWtype = 'G0W0'", end="\n", file=f1)
+                else:
+                    print("GWtype = 'GW0'", end="\n", file=f1)
+                # GWtruncation
+                if self.GWtypettk.get() == 'GW0':
+                    print("GWtype = 'GW0'", end="\n", file=f1)
+                elif self.GWtypettk.get() == 'G0W0':
+                    print("GWtype = 'G0W0'", end="\n", file=f1)
+                else:
+                    print("GWtype = 'GW0'", end="\n", file=f1)
+                # GWkpoints
+                print("GWkpoints = "+ str(self.GWkpointsttk.get()), end="\n", file=f1)
+                # GWcut_off_energy
+                print("GWcut_off_energy = "+ str(self.GWcut_off_energyttk.get()), end="\n", file=f1)
+                # GWbandVB
+                print("GWbandVB = "+ str(self.GWbandVBttk.get()), end="\n", file=f1)
+                # GWbandCB
+                print("GWbandCB = "+ str(self.GWbandCBttk.get()), end="\n", file=f1)
+                # GWppa
+                print("GWppa = "+ str(GWppavar.get()), end="\n", file=f1)
+                # GWq0correction
+                print("GWq0correction = "+ str(GWq0correctionvar.get()), end="\n", file=f1)
+                # GWnblock
+                print("GWnblock = "+ str(GWnblock.get()), end="\n", file=f1)
+
+                # ---------Optical------------
                 print("num_of_bands = "+ str(self.num_of_bandsttk.get()), end="\n", file=f1)
                 print("optFDsmear = "+ str(self.optFDsmearttk.get()), end="\n", file=f1)
                 print("opteta = "+ str(self.optetattk.get()), end="\n", file=f1)
@@ -527,6 +610,7 @@ class gg:
         self.labelframe3.pack(side='left')
         self.frame5.configure(height='200', width='200')
         self.frame5.pack(side='top')
+        # Frame for strain
         self.frame13 = ttk.Frame(self.frame4)
         self.labelframe4 = ttk.Labelframe(self.frame13)
         self.frame22 = ttk.Frame(self.labelframe4)
@@ -558,6 +642,97 @@ class gg:
         self.frame22.pack(side='top')
         self.labelframe4.configure(height='200', text='Strain Relaxation', width='200')
         self.labelframe4.pack(side='left')
+        # Frame for GW parameters
+        self.GWframe = ttk.Frame(self.frame4)
+        self.labelGWframe = ttk.Labelframe(self.GWframe)
+        # GWtype
+        self.frameGWtype = ttk.Frame(self.labelGWframe)
+        self.labelGWtype = ttk.Label(self.frameGWtype)
+        self.labelGWtype.configure(text='GW type')
+        self.labelGWtype.pack(side='left')
+        self.GWtypettk = ttk.Combobox(self.frameGWtype)
+        self.GWtypettk.configure(values=('GW0', 'G0W0'), state='readonly')
+        self.GWtypettk.pack(side='top')
+        self.GWtypettk.current(0)
+        self.frameGWtype.configure(height='200', width='200')
+        self.frameGWtype.pack(side='top')
+        # GWkpoints
+        self.frameGWkpoints = ttk.Frame(self.labelGWframe)
+        self.labelGWkpoints = ttk.Label(self.frameGWkpoints)
+        self.labelGWkpoints.configure(text='GW K-points change as np.array([[kix,kiy,kiz],...])')
+        self.labelGWkpoints.pack(side='left')
+        self.GWkpointsttk = tk.Entry(self.frameGWkpoints)
+        self.GWkpointsttk.delete('0', 'end')
+        self.GWkpointsttk.insert('0', 'Please enter kpoints in a format of: np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])')
+        self.GWkpointsttk.pack(side='top')
+        self.frameGWkpoints.configure(height='200', width='200')
+        self.frameGWkpoints.pack(side='top')
+        # GWtruncation
+        self.frameGWtruncation = ttk.Frame(self.labelGWframe)
+        self.labelGWtruncation = ttk.Label(self.frameGWtruncation)
+        self.labelGWtruncation.configure(text='GW truncation')
+        self.labelGWtruncation.pack(side='left')
+        self.GWtruncationttk = ttk.Combobox(self.frameGWtruncation)
+        self.GWtruncationttk.configure(values=(None, '2D', '1D', '0D', 'wigner-seitz'), state='readonly')
+        self.GWtruncationttk.pack(side='top')
+        self.GWtruncationttk.current(4)
+        self.frameGWtruncation.configure(height='200', width='200')
+        self.frameGWtruncation.pack(side='top')
+        # GWcut_off_energy
+        self.frameGWcut_off_energy = ttk.Frame(self.labelGWframe)
+        self.labelGWcut_off_energy = ttk.Label(self.frameGWcut_off_energy)
+        self.labelGWcut_off_energy.configure(text='Cut-off en. for opt.')
+        self.labelGWcut_off_energy.pack(side='left')
+        self.GWcut_off_energyttk = ttk.Entry(self.frameGWcut_off_energy)
+        self.GWcut_off_energyttk.delete('0', 'end')
+        self.GWcut_off_energyttk.insert('0', '100')
+        self.GWcut_off_energyttk.pack(side='top')
+        self.frameGWcut_off_energy.configure(height='200', width='200')
+        self.frameGWcut_off_energy.pack(side='top')
+        # GWbandVB
+        self.frameGWbandVB = ttk.Frame(self.labelGWframe)
+        self.labelGWbandVB = ttk.Label(self.frameGWbandVB)
+        self.labelGWbandVB.configure(text='Valence band number')
+        self.labelGWbandVB.pack(side='left')
+        self.GWbandVBttk = ttk.Entry(self.frameGWbandVB)
+        self.GWbandVBttk.delete('0', 'end')
+        self.GWbandVBttk.insert('0', '8')
+        self.GWbandVBttk.pack(side='top')
+        self.frameGWbandVB.configure(height='200', width='200')
+        self.frameGWbandVB.pack(side='top')
+        # GWbandCB
+        self.frameGWbandCB = ttk.Frame(self.labelGWframe)
+        self.labelGWbandCB = ttk.Label(self.frameGWbandCB)
+        self.labelGWbandCB.configure(text='Conduction band number')
+        self.labelGWbandCB.pack(side='left')
+        self.GWbandCBttk = ttk.Entry(self.frameGWbandCB)
+        self.GWbandCBttk.delete('0', 'end')
+        self.GWbandCBttk.insert('0', '8')
+        self.GWbandCBttk.pack(side='top')
+        self.frameGWbandCB.configure(height='200', width='200')
+        self.frameGWbandCB.pack(side='top')
+        # GWppa
+        self.GWppattk = ttk.Checkbutton(self.labelGWframe)
+        GWppavar = BooleanVar()
+        self.GWppattk.configure(variable = GWppavar, onvalue=True, offvalue=False, text='Plasmon Pole Approximation')
+        self.GWppattk.pack(side='top')
+        # GWq0correction
+        self.GWq0correctionttk = ttk.Checkbutton(self.labelGWframe)
+        GWq0correctionvar = BooleanVar()
+        self.GWq0correctionttk.configure(variable = GWq0correctionvar, onvalue=True, offvalue=False, text='Analytic correction to the q=0 contribution')
+        self.GWq0correctionttk.pack(side='top')
+        # GWnblock
+        self.GWnblockttk = ttk.Checkbutton(self.labelGWframe)
+        GWnblockvar = BooleanVar()
+        self.GWnblockttk.configure(variable = GWnblockvar, onvalue=True, offvalue=False, text='Cuts chi0 into as many blocks to reduce mem.')
+        self.GWnblockttk.pack(side='top')
+        
+        self.labelGWframe.configure(height='200', text='GW Parameters (Only applicable when Basis = PW-GW', width='200')
+        self.labelGWframe.pack(side='left')
+        self.GWframe.configure(height='200', width='200')
+        self.GWframe.pack(side='left')
+        
+        # Frame for Other
         self.labelframe5 = ttk.Labelframe(self.frame13)
         self.WantCIFexportttk = ttk.Checkbutton(self.labelframe5)
         WantCIFexportvar = BooleanVar()
@@ -569,6 +744,8 @@ class gg:
         self.frame13.pack(side='left')
         self.frame4.configure(height='200', width='200')
         self.frame4.pack(side='top')
+        
+        # Input parameters notebook tab
         self.notebookUpper.add(self.frame4, state='normal', text='Input Parameters')
         self.frame3 = ttk.Frame(self.notebookUpper)
         self.frame25 = ttk.Frame(self.frame3)

@@ -19,7 +19,7 @@ Description = f'''
  | ------ | ------------------- | ----------- | -------------- | --- | ---- | ---------------- | ------- |
  |   PW   | Yes                 | Yes         | Yes            | Yes | Yes  | Yes              | Yes     |
  | PW-G0W0| Yes                 | Yes         | No             | No  | Yes  | No               | No      |
- | PW-EXX*| Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
+ |  EXX*  | Yes (with PBE)      | No          | No             | No  | No   | No               | No      |
  |  LCAO  | No                  | No          | No             | Yes | Yes  | Yes              | No      |
  *: Just some ground state energy calculations for PBE0 and HSE06.
 '''
@@ -48,7 +48,7 @@ from numpy import genfromtxt
 
 # IF YOU WANT TO USE CONFIG FILE, YOU CAN CREATE FROM THIS FILE. PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
-Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW'             # Use PW, PW-GW, EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = False         # DOS calculation
 Band_calc = True        # Band structure calculation
@@ -72,7 +72,7 @@ energy_max = 15 		# eV. It is the maximum energy value for band structure figure
 XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
-#Choose one for PW-EXX (Ground state calculations will be done with PBE):
+#Choose one for EXX (Ground state calculations will be done with PBE):
 #XC_calc = 'PBE0'
 #XC_calc = 'HSE06'
 
@@ -232,7 +232,7 @@ if Optical_calc == False:
         # PW Ground State Calculations
         parprint("Starting PW ground state calculation...")
         if XC_calc in ['HSE06', 'PBE0']:
-            parprint('Error: '+XC_calc+' can be used only in PW-EXX mode...')
+            parprint('Error: '+XC_calc+' can be used only in EXX mode...')
             quit()
         calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
         bulk_configuration.calc = calc
@@ -247,7 +247,7 @@ if Optical_calc == False:
         else:
             calc.write(struct+'-1-Result-Ground.gpw')
 
-    elif Mode == 'PW-EXX':
+    elif Mode == 'EXX':
         # PW Ground State Calculations
         parprint("Starting PW ground state calculation with PBE...")
         calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')

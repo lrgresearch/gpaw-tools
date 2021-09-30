@@ -41,7 +41,7 @@ gpaw-tools/
 This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.
 
 #### As a command:
-Command line usage: `gpawsolve.py -o -c <config.py> -h -i <inputfile.cif>`
+Command line usage: `gpawsolve.py -v -o -c <config.py> -h -i <inputfile.cif>`
 
 Argument list:
 ```
@@ -53,8 +53,10 @@ Argument list:
                then the directory name will be /gpawsolve. If you change gpawsolve.py name to 
                anyname.py then the directory name will be /anyname
 -h --Help    : Help
+-v --Version : Version information of running code and the latest stable code. Also gives download link.
  ```
- 
+  You can put ASE Atoms object in to your config file and therefore can use it like an input file. As an example please note the example at: `examples\Bulk-aluminum` folder.
+  
  #### As a stand alone script
  * Change the parameters from related lines for each simulation OR change `config.py` once and use `-c` argument.
  * If you want to use CIF files for structure, use `-i` argument like `gpawsolve.py -i structurefile.cif`.
@@ -68,10 +70,10 @@ Argument list:
 
 Usage:
 For AMD CPUs or using Intel CPUs without hyperthreading:
-`$ mpirun -np <core_number> python gpawsolve.py <args>`
+`$ mpirun -np <core_number> gpawsolve.py <args>`
 
 For using all threads provided by Intel Hyperthreading technology
-`$ mpirun --use-hwthread-cpus -np <core_number> python gpawsolve.py <args>`
+`$ mpirun --use-hwthread-cpus -np <core_number> gpawsolve.py <args>`
 
 #### Calculation selector
 
@@ -121,6 +123,9 @@ Users must provide ASE Atoms object and simply insert the object inside these sc
 
 ### benchmarks/
 GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcomed.
+
+## examples/
+There are [some example calculations](https://github.com/lrgresearch/gpaw-tools/tree/main/examples) given with different usage scenarios. Please send us more calculations to include in this folder.
 
 ## Release notes
 Release notes are listed at [here](https://www.lrgresearch.org/gpaw-tools/releasenotes.html).

@@ -8,6 +8,8 @@ title: Release Notes
 
 ### Development version
 #### September 2021
+* Version argument is added.
+* GW parameters are also added to `gg.py`
 * Add some optical parameters to config files and `gg.py`.
 * Major change: `gpawsolve.py` and `gg.py` are now working as command. Config files can be used like general input file, you can put ASE Atom object plus every parameter that `gpawsolve.py` accepts. If you want, you can provide a CIF file instead of using atom object. You can run `gpawsolve.py` and `gg.py` from any folder.
 * Optical: Refractive index, extinction index, absorbtion and reflectivity calculations.
@@ -15,7 +17,7 @@ title: Release Notes
 * New argument parsing scheme for better future usages.
 * Very basic PW-EXX mode with HSE06 and PBE06. (Only some ground-state calculations.)
 * Adding GW0 and G0W0-GW0 selector.
-* Adding G0W0 approximation to `gpawsolve.py` (only bands).
+* Adding GW approximation to `gpawsolve.py` (only bands).
 * Many other small corrections.
 
 ### Version 21.9.0

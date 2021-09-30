@@ -40,7 +40,10 @@ Argument list:
                then the directory name will be /gpawsolve. If you change gpawsolve.py name to 
                anyname.py then the directory name will be /anyname
 -h --Help    : Help
+-v --Version : Version information of running code and the latest stable code. Also gives download link.
  ```
+ 
+ You can put ASE Atoms object in to your config file and therefore can use it like an input file. As an example please note the example at: `examples\Bulk-aluminum` folder.
  
 ### As a stand alone script
  * Change the parameters for each simulation OR change `config.py` once and use `-c` argument.
@@ -55,10 +58,10 @@ Argument list:
 
 Usage:
 For AMD CPUs or using Intel CPUs without hyperthreading:
-`$ mpirun -np <core_number> python gpawsolve.py <args>`
+`$ mpirun -np <core_number> gpawsolve.py <args>`
 
 For using all threads provided by Intel Hyperthreading technology
-`$ mpirun --use-hwthread-cpus -np <core_number> python gpawsolve.py <args>`
+`$ mpirun --use-hwthread-cpus -np <core_number> gpawsolve.py <args>`
 
 ### Calculation selector
 
@@ -73,7 +76,7 @@ For using all threads provided by Intel Hyperthreading technology
 
 ## gg.py
 Basic DFT calculations can be done graphically with the script `gg.py`. This script is behaving as a GUI to run `gpawsolve.py` script. To execute the GUI, type simply:
-  python gg.py
+  gg.py
 
 ## quick_optimize/quickoptimize.py
 Inter-atomic potentials are useful tool to perform a quick geometric optimization of the studied system before starting a precise DFT calculation. The `quickoptimize.py` script is written for geometric optimizations with inter-atomic potentials. The bulk configuration of atoms can be provided by the user in the script as an ASE Atoms object or given as an argument for the CIF file. A general potential is given for any calculation. However, user can provide the necessary OpenKIM potentialby changing the related line in the script.
@@ -102,3 +105,11 @@ Users must provide ASE Atoms object and simply insert the object inside these sc
 
 ## benchmarks/
 GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcomed.
+
+## examples/
+There are some example calculations given with different usage scenarios. Please send us more calculations to include in this folder.
+
+| Name              | Notes  | 
+| ----------------- | ------ |
+| Bulk-aluminum     | Ground, DOS and Band calculations of Bulk Aluminum. PW with 340 eV cutoff, 4x4x4 kpoints. Positions are given with Atom object.          |
+| Si-2atoms-all     | Two step calculation. First step ground, DOS and Band calculations. Second step for optical calculation. Structure is given with CIF file. |

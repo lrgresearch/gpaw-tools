@@ -11,7 +11,6 @@ import tkinter.ttk as ttk
 from tkinter import filedialog, BooleanVar, StringVar
 import pathlib
 import subprocess
-import importlib
 from ase.visualize import view
 from ase.io import read, write
 

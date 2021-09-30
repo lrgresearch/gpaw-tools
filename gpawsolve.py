@@ -26,6 +26,7 @@ Description = f'''
 
 import getopt, sys, os
 import textwrap
+import requests
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
 from ase.parallel import paropen, world, parprint, broadcast
@@ -108,6 +109,7 @@ draw_graphs = True		# Draw DOS and band structure on screen (yes for draw, small
 whichstrain=[True, True, False, False, False, False]
 
 WantCIFexport = True
+MPIcores = 4            # This is for gg.py. Not used in this script.
 # <<<<<<< TO HERE TO FILE config.py IN SAME DIRECTORY AND USE -c FLAG WITH COMMAND
 
 # -------------------------------------------------------------
@@ -131,6 +133,8 @@ bulk_configuration = Atoms(
 # -------------------------------------------------------------
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
+# Version
+__version__ = "v21.9.1b1"
 
 # To print Description variable with argparse
 class RawFormatter(HelpFormatter):
@@ -147,6 +151,7 @@ parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true',
                     If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
 parser.add_argument("-c", "--config", dest = "configfile", help="Use config file in the main directory for parameters")
 parser.add_argument("-i", "--input",dest ="inputfile", help="Use input CIF file")
+parser.add_argument("-v", "--version", dest="version", action='store_true')
 
 args = None
 
@@ -178,6 +183,15 @@ try:
 
     if args.outdir == True:
         outdir = True
+    
+    if args.version == True:
+        response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest")
+        parprint('gpawtools: This is the version '+str(__version__))
+        parprint('The latest stable release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
+        parprint('Download the latest stable release at: '+response.json()["tarball_url"])
+        quit()
+        
+        
 
 except getopt.error as err:
     # output error, and return with an error code

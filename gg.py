@@ -69,7 +69,7 @@ class gg:
                 self.Modettk.current(0)
             elif config.Mode == 'PW-GW':
                 self.Modettk.current(1)
-            elif config.Mode == 'PW-EXX':
+            elif config.Mode == 'EXX':
                 self.Modettk.current(2)
             elif config.Mode == 'LCAO':
                 self.Modettk.current(3)
@@ -263,8 +263,8 @@ class gg:
                     print("Mode = 'PW'", end="\n", file=f1)
                 elif self.Modettk.get() == 'PW-GW':
                     print("Mode = 'PW-GW'", end="\n", file=f1)
-                elif self.Modettk.get() == 'PW-EXX':
-                    print("Mode = 'PW-EXX'", end="\n", file=f1)
+                elif self.Modettk.get() == 'EXX':
+                    print("Mode = 'EXX'", end="\n", file=f1)
                 elif self.Modettk.get() == 'LCAO':
                     print("Mode = 'LCAO'", end="\n", file=f1)
                 elif self.Modettk.get() == 'FD':
@@ -404,7 +404,7 @@ class gg:
         self.label1.configure(text='Calculator')
         self.label1.pack(side='left')
         self.Modettk = ttk.Combobox(self.frame6)
-        self.Modettk.configure(values=('PW', 'PW-GW', 'PW-EXX', 'LCAO', 'FD'), state='readonly')
+        self.Modettk.configure(values=('PW', 'PW-GW', 'EXX', 'LCAO', 'FD'), state='readonly')
         self.Modettk.pack(side='top')
         self.Modettk.current(0)
         self.frame6.configure(height='200', width='200')
@@ -502,7 +502,7 @@ class gg:
         self.frame12.pack(side='top')
         self.frame14 = ttk.Frame(self.labelframe2)
         self.label11 = ttk.Label(self.frame14)
-        self.label11.configure(text='Exchange Correlation (PBE0 and HSE06 are for PW-EXX)')
+        self.label11.configure(text='Exchange Correlation (PBE0 and HSE06 are for EXX)')
         self.label11.pack(side='left')
         self.XC_calcttk = ttk.Combobox(self.frame14)
         self.XC_calcttk.configure(values=('LDA', 'PBE', 'revPBE', 'RPBE' , 'PBE0', 'HSE06'), state='readonly')
@@ -785,10 +785,7 @@ GG is a graphical user interface (GUI) for a
 gpawsolve.py script, which aims simple and
 expediting calculations with GPAW/ASE codes.
 
-Copyrighted with MIT license by
-Sefer Bora Lisesivdin and Beyza Lisesivdin
-
-For more information, please refer to LICENSE file.'''
+For licensing information, please refer to LICENSE file.'''
         self.text2.insert('0.0', _text_)
         self.text2.pack(side='left')
         self.button1 = ttk.Button(self.frame24)

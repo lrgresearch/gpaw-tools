@@ -25,7 +25,7 @@ Latest development release: [download (tar.gz)](https://github.com/lrgresearch/g
 
 ## News
 * **[gpaw-tools](releasenotes.md#version-21101)** version 21.10.1 released (Oct 1, 2021).
-* * **[gpaw-tools](releasenotes.md#version-21100)** version 21.10.0 released (Oct 1, 2021).
+* **[gpaw-tools](releasenotes.md#version-21100)** version 21.10.0 released (Oct 1, 2021).
 * **[gpaw-tools](releasenotes.md#version-2190)** version 21.9.0 released (Sep 14, 2021).
 
 ## Licensing

@@ -23,7 +23,7 @@ class gg:
     StructLoaded = False
 
     def __init__(self, master=None):
-        global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar
+        global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, GWppavar, GWq0correctionvar, GWnblockvar
         global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, WantCIFexportvar
         global Struct, StructLoaded
 
@@ -140,6 +140,8 @@ class gg:
             else:
                 Spin_calcvar.set(False)
 
+            self.Magmom_per_atomttk.delete('0', 'end')
+            self.Magmom_per_atomttk.insert('0', config.Magmom_per_atom)  
             self.gridrefttk.delete('0', 'end')
             self.gridrefttk.insert('0', config.gridref)        
             # ---------GW Parameters---------
@@ -301,6 +303,7 @@ class gg:
                     print("XC_calc = 'LDA'", end="\n", file=f1)
 
                 print("Spin_calc = "+ str(Spin_calcvar.get()), end="\n", file=f1)
+                print("Magmom_per_atom = "+ str(self.Magmom_per_atomttk.get()), end="\n", file=f1)
                 print("gridref = "+ str(self.gridrefttk.get()), end="\n", file=f1)
                 # ---------GW Parameters------------
                 # GWtype
@@ -517,6 +520,18 @@ class gg:
         self.Spin_calcttk.pack(side='top')
         self.frame15.configure(height='200', width='200')
         self.frame15.pack(side='top')
+        # Magmom_per_atom
+        self.frameMagmom_per_atom = ttk.Frame(self.labelframe2)
+        self.labelMagmom_per_atom = ttk.Label(self.frameMagmom_per_atom)
+        self.labelMagmom_per_atom.configure(text='Magnetic moment per atom')
+        self.labelMagmom_per_atom.pack(side='left')
+        self.Magmom_per_atomttk = ttk.Entry(self.frameMagmom_per_atom)
+        self.Magmom_per_atomttk.delete('0', 'end')
+        self.Magmom_per_atomttk.insert('0', '1.0')
+        self.Magmom_per_atomttk.pack(side='top')
+        self.frameMagmom_per_atom.configure(height='200', width='200')
+        self.frameMagmom_per_atom.pack(side='top')
+        
         self.frame16 = ttk.Frame(self.labelframe2)
         self.label13 = ttk.Label(self.frame16)
         self.label13.configure(text='Grid size for electron density calc')

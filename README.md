@@ -25,6 +25,7 @@ When you download `gpaw-tools-main` from GitHub and extract it to a folder you w
 gpaw-tools-main/
 └── benchmarks/
 │   └── simple_benchmark_2021.py
+├── examples/
 ├── optimizations/
 │   ├── ciftoase.py
 │   ├── optimize_cutoff.py

@@ -7,15 +7,22 @@ title: Release Notes
 ## Release notes
 
 ### Development version
+
+#### October 2021
+* n/a
+
+### Version 21.10.0
+
 #### October 2021
 * 5 different examples are added to show simply different usage cases.
 * Initializing magnetic moment problem is solved.
+
 #### September 2021
 * Version argument is added.
 * GW parameters are also added to `gg.py`
 * Add some optical parameters to config files and `gg.py`.
-* Major change: `gpawsolve.py` and `gg.py` are now working as command. Config files can be used like general input file, you can put ASE Atom object plus every parameter that `gpawsolve.py` accepts. If you want, you can provide a CIF file instead of using atom object. You can run `gpawsolve.py` and `gg.py` from any folder.
-* Optical: Refractive index, extinction index, absorbtion and reflectivity calculations.
+* Major change: `gpawsolve.py` and `gg.py` are now working as commands. Config files can be used as general input files, you can put ASE Atom object plus every parameter that `gpawsolve.py` accepts. If you want, you can provide a CIF file instead of using an atom object. You can run `gpawsolve.py` and `gg.py` from any folder.
+* Optical: Refractive index, extinction index, absorption, and reflectivity calculations.
 * `gg.py` is now opening ase gui when the user clicks the structure image.
 * New argument parsing scheme for better future usages.
 * Very basic PW-EXX mode with HSE06 and PBE06. (Only some ground-state calculations.)

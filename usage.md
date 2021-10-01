@@ -53,6 +53,7 @@ Argument list:
  * If you have CIF file but want to use Atoms method you can use `CIF-to-ASE/ciftoase.py` to convert your CIF files to ASE Atoms.
  * If you use Atoms method, change the name of `gpawsolve.py` to your simulation name like `graphene7x7-Fe-onsite32.py`. The naming will be used for naming of all output/result files.
  * If you use CIF file as an input, name of the input file will be used for naming of all output/result files.
+ * **Performance note:** When you want to use `gpawsolve.py` as a script, you can copy `gpawsolve.py` to your working folder where your config file and input file are ready. You must rename `gpawsolve.py` to something else like `gpawsolve1.py` or `gs-graphene.py`, something you like and then you can now run `gpaw -P<core> python gpawsolve1.py <args>` type command. Initializing with gpaw command in your system will give you better parallel computing, therefore shorter computation times. Initialization with gpaw can not be done when `gpawsolve.py` is used as command, because of the structure of initialization of Gpaw, as we know. If you know a solution from the point of view of gpaw-tools, please use issues to discuss or pull request for a solution.
  
 ### How to run?
  Change `<core_number>` with core numbers/threads to use. For getting a maximum performance from your PC you can use `total number of cores(or threads) - 1`. or `total RAM/2Gb` as a `<core_number>`
@@ -108,9 +109,12 @@ Users must provide ASE Atoms object and simply insert the object inside these sc
 GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcomed.
 
 ## examples/
-There are some example calculations given with different usage scenarios. Please send us more calculations to include in this folder.
+There are some example calculations given with different usage scenarios in the code. Please send us more calculations to include.
 
 | Name              | Notes  | 
 | ----------------- | ------ |
-| Bulk-aluminum     | Ground, DOS and Band calculations of Bulk Aluminum. PW with 340 eV cutoff, 4x4x4 kpoints. Positions are given with Atom object.          |
-| Si-2atoms-all     | Two step calculation. First step ground, DOS and Band calculations. Second step for optical calculation. Structure is given with CIF file. |
+| Bulk-Al-noCIF     | Ground, DOS and Band calculations of Bulk Aluminum with PW. Positions are given with Atom object.          |
+| Cr2O-spin         |Spin-dependent electronic properties of CrO2 |
+| Graphene-LCAO | Pristine graphene and graphene with defect with LCAO. Uses single config for two calculations. |
+| MoS2-GW           | GW Aproximation calculation for MoS2 |
+| Si-2atoms-optical | Two step calculation. First step ground, DOS and Band calculations. Second step for optical calculation. Structure is given with CIF file. |

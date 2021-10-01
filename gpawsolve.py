@@ -27,7 +27,6 @@ Description = f'''
 import getopt, sys, os
 import textwrap
 import requests
-import gpaw
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
 from ase.parallel import paropen, world, parprint, broadcast

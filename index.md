@@ -6,10 +6,6 @@ title: Home
 
 # Welcome to *gpaw-tools*
 
-| Note: |
-| ----- |
-| These pages will be the future website of gpaw-tools. Please visit later. |
-
 ## Introduction
 *gpaw-tools* is a bunch for python scripts for easy performing of GPAW calculations. It is mostly written for new DFT users who are running codes in their own PCs or on small group clusters.
 

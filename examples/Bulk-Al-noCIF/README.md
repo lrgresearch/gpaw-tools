@@ -1,5 +1,7 @@
 # Example: Electronic Properties of Bulk Aluminum
 
+**Note:** You can not use this example with `gg.py`. It is only working with CIF files.
+
 Ground, DOS and Band calculations of Bulk Aluminum. PW with 340 eV cutoff, 4x4x4 kpoints. The important thing is that the ositions are given with Atom object. To run the calculation with MPI on 4 cores please execute the following command in this folder.
 
     mpirun -np 4 gpawsolve.py -o -c bulk_aluminum.py

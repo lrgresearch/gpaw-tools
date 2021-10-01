@@ -27,6 +27,7 @@ Description = f'''
 import getopt, sys, os
 import textwrap
 import requests
+import gpaw
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
 from ase.parallel import paropen, world, parprint, broadcast
@@ -77,6 +78,7 @@ XC_calc = 'PBE'
 #XC_calc = 'HSE06'
 
 Spin_calc = False        # Spin polarized calculation?
+Magmom_per_atom = 1.0    # Magnetic moment per atom
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 #GW Parameters
@@ -101,7 +103,7 @@ optnblocks=4            # Split matrices in nblocks blocks and distribute them G
                         # or frequencies over processes
 
 #GENERAL
-draw_graphs = True		# Draw DOS and band structure on screen (yes for draw, small letters)
+draw_graphs = True		# Draw DOS and band structure on screen
 
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
@@ -234,6 +236,9 @@ if Optical_calc == False:
         if XC_calc in ['HSE06', 'PBE0']:
             parprint('Error: '+XC_calc+' can be used only in EXX mode...')
             quit()
+        if Spin_calc == True:
+           numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
+           bulk_configuration.set_initial_magnetic_moments(numm)
         calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
         bulk_configuration.calc = calc
 
@@ -586,7 +591,7 @@ if draw_graphs == True:
         if DOS_calc == True:
             if Spin_calc == True:
                 ax = plt.gca()
-                ax.plot(energies, -1.0*weights, 'r')
+                ax.plot(energies, -1.0*weights, 'y')
                 ax.plot(energies, weightsup, 'b')
                 ax.set_xlabel('Energy [eV]')
                 ax.set_ylabel('DOS [1/eV]')
@@ -601,7 +606,7 @@ if draw_graphs == True:
             # Band Structure
             if Mode == 'PW-GW':
                 f = plt.figure()
-                plt.plot(xdata, banddata, '-b', linewidth=1)
+                plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
                 plt.xticks(X, GWkpoints, fontsize=8)
                 plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
                 plt.tight_layout()

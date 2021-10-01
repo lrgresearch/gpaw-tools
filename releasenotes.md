@@ -8,8 +8,12 @@ title: Release Notes
 
 ### Development version
 
-#### October 2021
 * n/a
+
+### Version 21.10.1
+
+#### October 2021
+* An important bug made it impossible to work with existing examples with `gg.py`. It is now resolved.
 
 ### Version 21.10.0
 

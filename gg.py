@@ -11,6 +11,7 @@ import tkinter.ttk as ttk
 from tkinter import filedialog, BooleanVar, StringVar
 import pathlib
 import subprocess
+import shutil
 from ase.visualize import view
 from ase.io import read, write
 
@@ -60,6 +61,7 @@ class gg:
                                                   filetypes = (("PY files","*.py"),
                                                   ("All files","*.*")))
             configname = textfile
+            shutil.copy2(textfile, PROJECT_PATH) # Prepare a temporary config file for process
             # Loading config file
             sys.path.append(os.path.abspath(configname))
             config = __import__(pathlib.Path(configname).stem)
@@ -156,7 +158,10 @@ class gg:
             
             # GWkpoints
             self.GWkpointsttk.delete('0', 'end')
-            self.GWkpointsttk.insert('0', config.GWkpoints)
+            if hasattr(config, 'GWkpoints'):
+                self.GWkpointsttk.insert('0', config.GWkpoints)
+            else:
+                self.GWkpointsttk.insert('0', 'np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])')
             
             # GWtruncation
             if config.GWtruncation is None:
@@ -261,6 +266,7 @@ class gg:
             '''Calculate button's behaviour'''
             #Firstly, lets save all options to config file.
             with open(configname, 'w') as f1:
+                print("import numpy as np", end="\n", file=f1)
                 if self.Modettk.get() == 'PW':
                     print("Mode = 'PW'", end="\n", file=f1)
                 elif self.Modettk.get() == 'PW-GW':
@@ -333,7 +339,7 @@ class gg:
                 # GWq0correction
                 print("GWq0correction = "+ str(GWq0correctionvar.get()), end="\n", file=f1)
                 # GWnblock
-                print("GWnblock = "+ str(GWnblock.get()), end="\n", file=f1)
+                print("GWnblock = "+ str(GWnblockvar.get()), end="\n", file=f1)
 
                 # ---------Optical------------
                 print("num_of_bands = "+ str(self.num_of_bandsttk.get()), end="\n", file=f1)

@@ -6,21 +6,19 @@ title: About
 
 ## About *gpaw-tools*
 
-As an academic research group [LRG](https://www.lrgresearch.org), we are capable to conduct both experimental and calculations studies. Since 2011, we have been working on low-dimensional structures with a DFT tool ATK (later called QuantumATK). After the ATK was being purchased by Synopsys, we had some license problems with the Europractice scheme and with the pandemic rises at the beginning of 2020, we were looking for a new DFT tool for our further studies.
+[LRG](https://www.lrgresearch.org) is a research group at Gazi University that conducts both experimental and computational studies. Since 2011, LRG has been working on low-dimensional structures with the DFT tool ATK (later named QuantumATK). After ATK was acquired by Synopsys, due to licensing problems in the Europractice program at Gazi University, LRG started to look for a new DFT tool for further studies at the beginning of 2020 with pandemic increases.
 
-ASE/GPAW was our choice because of their combined capabilities. ASE is a very powerful software. And for GPAW, we can easily say that it is possible to use both PW and LCAO modes with GPAW. And it is possible to use ASE+ASAP+OpenKIM inter-atomic potentials as pre-optimization for geometry. These properties are very similar to ATK's features, that we are looking for.
+ASE/GPAW has been the main choice because they can be integrated and are flexible to work with Python. ASE is a very powerful software and being able to use GPAW and PW, FD, LCAO, Exact-exchange modes provides significant flexibility. And with the addition of using ASE+ASAP+OpenKIM interatomic potentials as geometry pre-optimization, it is very similar to the desired features of the ATK program.
 
-As a hybrid group, one of the important things is easy usage. ASE/GPAW usage needs Python knowledge. However, we want to enter input parameters and get the output data type usage like other DFT software. We are not interested in Python's abilities, and we do not have time for it, we are interested in our physics studies' results.
+One of the important things in computational studies for a hybrid research group is the ease of use. Using ASE/GPAW requires knowledge of Python. Each computation study needs its Python code. However, like other DFT software, entering the input parameters and accessing the output data is a successful way for the end-user type who is not interested in the details of the Python language but only wants to deal with materials research.
 
-Therefore, the gpaw-tools project was started. With the `gpawsolve.py` script (not a module, it is just a script!) we aimed to start UI creation for ASE/GPAW. And with `gg.py`, we want to show that a GUI is possible.
+Therefore, the gpaw-tools work was started. This work, which is based on showing that a UI for ASE/GPAW is possible with the gpawsolve.py script (not a module, just a script!) and a GUI with gg.py, is only in the beginning.
 
-We hope it was a good start. It is a simple tool now and we want to implement many ASE/GPAW's features inside it. Therefore, we need help. Please use/extend the software and create issues and pull requests on our [Github page](https://github.com/lrgresearch/gpaw-tools).
+We hope it was a good start. We want to implement many ASE/GPAW features within gpaw-tools. Therefore, we need help. Please use/extend the software and create issues and requests on our [Github page](https://github.com/lrgresearch/gpaw-tools).
+
 
 Thanks for using gpaw-tools.
 
-
-Prof. Dr. Sefer Bora Lisesivdin
-
-[homepage](https://sblisesivdin.github.io)
+gpaw-tools
 
 [back](./)

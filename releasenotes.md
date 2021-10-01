@@ -8,6 +8,8 @@ title: Release Notes
 
 ### Development version
 #### September 2021
+* 5 different examples are added to show simply different usage cases.
+* Initializing magnetic moment problem is solved.
 * Version argument is added.
 * GW parameters are also added to `gg.py`
 * Add some optical parameters to config files and `gg.py`.

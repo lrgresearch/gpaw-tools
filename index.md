@@ -23,9 +23,13 @@ More information about [gpaw-tools idea](about.md), [installation](installation.
 
 ## Download
 
-**Latest stable release: v21.9.0 [download](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v21.9.0.zip)**
+**Latest stable release: v21.10.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v21.10.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v21.10.0.zip)**
 
-Latest development release: [download](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
+Latest development release: [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
+
+## News
+* **[gpaw-tools](releasenotes.md#version-21100)** version 21.10.0 released (Oct 1, 2021).
+* **[gpaw-tools](releasenotes.md#version-2190)** version 21.9.0 released (Sep 14, 2021).
 
 ## Licensing
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).

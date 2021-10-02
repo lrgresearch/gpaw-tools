@@ -102,14 +102,10 @@ optnblocks=4            # Split matrices in nblocks blocks and distribute them G
                         # or frequencies over processes
 
 #GENERAL
-draw_graphs = True		# Draw DOS and band structure on screen
-
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
 whichstrain=[True, True, False, False, False, False]
-
-WantCIFexport = True
 MPIcores = 4            # This is for gg.py. Not used in this script.
 # <<<<<<< TO HERE TO FILE config.py IN SAME DIRECTORY AND USE -c FLAG WITH COMMAND
 
@@ -154,6 +150,7 @@ parser.add_argument("-c", "--config", dest = "configfile", help="Use config file
 parser.add_argument("-i", "--input",dest ="inputfile", help="Use input CIF file")
 parser.add_argument("-v", "--version", dest="version", action='store_true')
 parser.add_argument("-r", "--restart", dest="restart", action='store_true')
+parser.add_argument("-d", "--drawfigures", dest="drawfigs", action='store_true', help="Draws DOS and band structure figures at the end of calculation.")
 
 args = None
 
@@ -169,6 +166,7 @@ if args is None:
 outdir = False
 restart = False
 inFile = None
+drawfigs = False
 configpath = None
 Outdirname = ''
 
@@ -186,6 +184,9 @@ try:
 
     if args.outdir == True:
         outdir = True
+
+    if args.drawfigs == True:
+        drawfigs = True
     
     if args.version == True:
         response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest")
@@ -248,12 +249,13 @@ if Optical_calc == False:
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
-
             if Density_calc == True:
                 #This line makes huge GPW files. Therefore it is better to use this if else
                 calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             else:
                 calc.write(struct+'-1-Result-Ground.gpw')
+            # Writes final configuration as CIF file
+            write_cif(struct+'-Final.cif', bulk_configuration)
         else:
             parprint("Passing PW ground state calculation...")
 
@@ -267,6 +269,8 @@ if Optical_calc == False:
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+            # Writes final configuration as CIF file
+            write_cif(struct+'-Final.cif', bulk_configuration)
         else:
             parprint("Passing PW ground state calculation...")
 
@@ -291,6 +295,8 @@ if Optical_calc == False:
             bulk_configuration.get_potential_energy()
             calc.diagonalize_full_hamiltonian()
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+            # Writes final configuration as CIF file
+            write_cif(struct+'-Final.cif', bulk_configuration)
         else:
             parprint("Passing ground state calculation for GW calculation...")
 
@@ -312,6 +318,8 @@ if Optical_calc == False:
             relax.run(fmax=fmaxval)  # Consider much tighter fmax!
             bulk_configuration.get_potential_energy()
             calc.write(struct+'-1-Result-Ground.gpw', mode='all')
+            # Writes final configuration as CIF file
+            write_cif(struct+'-Final.cif', bulk_configuration)
         else:
             parprint("Passing LCAO ground state calculation...")
 
@@ -321,9 +329,6 @@ if Optical_calc == False:
     else:
         parprint("Please enter correct mode information.")
         quit()
-
-    if WantCIFexport == True:
-        write_cif(struct+'-Final.cif', bulk_configuration)
 
     # -------------------------------------------------------------
     # Step 2 - DOS CALCULATION
@@ -595,7 +600,7 @@ if Optical_calc == True:
 # -------------------------------------------------------------
 # Step Last - DRAWING BAND STRUCTURE AND DOS
 # -------------------------------------------------------------
-if draw_graphs == True:
+if drawfigs == True:
     # Draw graphs only on master node
     if world.rank == 0:
         # DOS

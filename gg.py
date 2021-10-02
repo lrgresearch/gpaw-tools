@@ -12,12 +12,12 @@ from tkinter import filedialog, BooleanVar, StringVar
 import pathlib
 import subprocess
 import shutil
+import numpy as np
 from ase.visualize import view
 from ase.io import read, write
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
-PROJECT_UI = os.path.join(PROJECT_PATH, "gg.ui")
-
+WORK_PATH = os.getcwd()
 class gg:
     ''' Main class'''
     Struct = ""
@@ -25,9 +25,10 @@ class gg:
 
     def __init__(self, master=None):
         global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, GWppavar, GWq0correctionvar, GWnblockvar
-        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, WantCIFexportvar
+        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar
         global Struct, StructLoaded
-
+        
+        
         def onOpen():
             ''' This is the open button's behaviour on the first tab.'''
             global basename, basepath, textfilenamepath
@@ -44,26 +45,28 @@ class gg:
             #textfile.close()
             self.text1.insert(tk.END, "File opened: "+basename+" \n")
             # Opening a working directory
-            if not os.path.isdir(os.path.join(basepath,basename)):
-                os.makedirs(os.path.join(basepath,basename), exist_ok=True)
+            #if not os.path.isdir(os.path.join(basepath,basename)):
+                #os.makedirs(os.path.join(basepath,basename), exist_ok=True)
             asestruct = read(textfilenamepath, index='-1')
             Struct = asestruct
             StructLoaded = True
             write(os.path.join(p.parents[0], basename)+'_InitialStructure.png', asestruct)
-            self.structureimage = tk.PhotoImage(file=os.path.join(os.path.join(p.parents[0], basename)+'_InitialStructure.png'))
+            self.structureimage = tk.PhotoImage(file=os.path.join(p.parents[0], basename)+'_InitialStructure.png')
             self.button2.configure(image=self.structureimage, style='Toolbutton', text='button2')
 
             
         def onConfigOpen():
             ''' This is the Configuration file open button's behaviour on the first tab.'''
             global configname
-            textfile = filedialog.askopenfilename(initialdir = os.getcwd(), title = "Open file",
+            textfile = filedialog.askopenfilename(initialdir = WORK_PATH, title = "Open file",
                                                   filetypes = (("PY files","*.py"),
                                                   ("All files","*.*")))
             configname = textfile
-            shutil.copy2(textfile, PROJECT_PATH) # Prepare a temporary config file for process
+            # Prepare a temporary config file for process
+            shutil.copy2(textfile, os.path.join(WORK_PATH,pathlib.Path(configname).stem+'_temp.py')) 
+            configname = os.path.join(WORK_PATH, pathlib.Path(configname).stem+'_temp.py')
             # Loading config file
-            sys.path.append(os.path.abspath(configname))
+            sys.path.append(WORK_PATH)
             config = __import__(pathlib.Path(configname).stem)
             
             # There must be some elegant way to do this.
@@ -159,9 +162,9 @@ class gg:
             # GWkpoints
             self.GWkpointsttk.delete('0', 'end')
             if hasattr(config, 'GWkpoints'):
-                self.GWkpointsttk.insert('0', config.GWkpoints)
+                self.GWkpointsttk.insert('0', str(config.GWkpoints.tolist()))
             else:
-                self.GWkpointsttk.insert('0', 'np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])')
+                self.GWkpointsttk.insert('0', '[[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]')
             
             # GWtruncation
             if config.GWtruncation is None:
@@ -253,11 +256,6 @@ class gg:
             else:
                 ShearXYvar.set(False)
 
-            if config.WantCIFexport == True:
-                WantCIFexportvar.set(True)
-            else:
-                WantCIFexportvar.set(False)
-
             self.MPIcoresttk.delete('0', 'end')
             self.MPIcoresttk.insert('0', config.MPIcores)
             self.text1.insert(tk.END, "Configuration loaded, please continue with Input parameters tab \n")
@@ -320,14 +318,19 @@ class gg:
                 else:
                     print("GWtype = 'GW0'", end="\n", file=f1)
                 # GWtruncation
-                if self.GWtypettk.get() == 'GW0':
-                    print("GWtype = 'GW0'", end="\n", file=f1)
-                elif self.GWtypettk.get() == 'G0W0':
-                    print("GWtype = 'G0W0'", end="\n", file=f1)
+                if self.GWtruncationttk.get() == '':
+                    print("GWtruncation = None", end="\n", file=f1)
+                elif self.GWtruncationttk.get() == '2D':
+                    print("GWtruncation = '2D'", end="\n", file=f1)
+                elif self.GWtruncationttk.get() == '1D':
+                    print("GWtruncation = '1D'", end="\n", file=f1)
+                elif self.GWtruncationttk.get() == '0D':
+                    print("GWtruncation = '0D'", end="\n", file=f1)
                 else:
-                    print("GWtype = 'GW0'", end="\n", file=f1)
+                    print("GWtruncation = 'wigner-seitz'", end="\n", file=f1)
+                    
                 # GWkpoints
-                print("GWkpoints = "+ str(self.GWkpointsttk.get()), end="\n", file=f1)
+                print("GWkpoints = np.array("+ str(self.GWkpointsttk.get())+")", end="\n", file=f1)
                 # GWcut_off_energy
                 print("GWcut_off_energy = "+ str(self.GWcut_off_energyttk.get()), end="\n", file=f1)
                 # GWbandVB
@@ -349,31 +352,42 @@ class gg:
                 print("optnblocks = "+ str(self.optnblocksttk.get()), end="\n", file=f1)
                 print("optomega2 = "+ str(self.optomega2ttk.get()), end="\n", file=f1)
                 print("optecut = "+ str(self.optecutttk.get()), end="\n", file=f1)
-                print("draw_graphs = True", end="\n", file=f1)
                 print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
-                print("WantCIFexport = "+ str(WantCIFexportvar.get()), end="\n", file=f1)
 
                 # This feature is not used by gpawsolve.py, this is only usable for gg.py
                 print("MPIcores = "+ str(self.MPIcoresttk.get()), end="\n", file=f1)
 
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
-            gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -c '+str(configname)+' -i '+str(textfilenamepath)
+            if restartvar == True:
+                gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -r -d -c '+str(configname)+' -i '+str(textfilenamepath)
+            else:
+                gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -d -c '+str(configname)+' -i '+str(textfilenamepath)
             proc = subprocess.Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
 
             # Save stdout as a log
-            with open(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-STDOUT-Log.txt", 'w') as f2:
+            #sys.path.append(os.path.abspath(configname))
+            #config = __import__(pathlib.Path(configname).stem)
+            
+            #Looking for working directory
+            if not os.path.isdir(os.path.join(os.path.dirname(configname), basename)):
+                os.makedirs(os.path.join(os.path.dirname(configname), basename), exist_ok=True)
+            
+            with open(os.path.join(os.path.join(os.path.dirname(configname), basename), basename)+"-STDOUT-Log.txt", 'w') as f2:
                 for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):  # or another encoding
                     self.text4.insert(tk.END, line)
                     print(line, end="\n", file=f2)
                 self.text1.insert(tk.END, "Calculation finished... \n")
             self.text1.insert(tk.END, "STDOUT is also saved as log file. \n")
 
-            # If there is a final cif file in the folder:
-            if read(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-Final.cif", index='-1'):
-                asestruct = read(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+"-Final.cif", index='-1')
-                write(os.path.join(os.path.join(PROJECT_PATH, basename), basename)+'_FinalStructure.png', asestruct)
-                self.text1.insert(tk.END, "Initial and Final Structure PNG files are saved to "+basename+" folder \n")
+            # Read final cif file and save it as png:
+            # /home/sblisesivdin/gpaw-tools-main/Cr2O_mp-1206821_primitive/Cr2O_mp-1206821_primitive-STDOUT-Log.txt
+            asestruct = read(os.path.join(os.path.join(os.path.dirname(configname), basename), basename)+"-Final.cif", index='-1')
+            write(os.path.join(os.path.join(os.path.dirname(configname), basename), basename)+'_FinalStructure.png', asestruct),
+            
+            shutil.move(os.path.join(basepath, basename)+'_InitialStructure.png', os.path.join(os.path.join(os.path.dirname(configname), basename), basename+'_InitialStructure.png'))
+            os.remove(configname)
+            self.text1.insert(tk.END, "Initial and Final Structure PNG files are saved to "+os.path.dirname(configname)+"/"+basename+" folder \n")
 
         def onASEload():
             '''When the user click on the structure image'''
@@ -680,11 +694,11 @@ class gg:
         # GWkpoints
         self.frameGWkpoints = ttk.Frame(self.labelGWframe)
         self.labelGWkpoints = ttk.Label(self.frameGWkpoints)
-        self.labelGWkpoints.configure(text='GW K-points change as np.array([[kix,kiy,kiz],...])')
+        self.labelGWkpoints.configure(text='GW K-points change as list [[kix,kiy,kiz],...]')
         self.labelGWkpoints.pack(side='left')
         self.GWkpointsttk = tk.Entry(self.frameGWkpoints)
         self.GWkpointsttk.delete('0', 'end')
-        self.GWkpointsttk.insert('0', 'Please enter kpoints in a format of: np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])')
+        self.GWkpointsttk.insert('0', '[[0.0,0.0,0.0]]')
         self.GWkpointsttk.pack(side='top')
         self.frameGWkpoints.configure(height='200', width='200')
         self.frameGWkpoints.pack(side='top')
@@ -753,12 +767,12 @@ class gg:
         self.GWframe.configure(height='200', width='200')
         self.GWframe.pack(side='left')
         
-        # Frame for Other
+        # Frame for Other Parameters
         self.labelframe5 = ttk.Labelframe(self.frame13)
-        self.WantCIFexportttk = ttk.Checkbutton(self.labelframe5)
-        WantCIFexportvar = BooleanVar()
-        self.WantCIFexportttk.configure(variable = WantCIFexportvar, onvalue=True, offvalue=False, text='CIF export for the final structure')
-        self.WantCIFexportttk.pack(side='top')
+        self.restartttk = ttk.Checkbutton(self.labelframe5)
+        restartvar = BooleanVar()
+        self.restartttk.configure(variable = restartvar, onvalue=True, offvalue=False, text='Restart calculation from file')
+        self.restartttk.pack(side='top')
         self.labelframe5.configure(height='200', text='General options', width='200')
         self.labelframe5.pack(side='top')
         self.frame13.configure(height='200', width='200')

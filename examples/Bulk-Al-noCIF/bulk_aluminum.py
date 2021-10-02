@@ -64,11 +64,8 @@ optnblocks=4            # Split matrices in nblocks blocks and distribute them G
                         # or frequencies over processes
 
 #GENERAL
-draw_graphs = True		# Draw DOS and band structure on screen
-
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
 whichstrain=[False, False, False, False, False, False]
-WantCIFexport = True
 MPIcores = 4            # Number of cores in calculation.

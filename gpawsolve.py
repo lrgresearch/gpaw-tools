@@ -153,6 +153,7 @@ parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true',
 parser.add_argument("-c", "--config", dest = "configfile", help="Use config file in the main directory for parameters")
 parser.add_argument("-i", "--input",dest ="inputfile", help="Use input CIF file")
 parser.add_argument("-v", "--version", dest="version", action='store_true')
+parser.add_argument("-r", "--restart", dest="restart", action='store_true')
 
 args = None
 
@@ -166,6 +167,7 @@ if args is None:
     exit(0)
 
 outdir = False
+restart = False
 inFile = None
 configpath = None
 Outdirname = ''
@@ -192,7 +194,8 @@ try:
         parprint('Download the latest stable release at: '+response.json()["tarball_url"])
         quit()
         
-        
+    if args.restart == True:
+        restart = True        
 
 except getopt.error as err:
     # output error, and return with an error code
@@ -230,36 +233,42 @@ if Optical_calc == False:
     # -------------------------------------------------------------
 
     if Mode == 'PW':
-        # PW Ground State Calculations
-        parprint("Starting PW ground state calculation...")
         if XC_calc in ['HSE06', 'PBE0']:
             parprint('Error: '+XC_calc+' can be used only in EXX mode...')
             quit()
         if Spin_calc == True:
            numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
            bulk_configuration.set_initial_magnetic_moments(numm)
-        calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
-        bulk_configuration.calc = calc
+        
+        if restart == False:
+            # PW Ground State Calculations
+            parprint("Starting PW ground state calculation...")
+            calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+            bulk_configuration.calc = calc
+            uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+            relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+            relax.run(fmax=fmaxval)  # Consider tighter fmax!
 
-        uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-        relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-        relax.run(fmax=fmaxval)  # Consider tighter fmax!
-
-        if Density_calc == True:
-            #This line makes huge GPW files. Therefore it is better to use this if else
-            calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+            if Density_calc == True:
+                #This line makes huge GPW files. Therefore it is better to use this if else
+                calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+            else:
+                calc.write(struct+'-1-Result-Ground.gpw')
         else:
-            calc.write(struct+'-1-Result-Ground.gpw')
+            parprint("Passing PW ground state calculation...")
 
     elif Mode == 'EXX':
-        # PW Ground State Calculations
-        parprint("Starting PW ground state calculation with PBE...")
-        calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
-        bulk_configuration.calc = calc
-
-        uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-        relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-        relax.run(fmax=fmaxval)  # Consider tighter fmax!
+        if restart == False:
+            # PW Ground State Calculations
+            parprint("Starting PW ground state calculation with PBE...")
+            calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+            bulk_configuration.calc = calc
+            uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+            relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+            relax.run(fmax=fmaxval)  # Consider tighter fmax!
+            calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+        else:
+            parprint("Passing PW ground state calculation...")
 
         if XC_calc in ['HSE06', 'PBE0']:
             parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
@@ -271,18 +280,19 @@ if Optical_calc == False:
                 print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
 
     elif Mode == 'PW-GW':
-        # PW Ground State Calculations with G0W0 Approximation
-        parprint("Starting PW only ground state calculation...")
-        calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': True}, txt=struct+'-1-Log-Ground.txt')
-        bulk_configuration.calc = calc
-
-        uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-        relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-        relax.run(fmax=fmaxval)  # Consider tighter fmax!
-
-        bulk_configuration.get_potential_energy()
-        calc.diagonalize_full_hamiltonian()
-        calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+        if restart == False:
+            # PW Ground State Calculations with G0W0 Approximation
+            parprint("Starting PW only ground state calculation for GW calculation...")
+            calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': True}, txt=struct+'-1-Log-Ground.txt')
+            bulk_configuration.calc = calc
+            uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+            relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+            relax.run(fmax=fmaxval)  # Consider tighter fmax!
+            bulk_configuration.get_potential_energy()
+            calc.diagonalize_full_hamiltonian()
+            calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+        else:
+            parprint("Passing ground state calculation for GW calculation...")
 
         # We start by setting up a G0W0 calculator object
         gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB), 
@@ -294,15 +304,17 @@ if Optical_calc == False:
         gw.calculate()
 
     elif Mode == 'LCAO':
-        parprint("Starting LCAO ground state calculation...")
-        calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
-        bulk_configuration.calc = calc
+        if restart == False:
+            parprint("Starting LCAO ground state calculation...")
+            calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
+            bulk_configuration.calc = calc
+            relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+            relax.run(fmax=fmaxval)  # Consider much tighter fmax!
+            bulk_configuration.get_potential_energy()
+            calc.write(struct+'-1-Result-Ground.gpw', mode='all')
+        else:
+            parprint("Passing LCAO ground state calculation...")
 
-        relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
-        relax.run(fmax=fmaxval)  # Consider much tighter fmax!
-
-        bulk_configuration.get_potential_energy()
-        calc.write(struct+'-1-Result-Ground.gpw', mode='all')
     elif Mode == 'FD':
         parprint("FD mode is not implemented in gpaw-tools yet...")
         quit()

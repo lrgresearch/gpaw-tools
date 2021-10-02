@@ -51,7 +51,7 @@ also you may need to give execute rights to `gpawsolve.py` and `gg.py` to execut
 This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.
 
 #### As a command:
-Command line usage: `gpawsolve.py -v -o -r -d -h -c <config.py> -i <inputfile.cif>`
+Command line usage: `gpawsolve.py -v -o -r -d -c <configfile.py> -h -i <inputfile.cif>`
 
 Argument list:
 ```
@@ -63,7 +63,7 @@ Argument list:
                    then the directory name will be /gpawsolve. If you change gpawsolve.py name to 
                    anyname.py then the directory name will be /anyname
 -h --help        : Help
--d --drawfigures : Draws DOS and band structure figures at the end of calculation.")
+-d --drawfigures : Draws DOS and band structure figures at the end of calculation.
 -r --restart     : Passing ground calculations and continue with the next required calculation.
 -v --version     : Version information of running code and the latest stable code. Also gives download link.
  ```

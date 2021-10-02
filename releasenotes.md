@@ -8,20 +8,16 @@ title: Release Notes
 
 ### Development version
 
-* n/a
+* A new argument '-r' is added. This argument makes script pass the ground state calculations and continue with the next calculation.
 
 ### Version 21.10.1
 
-#### October 2021
 * An important bug made it impossible to work with existing examples with `gg.py`. It is now resolved.
 
 ### Version 21.10.0
 
-#### October 2021
 * 5 different examples are added to show simply different usage cases.
 * Initializing magnetic moment problem is solved.
-
-#### September 2021
 * Version argument is added.
 * GW parameters are also added to `gg.py`
 * Add some optical parameters to config files and `gg.py`.
@@ -36,13 +32,10 @@ title: Release Notes
 
 ### Version 21.9.0
 
-#### September 2021
 * Corrected `quickoptimize.py` behaviour.
 * Many code quality and folder structure improvements.
 * Comment additions to code.
 * Better README.md.
-
-#### August 2021
 * `gg.py` which is a GUI for gpaw-tools is added to project. It can do all `gpawsolve.py`'s features in a graphical way!
 * `gpawsolve.py` can be run solely as a command now (This is needed for a GUI project).
 * All three scripts`PW-Electronic.py`, `LCAO-Electronic.py` and `PW-Optical-SingleCoreOnly.py` scripts becomes a single for-all-case script: `gpawsolve.py`.
@@ -56,9 +49,7 @@ title: Release Notes
 * Strain minimization in PW only. 
 * BFGS to LBFGS, Small many changes have been done.
 
-#### July 2021 
+### Preversion
 * `PW-Optical-SingleCoreOnly.py` script for optical calculations.
-* `PW-Electronic-changename.py` script for electronic calculations.
-
-#### March 2020 
+* `PW-Electronic-changename.py` script for electronic calculations. 
 * First scripts for personal usage.

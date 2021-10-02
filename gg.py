@@ -12,7 +12,6 @@ from tkinter import filedialog, BooleanVar, StringVar
 import pathlib
 import subprocess
 import shutil
-import numpy as np
 from ase.visualize import view
 from ase.io import read, write
 

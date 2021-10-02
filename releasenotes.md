@@ -8,6 +8,9 @@ title: Release Notes
 
 ### Development version
 
+* `gg.py` is better now. It is compatible with new arguments and removed variables. It can run in any directory and handling of `GWkpoints` and `GWtruncation` variables are correct now.
+* A new argument '-d' is added. This argument makes script draw the DOS and band calculation results. In the past, it was a varible in the config file.
+* `WantedCIFexport` variable is removed. 
 * A new argument '-r' is added. This argument makes script pass the ground state calculations and continue with the next calculation.
 
 ### Version 21.10.1

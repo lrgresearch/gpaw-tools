@@ -4,3 +4,4 @@ description: Bringing simplicity and order to GPAW calculations.
 show_downloads: false
 google_analytics:
 theme: jekyll-theme-minimal
+markdown: GFM

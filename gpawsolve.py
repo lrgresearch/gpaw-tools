@@ -276,16 +276,20 @@ if Optical_calc == False:
 
         if XC_calc in ['HSE06', 'PBE0']:
             parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
-            calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-EXX.txt')
+            calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, txt=struct+'-1-Log-EXX.txt')
             bulk_configuration.calc_exx = calc_exx
             with paropen(struct+'-1-Result-Ground-EXX.txt', "w") as fd:
                 print('Eigenvalue contributions: ',calc_exx.get_eigenvalue_contributions() , file=fd)
-                print('EXX Energy: ',calc_exx.get_exx_energy , file=fd)
-                print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
+                if np.isnan(calc_exx.get_exx_energy()):
+                    print ('The EXX and therefore total energy is not be calculated, because we are only', file=fd)
+                    print ('interested in a few eigenvalues for a few k-points.', file=fd)
+                else:
+                    print('EXX Energy: ',calc_exx.get_exx_energy() , file=fd)
+                    print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
 
     elif Mode == 'PW-GW':
         if restart == False:
-            # PW Ground State Calculations with G0W0 Approximation
+            # PW Ground State Calculations
             parprint("Starting PW only ground state calculation for GW calculation...")
             calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': True}, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc

@@ -1,7 +1,7 @@
 import numpy as np
 
 # -------------------------------------------------------------
-Mode = 'PW-GW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW-GW'             # Use PW, PW-GW, EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = False         # DOS calculation
 Band_calc = False        # Band structure calculation

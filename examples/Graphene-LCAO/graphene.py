@@ -3,7 +3,7 @@ import numpy as np
 #Outdirname = 'graphene-results'
 
 # -------------------------------------------------------------
-Mode = 'LCAO'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'LCAO'             # Use PW, PW-GW, EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = True         # DOS calculation
 Band_calc = True        # Band structure calculation

@@ -276,9 +276,9 @@ if Optical_calc == False:
 
         if XC_calc in ['HSE06', 'PBE0']:
             parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
-            calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, txt=struct+'-1-Log-EXX.txt')
+            calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, txt=struct+'-1-Log-EXX_mode.txt')
             bulk_configuration.calc_exx = calc_exx
-            with paropen(struct+'-1-Result-Ground-EXX.txt', "w") as fd:
+            with paropen(struct+'-1-Result-Ground-EXX_mode.txt', "w") as fd:
                 print('Eigenvalue contributions: ',calc_exx.get_eigenvalue_contributions() , file=fd)
                 if np.isnan(calc_exx.get_exx_energy()):
                     print ('The EXX and therefore total energy is not be calculated, because we are only', file=fd)
@@ -286,6 +286,8 @@ if Optical_calc == False:
                 else:
                     print('EXX Energy: ',calc_exx.get_exx_energy() , file=fd)
                     print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
+            parprint('ATTENTION:EXX mode results are only listed at: '+struct+'-1-Result-Ground-EXX_mode.txt')
+            parprint('          Other files (DOS, band, etc...) are the results calculated with PBE.')
 
     elif Mode == 'PW-GW':
         if restart == False:

@@ -14,12 +14,12 @@ Description = f'''
  -------------------------------------------------------------
  Calculation selector
  -------------------------------------------------------------
- | Method | Strain_minimization | Several XCs | Spin polarized | DOS | DFT+U | Band | Electron Density | Optical |
- | ------ | ------------------- | ----------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
- |   PW   | Yes                 | Yes         | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
- | PW-G0W0| Yes                 | Yes         | No             | No  | No    | Yes  | No               | No      |
- |  EXX*  | Yes (with PBE)      | No          | No             | No  | No    | No   | No               | No      |
- |  LCAO  | No                  | No          | No             | Yes | Yes   | Yes  | Yes              | No      |
+ | Method | Strain_minimization | Different XCs | Spin polarized | DOS | DFT+U | Band | Electron Density | Optical |
+ | ------ | ------------------- | ------------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
+ |   PW   | Yes                 | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
+ | PW-G0W0| Yes                 | Yes           | No             | No  | No    | Yes  | No               | No      |
+ |  EXX*  | Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
+ |  LCAO  | No                  | No            | No             | Yes | Yes   | Yes  | Yes              | No      |
  *: Just some ground state energy calculations for PBE0 and HSE06.
 '''
 

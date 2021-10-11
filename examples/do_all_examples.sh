@@ -35,4 +35,12 @@ echo "Step 1: Ground, DOS and Band"
 time mpirun -np $CORENUMBER gpawsolve.py -o -c Si-Step1-ground_dos_band.py -i Si_mp-149_primitive_Example.cif
 echo "Step 2: Optical"
 time gpawsolve.py -o -c Si-Step2-optical.py -i Si_mp-149_primitive_Example.cif
+
+# Wurtzite ZnO with DFT+U
+echo "Calculating: ZnO with DFT+U"
+cd ../ZnO-with-Hubbard
+echo "Calculating: Ground, DOS and Band"
+time mpirun -np $CORENUMBER gpawsolve.py -o -c ZnO_Hubbard.py
+
+# Finish
 echo "All calculations are finished."

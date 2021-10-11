@@ -123,6 +123,13 @@ class gg:
 
             self.energy_maxttk.delete('0', 'end')
             self.energy_maxttk.insert('0', config.energy_max)
+            
+            # Hubbard
+            self.Hubbardttk.delete('0', 'end')
+            if hasattr(config, 'Hubbard'):
+                self.Hubbardttk.insert('0', str(config.Hubbard))
+            else:
+                self.Hubbardttk.insert('0', '{}')
 
             if config.XC_calc == 'LDA':
                 self.XC_calcttk.current(0)
@@ -289,6 +296,7 @@ class gg:
                 print("band_path = '"+ str(self.band_pathttk.get())+"'", end="\n", file=f1)
                 print("band_npoints = "+ str(self.band_npointsttk.get()), end="\n", file=f1)
                 print("energy_max = "+ str(self.energy_maxttk.get()), end="\n", file=f1)
+                print("Hubbard = "+ str(self.Hubbardttk.get()), end="\n", file=f1)
 
                 if self.XC_calcttk.get() == 'LDA':
                     print("XC_calc = 'LDA'", end="\n", file=f1)
@@ -522,6 +530,18 @@ class gg:
         self.energy_maxttk.pack(side='top')
         self.frame12.configure(height='200', width='200')
         self.frame12.pack(side='top')
+        # Hubbard
+        self.frameHubbard = ttk.Frame(self.labelframe2)
+        self.labelHubbard = ttk.Label(self.frameHubbard)
+        self.labelHubbard.configure(text='Hubbard Params.({} for none):')
+        self.labelHubbard.pack(side='left')
+        self.Hubbardttk = ttk.Entry(self.frameHubbard)
+        self.Hubbardttk.delete('0', 'end')
+        self.Hubbardttk.insert('0', '{}')
+        self.Hubbardttk.pack(side='top')
+        self.frameHubbard.configure(height='200', width='200')
+        self.frameHubbard.pack(side='top')
+        
         self.frame14 = ttk.Frame(self.labelframe2)
         self.label11 = ttk.Label(self.frame14)
         self.label11.configure(text='Exchange Correlation (PBE0 and HSE06 are for EXX)')

@@ -20,6 +20,7 @@ kpts_z = 1				# kpoints in z direction
 band_path = 'GKG'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points
 energy_max = 10		# eV. It is the maximum energy value for band structure figure.
+Hubbard = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 #Exchange-Correlation, choose one:
 XC_calc = 'LDA'
 #XC_calc = 'PBE'

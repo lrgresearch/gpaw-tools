@@ -67,6 +67,7 @@ kpts_z = 1				# kpoints in z direction
 band_path = 'GMKG'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
+Hubbard = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 #Exchange-Correlation, choose one:
 #XC_calc = 'LDA'
 XC_calc = 'PBE'
@@ -244,7 +245,8 @@ if Optical_calc == False:
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation...")
-            calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': world.size}, spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+            calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, setups= Hubbard, parallel={'domain': world.size}, 
+                        spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
@@ -318,7 +320,7 @@ if Optical_calc == False:
     elif Mode == 'LCAO':
         if restart == False:
             parprint("Starting LCAO ground state calculation...")
-            calc = GPAW(mode='lcao', basis='dzp', kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
+            calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
             bulk_configuration.calc = calc
             relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider much tighter fmax!

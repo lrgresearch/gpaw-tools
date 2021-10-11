@@ -1,13 +1,9 @@
-from ase import Atoms
+from ase.build import bulk
 import numpy as np
 
-Outdirname = 'bulk-aluminum-results'
+Outdirname = 'ZnO-results'
 
-bulk_configuration = Atoms('Al',
-                            cell=[[0, 2.025, 2.025],
-                                 [2.025, 0, 2.025],
-                                 [2.025, 2.025, 0]],
-                                 pbc=True)
+bulk_configuration = bulk('ZnO', 'wurtzite', a=3.25, c=5.2)
 
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
@@ -23,16 +19,16 @@ Optical_calc = False     # Calculate the optical properties
 # ELECTRONIC
 fmaxval = 0.05 			#
 cut_off_energy = 340 	# eV
-kpts_x = 4 			    # kpoints in x direction
-kpts_y = 4				# kpoints in y direction
-kpts_z = 4				# kpoints in z direction
-band_path = 'LGXG'	    # Brillouin zone high symmetry points
+kpts_x = 5 			    # kpoints in x direction
+kpts_y = 5				# kpoints in y direction
+kpts_z = 5				# kpoints in z direction
+band_path = 'ALMGAHKG'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
-Hubbard = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
+Hubbard = {}  # Can be used like {'N': ':p,6.0,0'}, for none use {}
 #Exchange-Correlation, choose one:
-XC_calc = 'LDA'
-#XC_calc = 'PBE'
+#XC_calc = 'LDA'
+XC_calc = 'PBE'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
 #Choose one for PW-EXX (Ground state calculations will be done with PBE):
@@ -68,5 +64,5 @@ optnblocks=4            # Split matrices in nblocks blocks and distribute them G
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[False, False, False, False, False, False]
+whichstrain=[True, True, True, False, False, False]
 MPIcores = 4            # Number of cores in calculation.

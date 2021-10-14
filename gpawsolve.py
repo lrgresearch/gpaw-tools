@@ -26,6 +26,7 @@ Description = f'''
 import getopt, sys, os
 import textwrap
 import requests
+import pickle
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
 from ase.parallel import paropen, world, parprint, broadcast
@@ -315,6 +316,12 @@ if Optical_calc == False:
                   ecut=GWcut_off_energy, ppa=GWppa)
         parprint("Starting PW ground state calculation with G0W0 approximation...")
         gw.calculate()
+        results = pickle.load(open(struct+'-1-_results.pckl', 'rb'))
+        with paropen(struct+'-1-BandGap.txt', "w") as fd:
+            print('Quasi particle (QP) energies in eV. Take CB-VB for the bandgap', file=fd)
+            print('To see other energy contributions, use python -mpickle <picklefile>', file=fd)
+            for x in zip(results['qp']):
+                    print(*x, sep=", ", file=fd)
 
     elif Mode == 'LCAO':
         if restart == False:

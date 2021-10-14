@@ -3,8 +3,8 @@ import numpy as np
 # -------------------------------------------------------------
 Mode = 'PW-GW'             # Use PW, PW-GW, EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
-DOS_calc = False         # DOS calculation
-Band_calc = False        # Band structure calculation
+DOS_calc = True         # DOS calculation
+Band_calc = True        # Band structure calculation
 Density_calc = False    # Calculate the all-electron density?
 Optical_calc = False     # Calculate the optical properties
 
@@ -41,9 +41,10 @@ GWtruncation = '2D'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
 GWcut_off_energy = 60   # Cut-off energy
 GWbandVB = 8            # Valence band number
 GWbandCB = 18           # Conduction band number
-GWppa = False            # Plasmon Pole Approximation
+GWppa = True            # Plasmon Pole Approximation
 GWq0correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
 GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
+GWbandinterpolation = False
 
 # OPTICAL
 num_of_bands = 16		#

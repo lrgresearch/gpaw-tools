@@ -25,7 +25,7 @@ class gg:
     def __init__(self, master=None):
         global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, GWppavar, GWq0correctionvar, GWnblockvar
         global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar
-        global Struct, StructLoaded
+        global Struct, StructLoaded, GWbandinterpolationvar
         
         
         def onOpen():
@@ -209,7 +209,12 @@ class gg:
                 GWnblockvar.set(True)
             else:
                 GWnblockvar.set(False)
-            
+            # GWbandinterpolation
+            if config.GWbandinterpolation == True:
+                GWbandinterpolationvar.set(True)
+            else:
+                GWbandinterpolationvar.set(False)
+                
             # ---------Optical------------
             self.num_of_bandsttk.delete('0', 'end')
             self.num_of_bandsttk.insert('0', config.num_of_bands)
@@ -350,6 +355,8 @@ class gg:
                 print("GWq0correction = "+ str(GWq0correctionvar.get()), end="\n", file=f1)
                 # GWnblock
                 print("GWnblock = "+ str(GWnblockvar.get()), end="\n", file=f1)
+                # GWbandinterpolation
+                print("GWbandinterpolation = "+ str(GWbandinterpolationvar.get()), end="\n", file=f1)
 
                 # ---------Optical------------
                 print("num_of_bands = "+ str(self.num_of_bandsttk.get()), end="\n", file=f1)
@@ -780,6 +787,11 @@ class gg:
         GWnblockvar = BooleanVar()
         self.GWnblockttk.configure(variable = GWnblockvar, onvalue=True, offvalue=False, text='Cuts chi0 into as many blocks to reduce mem.')
         self.GWnblockttk.pack(side='top')
+        # GWbandinterpolation
+        self.GWbandinterpolationttk = ttk.Checkbutton(self.labelGWframe)
+        GWbandinterpolationvar = BooleanVar()
+        self.GWbandinterpolationttk.configure(variable = GWbandinterpolationvar, onvalue=True, offvalue=False, text='Spline draw in band?(needs min. 3 points)')
+        self.GWbandinterpolationttk.pack(side='top')
         
         self.labelGWframe.configure(height='200', text='GW Parameters (Only applicable when Basis = PW-GW', width='200')
         self.labelGWframe.pack(side='left')

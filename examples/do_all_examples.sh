@@ -24,9 +24,9 @@ echo "Step 2: Graphene with defect"
 time mpirun -np $CORENUMBER gpawsolve.py -o -c graphene.py -i graphene4x4withdefect.cif
 
 # MoS2-GW -------------------
-# echo "Calculating: MoS2-GW"
-# cd ../MoS2-GW
-# time mpirun -np $CORENUMBER gpawsolve.py -o -c MoS2-GW.py -i MoS2-structure.cif
+echo "Calculating: MoS2-GW"
+cd ../MoS2-GW
+time gpawsolve.py -o -c MoS2-GW.py -i MoS2-structure.cif
 
 # Si-2atoms-optical ----------------
 echo "Calculating: Si-2atoms-optical"

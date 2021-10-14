@@ -378,7 +378,7 @@ if Optical_calc == False:
                  gw_file=struct+'-1-_results.pckl',kpoints=GWkpoints)
 
             # Gettting results without spin-orbit
-            results = GW.get_gw_bands(SO=False, interpolate=True, vac=True)
+            results = GW.get_gw_bands(SO=False, interpolate=GWbandinterpolation, vac=True)
 
             # Extracting data
             X = results['X']

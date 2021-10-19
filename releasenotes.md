@@ -8,6 +8,8 @@ title: Release Notes
 
 ### Development version
 
+* In GW calculations, calculation could not be done because of interpolation in drawing the figure when the data did not have a minimum of 3 points. Now there is a variable to use interpolation or not.
+* In GW calculations, `gpawsolve.py` can write quasiparticle energies to a file separately.
 * DFT+U calculation ability is added for PW and LCAO modes.
 * `gg.py` is better now. It is compatible with new arguments and removed variables. It can run in any directory and handling of `GWkpoints` and `GWtruncation` variables are correct now.
 * A new argument '-d' is added. This argument makes script draw the DOS and band calculation results. In the past, it was a varible in the config file.

@@ -245,7 +245,7 @@ if Optical_calc == False:
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation...")
-            calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, setups= Hubbard, parallel={'domain': world.size}, 
+            calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
                         spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)

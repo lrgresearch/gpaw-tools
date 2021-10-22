@@ -1,10 +1,14 @@
 '''
 optimize_kpoints.py: Sample K-point Optimization with GPAW
 
-Usage: $ gpaw -P<core_number> python optimize_kpoints.py
+Usage: $ gpaw -P<core_number> python optimize_kpoints.py <file.cif>
+If the atom positions are not given with an external file like <file.cif>
+it must be provided as a ASE object below part "Bulk Configuration"
+Related ASE object can be produced with ciftoase.py script.
 '''
 
 from ase import *
+import sys, os
 from gpaw import GPAW, PW
 from ase.parallel import paropen, parprint
 
@@ -30,6 +34,11 @@ bulk_configuration = Atoms(
 # -------------------------------------------------------------
 # CONVERGE KPOINTS
 # -------------------------------------------------------------
+# if bulk structure is given with CIF, XYZ, etc... file
+if len(sys.argv) > 1:
+    inFile = sys.argv[1]
+    bulk_configuration = read(inFile, index='-1')
+
 cell0 = bulk_configuration.cell
 with paropen('OptimizeKPoints_Table-KPoints.txt', 'a') as f:
     f.write('K-point  Total_Energy\n')

@@ -21,7 +21,7 @@ kpoint_max = 11
 
 
 # -------------------------------------------------------------
-# Bulk Configuration
+# Bulk Configuration - YOU DON'T NEED IF YOU USE CIF FILE
 # -------------------------------------------------------------
 bulk_configuration = Atoms(
     [

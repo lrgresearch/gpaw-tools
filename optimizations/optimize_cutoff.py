@@ -23,7 +23,7 @@ kpts_y = 7
 kpts_z = 7
 
 # -------------------------------------------------------------
-# Bulk Configuration
+# Bulk Configuration - YOU DON'T NEED IF YOU USE CIF FILE
 # -------------------------------------------------------------
 bulk_configuration = Atoms(
     [

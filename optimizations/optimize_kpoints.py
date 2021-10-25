@@ -8,7 +8,7 @@ Related ASE object can be produced with ciftoase.py script.
 '''
 
 from ase import *
-import sys, os
+import sys
 from gpaw import GPAW, PW
 from ase.parallel import paropen, parprint
 

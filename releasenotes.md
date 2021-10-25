@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* PDOS calculations.
 * PW mode can use GLLB-SC xc now.
 * `optimize_cutoff.py` and `optimize_kpoints.py` can use CIF, XYZ, etc... files as input file. No need to include the ASE object inside these scripts anymore.
 * The nbands parameter is changed in PW mode.

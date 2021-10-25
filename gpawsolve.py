@@ -361,7 +361,7 @@ if Optical_calc == False:
         parprint("Starting DOS calculation...")
         calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-2-Log-DOS.txt')
         #energies, weights = calc.get_dos(npts=800, width=0)
-        dos = DOS(calc, npts=500, width=0)
+        dos = DOS(calc, npts=501, width=0.3)
         if Spin_calc == True:
             energies = dos.get_energies()
             weights = dos.get_dos(spin=0)
@@ -370,14 +370,55 @@ if Optical_calc == False:
             energies = dos.get_energies()
             weights = dos.get_dos()
 
-        with paropen(struct+'-2-Result-DOS.txt', "w") as fd:
+        with paropen(struct+'-2-Result-DOS.csv', "w") as fd:
             if Spin_calc == True:
                 for x in zip(energies, weights, weightsup):
                     print(*x, sep=", ", file=fd)
             else:
                 for x in zip(energies, weights):
                     print(*x, sep=", ", file=fd)
-
+        #PDOS
+        parprint("Calculating and saving PDOS...")
+        chem_sym = bulk_configuration.get_chemical_symbols()
+        ef = calc.get_fermi_level()
+        
+        if Spin_calc == True:
+            #Spin down
+            with paropen(struct+'-2-Result-PDOS-Down.csv', "w") as fd:
+                print("Energy, s-orbital, p-orbital, d-orbital, f-orbital", file=fd)
+                for j in range(0, bulk_configuration.get_global_number_of_atoms()):
+                    print("Atom no: "+str(j)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
+                    en, pdossd = calc.get_orbital_ldos(a=j, spin=0, angular='s', npts=501, width=0.3)
+                    en, pdospd = calc.get_orbital_ldos(a=j, spin=0, angular='p', npts=501, width=0.3)
+                    en, pdosdd = calc.get_orbital_ldos(a=j, spin=0, angular='d', npts=501, width=0.3)
+                    en, pdosfd = calc.get_orbital_ldos(a=j, spin=0, angular='f', npts=501, width=0.3)
+                    for x in zip(en-ef, pdossd, pdospd, pdosdd, pdosfd):
+                        print(*x, sep=", ", file=fd)
+                print("---------------------------------------------------- --------------------", file=fd)
+            #Spin up
+            with paropen(struct+'-2-Result-PDOS-Up.csv', "w") as fd:
+                print("Energy, s-orbital, p-orbital, d-orbital, f-orbital", file=fd)
+                for j in range(0, bulk_configuration.get_global_number_of_atoms()):
+                    print("Atom no: "+str(j)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
+                    en, pdossu = calc.get_orbital_ldos(a=j, spin=1, angular='s', npts=501, width=0.3)
+                    en, pdospu = calc.get_orbital_ldos(a=j, spin=1, angular='p', npts=501, width=0.3)
+                    en, pdosdu = calc.get_orbital_ldos(a=j, spin=1, angular='d', npts=501, width=0.3)
+                    en, pdosfu = calc.get_orbital_ldos(a=j, spin=1, angular='f', npts=501, width=0.3)
+                    for x in zip(en-ef, pdossu, pdospu, pdosdu, pdosfu):
+                        print(*x, sep=", ", file=fd)
+                print("---------------------------------------------------- --------------------", file=fd)
+        else:
+            with paropen(struct+'-2-Result-PDOS.csv', "w") as fd:
+                print("Energy, s-orbital, p-orbital, d-orbital, f-orbital", file=fd)
+                for j in range(0, bulk_configuration.get_global_number_of_atoms()):
+                    print("Atom no: "+str(j)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
+                    en, pdoss = calc.get_orbital_ldos(a=j, spin=0, angular='s', npts=501, width=0.3)
+                    en, pdosp = calc.get_orbital_ldos(a=j, spin=0, angular='p', npts=501, width=0.3)
+                    en, pdosd = calc.get_orbital_ldos(a=j, spin=0, angular='d', npts=501, width=0.3)
+                    en, pdosf = calc.get_orbital_ldos(a=j, spin=0, angular='f', npts=501, width=0.3)
+                    for x in zip(en-ef, pdoss, pdosp, pdosd, pdosf):
+                        print(*x, sep=", ", file=fd)
+                print("---------------------------------------------------- --------------------", file=fd)
     # -------------------------------------------------------------
     # Step 3 - BAND STRUCTURE CALCULATION
     # -------------------------------------------------------------
@@ -387,7 +428,7 @@ if Optical_calc == False:
             GW = GWBands(calc=struct+'-1-Result-Ground.gpw', fixdensity=True,
                  gw_file=struct+'-1-_results.pckl',kpoints=GWkpoints)
 
-            # Gettting results without spin-orbit
+            # Getting results without spin-orbit
             results = GW.get_gw_bands(SO=False, interpolate=GWbandinterpolation, vac=True)
 
             # Extracting data

@@ -26,6 +26,7 @@ Hubbard = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 #Exchange-Correlation, choose one:
 XC_calc = 'LDA'
 #XC_calc = 'PBE'
+#XC_calc = 'GLLBSC'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
 #Choose one for PW-EXX (Ground state calculations will be done with PBE):

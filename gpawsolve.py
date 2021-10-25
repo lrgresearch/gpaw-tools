@@ -14,9 +14,9 @@ Description = f'''
  -------------------------------------------------------------
  Calculation selector
  -------------------------------------------------------------
- | Method | Strain_minimization | Different XCs | Spin polarized | DOS | DFT+U | Band | Electron Density | Optical |
+ | Method | Structure optim.    | Different XCs | Spin polarized | DOS | DFT+U | Band | Electron Density | Optical |
  | ------ | ------------------- | ------------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
- |   PW   | Yes                 | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
+ |   PW   | Yes (No for GLLBSC) | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
  | PW-G0W0| Yes                 | Yes           | No             | No  | No    | Yes  | No               | No      |
  |  EXX*  | Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
  |  LCAO  | No                  | No            | No             | Yes | Yes   | Yes  | Yes              | No      |
@@ -71,6 +71,7 @@ Hubbard = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 #Exchange-Correlation, choose one:
 #XC_calc = 'LDA'
 XC_calc = 'PBE'
+#XC_calc = 'GLLBSC'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
 #Choose one for EXX (Ground state calculations will be done with PBE):
@@ -248,9 +249,18 @@ if Optical_calc == False:
             calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
                         spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
-            uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-            relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
-            relax.run(fmax=fmaxval)  # Consider tighter fmax!
+            if True in whichstrain:
+                if XC_calc == 'GLLBSC':
+                    parprint("Structure optimization LBFGS can not be used with GLLBSC xc.")
+                    parprint("Do structure optimization with PBE, then use its final CIF as input.")
+                    parprint("Quiting...")
+                    quit()
+                uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
+                relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+                relax.run(fmax=fmaxval)  # Consider tighter fmax!
+            else:
+                bulk_configuration.set_calculator(calc)
+                bulk_configuration.get_potential_energy()
             if Density_calc == True:
                 #This line makes huge GPW files. Therefore it is better to use this if else
                 calc.write(struct+'-1-Result-Ground.gpw', mode="all")
@@ -349,7 +359,7 @@ if Optical_calc == False:
     # -------------------------------------------------------------
     if DOS_calc == True:
         parprint("Starting DOS calculation...")
-        calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt')
+        calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-2-Log-DOS.txt')
         #energies, weights = calc.get_dos(npts=800, width=0)
         dos = DOS(calc, npts=500, width=0)
         if Spin_calc == True:
@@ -374,7 +384,7 @@ if Optical_calc == False:
     if Band_calc == True:
         parprint("Starting band structure calculation...")
         if Mode == 'PW-GW':      
-            GW = GWBands(calc=struct+'-1-Result-Ground.gpw',
+            GW = GWBands(calc=struct+'-1-Result-Ground.gpw', fixdensity=True,
                  gw_file=struct+'-1-_results.pckl',kpoints=GWkpoints)
 
             # Gettting results without spin-orbit

@@ -29,6 +29,7 @@ Hubbard = {'O': ':p,7.0','Zn': ':d,10.0'}  # Can be used like {'N': ':p,6.0,0'},
 #Exchange-Correlation, choose one:
 #XC_calc = 'LDA'
 XC_calc = 'PBE'
+#XC_calc = 'GLLBSC'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
 #Choose one for PW-EXX (Ground state calculations will be done with PBE):

@@ -135,14 +135,16 @@ class gg:
                 self.XC_calcttk.current(0)
             elif config.XC_calc == 'PBE':
                 self.XC_calcttk.current(1)
-            elif config.XC_calc == 'revPBE':
+            elif config.XC_calc == 'GLLBSC':
                 self.XC_calcttk.current(2)
-            elif config.XC_calc == 'RPBE':
+            elif config.XC_calc == 'revPBE':
                 self.XC_calcttk.current(3)
-            elif config.XC_calc == 'PBE0':
+            elif config.XC_calc == 'RPBE':
                 self.XC_calcttk.current(4)
-            elif config.XC_calc == 'HSE06':
+            elif config.XC_calc == 'PBE0':
                 self.XC_calcttk.current(5)
+            elif config.XC_calc == 'HSE06':
+                self.XC_calcttk.current(6)
             else:
                 self.XC_calcttk.current(0)
 
@@ -306,6 +308,8 @@ class gg:
                 if self.XC_calcttk.get() == 'LDA':
                     print("XC_calc = 'LDA'", end="\n", file=f1)
                 elif self.XC_calcttk.get() == 'PBE':
+                    print("XC_calc = 'GLLBSC'", end="\n", file=f1)
+                elif self.XC_calcttk.get() == 'GLLBSC':
                     print("XC_calc = 'PBE'", end="\n", file=f1)
                 elif self.XC_calcttk.get() == 'revPBE':
                     print("XC_calc = 'revPBE'", end="\n", file=f1)
@@ -554,7 +558,7 @@ class gg:
         self.label11.configure(text='Exchange Correlation (PBE0 and HSE06 are for EXX)')
         self.label11.pack(side='left')
         self.XC_calcttk = ttk.Combobox(self.frame14)
-        self.XC_calcttk.configure(values=('LDA', 'PBE', 'revPBE', 'RPBE' , 'PBE0', 'HSE06'), state='readonly')
+        self.XC_calcttk.configure(values=('LDA', 'PBE', 'GLLBSC', 'revPBE', 'RPBE' , 'PBE0', 'HSE06'), state='readonly')
         self.XC_calcttk.pack(side='top')
         self.XC_calcttk.current(0)
         self.frame14.configure(height='200', width='200')

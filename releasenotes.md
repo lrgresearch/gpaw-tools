@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* PW mode can use GLLB-SC xc now.
 * `optimize_cutoff.py` and `optimize_kpoints.py` can use CIF, XYZ, etc... files as input file. No need to include the ASE object inside these scripts anymore.
 * The nbands parameter is changed in PW mode.
 * In GW calculations, calculation could not be done because of interpolation in drawing the figure when the data did not have a minimum of 3 points. Now there is a variable to use interpolation or not.

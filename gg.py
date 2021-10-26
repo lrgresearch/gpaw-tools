@@ -430,7 +430,7 @@ class gg:
         self.loadConfigfilettk.configure(command=onConfigOpen)
 
         self.button2 = ttk.Button(self.frame1)
-        self.structureimage = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gg_full.png'))
+        self.structureimage = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
         self.button2.configure(image=self.structureimage, style='Toolbutton', text='button2')
         self.button2.pack(side='top')
         self.button2.configure(command=onASEload)
@@ -849,7 +849,7 @@ class gg:
         self.text2 = tk.Text(self.frame24)
         self.text2.configure(background='#4f4f4f', foreground='#ffffff', height='14', undo='false')
         self.text2.configure(width='60', wrap='char')
-        _text_ = '''GG ([g]paw-tools [g]ui)
+        _text_ = '''GG (gpaw-tools & gui)
 =======================
 GG is a graphical user interface (GUI) for a 
 gpawsolve.py script, which aims simple and
@@ -859,7 +859,7 @@ For licensing information, please refer to LICENSE file.'''
         self.text2.insert('0.0', _text_)
         self.text2.pack(side='left')
         self.button1 = ttk.Button(self.frame24)
-        self.gg_fullsmall_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gg_fullsmall.png'))
+        self.gg_fullsmall_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
         self.button1.configure(image=self.gg_fullsmall_png, state='normal', text='button1')
         self.button1.pack(side='left')
         self.frame24.configure(height='200', width='900')
@@ -878,7 +878,7 @@ For licensing information, please refer to LICENSE file.'''
         self.notebookBottom.pack(fill='x', side='top')
         self.frame2.configure(height='600', width='900')
         self.frame2.pack(fill='both', side='top')
-        self.gg_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gg.png'))
+        self.gg_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
         self.toplevel1.configure(height='600', width='900')
         self.toplevel1.iconphoto(True, self.gg_png)
         self.toplevel1.resizable(False, False)

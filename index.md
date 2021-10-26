@@ -5,9 +5,12 @@ title: Home
 ---
 
 # Welcome to *gpaw-tools*
+{: .fs-9 }
 
-## Introduction
 *gpaw-tools* is a bunch of higher-level user interaction python scripts for easy performing of GPAW calculations. It is mostly written for new DFT users who are running codes in their own PCs or on small group clusters.
+{: .fs-6 .fw-300 }
+
+[Download now](#download){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/lrgresearch/gpaw-tools){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 `gpaw-tools` have:
 1. A force-field quick optimization script `quickoptimization.py` for preliminary calculations using ASAP3/OpenKIM potentials. 

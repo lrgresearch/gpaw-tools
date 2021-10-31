@@ -5,18 +5,39 @@ title: Installation
 ---
 
 # Installation
- You must have `ase` and `gpaw` codes on your computer. You can find more information about installation of [ASE](https://wiki.fysik.dtu.dk/ase/install.html) and [GPAW](https://wiki.fysik.dtu.dk/gpaw/install.html) from their related sites.
- However, for a simple installation on a Windows 10 computer with WSL, a small installation information is given below:
 
-## Full Installation of WSL, ASE, GPAW and gpaw-tools on a Windows 10 system
+## Requirements
+This installation notes are based on installations on Linux operating system. Here, we are using Ubuntu distro as Linux system. However, other linux distros will also work with similar commands. If you are new to Linux, please continue with Ubuntu Linux and our commands given below.,
 
-### Windows Subsystem for Linux (WSL)
-The Windows Subsystem for Linux allows developers to run a wide range of Linux-based apps and utilities on Windows without the need for a traditional virtual machine or a dualboot setup. More information about installation can be found [here](https://docs.microsoft.com/en-us/windows/wsl/install).
+Required softwares for successfully running *gpaw-tools* software:
 
-We are suggesting Ubuntu 20.04 LTS version for gpaw-tools studies.
+* Linux Operating system (can be independently installed, virtually installed or installed as WSL distro under Windows Operating system)
+* Python 3.6 or above (with PIP and TK packages)
+* Atomic Simulation Environment (ASE) (will automatically install to NumPy, SciPy, Matplotlib packages)
+* GPAW
+* BLAS, LibXC, MPI, LibKIM, OpenKIM and ScaLAPACK packages
+* Some other Python packages like kimpy, ASAP3.
 
-### WSL Linux Distribution Version Control
-After installing WSL, we need to control the WSL version of Linux distribution installed in your system. Open Powershell and type:
+## What kind of Linux environment?
+
+Windows Subsystem for Linux on Windows, Virtual machine or a Linux machine?
+
+You can use *gpaw-tools* on many different systems that are supporting required libraries. In this installation notes, we are using Linux systems. We would like to give some information on installation on Linux on Windows machines, virtual machines or a pure Linux machine. You can also use a Mac system, however because we do not have a Mac system to control it we couldn't give the installation notes for a Mac system. Please do not hesitate to send us if you have installation notes for a Mac system.
+
+ * Full Installation on a Windows 10 system
+ * Full Installation on a Windows 11 system
+ * Full Installation on an Ubuntu 20.04 LTS system
+ * Full Installation on a Virtual Machine Linux system
+
+## Windows Subsystem for Linux (WSL)
+The Windows Subsystem for Linux allows developers to run a wide range of Linux-based apps and utilities on Windows without the need for a traditional virtual machine or a dualboot setup. More information about installation can be found [here](https://docs.microsoft.com/en-us/windows/wsl/install). There are two versions of WSL which are called WSL1 and WSL2. For GPAW calculations, WSL1 is giving better computation times than WSL2. However, with the announcement of WSLg on April 2021 at the Microsoft Build 2021, WSL2 is seemed to be the future of WSL.
+
+### Full Installation on a Windows 10 system (with WSL1)
+This installation note is explaining how to install WSL1 and other required tools to study gpaw-tools on a Windows 10 system. WSLg is coming on default at Windows 11 and installation note for Windows 11 is explaining similar things but using WSLg. If you are using Windows 11, please continue from here.
+We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
+
+#### WSL Version Control
+[After activating the WSL](https://www.windowscentral.com/install-windows-subsystem-linux-windows-10), and installing an Ubuntu system for Microsoft Store application, we need to control the WSL version of Linux distribution installed in your system. Open Powershell and type:
 
     wsl --list --verbose 
 
@@ -29,23 +50,56 @@ Your WSL distribution version must be "1", not "2". If it is not, change the WSL
 
     wsl --set-version Ubuntu-20.04 1
 
-### ASE/GPAW Installation
+#### Update, upgrade and XWindows
+Open Ubuntu, finish the installation of it, then update your Linux system with:
+
+    sudo apt update
+    sudo apt upgrade
+    
 To use a X server on windows, firstly you need to install few files (not necessary if you do not use matplotlib features.)
 
     sudo apt install libglu1-mesa-dev freeglut3 freeglut3-dev mesa-common-dev
 
-You also need to install [XMing](https://sourceforge.net/projects/xming/) on Windows. In new WSL installations, the following line must be added to `.bashrc` file
+You also need to install [XMing](https://sourceforge.net/projects/xming/) on Windows. In new WSL installations, the following line must be added to `~/.bashrc` file. You can use nano editor to do this:
+
+    nano ~/.bashrc
+
+and add these lines at the end of the file
 
     export LIBGL_ALWAYS_INDIRECT=0
     export DISPLAY=localhost:0.0
+
+After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command).
+
+### Full Installation on a Windows 11 system (with WSLg)
+This installation note is explaining how to install WSLg and other required tools to study gpaw-tools on a Windows 11 system. WSLg is coming on default at Windows 11.
+We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
+
+Open Ubuntu, finish the installation of it, then update your Linux system with:
+
+    sudo apt update
+    sudo apt upgrade
     
-also you need Tk library
+You do not need to install X server on your Windows to use with WSLg. 
 
-    sudo apt install python3-tk
+### Full Installation on an independent Linux system
+You just need to update and upgrade, before continuing:
 
-To further package installations, we need PIP installer
+    sudo apt update
+    sudo apt upgrade
+    
+### Full Installation on a Virtual Machine Linux system
+After [installing your Linux system inside Windows or other Linux using a virtualization software like VirtualBox](https://itsfoss.com/install-linux-in-virtualbox/).You just need to update and upgrade, before continuing:
 
-    sudo apt install python3-pip
+    sudo apt update
+    sudo apt upgrade
+    
+## Installation of ASE and GPAW
+You must have `ase` and `gpaw` codes on your computer. You can find more information about installation of [ASE](https://wiki.fysik.dtu.dk/ase/install.html) and [GPAW](https://wiki.fysik.dtu.dk/gpaw/install.html) from their related sites.
+
+You need Tk library for GUI, unzip for file unzipping and for further package installations, we need PIP installer
+
+    sudo apt install python3-tk python3-pip unzip
 
 Install ASE and other math, parallel, dev libraries
 
@@ -59,15 +113,16 @@ At this point, PIP can give some warnings as:
     which is not on PATH.
     Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 
-You must add this folder to your ``~/.bashrc`` file.
+Add the following line at the end of your ``~/.bashrc`` file.
 
     export PATH=/home/YOURUSERNAME/.local/bin:$PATH
     
-Then continue,
+
+After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command). Then continue,
 
     sudo apt install python3-dev libopenblas-dev libxc-dev libscalapack-mpi-dev libfftw3-dev
 
-Create a siteconfig.py file:
+Create a `siteconfig.py` file:
 
 ```
 $ mkdir -p ~/.gpaw
@@ -86,9 +141,9 @@ Use `gpaw info` to see information about installation. However, PAW-datasets are
     mkdir ~/.gpaw/gpaw-setups
     gpaw install-data ~/.gpaw/gpaw-setups/
 
-Now, you can test your GPAW with https://github.com/lrgresearch/gpaw-tools/blob/main/benchmarks/simple_benchmark_2021.py file
+Now, you can test your GPAW with https://github.com/lrgresearch/gpaw-tools/blob/main/benchmarks/simple_benchmark_2021.py file    
 
-### Installation of ASAP and KIM for Quick Optimization
+## Installation of ASAP and KIM for Quick Optimization
 
 For quick optimization, we need simple interatomic modelling. For this, we need ASAP3 for ASE, then we must install KIM with OpenKIM models and kimpy libraries.
 
@@ -99,3 +154,25 @@ For quick optimization, we need simple interatomic modelling. For this, we need 
     pip3 install kimpy
 
 Then you can use files in https://github.com/lrgresearch/gpaw-tools/tree/main/QuickOptimize
+
+## Installation of gpaw-tools
+In your home folder (~), let's download the latest development release (you can prefer stable release also, please visit https://www.lrgresearch.org/gpaw-tools/ to get the latest URL)
+
+    cd ~
+    wget https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip
+    unzip main.zip
+
+All files will be extracted to a folder called `gpaw-tools-main`. We need to make some files executable, and add this folder to `~/.bashrc` file to system-wide reach.
+
+    cd gpaw-tools-main/
+    chmod +x gg.py gpawsolve.py
+    nano ~/.bashrc
+
+Add the following line at the end of your ``~/.bashrc`` file.
+
+    export PATH=/home/YOURUSERNAME/gpaw-tools-main:$PATH
+
+
+After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command). 
+
+Congratulations! You installed all necessary files to run *gpaw-tools*. You can continue with our [Usage](Usage.md) page, or continue with the `examples` folder in your `gpaw-tools-main` folder. All examples have README.md files.

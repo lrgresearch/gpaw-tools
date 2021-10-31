@@ -7,7 +7,7 @@ title: Home
 # Welcome to *gpaw-tools*
 {: .fs-9 }
 
-*gpaw-tools* is a collection of python scripts that use ASE and GPAW for performing Density Functional Theory (DFT) calculations. Its aim is lowering the entry barrier and providing an easy-to-use command line and graphical user interfaces for GPAW. It is mostly written for new DFT users who are running codes in their own PCs or on small group clusters.
+*gpaw-tools* is a collection of python scripts that use ASE and GPAW for performing Density Functional Theory (DFT) calculations. Its aim is to lower the entry barrier and to provide an easy-to-use command line and graphical user interfaces for GPAW. It is mostly written for new DFT users who are running codes on their own PCs or on small group clusters.
 {: .fs-6 .fw-300 }
 
 [Download now](#download){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/lrgresearch/gpaw-tools){: .btn .fs-5 .mb-4 .mb-md-0 }

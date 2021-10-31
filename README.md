@@ -9,7 +9,7 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/lrgresearch/gpaw-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lrgresearch/gpaw-tools/alerts/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/lrgresearch/gpaw-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lrgresearch/gpaw-tools/context:python)
 ## Introduction
-*gpaw-tools* is a bunch of higher-level user interaction python scripts for easy performing of GPAW calculations. It is mostly written for new DFT users who are running codes in their own PCs or on small group clusters.
+*gpaw-tools* is a collection of python scripts that use ASE and GPAW for performing Density Functional Theory (DFT) calculations. Its aim is lowering the entry barrier and providing an easy-to-use command line and graphical user interfaces for GPAW. It is mostly written for new DFT users who are running codes in their own PCs or on small group clusters.
 
 `gpaw-tools` have:
 1. A force-field quick optimization script `quickoptimization.py` for preliminary calculations using ASAP3/OpenKIM potentials. 

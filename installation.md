@@ -24,15 +24,15 @@ Windows Subsystem for Linux on Windows, Virtual machine or a Linux machine?
 
 You can use *gpaw-tools* on many different systems that are supporting required libraries. In this installation notes, we are using Linux systems. We would like to give some information on installation on Linux on Windows machines, virtual machines or a pure Linux machine. You can also use a Mac system, however because we do not have a Mac system to control it we couldn't give the installation notes for a Mac system. Please do not hesitate to send us if you have installation notes for a Mac system.
 
- * Full Installation on a Windows 10 system
- * Full Installation on a Windows 11 system
- * Full Installation on an Ubuntu 20.04 LTS system
- * Full Installation on a Virtual Machine Linux system
+ * [Installation on a Windows 10 system](installation.md#installation-on-a-windows-10-system-with-wsl1)
+ * [Installation on a Windows 11 system](installation.md#installation-on-a-windows-11-system-with-wslg)
+ * [Installation on an independent Linux system](installation.md#installation-on-an-independent-linux-system)
+ * [Installation on a Virtual Machine Linux system](installation.md#installation-on-a-virtual-machine-linux-system)
 
 ## Windows Subsystem for Linux (WSL)
 The Windows Subsystem for Linux allows developers to run a wide range of Linux-based apps and utilities on Windows without the need for a traditional virtual machine or a dualboot setup. More information about installation can be found [here](https://docs.microsoft.com/en-us/windows/wsl/install). There are two versions of WSL which are called WSL1 and WSL2. For GPAW calculations, WSL1 is giving better computation times than WSL2. However, with the announcement of WSLg on April 2021 at the Microsoft Build 2021, WSL2 is seemed to be the future of WSL.
 
-### Full Installation on a Windows 10 system (with WSL1)
+### Installation on a Windows 10 system (with WSL1)
 This installation note is explaining how to install WSL1 and other required tools to study gpaw-tools on a Windows 10 system. WSLg is coming on default at Windows 11 and installation note for Windows 11 is explaining similar things but using WSLg. If you are using Windows 11, please continue from here.
 We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
 
@@ -71,7 +71,7 @@ and add these lines at the end of the file
 
 After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command).
 
-### Full Installation on a Windows 11 system (with WSLg)
+### Installation on a Windows 11 system (with WSLg)
 This installation note is explaining how to install WSLg and other required tools to study gpaw-tools on a Windows 11 system. WSLg is coming on default at Windows 11.
 We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
 
@@ -82,20 +82,20 @@ Open Ubuntu, finish the installation of it, then update your Linux system with:
     
 You do not need to install X server on your Windows to use with WSLg. 
 
-### Full Installation on an independent Linux system
+### Installation on an independent Linux system
 You just need to update and upgrade, before continuing:
 
     sudo apt update
     sudo apt upgrade
     
-### Full Installation on a Virtual Machine Linux system
+### Installation on a Virtual Machine Linux system
 After [installing your Linux system inside Windows or other Linux using a virtualization software like VirtualBox](https://itsfoss.com/install-linux-in-virtualbox/).You just need to update and upgrade, before continuing:
 
     sudo apt update
     sudo apt upgrade
     
 ## Installation of ASE and GPAW
-You must have `ase` and `gpaw` codes on your computer. You can find more information about installation of [ASE](https://wiki.fysik.dtu.dk/ase/install.html) and [GPAW](https://wiki.fysik.dtu.dk/gpaw/install.html) from their related sites.
+After preparing your Linux system, you must have `ase` and `gpaw` codes on your computer. You can find more information about installation of [ASE](https://wiki.fysik.dtu.dk/ase/install.html) and [GPAW](https://wiki.fysik.dtu.dk/gpaw/install.html) from their related sites.
 
 You need Tk library for GUI, unzip for file unzipping and for further package installations, we need PIP installer
 
@@ -175,4 +175,4 @@ Add the following line at the end of your ``~/.bashrc`` file.
 
 After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command). 
 
-Congratulations! You installed all necessary files to run *gpaw-tools*. You can continue with our [Usage](Usage.md) page, or continue with the `examples` folder in your `gpaw-tools-main` folder. All examples have README.md files.
+Congratulations! You installed all necessary files to run *gpaw-tools*. You can continue with our [usage](usage.md) page, or continue with the `examples` folder in your `gpaw-tools-main` folder. All examples have README.md files.

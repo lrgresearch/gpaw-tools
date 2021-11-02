@@ -7,6 +7,7 @@ it must be provided as a ASE object below part "Bulk Configuration"
 Related ASE object can be produced with ciftoase.py script.
 '''
 from ase import *
+from ase.io import read
 from gpaw import GPAW, PW
 import sys
 from ase.parallel import paropen, world, parprint

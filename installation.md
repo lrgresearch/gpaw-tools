@@ -109,7 +109,7 @@ After preparing your Linux system, you must have `ase` and `gpaw` codes on your 
 
 You need Tk library for GUI, unzip for file unzipping and for further package installations, we need PIP installer
 
-    sudo apt install python3-tk python3-pip unzip
+    sudo apt install python3-tk python3-pip unzip python-is-python3
 
 Install ASE and other math, parallel, dev libraries
 

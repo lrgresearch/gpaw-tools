@@ -37,7 +37,6 @@ gpaw-tools-main/
 ├── gui_files/
 └── gpawsolve.py
 └── gg.py
-└── config.py
 ```
 To make the `gpawsolve.py` and `gg.py` as system-wide commands, user must include the `gpaw-tools-main` folder to the $PATH variable in the `.bashrc` file. In case of user  downloaded and extracted the `gpaw-tools-main` file to user's home directory, and to make the change permanent, user must need to define the $PATH variable in the shell configuration file `.bashrc` as
 
@@ -71,7 +70,7 @@ Argument list:
   You can put ASE Atoms object in to your config file and therefore can use it like an input file. As an example please note the example at: `examples\Bulk-aluminum` folder.
   
  #### As a stand alone script
- * Change the parameters from related lines for each simulation OR change `config.py` once and use `-c` argument.
+ * Change the parameters from related lines for each simulation OR create a config file (as you can see in examples) once and use `-c` argument.
  * If you want to use CIF files for structure, use `-i` argument like `gpawsolve.py -i structurefile.cif`.
  * If you want to use ASE atoms method for structure, just copy/paste your `Atoms` info into the part mentioned with "Bulk Structure".
  * If you have CIF file but want to use Atoms method you can use `CIF-to-ASE/ciftoase.py` to convert your CIF files to ASE Atoms.

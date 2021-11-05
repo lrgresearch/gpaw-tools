@@ -149,9 +149,7 @@ Then install gpaw
 Use `gpaw info` to see information about installation. However, PAW-datasets are not installed yet. To install it, firstly create a directory under `~/.gpaw` then install PAW datasets
 
     mkdir ~/.gpaw/gpaw-setups
-    gpaw install-data ~/.gpaw/gpaw-setups/
-
-Now, you can test your GPAW with https://github.com/lrgresearch/gpaw-tools/blob/main/benchmarks/simple_benchmark_2021.py file    
+    gpaw install-data ~/.gpaw/gpaw-setups/  
 
 ## 3. Installation of ASAP and KIM for Quick Optimization
 

@@ -8,6 +8,8 @@ For better performance do not use `total number of cores` that your computer pro
 or (this will take a little bit longer)
 
        time mpiexec -n 7 gpaw python simple_benchmark_2021.py
+       
+or if your CPU supports threads (sometimes this may take even longer)
 
 These commands will result something like:
 ```
@@ -34,12 +36,13 @@ Here, `real    9m0.0719s` is the benchmark time.
 ## Some Benchmark Times
 
 ### Computers
-| Computer  | CPU                      | Cores | CPU Speed | Memory | Hdd            | CPU GFlops | Memory Bandwidth | HDD Speed |
-| --------- | ------------------------ | ----- | --------- | ------ | -------------- | ---------- | ---------------- | --------- |
-| 1         | 2x Intel Xeon E5-2430 v2 | 24    | 2.5 GHz   | 16Gb   | 300Gb + 1000Gb | 357        | 5 GB/s           | 259 MB/s  |
-| 2         | Intel Core i7-8550u      | 4     | 1.8GHz    | 8Gb    | 512SSD         | 81         | 12 GB/s          | 1GB/s     |
-| 3         | AMD Ryzen 5 4500u        | 6     | 2.38GHz   | 8Gb    | 256SSD         | 86         | 9 GB/s           | 0.8GB/s   |
-| 4         | Intel Core i7-8700       | 12    | 3.2 GHz   | 8 Gb   | 1000 Gb        | 302        | 10 GB/s          | 195 MB/s  |
+| Computer  | CPU                      | Cores(Threads) | CPU Speed | Memory | Hdd            | CPU GFlops | Memory Bandwidth | HDD Speed |
+| --------- | ------------------------ | -------------- | --------- | ------ | -------------- | ---------- | ---------------- | --------- |
+| 1         | 2x Intel Xeon E5-2430 v2 | 24             | 2.5 GHz   | 16Gb   | 300Gb + 1000Gb | 357        | 5 GB/s           | 259 MB/s  |
+| 2         | Intel Core i7-8550u      | 4(8)           | 1.8GHz    | 8Gb    | 512SSD         | 81         | 12 GB/s          | 1GB/s     |
+| 3         | AMD Ryzen 5 4500u        | 6              | 2.38GHz   | 8Gb    | 256SSD         | 86         | 9 GB/s           | 0.8GB/s   |
+| 4         | Intel Core i7-8700       | 6(12)          | 3.2 GHz   | 8 Gb   | 1000 Gb        | 302        | 10 GB/s          | 195 MB/s  |
+| 5         | AMD Ryzen 7 5700u        | 8(16)          | 1.8GHz    | 16Gb   | 512SSD         | 254        | 6 GB/s           | 2GB/s     |
 
 ### Benchmarks
 | Computer  | GPAW Version  | System                  | Used Core | Command                       | Benchmark File             | Time Elapsed |
@@ -52,3 +55,6 @@ Here, `real    9m0.0719s` is the benchmark time.
 | 2         | 21.6.0        | W10Pro - WSL2 - Ub20.04 | 7         | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 9m00s        |
 | 3         | 21.6.0        | W10 - WSL1 - Ub20.04    | 5         | gpaw -P                       | simple_benchmark_2021.py   | 4m26s        |
 | 4         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 11        | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 5m22s        |
+| 5         | 21.6.0        | Ubuntu 20.04            | 8         | gpaw -P                       | simple_benchmark_2021.py   | 4m24s        |
+| 5         | 21.6.0        | Ubuntu 20.04            | 8         | mpirun -n                     | simple_benchmark_2021.py   | 5m15s        |
+| 5         | 21.6.0        | Ubuntu 20.04            | 15        | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 8m19s        |

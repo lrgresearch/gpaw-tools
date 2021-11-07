@@ -11,6 +11,8 @@ or (this will take a little bit longer)
        
 or if your CPU supports threads (sometimes this may take even longer)
 
+       time mpiexec --use-hwthread-cpus -n 15 gpaw python simple_benchmark_2021.py
+
 These commands will result something like:
 ```
        Step     Time          Energy         fmax

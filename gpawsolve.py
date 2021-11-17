@@ -33,6 +33,7 @@ from ase.parallel import paropen, world, parprint, broadcast
 from gpaw import GPAW, PW, FermiDirac
 from ase.optimize.lbfgs import LBFGS
 from ase.io import read, write
+from ase.units import Bohr
 import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
 from ase.constraints import UnitCellFilter
@@ -496,9 +497,10 @@ if Optical_calc == False:
         bulk_configuration.calc = calc
         np = calc.get_pseudo_density()
         n = calc.get_all_electron_density(gridrefinement=gridref)
-
-        write(struct+'-4-Result-All-electron_n.cube', bulk_configuration, data=n)
-        write(struct+'-4-Result-All-electron_np.cube', bulk_configuration, data=np)
+        
+        # Writing pseudo and all electron densities to cube file with Bohr unit
+        write(struct+'-4-Result-All-electron_nall.cube', bulk_configuration, data=n * Bohr**3)
+        write(struct+'-4-Result-All-electron_npseudo.cube', bulk_configuration, data=np * Bohr**3)
 
 # -------------------------------------------------------------
 # Step 5 - OPTICAL CALCULATION

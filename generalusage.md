@@ -1,10 +1,10 @@
 ---
 layout: default
 navigation_weight: 4
-title: Usage
+title: General Usage
 ---
 
-# Usage
+# General Usage
 When you download `gpaw-tools` from GitHub and extract it to a folder you will have a folder structure as:
 
 ```

@@ -152,8 +152,8 @@ parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true',
                     help="""Save everything to a output directory with naming /inputfile. If there is no input file given and 
                     Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
                     If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
-parser.add_argument("-c", "--config", dest = "configfile", help="Use config file in the main directory for parameters")
-parser.add_argument("-i", "--input",dest ="inputfile", help="Use input CIF file")
+parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
+parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
 parser.add_argument("-v", "--version", dest="version", action='store_true')
 parser.add_argument("-r", "--restart", dest="restart", action='store_true')
 parser.add_argument("-d", "--drawfigures", dest="drawfigs", action='store_true', help="Draws DOS and band structure figures at the end of calculation.")
@@ -177,16 +177,16 @@ configpath = None
 Outdirname = ''
 
 try:
-    if args.configfile is not None:
-        configpath = os.path.join(os.getcwd(),args.configfile)
+    if args.inputfile is not None:
+        configpath = os.path.join(os.getcwd(),args.inputfile)
         sys.path.append(os.getcwd())
         # Works like from FILE import *
         conf = __import__(Path(configpath).stem, globals(), locals(), ['*'])
         for k in dir(conf):
             locals()[k] = getattr(conf, k)
 
-    if args.inputfile :
-        inFile = os.path.join(os.getcwd(),args.inputfile)
+    if args.geometryfile :
+        inFile = os.path.join(os.getcwd(),args.geometryfile)
 
     if args.outdir == True:
         outdir = True

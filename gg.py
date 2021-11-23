@@ -69,208 +69,392 @@ class gg:
             config = __import__(pathlib.Path(configname).stem)
             
             # There must be some elegant way to do this.
-            if config.Mode == 'PW':
-                self.Modettk.current(0)
-            elif config.Mode == 'PW-GW':
-                self.Modettk.current(1)
-            elif config.Mode == 'EXX':
-                self.Modettk.current(2)
-            elif config.Mode == 'LCAO':
-                self.Modettk.current(3)
-            elif config.Mode == 'FD':
-                self.Modettk.current(4)
+            # Searching in globals() make us to use less parameters in config files. Otherwise not using a variable in
+            # a congig file gives errors.
+            
+            # Mode
+            if 'config.Mode' in globals():
+                if config.Mode == 'PW':
+                    self.Modettk.current(0)
+                elif config.Mode == 'PW-GW':
+                    self.Modettk.current(1)
+                elif config.Mode == 'EXX':
+                    self.Modettk.current(2)
+                elif config.Mode == 'LCAO':
+                    self.Modettk.current(3)
+                elif config.Mode == 'FD':
+                    self.Modettk.current(4)
+                else:
+                    self.Modettk.current(0)
             else:
                 self.Modettk.current(0)
 
-            if config.DOS_calc == True:
-                DOS_calcvar.set(True)
+            # DOS calculation    
+            if 'config.DOS_calc' in globals():
+                if config.DOS_calc == True:
+                    DOS_calcvar.set(True)
+                else:
+                    DOS_calcvar.set(False)
             else:
                 DOS_calcvar.set(False)
 
-            if config.Band_calc == True:
-                Band_calcvar.set(True)
+            # Band calculation
+            if 'config.Band_calc' in globals():
+                if config.Band_calc == True:
+                    Band_calcvar.set(True)
+                else:
+                    Band_calcvar.set(False)
             else:
                 Band_calcvar.set(False)
 
-            if config.Density_calc == True:
-                Density_calcvar.set(True)
+            # Density calculation
+            if 'config.Density_calc' in globals():
+                if config.Density_calc == True:
+                    Density_calcvar.set(True)
+                else:
+                    Density_calcvar.set(False)
             else:
                 Density_calcvar.set(False)
 
-            if config.Optical_calc == True:
-                Optical_calcvar.set(True)
+            # Optical calculation
+            if 'config.Optical_calc' in globals():
+                if config.Optical_calc == True:
+                    Optical_calcvar.set(True)
+                else:
+                    Optical_calcvar.set(False)
             else:
                 Optical_calcvar.set(False)
 
-            self.fmaxvalttk.delete('0', 'end')
-            self.fmaxvalttk.insert('0', config.fmaxval)
+            # Fmax
+            if 'config.fmaxval' in globals():
+                self.fmaxvalttk.delete('0', 'end')
+                self.fmaxvalttk.insert('0', config.fmaxval)
+            else:
+                self.fmaxvalttk.delete('0', 'end')
+                self.fmaxvalttk.insert('0', '0.05')
 
-            self.cut_off_energyttk.delete('0', 'end')
-            self.cut_off_energyttk.insert('0', config.cut_off_energy)
+            # Cut-off energy
+            if 'config.cut_off_energy' in globals():
+                self.cut_off_energyttk.delete('0', 'end')
+                self.cut_off_energyttk.insert('0', config.cut_off_energy)
+            else:
+                self.cut_off_energyttk.delete('0', 'end')
+                self.cut_off_energyttk.insert('0', '340')
 
-            self.kpts_xttk.delete('0', 'end')
-            self.kpts_xttk.insert('0', config.kpts_x)
-            self.kpts_yttk.delete('0', 'end')
-            self.kpts_yttk.insert('0', config.kpts_y)
-            self.kpts_zttk.delete('0', 'end')
-            self.kpts_zttk.insert('0', config.kpts_z)
+            # Kpoints
+            if 'config.kpts_x' in globals():
+                self.kpts_xttk.delete('0', 'end')
+                self.kpts_xttk.insert('0', config.kpts_x)
+                self.kpts_yttk.delete('0', 'end')
+                self.kpts_yttk.insert('0', config.kpts_y)
+                self.kpts_zttk.delete('0', 'end')
+                self.kpts_zttk.insert('0', config.kpts_z)
+            else:
+                self.kpts_xttk.delete('0', 'end')
+                self.kpts_xttk.insert('0', '1')
+                self.kpts_yttk.delete('0', 'end')
+                self.kpts_yttk.insert('0', '1')
+                self.kpts_zttk.delete('0', 'end')
+                self.kpts_zttk.insert('0', '1')
 
-            self.band_pathttk.delete('0', 'end')
-            self.band_pathttk.insert('0', config.band_path)
+            # Gamma
+            if 'config.Gamma' in globals():
+                if config.Gamma == True:
+                    Gammavar.set(True)
+                else:
+                    Gammavar.set(False)
+            else:
+                Gammavar.set(False)
 
-            self.band_npointsttk.delete('0', 'end')
-            self.band_npointsttk.insert('0', config.band_npoints)
+            # Band path
+            if 'config.band_path' in globals():
+                self.band_pathttk.delete('0', 'end')
+                self.band_pathttk.insert('0', config.band_path)
+            else:
+                self.band_pathttk.delete('0', 'end')
+                self.band_pathttk.insert('0', 'GX')
 
-            self.energy_maxttk.delete('0', 'end')
-            self.energy_maxttk.insert('0', config.energy_max)
+            # Npoints
+            if 'config.band_npoints' in globals():
+                self.band_npointsttk.delete('0', 'end')
+                self.band_npointsttk.insert('0', config.band_npoints)
+            else:
+                self.band_npointsttk.delete('0', 'end')
+                self.band_npointsttk.insert('0', '40')
+
+            # Max energy for figure
+            if 'config.energy_max' in globals():
+                self.energy_maxttk.delete('0', 'end')
+                self.energy_maxttk.insert('0', config.energy_max)
+            else:
+                self.energy_maxttk.delete('0', 'end')
+                self.energy_maxttk.insert('0', '15')
+
             
             # Hubbard
-            self.Hubbardttk.delete('0', 'end')
-            if hasattr(config, 'Hubbard'):
-                self.Hubbardttk.insert('0', str(config.Hubbard))
+            if 'config.Hubbard' in globals():
+                self.Hubbardttk.delete('0', 'end')
+                if hasattr(config, 'Hubbard'):
+                    self.Hubbardttk.insert('0', str(config.Hubbard))
+                else:
+                    self.Hubbardttk.insert('0', '{}')
             else:
+                self.Hubbardttk.delete('0', 'end')
                 self.Hubbardttk.insert('0', '{}')
 
-            if config.XC_calc == 'LDA':
-                self.XC_calcttk.current(0)
-            elif config.XC_calc == 'PBE':
-                self.XC_calcttk.current(1)
-            elif config.XC_calc == 'GLLBSC':
-                self.XC_calcttk.current(2)
-            elif config.XC_calc == 'revPBE':
-                self.XC_calcttk.current(3)
-            elif config.XC_calc == 'RPBE':
-                self.XC_calcttk.current(4)
-            elif config.XC_calc == 'PBE0':
-                self.XC_calcttk.current(5)
-            elif config.XC_calc == 'HSE06':
-                self.XC_calcttk.current(6)
+            # XCs
+            if 'config.XC_calc' in globals():
+                if config.XC_calc == 'LDA':
+                    self.XC_calcttk.current(0)
+                elif config.XC_calc == 'PBE':
+                    self.XC_calcttk.current(1)
+                elif config.XC_calc == 'GLLBSC':
+                    self.XC_calcttk.current(2)
+                elif config.XC_calc == 'revPBE':
+                    self.XC_calcttk.current(3)
+                elif config.XC_calc == 'RPBE':
+                    self.XC_calcttk.current(4)
+                elif config.XC_calc == 'PBE0':
+                    self.XC_calcttk.current(5)
+                elif config.XC_calc == 'HSE06':
+                    self.XC_calcttk.current(6)
+                else:
+                    self.XC_calcttk.current(0)
             else:
                 self.XC_calcttk.current(0)
 
-            if config.Spin_calc == True:
-                Spin_calcvar.set(True)
+            # Spin Calculation
+            if 'config.Spin_calc' in globals():
+                if config.Spin_calc == True:
+                    Spin_calcvar.set(True)
+                else:
+                    Spin_calcvar.set(False)
             else:
                 Spin_calcvar.set(False)
 
-            self.Magmom_per_atomttk.delete('0', 'end')
-            self.Magmom_per_atomttk.insert('0', config.Magmom_per_atom)  
-            self.gridrefttk.delete('0', 'end')
-            self.gridrefttk.insert('0', config.gridref)        
+            # Magnetic Moment
+            if 'config.Magmom_per_atom' in globals():
+                self.Magmom_per_atomttk.delete('0', 'end')
+                self.Magmom_per_atomttk.insert('0', config.Magmom_per_atom)
+            else:
+                self.Magmom_per_atomttk.delete('0', 'end')
+                self.Magmom_per_atomttk.insert('0', '0.0')
+
+            #Gridref for electron density
+            if 'config.gridref' in globals():
+                self.gridrefttk.delete('0', 'end')
+                self.gridrefttk.insert('0', config.gridref)
+            else:
+                self.gridrefttk.delete('0', 'end')
+                self.gridrefttk.insert('0', '2')        
+
             # ---------GW Parameters---------
             
             # GWtype
-            if config.GWtype == 'GW0':
-                self.GWtypettk.current(0)
-            elif config.GWtype == 'G0W0':
-                self.GWtypettk.current(1)
+            if 'config.gridref' in globals():
+                if config.GWtype == 'GW0':
+                    self.GWtypettk.current(0)
+                elif config.GWtype == 'G0W0':
+                    self.GWtypettk.current(1)
+                else:
+                    self.GWtypettk.current(0)
             else:
                 self.GWtypettk.current(0)
             
             # GWkpoints
-            self.GWkpointsttk.delete('0', 'end')
-            if hasattr(config, 'GWkpoints'):
-                self.GWkpointsttk.insert('0', str(config.GWkpoints.tolist()))
+            if 'config.GWkpoints' in globals():
+                self.GWkpointsttk.delete('0', 'end')
+                if hasattr(config, 'GWkpoints'):
+                    self.GWkpointsttk.insert('0', str(config.GWkpoints.tolist()))
+                else:
+                    self.GWkpointsttk.insert('0', '[[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]')
             else:
+                self.GWkpointsttk.delete('0', 'end')
                 self.GWkpointsttk.insert('0', '[[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]')
             
             # GWtruncation
-            if config.GWtruncation is None:
-                self.GWtruncationttk.current(0)
-            elif config.GWtruncation == '2D':
-                self.GWtruncationttk.current(1)
-            elif config.GWtruncation == '1D':
-                self.GWtruncationttk.current(2)
-            elif config.GWtruncation == '0D':
-                self.GWtruncationttk.current(3)
-            elif config.GWtruncation == 'wigner-seitz':
-                self.GWtruncationttk.current(4)
+            if 'config.GWtruncation' in globals():
+                if config.GWtruncation is None:
+                    self.GWtruncationttk.current(0)
+                elif config.GWtruncation == '2D':
+                    self.GWtruncationttk.current(1)
+                elif config.GWtruncation == '1D':
+                    self.GWtruncationttk.current(2)
+                elif config.GWtruncation == '0D':
+                    self.GWtruncationttk.current(3)
+                elif config.GWtruncation == 'wigner-seitz':
+                    self.GWtruncationttk.current(4)
+                else:
+                    self.GWtruncationttk.current(0)
             else:
-                self.GWtypettk.current(4)
+                self.GWtruncationttk.current(0)
+
             # GWcut_off_energy
-            self.GWcut_off_energyttk.delete('0', 'end')
-            self.GWcut_off_energyttk.insert('0', config.GWcut_off_energy)
+            if 'config.GWcut_off_energy' in globals():
+                self.GWcut_off_energyttk.delete('0', 'end')
+                self.GWcut_off_energyttk.insert('0', config.GWcut_off_energy)
+            else:
+                self.GWcut_off_energyttk.delete('0', 'end')
+                self.GWcut_off_energyttk.insert('0', '50')
+
             # GWbandVB
-            self.GWbandVBttk.delete('0', 'end')
-            self.GWbandVBttk.insert('0', config.GWbandVB)
+            if 'config.GWbandVB' in globals():
+                self.GWbandVBttk.delete('0', 'end')
+                self.GWbandVBttk.insert('0', config.GWbandVB)
+            else:
+                self.GWbandVBttk.delete('0', 'end')
+                self.GWbandVBttk.insert('0', '8')
+
             # GWbandCB
-            self.GWbandCBttk.delete('0', 'end')
-            self.GWbandCBttk.insert('0', config.GWbandCB)
+            if 'config.GWbandCB' in globals():
+                self.GWbandCBttk.delete('0', 'end')
+                self.GWbandCBttk.insert('0', config.GWbandCB)
+            else:
+                self.GWbandCBttk.delete('0', 'end')
+                self.GWbandCBttk.insert('0', '18')
+
             # GWppa
-            if config.GWppa == True:
-                GWppavar.set(True)
+            if 'config.GWppa' in globals():
+                if config.GWppa == True:
+                    GWppavar.set(True)
+                else:
+                    GWppavar.set(False)
             else:
                 GWppavar.set(False)
+                
             # GWq0correction
-            if config.GWq0correction == True:
-                GWq0correctionvar.set(True)
+            if 'config.GWq0correction' in globals():
+                if config.GWq0correction == True:
+                    GWq0correctionvar.set(True)
+                else:
+                    GWq0correctionvar.set(False)
             else:
                 GWq0correctionvar.set(False)
+
             # GWnblock
-            if config.GWnblock == True:
-                GWnblockvar.set(True)
+            if 'config.GWnblock' in globals():
+                if config.GWnblock == True:
+                    GWnblockvar.set(True)
+                else:
+                    GWnblockvar.set(False)
             else:
                 GWnblockvar.set(False)
+
             # GWbandinterpolation
-            if config.GWbandinterpolation == True:
-                GWbandinterpolationvar.set(True)
+            if 'config.GWbandinterpolation' in globals():
+                if config.GWbandinterpolation == True:
+                    GWbandinterpolationvar.set(True)
+                else:
+                    GWbandinterpolationvar.set(False)
             else:
-                GWbandinterpolationvar.set(False)
-                
+                GWbandinterpolationvar.set(True)
+
             # ---------Optical------------
-            self.num_of_bandsttk.delete('0', 'end')
-            self.num_of_bandsttk.insert('0', config.num_of_bands)
 
-            self.optFDsmearttk.delete('0', 'end')
-            self.optFDsmearttk.insert('0', config.optFDsmear)
+            # Number of bands
+            if 'config.num_of_bands' in globals():
+                self.num_of_bandsttk.delete('0', 'end')
+                self.num_of_bandsttk.insert('0', config.num_of_bands)
+            else:
+                self.num_of_bandsttk.delete('0', 'end')
+                self.num_of_bandsttk.insert('0', '16')
 
-            self.optetattk.delete('0', 'end')
-            self.optetattk.insert('0', config.opteta)
+            # Fermi-Dirac Smearing
+            if 'config.optFDsmear' in globals():
+                self.optFDsmearttk.delete('0', 'end')
+                self.optFDsmearttk.insert('0', config.optFDsmear)
+            else:
+                self.optFDsmearttk.delete('0', 'end')
+                self.optFDsmearttk.insert('0', '0.05')
 
-            self.optdomega0ttk.delete('0', 'end')
-            self.optdomega0ttk.insert('0', config.optdomega0)
+            # Eta
+            if 'config.opteta' in globals():
+                self.optetattk.delete('0', 'end')
+                self.optetattk.insert('0', config.opteta)
+            else:
+                self.optetattk.delete('0', 'end')
+                self.optetattk.insert('0', '0.05')
 
-            self.optnblocksttk.delete('0', 'end')
-            self.optnblocksttk.insert('0', config.optnblocks)
+            # DOmega0
+            if 'config.optdomega0' in globals():
+                self.optdomega0ttk.delete('0', 'end')
+                self.optdomega0ttk.insert('0', config.optdomega0)
+            else:
+                self.optdomega0ttk.delete('0', 'end')
+                self.optdomega0ttk.insert('0', '0.05')
+
+            # Optical nblocks
+            if 'config.optnblocks' in globals():
+                self.optnblocksttk.delete('0', 'end')
+                self.optnblocksttk.insert('0', config.optnblocks)
+            else:
+                self.optnblocksttk.delete('0', 'end')
+                self.optnblocksttk.insert('0', '4')
             
-            self.optomega2ttk.delete('0', 'end')
-            self.optomega2ttk.insert('0', config.optomega2)
-            
-            self.optecutttk.delete('0', 'end')
-            self.optecutttk.insert('0', config.optecut)
+            # Omega2
+            if 'config.optomega2' in globals():
+                self.optomega2ttk.delete('0', 'end')
+                self.optomega2ttk.insert('0', config.optomega2)
+            else:
+                self.optomega2ttk.delete('0', 'end')
+                self.optomega2ttk.insert('0', '5.0')
 
-            if config.whichstrain[0] == True:
-                EpsXvar.set(True)
+            # Optical cut off
+            if 'config.optecut' in globals():
+                self.optecutttk.delete('0', 'end')
+                self.optecutttk.insert('0', config.optecut)
+            else:
+                self.optecutttk.delete('0', 'end')
+                self.optecutttk.insert('0', '100')
+
+            # Strain-Shear
+            if 'config.whichstrain' in globals():
+                if config.whichstrain[0] == True:
+                    EpsXvar.set(True)
+                else:
+                    EpsXvar.set(False)
+
+                if config.whichstrain[1] == True:
+                    EpsYvar.set(True)
+                else:
+                    EpsYvar.set(False)
+
+                if config.whichstrain[2] == True:
+                    EpsZvar.set(True)
+                else:
+                    EpsZvar.set(False)
+
+                if config.whichstrain[3] == True:
+                    ShearYZvar.set(True)
+                else:
+                    ShearYZvar.set(False)
+
+                if config.whichstrain[4] == True:
+                    ShearXZvar.set(True)
+                else:
+                    ShearXZvar.set(False)
+
+                if config.whichstrain[5] == True:
+                    ShearXYvar.set(True)
+                else:
+                    ShearXYvar.set(False)
             else:
                 EpsXvar.set(False)
-
-            if config.whichstrain[1] == True:
-                EpsYvar.set(True)
-            else:
                 EpsYvar.set(False)
-
-            if config.whichstrain[2] == True:
-                EpsZvar.set(True)
-            else:
                 EpsZvar.set(False)
-
-            if config.whichstrain[3] == True:
-                ShearYZvar.set(True)
-            else:
                 ShearYZvar.set(False)
-
-            if config.whichstrain[4] == True:
-                ShearXZvar.set(True)
-            else:
                 ShearXZvar.set(False)
-
-            if config.whichstrain[5] == True:
-                ShearXYvar.set(True)
-            else:
                 ShearXYvar.set(False)
 
-            self.MPIcoresttk.delete('0', 'end')
-            self.MPIcoresttk.insert('0', config.MPIcores)
+            #Core number
+            if 'config.MPIcores' in globals():
+                self.MPIcoresttk.delete('0', 'end')
+                self.MPIcoresttk.insert('0', config.MPIcores)
+            else:
+                self.MPIcoresttk.delete('0', 'end')
+                self.MPIcoresttk.insert('0', '1')
+            
+            # Text for textbox
             self.text1.insert(tk.END, "Configuration loaded, please continue with Input parameters tab \n")
 
         def onCalculate():
@@ -300,6 +484,7 @@ class gg:
                 print("kpts_x = "+ str(self.kpts_xttk.get()), end="\n", file=f1)
                 print("kpts_y = "+ str(self.kpts_yttk.get()), end="\n", file=f1)
                 print("kpts_z = "+ str(self.kpts_zttk.get()), end="\n", file=f1)
+                print("Gamma = "+ str(Gammavar.get()), end="\n", file=f1)
                 print("band_path = '"+ str(self.band_pathttk.get())+"'", end="\n", file=f1)
                 print("band_npoints = "+ str(self.band_npointsttk.get()), end="\n", file=f1)
                 print("energy_max = "+ str(self.energy_maxttk.get()), end="\n", file=f1)
@@ -511,6 +696,17 @@ class gg:
         self.kpts_zttk.pack(side='top')
         self.frame9.configure(height='200', width='200')
         self.frame9.pack(side='top')
+        
+        #Gamma
+        self.frame23 = ttk.Frame(self.labelframe2)
+        self.Gammattk = ttk.Checkbutton(self.frame23)
+        Gammavar = BooleanVar()
+        self.Gammattk.configure(variable = Gammavar, onvalue=True, offvalue=False, text='Gamma Included?')
+        self.Gammattk.pack(side='top')
+        self.frame23.configure(height='200', width='200')
+        self.frame23.pack(side='top')
+        
+        #Band path
         self.frame10 = ttk.Frame(self.labelframe2)
         self.label8 = ttk.Label(self.frame10)
         self.label8.configure(text='Band Path (G:for Gamma)')
@@ -794,7 +990,7 @@ class gg:
         # GWbandinterpolation
         self.GWbandinterpolationttk = ttk.Checkbutton(self.labelGWframe)
         GWbandinterpolationvar = BooleanVar()
-        self.GWbandinterpolationttk.configure(variable = GWbandinterpolationvar, onvalue=True, offvalue=False, text='Spline draw in band?(needs min. 3 points)')
+        self.GWbandinterpolationttk.configure(variable = GWbandinterpolationvar, onvalue=True, offvalue=False, text='Spline draw fpr bands? (needs min. 3 points)')
         self.GWbandinterpolationttk.pack(side='top')
         
         self.labelGWframe.configure(height='200', text='GW Parameters (Only applicable when Basis = PW-GW', width='200')

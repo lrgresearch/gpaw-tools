@@ -16,9 +16,11 @@ Optical_calc = False     # Calculate the optical properties
 # ELECTRONIC
 fmaxval = 0.05 			#
 cut_off_energy = 340 	# eV
+#kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 kpts_x = 4 			    # kpoints in x direction
 kpts_y = 4				# kpoints in y direction
 kpts_z = 1				# kpoints in z direction
+Gamma = True
 band_path = 'GKMG'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.

@@ -62,9 +62,11 @@ Optical_calc = False     # Calculate the optical properties
 # ELECTRONIC
 fmaxval = 0.05 			#
 cut_off_energy = 340 	# eV
+#kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 kpts_x = 5 			    # kpoints in x direction
 kpts_y = 5				# kpoints in y direction
 kpts_z = 1				# kpoints in z direction
+Gamma = True
 band_path = 'GMKG'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
@@ -75,6 +77,7 @@ XC_calc = 'PBE'
 #XC_calc = 'GLLBSC'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
+#XC_calc = 'B3LYP'
 #Choose one for EXX (Ground state calculations will be done with PBE):
 #XC_calc = 'PBE0'
 #XC_calc = 'HSE06'
@@ -108,7 +111,7 @@ optnblocks=4            # Split matrices in nblocks blocks and distribute them G
 # Which components of strain will be relaxed
 # EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[True, True, False, False, False, False]
+whichstrain=[False, False, False, False, False, False]
 MPIcores = 4            # This is for gg.py. Not used in this script.
 # <<<<<<< TO HERE TO FILE config.py IN SAME DIRECTORY AND USE -c FLAG WITH COMMAND
 
@@ -247,8 +250,12 @@ if Optical_calc == False:
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation...")
-            calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
-                        spinpol=Spin_calc, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+            if 'kpts_density' in globals():
+                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
+                        spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt')
+            else:
+                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
+                        spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             if True in whichstrain:
                 if XC_calc == 'GLLBSC':
@@ -276,7 +283,10 @@ if Optical_calc == False:
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation with PBE...")
-            calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+            if 'kpts_density' in globals():
+                calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt')
+            else:
+                calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
@@ -306,7 +316,10 @@ if Optical_calc == False:
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW only ground state calculation for GW calculation...")
-            calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': True}, txt=struct+'-1-Log-Ground.txt')
+            if 'kpts_density' in globals():
+                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt')
+            else:
+                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, occupations=FermiDirac(0.001), kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
@@ -337,7 +350,10 @@ if Optical_calc == False:
     elif Mode == 'LCAO':
         if restart == False:
             parprint("Starting LCAO ground state calculation...")
-            calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts=(kpts_x, kpts_y, kpts_z), parallel={'domain': world.size})
+            if 'kpts_density' in globals():
+                calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma}, parallel={'domain': world.size})
+            else:
+                calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, parallel={'domain': world.size})
             bulk_configuration.calc = calc
             relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider much tighter fmax!

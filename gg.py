@@ -562,9 +562,9 @@ class gg:
 
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
             if restartvar == True:
-                gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -r -d -c '+str(configname)+' -i '+str(textfilenamepath)
+                gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -r -d -i '+str(configname)+' -g '+str(textfilenamepath)
             else:
-                gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -d -c '+str(configname)+' -i '+str(textfilenamepath)
+                gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -d -i '+str(configname)+' -g '+str(textfilenamepath)
             proc = subprocess.Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
 

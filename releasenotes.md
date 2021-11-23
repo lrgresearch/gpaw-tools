@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* `gg.py` can now work with enough number of variables. Previously, it must see all variables.
 * `kpts_density` is introduced.
 * Units used in cube file are changed for Bader analysis.
 * There is no general config file anymore.

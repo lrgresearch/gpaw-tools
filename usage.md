@@ -28,13 +28,13 @@ gpaw-tools/
 This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.
 
 ### As a command:
-Command line usage: `gpawsolve.py -v -o -r -d -c <configfile.py> -h -i <inputfile.cif>`
+Command line usage: `gpawsolve.py -v -o -r -d -i <inputfile.py> -h -g <geometryfile.cif>`
 
 Argument list:
 ```
--i, --input      : Use input CIF file
--c, --config     : Use configuration file in the main directory for parameters (config.py) If you do not
-                   use this argument, parameters will be taken from the related lines of gpawsolve.py
+-g, --geometry   : Use a CIF file for geometry
+-i, --input      : Use an input file for variables (input.py) If you do not use this argument, parameters 
+                   will be taken from the related lines of gpawsolve.py. Visit "Input File Keywords" webpage for more. 
 -o, --outdir     : Save everything to a output directory with naming /inputfile. 
                    If there is no input file given and Atoms object is used in gpawsolve.py file 
                    then the directory name will be /gpawsolve. If you change gpawsolve.py name to 
@@ -48,12 +48,12 @@ Argument list:
  You can put ASE Atoms object in to your config file and therefore can use it like an input file. As an example please note the example at: `examples\Bulk-aluminum` folder.
  
 ### As a stand alone script
- * Change the parameters for each simulation OR create a config file (as you can see in examples) once and use `-c` argument.
- * If you want to use CIF files for structure, use `-i` argument like `gpawsolve.py -i structurefile.cif`.
+* Change the parameters from related lines for each simulation OR create an input file (as you can see in examples) once and use `-i` argument.
+ * If you want to use CIF files for structure, use `-g` argument like `gpawsolve.py -g geometryfile.cif`.
  * If you want to use ASE atoms method for structure, just copy/paste your `Atoms` info into the part mentioned with "Bulk Structure".
  * If you have CIF file but want to use Atoms method you can use `CIF-to-ASE/ciftoase.py` to convert your CIF files to ASE Atoms.
  * If you use Atoms method, change the name of `gpawsolve.py` to your simulation name like `graphene7x7-Fe-onsite32.py`. The naming will be used for naming of all output/result files.
- * If you use CIF file as an input, name of the input file will be used for naming of all output/result files.
+ * If you use CIF file as an geometry, name of the input file will be used for naming of all output/result files.
  * **Performance note:** When you want to use `gpawsolve.py` as a script, you can copy `gpawsolve.py` to your working folder where your config file and input file are ready. You must rename `gpawsolve.py` to something else like `gpawsolve1.py` or `gs-graphene.py`, something you like and then you can now run `gpaw -P<core> python gpawsolve1.py <args>` type command. Initializing with gpaw command in your system will give you better parallel computing, therefore shorter computation times. Initialization with gpaw can not be done when `gpawsolve.py` is used as command, because of the structure of initialization of Gpaw, as we know. If you know a solution from the point of view of gpaw-tools, please use issues to discuss or pull request for a solution.
  
 ### How to run?
@@ -119,3 +119,5 @@ There are some example calculations given with different usage scenarios in the 
 | Graphene-LCAO | Pristine graphene and graphene with defect with LCAO. Uses single config for two calculations. |
 | MoS2-GW           | GW Aproximation calculation for MoS2 |
 | Si-2atoms-optical | Two step calculation. First step ground, DOS and Band calculations. Second step for optical calculation. Structure is given with CIF file. |
+|ZnO with DFT+U     | Wurtzite ZnO calculation with DFT+U. Positions are given with Bulk object. Hubbard params are: O-p: 7eV, Zn-d: 10eV |
+

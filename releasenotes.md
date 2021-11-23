@@ -8,6 +8,9 @@ title: Release Notes
 
 ### Development version
 
+* `kpts_density` is introduced.
+* Units used in cube file are changed for Bader analysis.
+* There is no general config file anymore.
 * Small bugfixes.
 
 ### Version 21.11.0

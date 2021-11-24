@@ -6,9 +6,9 @@ title: Input File Keywords
 
 # Input File Keywords
 
-```
-NOTE: This page is under construction.
-```
+**General Keywords:** [Mode](inputfilekeywords.md#Mode), [DOS_calc](inputfilekeywords.md#DOS_calc)
+
+
 ## General Keywords
 
 ---
@@ -103,6 +103,50 @@ False
 
 #### Example
 Optical_calc = False
+
+---
+
+### whichstrain
+#### Keyword type
+Python List of Logical values
+
+#### Description
+This keyword controls the hich components of strain will be relaxed. There are six independent components indicating the strain are relaxed or not. Here:
+
+* True = relax to zero
+* False = fixed
+
+And these six independent components are in order:
+
+* EpsilonX
+* EpsilonY, 
+* EpsilonZ
+* ShearYZ
+* ShearXZ
+* ShearXY
+
+
+#### Default
+[False, False, False, False, False, False]
+
+#### Example
+whichstrain=[True, True, False, False, False, False] #For a x-y 2D nanosheet only first 2 component will be true
+
+---
+
+### MPIcores
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of cores used in calculation. This parameter is not used with `gpawsolve.py`. It is only needed for the `gg.py`.
+NOTE: `gg.py` can run `gpawsolve.py` with only `mpirun -np <corenumber>` command. Therefore, for CPUs with hyperthreading support, you can run only the half of your thread number. In the future, `gg.py` will have an option for threads. Please control this variable in future.
+
+#### Default
+4
+
+#### Example
+MPIcores = 4
 
 ## Electronic Properties Calculation Variables
 ### fmaxval

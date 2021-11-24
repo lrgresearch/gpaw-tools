@@ -104,7 +104,6 @@ False
 #### Example
 Optical_calc = False
 
----
 ## Electronic Properties Calculation Variables
 ### fmaxval
 #### Keyword type
@@ -332,3 +331,116 @@ False
 
 #### Example
 Spin_calc = True
+
+---
+
+### Magmom_per_atom
+#### Keyword type
+Floating point
+
+#### Description
+This keyword controls the value of magnetic moment of each atom. Please do not forget to set `Spin_calc` variable to `True`. Unit is μB.
+
+#### Default
+1.0
+
+#### Example
+Magmom_per_atom = 1.0
+
+## GW Calculations Variables
+### GWtype
+#### Keyword type
+String
+
+#### Description
+This keyword controls the type GW calculation. Available options are:
+
+* GW0
+* G0W0
+
+#### Default
+GW0
+
+#### Example
+GWtype = 'GW0'
+
+---
+
+### GWkpoints
+#### Keyword type
+NumPy Array
+
+#### Description
+This keyword represents the kpoint coordinates for the GW calculation.
+
+#### Default
+np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])
+
+#### Example
+GWkpoints = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])
+
+---
+
+### GWtruncation 
+#### Keyword type
+NumPy Array
+
+#### Description
+This keyword controls the truncation of Coulomb potential for the GW calculations. Available options are:
+
+* None
+* 2D
+* 1D
+* 0D
+* wigner-seitz
+
+#### Default
+None
+
+#### Example
+GWtruncation = '2D'
+
+---
+
+### GWcut_off_energy
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the cut off energy value for the GW calculations. Unit is eV.
+
+#### Default
+50 eV
+
+#### Example
+GWcut_off_energy = 50
+
+---
+
+### GWbandVB
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of the band for the valence band for GW calculations.
+
+#### Default
+8 (Default value is not a general value. Please find correct band for your calculation.)
+
+#### Example
+GWbandVB = 8
+
+---
+
+### GWbandCB
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of the band for the conduction band for GW calculations.
+
+#### Default
+18 (Default value is not a general value. Please find correct band for your calculation.)
+
+#### Example
+GWbandCB = 18

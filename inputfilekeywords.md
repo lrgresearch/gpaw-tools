@@ -8,6 +8,14 @@ title: Input File Keywords
 
 [**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [whichstrain](inputfilekeywords.md#whichstrain), [MPIcores](inputfilekeywords.md#mpicores)
 
+[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
+
+[**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GWtype](inputfilekeywords.md#gwtype), [GWkpoints](inputfilekeywords.md#gwkpoints), [GWtruncation](inputfilekeywords.md#gwtruncation), [GWcut_off_energy](inputfilekeywords.md#gwcut_off_energy), [GWbandVB](inputfilekeywords.md#gwbandvb), [GWbandCB](inputfilekeywords.md#gwbandcb), [GWppa](inputfilekeywords.md#gwppa), [GWq0correction](inputfilekeywords.md#gwq0correction), [GWnblock](inputfilekeywords.md#gwnblock)
+
+[**Optical Calculations Keywords:**](inputfilekeywords.md#optical-calculations-keywords)
+[num_of_bands](inputfilekeywords.md#num_of_bands), [optFDsmear](inputfilekeywords.md#optfdsmear), [opteta](inputfilekeywords.md#opteta), [optdomega0](inputfilekeywords.md#optdomega0), [optomega2](inputfilekeywords.md#optomega2), [optecut](inputfilekeywords.md#optecut), [optnblocks](inputfilekeywords.md#optnblocks)
+
+# All Keywords
 
 ## General Keywords
 
@@ -148,7 +156,7 @@ NOTE: `gg.py` can run `gpawsolve.py` with only `mpirun -np <corenumber>` command
 #### Example
 MPIcores = 4
 
-## Electronic Properties Calculation Variables
+## Electronic Calculations Keywords
 ### fmaxval
 #### Keyword type
 Float
@@ -391,7 +399,7 @@ This keyword controls the value of magnetic moment of each atom. Please do not f
 #### Example
 Magmom_per_atom = 1.0
 
-## GW Calculations Variables
+## GW Calculations Keywords
 ### GWtype
 #### Keyword type
 String
@@ -534,7 +542,7 @@ True
 #### Example
 GWnblock = True
 
-## Optical Calculations Variables
+## Optical Calculations Keywords
 ### num_of_bands
 #### Keyword type
 Integer

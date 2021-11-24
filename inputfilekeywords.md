@@ -6,7 +6,7 @@ title: Input File Keywords
 
 # Input File Keywords
 
-**General Keywords:** [Mode](inputfilekeywords.md#Mode), [DOS_calc](inputfilekeywords.md#DOS_calc)
+[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [whichstrain](inputfilekeywords.md#whichstrain), [MPIcores](inputfilekeywords.md#mpicores)
 
 
 ## General Keywords

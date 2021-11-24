@@ -193,3 +193,66 @@ This keyword controls the number of kpoints in z direction. If `kpts_density` is
 
 #### Example
 kpts_z = 5
+
+---
+
+### Gamma
+#### Keyword type
+Logical
+
+#### Description
+This keyword controls the inclusion of Gamma point in band calculations. Available options are:
+
+* True
+* False
+
+#### Default
+True
+
+#### Example
+Gamma = False
+
+---
+
+### band_path
+#### Keyword type
+String
+
+#### Description
+This keyword controls the path of high-symmetry points in band structure diagram. Use 'G' for Gamma point. 
+
+#### Default
+'LGL'
+
+#### Example
+band_path = 'GMKG'
+
+---
+
+### band_npoints
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of points between the first and the last high symmetry points. 
+
+#### Default
+60
+
+#### Example
+band_npoints = 50
+
+---
+
+### energy_max
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the maximum energy value when the software is used with -d (draw) argument. number of points between the first and the last high symmetry points. Unit is eV.
+
+#### Default
+15
+
+#### Example
+energy_max = 10 # eV

@@ -107,7 +107,7 @@ Optical_calc = False
 ## Electronic Properties Calculation Variables
 ### fmaxval
 #### Keyword type
-Floating point
+Float
 
 #### Description
 This keyword controls the maximum force tolerance in BFGS type geometry optimization. Unit is eV/Ang.
@@ -137,7 +137,7 @@ cut_off_energy = 500 # eV
 
 ### kpts_density
 #### Keyword type
-Floating point
+Float
 
 #### Description
 This keyword controls kpoint density. It is deactivated normally. Monkhorst-Pack mesh is used with `kpts_x`, `kpts_y` and `kpts_z` variables. If `kpts_density` is included in an input file, the `kpts_x`, `kpts_y` and `kpts_z` variables will be ignored automatically. Unit is pts per Å^-1.
@@ -336,7 +336,7 @@ Spin_calc = True
 
 ### Magmom_per_atom
 #### Keyword type
-Floating point
+Float
 
 #### Description
 This keyword controls the value of magnetic moment of each atom. Please do not forget to set `Spin_calc` variable to `True`. Unit is μB.
@@ -489,3 +489,108 @@ True
 
 #### Example
 GWnblock = True
+
+## Optical Calculations Variables
+### num_of_bands
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of bands used in optical calculations.
+
+#### Default
+16
+
+#### Example
+num_of_bands = 8
+
+---
+
+### optFDsmear
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the Fermi Dirac smearing for optical calculations.
+
+#### Default
+0.05
+
+#### Example
+optFDsmear = 0.02
+
+---
+
+### opteta
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the broadening parameter -eta- used in dielectric function calculations.
+
+#### Default
+0.2
+
+#### Example
+optFDsmear = 0.05
+
+---
+
+### optdomega0
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the  [Δω0 parameter](https://wiki.fysik.dtu.dk/gpaw/tutorialsexercises/opticalresponse/dielectric_response/dielectric_response.html) for non-linear frequency grid used in dielectric function calculations. Unit is eV.
+
+#### Default
+0.1 eV
+
+#### Example
+optdomega0 = 0.05 # eV
+
+---
+
+### optomega2
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the  [ω2 parameter](https://wiki.fysik.dtu.dk/gpaw/tutorialsexercises/opticalresponse/dielectric_response/dielectric_response.html) for non-linear frequency grid used in dielectric function calculations. Unit is eV.
+
+#### Default
+10.0 eV
+
+#### Example
+optomega2 = 2.0 # eV
+
+---
+
+### optecut
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the planewave energy cutoff in dielectric function calculations. Determines the size of dielectric matrix. Unit is eV.
+
+#### Default
+10.0 eV
+
+#### Example
+optecut = 20.0 # eV
+
+---
+
+### optnblocks
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the Split matrices in nblocks blocks and distribute them G-vectors or frequencies over processes.
+
+#### Default
+4
+
+#### Example
+optnblocks = 4
+

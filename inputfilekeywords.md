@@ -444,3 +444,48 @@ This keyword controls the number of the band for the conduction band for GW calc
 
 #### Example
 GWbandCB = 18
+
+---
+
+### GWppa
+#### Keyword type
+Logical
+
+#### Description
+This keyword controls the usage of Plasmon Pole Approximation (PPA) for GW calculations.
+
+#### Default
+True
+
+#### Example
+GWppa = True
+
+---
+
+### GWq0correction
+#### Keyword type
+Logical
+
+#### Description
+This keyword controls the usage of analytic correction to the q=0 contribution applicable to 2D systems.
+
+#### Default
+True
+
+#### Example
+GWq0correction = True
+
+---
+
+### GWnblock
+#### Keyword type
+Logical
+
+#### Description
+This keyword controls the behaviour of cutting chi0 into as many blocks to reduce memory requirement as much as possible.
+
+#### Default
+True
+
+#### Example
+GWnblock = True

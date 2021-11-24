@@ -256,3 +256,79 @@ This keyword controls the maximum energy value when the software is used with -d
 
 #### Example
 energy_max = 10 # eV
+
+---
+
+### energy_max
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the maximum energy value when the software is used with -d (draw) argument. number of points between the first and the last high symmetry points. Unit is eV.
+
+#### Default
+15
+
+#### Example
+energy_max = 10 # eV
+
+---
+
+### Hubbard
+#### Keyword type
+Python dictionary
+
+#### Description
+This keyword controls the implementation of Hubbard parameter on the related orbitals of related elements. For none use {}. Unit is eV.
+
+#### Default
+{}
+
+#### Example
+energy_max = {'N': ':p,6.0'} # eV
+
+---
+
+### XC_calc
+#### Keyword type
+String
+
+#### Description
+This keyword controls the which exchange-correlation functional is used in the calculation.Available options are:
+
+* LDA
+* PBE
+* GLLBSC
+* revPBE
+* RPBE
+* B3LYP
+* PBE0  (can be used only with PW-EXX)
+* HSE06 (can be used only with PW-EXX)
+
+Because GPAW is using libxc, there are many exchange-correlation functionals available to use. However, the above functionals are used and tested successfully with gpaw-tools. Please try other possible functionals, make us know, send us input files.
+
+#### Default
+LDA
+
+#### Example
+XC_calc = 'PBE'
+
+---
+
+### Spin_calc
+#### Keyword type
+Logical
+
+#### Description
+This keyword controls the inclusion of spin based calculations. Please do not forget to set `Magmom_per_atom` variable. Available options are:
+
+* True
+* False
+
+Because GPAW is using libxc, there are many exchange-correlation functionals available to use. However, the above functionals are used and tested successfully with gpaw-tools. Please try other possible functionals, make us know, send us input files.
+
+#### Default
+False
+
+#### Example
+Spin_calc = True

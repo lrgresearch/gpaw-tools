@@ -114,7 +114,82 @@ Floating point
 This keyword controls the maximum force tolerance in BFGS type geometry optimization. Unit is eV/Ang.
 
 #### Default
-False
+0.05
 
 #### Example
 fmaxval = 0.05 # eV/Ang
+
+---
+
+### cut_off_energy
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the plane wave cut off energy value. Unit is eV. Can be used in PW mode.
+
+#### Default
+340 eV
+
+#### Example
+cut_off_energy = 500 # eV
+
+---
+
+### kpts_density
+#### Keyword type
+Floating point
+
+#### Description
+This keyword controls kpoint density. It is deactivated normally. Monkhorst-Pack mesh is used with `kpts_x`, `kpts_y` and `kpts_z` variables. If `kpts_density` is included in an input file, the `kpts_x`, `kpts_y` and `kpts_z` variables will be ignored automatically. Unit is pts per Å^-1.
+
+#### Default
+Not used in default.
+
+#### Example
+kpts_density = 2.5     # pts per Å^-1
+
+---
+
+### kpts_x
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of kpoints in x direction. If `kpts_density` is included in an input file, the `kpts_x` variable will be ignored automatically. Unit is number of points.
+
+#### Default
+5
+
+#### Example
+kpts_x = 5
+
+---
+
+### kpts_y
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of kpoints in y direction. If `kpts_density` is included in an input file, the `kpts_y` variable will be ignored automatically. Unit is number of points.
+
+#### Default
+5
+
+#### Example
+kpts_y = 5
+
+---
+
+### kpts_z
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of kpoints in z direction. If `kpts_density` is included in an input file, the `kpts_z` variable will be ignored automatically. Unit is number of points.
+
+#### Default
+5
+
+#### Example
+kpts_z = 5

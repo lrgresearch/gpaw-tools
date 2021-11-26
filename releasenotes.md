@@ -8,10 +8,11 @@ title: Release Notes
 
 ### Development version
 
+* Default values of variables are changed.
 * Previous -i (input) argument is changed as -g (geometry). It is more logical, because it is used for geometry.
 * Previous -c (config) argument is changed as -i (input). It is more general, convenient and understandable.
-* `gg.py` can now work with enough number of variables. Previously, it must see all variables.
-* `kpts_density` is introduced.
+* `gg.py` can now work with just enough number of variables. Previously, it must see all variables.
+* `kpts_density` is added.
 * Units used in cube file are changed for Bader analysis.
 * There is no general config file anymore.
 * Small bugfixes.

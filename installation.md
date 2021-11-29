@@ -143,9 +143,9 @@ libraries = ['xc', 'blas', 'fftw3', 'scalapack-openmpi']
 ^D
 ```
 
-```
 NOTE: If the user wants to use exchange correlations listed in [libxc library](https://www.tddft.org/programs/libxc/), 'libxc' must be listed in the libraries line above.
-```
+{: .text-red-200 }
+
 
 Then install gpaw
 

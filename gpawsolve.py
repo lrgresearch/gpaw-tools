@@ -18,7 +18,7 @@ Description = f'''
  | ------ | ------------------- | ------------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
  |   PW   | Yes (No for GLLBSC) | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
  | PW-G0W0| Yes                 | Yes           | No             | No  | No    | Yes  | No               | No      |
- |  EXX*  | Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
+ | PW-EXX*| Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
  |  LCAO  | No                  | No            | No             | Yes | Yes   | Yes  | Yes              | No      |
  *: Just some ground state energy calculations for PBE0 and HSE06.
 '''
@@ -49,7 +49,7 @@ from numpy import genfromtxt
 
 # IF YOU WANT TO USE CONFIG FILE, YOU CAN CREATE FROM THIS FILE. PLEASE COPY/PASTE FROM HERE:>>>>>>>
 # -------------------------------------------------------------
-Mode = 'PW'             # Use PW, PW-GW, EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = False         # DOS calculation
 Band_calc = False        # Band structure calculation
@@ -78,7 +78,7 @@ XC_calc = 'LDA'
 #XC_calc = 'revPBE'
 #XC_calc = 'RPBE'
 #XC_calc = 'B3LYP'
-#Choose one for EXX (Ground state calculations will be done with PBE):
+#Choose one for PW-EXX (Ground state calculations will be done with PBE):
 #XC_calc = 'PBE0'
 #XC_calc = 'HSE06'
 Spin_calc = False        # Spin polarized calculation?
@@ -240,7 +240,7 @@ if Optical_calc == False:
 
     if Mode == 'PW':
         if XC_calc in ['HSE06', 'PBE0']:
-            parprint('Error: '+XC_calc+' can be used only in EXX mode...')
+            parprint('Error: '+XC_calc+' can be used only in PW-EXX mode...')
             quit()
         if Spin_calc == True:
            numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
@@ -278,7 +278,7 @@ if Optical_calc == False:
         else:
             parprint("Passing PW ground state calculation...")
 
-    elif Mode == 'EXX':
+    elif Mode == 'PW-EXX':
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation with PBE...")

@@ -10,7 +10,7 @@ bulk_configuration = Atoms('Al',
                                  pbc=True)
 
 # -------------------------------------------------------------
-Mode = 'PW'             # Use PW, PW-GW, EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 DOS_calc = True         # DOS calculation
 Band_calc = True        # Band structure calculation

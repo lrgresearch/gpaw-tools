@@ -57,14 +57,10 @@ Argument list:
  * **Performance note:** When you want to use `gpawsolve.py` as a script, you can copy `gpawsolve.py` to your working folder where your config file and input file are ready. You must rename `gpawsolve.py` to something else like `gpawsolve1.py` or `gs-graphene.py`, something you like and then you can now run `gpaw -P<core> python gpawsolve1.py <args>` type command. Initializing with gpaw command in your system will give you better parallel computing, therefore shorter computation times. Initialization with gpaw can not be done when `gpawsolve.py` is used as command, because of the structure of initialization of Gpaw, as we know. If you know a solution from the point of view of gpaw-tools, please use issues to discuss or pull request for a solution.
  
 ### How to run?
- Change `<core_number>` with core numbers/threads to use. For getting a maximum performance from your PC you can use `total number of cores(or threads) - 1`. or `total RAM/2Gb` as a `<core_number>`
+Change `<core_number>` with core numbers to use. For getting a maximum performance from your PC you can use `total number of cores - 1` or `total RAM/2Gb` as a `<core_number>`. For CPUs supporting hyperthreading, users can use more than one instance of `gpawsolve.py` to achive maximum efficiency. 
 
 Usage:
-For AMD CPUs or using Intel CPUs without hyperthreading:
 `$ mpirun -np <core_number> gpawsolve.py <args>`
-
-For using all threads provided by Intel Hyperthreading technology
-`$ mpirun --use-hwthread-cpus -np <core_number> gpawsolve.py <args>`
 
 ### Calculation selector
 
@@ -88,16 +84,16 @@ Mainly, quickoptimize.py is not related to GPAW. However it is dependent to ASAP
 
 The script can be called as: from the command line  in the script itself:
 
-    python quickoptimize.py                   (if the user wants to provide structure as ASE Atoms object)
-    python quickoptimize.py <inputfile.cif>   (if the user wants to provide structure as a CIF file
+    python quickoptimize.py                      (if the user wants to provide structure as ASE Atoms object)
+    python quickoptimize.py <geometryfile.cif>   (if the user wants to provide structure as a CIF file
 
 
 ## optimizations/ciftoase.py
 For `quickoptimize.py` or other optimization scripts, user may need to give ASE Atoms object instead of using a CIF file. This script changes a CIF file information to ASE Atoms object. Because there is a problem in the read method of ASE.io, sometimes it can give a double number of atoms. If the user lives this kind of problem, there is a setting inside the script. User can run the script like:
 
-    python ciftoase.py <inputfile.cif>
+    python ciftoase.py <geometryfile.cif>
 
-Result will be printed to screen and will be saved as `inputfile.py` in the same folder.
+Result will be printed to screen and will be saved as `geometryfile.py` in the same folder.
 
 ## optimizations/optimize_cutoff (and kpoints)(and latticeparam).py
 Users must provide ASE Atoms object and simply insert the object inside these scripts. With the scripts, the user can do convergence tests for cut-off energy, k-points and can calculate the energy dependent lattice parameter values. These codes are mainly based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. Scripts can easily called with MPI as:

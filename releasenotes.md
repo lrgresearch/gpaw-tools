@@ -8,6 +8,11 @@ title: Release Notes
 
 ### Development version
 
+* n/a
+
+### Version 21.12.0
+
+* EXX mode is renamed as PW-EXX.
 * Default values of variables are changed.
 * Previous -i (input) argument is changed as -g (geometry). It is more logical, because it is used for geometry.
 * Previous -c (config) argument is changed as -i (input). It is more general, convenient and understandable.

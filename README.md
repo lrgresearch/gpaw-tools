@@ -79,14 +79,10 @@ Argument list:
  * **Performance note:** When you want to use `gpawsolve.py` as a script, you can copy `gpawsolve.py` to your working folder where your config file and input file are ready. You must rename `gpawsolve.py` to something else like `gpawsolve1.py` or `gs-graphene.py`, something you like and then you can now run `gpaw -P<core> python gpawsolve1.py <args>` type command. Initializing with gpaw command in your system will give you better parallel computing, therefore shorter computation times. Initialization with gpaw can not be done when `gpawsolve.py` is used as command, because of the structure of initialization of Gpaw, as we know. If you know a solution from the point of view of gpaw-tools, please use issues to discuss or pull request for a solution.
  
  #### How to run?
- Change `<core_number>` with core numbers/threads to use. For getting a maximum performance from your PC you can use `total number of cores(or threads) - 1`. or `total RAM/2Gb` as a `<core_number>`
+ Change `<core_number>` with core numbers to use. For getting a maximum performance from your PC you can use `total number of cores - 1` or `total RAM/2Gb` as a `<core_number>`. For CPUs supporting hyperthreading, users can use more than one instance of `gpawsolve.py` to achive maximum efficiency. 
 
 Usage:
-For AMD CPUs or using Intel CPUs without hyperthreading:
 `$ mpirun -np <core_number> gpawsolve.py <args>`
-
-For using all threads provided by Intel Hyperthreading technology
-`$ mpirun --use-hwthread-cpus -np <core_number> gpawsolve.py <args>`
 
 #### Calculation selector
 
@@ -142,6 +138,7 @@ There are [some example calculations](https://github.com/lrgresearch/gpaw-tools/
 
 ## Input File Keywords
 There are many keywords can be used in input files. You can find more at [here](https://www.lrgresearch.org/gpaw-tools/inputfilekeywords/)
+
 ## Release notes
 Release notes are listed at [here](https://www.lrgresearch.org/gpaw-tools/releasenotes/).
 

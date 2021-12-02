@@ -1,7 +1,7 @@
 '''
 quickoptimize.py: Quick Geometric Optimization
                   using interatomic potentials.
-Usage: $ python quickoptimize.py inputfilename.cif
+Usage: $ python quickoptimize.py geometryfile.cif
 '''
 import sys, os
 from pathlib import Path
@@ -13,6 +13,30 @@ from asap3.md.langevin import Langevin
 from ase.calculators.kim import KIM
 
 
+# -------------------------------------------------------------
+# Parameters
+# -------------------------------------------------------------
+
+# Simulation parameters
+
+#More potantial can be found from https://openkim.org
+PotentialUsed = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
+Temperature = 1 #Kelvin
+Time = 5 # fs
+Friction = 0.05
+
+Scaled = False #Scaled or cartessian coordinates
+Manualpbc = False # If you need manual constraint axis
+
+# IF Manualpbc is true then change following:
+pbcmanual=[True,True,False]
+
+# If you have double number of elements in your final file
+SolveDoubleElementProblem = True
+
+# If you do not want to use a CIF file for geometry, please provide
+# ASE Atoms object information below. You can use ciftoase.py to
+# make your own ASE Atoms object from a CIF file.
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
@@ -26,20 +50,6 @@ bulk_configuration = Atoms(
     pbc=True,
     )
 
-# -------------------------------------------------------------
-# Parameters
-# -------------------------------------------------------------
-
-PotentialUsed = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
-
-Scaled = False #Scaled or cartessian coordinates
-Manualpbc = False # If you need manual constraint axis
-
-# IF Manualpbc is true then change following:
-pbcmanual=[True,True,False]
-
-# If you have double number of elements in your final file
-SolveDoubleElementProblem = True
 # -------------------------------------------------------------
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
@@ -61,7 +71,7 @@ else:
 
 asestruct.set_calculator(KIM(PotentialUsed, options={"ase_neigh": False}))
 
-dyn = Langevin(asestruct, timestep=5*units.fs, trajectory='md.traj', logfile=Filename+'-Log-GPAW-QuickOptim.txt', temperature=1*units.kB, friction=0.05)
+dyn = Langevin(asestruct, timestep=Time*units.fs, trajectory='quickoptim.traj', logfile=Filename+'-Log-GPAW-QuickOptim.txt', temperature_K=Temperature, friction=Friction)
 
 
 print("")

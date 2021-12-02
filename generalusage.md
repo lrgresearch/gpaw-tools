@@ -68,7 +68,7 @@ Usage:
 | ------ | ------------------- | ------------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
 |   PW   | Yes                 | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
 | PW-G0W0| Yes                 | Yes           | No             | No  | No    | Yes  | No               | No      |
-|  EXX*  | Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
+| PW-EXX*| Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
 |  LCAO  | No                  | No            | No             | Yes | Yes   | Yes  | Yes              | No      |
 
 *: Just some ground state energy calculations for PBE0 and HSE06.

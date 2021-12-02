@@ -6,11 +6,8 @@ More information: $ gpawsolve.py -h
 '''
 
 Description = f''' 
- Usage: Change number with core numbers/threads to use. I am suggesting to use total number of cores(or threads) - 1
- Usage: For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
-        $ mpirun -np 4 gpawsolve.py <args>
- For using all threads provided by Intel Hyperthreading technology:
-        $ mpirun --use-hwthread-cpus -np 8 gpawsolve.py <args>
+ Usage: 
+ $ mpirun -np <corenumbers> gpawsolve.py <args>
  -------------------------------------------------------------
  Calculation selector
  -------------------------------------------------------------
@@ -46,8 +43,9 @@ from gpaw.xc.exx import EXX
 import numpy as np
 from numpy import genfromtxt
 
-
-# IF YOU WANT TO USE CONFIG FILE, YOU CAN CREATE FROM THIS FILE. PLEASE COPY/PASTE FROM HERE:>>>>>>>
+# DEFAULT VALUES
+# These values (with bulk configuration) can be used to run this script without using inputfile (py file)
+# and configuration file (cif file). 
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
@@ -95,6 +93,7 @@ GWbandCB = 18           # Conduction band number
 GWppa = True            # Plasmon Pole Approximation
 GWq0correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
 GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
+GWbandinterpolation = True # Interpolate band
 
 # OPTICAL
 num_of_bands = 16		#
@@ -112,7 +111,6 @@ optnblocks=4            # Split matrices in nblocks blocks and distribute them G
 # Example: For a x-y 2D nanosheet only first 2 component will be true
 whichstrain=[False, False, False, False, False, False]
 MPIcores = 4            # This is for gg.py. Not used in this script.
-# <<<<<<< TO HERE TO FILE config.py IN SAME DIRECTORY AND USE -c FLAG WITH COMMAND
 
 # -------------------------------------------------------------
 # Bulk Configuration

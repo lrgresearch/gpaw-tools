@@ -90,7 +90,7 @@ Usage:
 | ------ | ------------------- | ------------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
 |   PW   | Yes                 | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
 | PW-GW  | Yes                 | Yes           | No             | No  | No    | Yes  | No               | No      |
-|  EXX*  | Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
+| PW-EXX*| Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
 |  LCAO  | No                  | No            | No             | Yes | Yes   | Yes  | Yes              | No      |
 
 *: Just some ground state energy calculations for PBE0 and HSE06.
@@ -113,15 +113,15 @@ Mainly, quickoptimize.py is not related to GPAW. However it is dependent to ASAP
 The script can be called as: from the command line  in the script itself:
 
     python quickoptimize.py                   (if the user wants to provide structure as ASE Atoms object)
-    python quickoptimize.py <inputfile.cif>   (if the user wants to provide structure as a CIF file
+    python quickoptimize.py <geometryfile.cif>   (if the user wants to provide structure as a CIF file
 
 
 ### optimizations/ciftoase.py
 For `quickoptimize.py` or other optimization scripts, user may need to give ASE Atoms object instead of using a CIF file. This script changes a CIF file information to ASE Atoms object. Because there is a problem in the read method of ASE.io, sometimes it can give a double number of atoms. If the user lives this kind of problem, there is a setting inside the script. User can run the script like:
 
-    python ciftoase.py <inputfile.cif>
+    python ciftoase.py <geometryfile.cif>
 
-Result will be printed to screen and will be saved as `inputfile.py` in the same folder.
+Result will be printed to screen and will be saved as `geometryfile.py` in the same folder.
 
 ### optimizations/optimize_cutoff (and kpoints)(and latticeparam).py
 Users must provide ASE Atoms object and simply insert the object inside these scripts. With the scripts, the user can do convergence tests for cut-off energy, k-points and can calculate the energy dependent lattice parameter values. These codes are mainly based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. Scripts can easily called with MPI as:

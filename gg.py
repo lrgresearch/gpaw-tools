@@ -24,7 +24,7 @@ class gg:
 
     def __init__(self, master=None):
         global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, GWppavar, GWq0correctionvar, GWnblockvar
-        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar
+        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar
         global Struct, StructLoaded, GWbandinterpolationvar
         
         
@@ -67,13 +67,15 @@ class gg:
             # Loading config file
             sys.path.append(WORK_PATH)
             config = __import__(pathlib.Path(configname).stem)
+
             
             # There must be some elegant way to do this.
             # Searching in globals() make us to use less parameters in config files. Otherwise not using a variable in
             # a congig file gives errors.
             
             # Mode
-            if 'config.Mode' in globals():
+            self.text1.insert(tk.END, config.__dict__.keys())
+            if 'Mode' in config.__dict__.keys():
                 if config.Mode == 'PW':
                     self.Modettk.current(0)
                 elif config.Mode == 'PW-GW':
@@ -87,10 +89,10 @@ class gg:
                 else:
                     self.Modettk.current(0)
             else:
-                self.Modettk.current(0)
+                self.Modettk.current(2)
 
             # DOS calculation    
-            if 'config.DOS_calc' in globals():
+            if 'DOS_calc' in config.__dict__.keys():
                 if config.DOS_calc == True:
                     DOS_calcvar.set(True)
                 else:
@@ -99,7 +101,7 @@ class gg:
                 DOS_calcvar.set(False)
 
             # Band calculation
-            if 'config.Band_calc' in globals():
+            if 'Band_calc' in config.__dict__.keys():
                 if config.Band_calc == True:
                     Band_calcvar.set(True)
                 else:
@@ -108,7 +110,7 @@ class gg:
                 Band_calcvar.set(False)
 
             # Density calculation
-            if 'config.Density_calc' in globals():
+            if 'Density_calc' in config.__dict__.keys():
                 if config.Density_calc == True:
                     Density_calcvar.set(True)
                 else:
@@ -117,7 +119,7 @@ class gg:
                 Density_calcvar.set(False)
 
             # Optical calculation
-            if 'config.Optical_calc' in globals():
+            if 'Optical_calc' in config.__dict__.keys():
                 if config.Optical_calc == True:
                     Optical_calcvar.set(True)
                 else:
@@ -126,7 +128,7 @@ class gg:
                 Optical_calcvar.set(False)
 
             # Fmax
-            if 'config.fmaxval' in globals():
+            if 'fmaxval' in config.__dict__.keys():
                 self.fmaxvalttk.delete('0', 'end')
                 self.fmaxvalttk.insert('0', config.fmaxval)
             else:
@@ -134,7 +136,7 @@ class gg:
                 self.fmaxvalttk.insert('0', '0.05')
 
             # Cut-off energy
-            if 'config.cut_off_energy' in globals():
+            if 'cut_off_energy' in config.__dict__.keys():
                 self.cut_off_energyttk.delete('0', 'end')
                 self.cut_off_energyttk.insert('0', config.cut_off_energy)
             else:
@@ -142,7 +144,7 @@ class gg:
                 self.cut_off_energyttk.insert('0', '340')
 
             # Kpoints
-            if 'config.kpts_x' in globals():
+            if 'kpts_x' in config.__dict__.keys():
                 self.kpts_xttk.delete('0', 'end')
                 self.kpts_xttk.insert('0', config.kpts_x)
                 self.kpts_yttk.delete('0', 'end')
@@ -158,7 +160,7 @@ class gg:
                 self.kpts_zttk.insert('0', '1')
 
             # Gamma
-            if 'config.Gamma' in globals():
+            if 'Gamma' in config.__dict__.keys():
                 if config.Gamma == True:
                     Gammavar.set(True)
                 else:
@@ -167,7 +169,7 @@ class gg:
                 Gammavar.set(False)
 
             # Band path
-            if 'config.band_path' in globals():
+            if 'band_path' in config.__dict__.keys():
                 self.band_pathttk.delete('0', 'end')
                 self.band_pathttk.insert('0', config.band_path)
             else:
@@ -175,7 +177,7 @@ class gg:
                 self.band_pathttk.insert('0', 'GX')
 
             # Npoints
-            if 'config.band_npoints' in globals():
+            if 'band_npoints' in config.__dict__.keys():
                 self.band_npointsttk.delete('0', 'end')
                 self.band_npointsttk.insert('0', config.band_npoints)
             else:
@@ -183,7 +185,7 @@ class gg:
                 self.band_npointsttk.insert('0', '40')
 
             # Max energy for figure
-            if 'config.energy_max' in globals():
+            if 'energy_max' in config.__dict__.keys():
                 self.energy_maxttk.delete('0', 'end')
                 self.energy_maxttk.insert('0', config.energy_max)
             else:
@@ -192,7 +194,7 @@ class gg:
 
             
             # Hubbard
-            if 'config.Hubbard' in globals():
+            if 'Hubbard' in config.__dict__.keys():
                 self.Hubbardttk.delete('0', 'end')
                 if hasattr(config, 'Hubbard'):
                     self.Hubbardttk.insert('0', str(config.Hubbard))
@@ -203,7 +205,7 @@ class gg:
                 self.Hubbardttk.insert('0', '{}')
 
             # XCs
-            if 'config.XC_calc' in globals():
+            if 'XC_calc' in config.__dict__.keys():
                 if config.XC_calc == 'LDA':
                     self.XC_calcttk.current(0)
                 elif config.XC_calc == 'PBE':
@@ -224,7 +226,7 @@ class gg:
                 self.XC_calcttk.current(0)
 
             # Spin Calculation
-            if 'config.Spin_calc' in globals():
+            if 'Spin_calc' in config.__dict__.keys():
                 if config.Spin_calc == True:
                     Spin_calcvar.set(True)
                 else:
@@ -233,7 +235,7 @@ class gg:
                 Spin_calcvar.set(False)
 
             # Magnetic Moment
-            if 'config.Magmom_per_atom' in globals():
+            if 'Magmom_per_atom' in config.__dict__.keys():
                 self.Magmom_per_atomttk.delete('0', 'end')
                 self.Magmom_per_atomttk.insert('0', config.Magmom_per_atom)
             else:
@@ -241,7 +243,7 @@ class gg:
                 self.Magmom_per_atomttk.insert('0', '0.0')
 
             #Gridref for electron density
-            if 'config.gridref' in globals():
+            if 'gridref' in config.__dict__.keys():
                 self.gridrefttk.delete('0', 'end')
                 self.gridrefttk.insert('0', config.gridref)
             else:
@@ -251,7 +253,7 @@ class gg:
             # ---------GW Parameters---------
             
             # GWtype
-            if 'config.gridref' in globals():
+            if 'gridref' in config.__dict__.keys():
                 if config.GWtype == 'GW0':
                     self.GWtypettk.current(0)
                 elif config.GWtype == 'G0W0':
@@ -262,7 +264,7 @@ class gg:
                 self.GWtypettk.current(0)
             
             # GWkpoints
-            if 'config.GWkpoints' in globals():
+            if 'GWkpoints' in config.__dict__.keys():
                 self.GWkpointsttk.delete('0', 'end')
                 if hasattr(config, 'GWkpoints'):
                     self.GWkpointsttk.insert('0', str(config.GWkpoints.tolist()))
@@ -273,7 +275,7 @@ class gg:
                 self.GWkpointsttk.insert('0', '[[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]')
             
             # GWtruncation
-            if 'config.GWtruncation' in globals():
+            if 'GWtruncation' in config.__dict__.keys():
                 if config.GWtruncation is None:
                     self.GWtruncationttk.current(0)
                 elif config.GWtruncation == '2D':
@@ -290,7 +292,7 @@ class gg:
                 self.GWtruncationttk.current(0)
 
             # GWcut_off_energy
-            if 'config.GWcut_off_energy' in globals():
+            if 'GWcut_off_energy' in config.__dict__.keys():
                 self.GWcut_off_energyttk.delete('0', 'end')
                 self.GWcut_off_energyttk.insert('0', config.GWcut_off_energy)
             else:
@@ -298,7 +300,7 @@ class gg:
                 self.GWcut_off_energyttk.insert('0', '50')
 
             # GWbandVB
-            if 'config.GWbandVB' in globals():
+            if 'GWbandVB' in config.__dict__.keys():
                 self.GWbandVBttk.delete('0', 'end')
                 self.GWbandVBttk.insert('0', config.GWbandVB)
             else:
@@ -306,7 +308,7 @@ class gg:
                 self.GWbandVBttk.insert('0', '8')
 
             # GWbandCB
-            if 'config.GWbandCB' in globals():
+            if 'GWbandCB' in config.__dict__.keys():
                 self.GWbandCBttk.delete('0', 'end')
                 self.GWbandCBttk.insert('0', config.GWbandCB)
             else:
@@ -314,7 +316,7 @@ class gg:
                 self.GWbandCBttk.insert('0', '18')
 
             # GWppa
-            if 'config.GWppa' in globals():
+            if 'GWppa' in config.__dict__.keys():
                 if config.GWppa == True:
                     GWppavar.set(True)
                 else:
@@ -323,7 +325,7 @@ class gg:
                 GWppavar.set(False)
                 
             # GWq0correction
-            if 'config.GWq0correction' in globals():
+            if 'GWq0correction' in config.__dict__.keys():
                 if config.GWq0correction == True:
                     GWq0correctionvar.set(True)
                 else:
@@ -332,7 +334,7 @@ class gg:
                 GWq0correctionvar.set(False)
 
             # GWnblock
-            if 'config.GWnblock' in globals():
+            if 'GWnblock' in config.__dict__.keys():
                 if config.GWnblock == True:
                     GWnblockvar.set(True)
                 else:
@@ -341,7 +343,7 @@ class gg:
                 GWnblockvar.set(False)
 
             # GWbandinterpolation
-            if 'config.GWbandinterpolation' in globals():
+            if 'GWbandinterpolation' in config.__dict__.keys():
                 if config.GWbandinterpolation == True:
                     GWbandinterpolationvar.set(True)
                 else:
@@ -352,7 +354,7 @@ class gg:
             # ---------Optical------------
 
             # Number of bands
-            if 'config.num_of_bands' in globals():
+            if 'num_of_bands' in config.__dict__.keys():
                 self.num_of_bandsttk.delete('0', 'end')
                 self.num_of_bandsttk.insert('0', config.num_of_bands)
             else:
@@ -360,7 +362,7 @@ class gg:
                 self.num_of_bandsttk.insert('0', '16')
 
             # Fermi-Dirac Smearing
-            if 'config.optFDsmear' in globals():
+            if 'optFDsmear' in config.__dict__.keys():
                 self.optFDsmearttk.delete('0', 'end')
                 self.optFDsmearttk.insert('0', config.optFDsmear)
             else:
@@ -368,7 +370,7 @@ class gg:
                 self.optFDsmearttk.insert('0', '0.05')
 
             # Eta
-            if 'config.opteta' in globals():
+            if 'opteta' in config.__dict__.keys():
                 self.optetattk.delete('0', 'end')
                 self.optetattk.insert('0', config.opteta)
             else:
@@ -376,7 +378,7 @@ class gg:
                 self.optetattk.insert('0', '0.05')
 
             # DOmega0
-            if 'config.optdomega0' in globals():
+            if 'optdomega0' in config.__dict__.keys():
                 self.optdomega0ttk.delete('0', 'end')
                 self.optdomega0ttk.insert('0', config.optdomega0)
             else:
@@ -384,7 +386,7 @@ class gg:
                 self.optdomega0ttk.insert('0', '0.05')
 
             # Optical nblocks
-            if 'config.optnblocks' in globals():
+            if 'optnblocks' in config.__dict__.keys():
                 self.optnblocksttk.delete('0', 'end')
                 self.optnblocksttk.insert('0', config.optnblocks)
             else:
@@ -392,7 +394,7 @@ class gg:
                 self.optnblocksttk.insert('0', '4')
             
             # Omega2
-            if 'config.optomega2' in globals():
+            if 'optomega2' in config.__dict__.keys():
                 self.optomega2ttk.delete('0', 'end')
                 self.optomega2ttk.insert('0', config.optomega2)
             else:
@@ -400,7 +402,7 @@ class gg:
                 self.optomega2ttk.insert('0', '5.0')
 
             # Optical cut off
-            if 'config.optecut' in globals():
+            if 'optecut' in config.__dict__.keys():
                 self.optecutttk.delete('0', 'end')
                 self.optecutttk.insert('0', config.optecut)
             else:
@@ -408,7 +410,7 @@ class gg:
                 self.optecutttk.insert('0', '100')
 
             # Strain-Shear
-            if 'config.whichstrain' in globals():
+            if 'whichstrain' in config.__dict__.keys():
                 if config.whichstrain[0] == True:
                     EpsXvar.set(True)
                 else:
@@ -447,7 +449,7 @@ class gg:
                 ShearXYvar.set(False)
 
             #Core number
-            if 'config.MPIcores' in globals():
+            if 'MPIcores' in config.__dict__.keys():
                 self.MPIcoresttk.delete('0', 'end')
                 self.MPIcoresttk.insert('0', config.MPIcores)
             else:
@@ -493,9 +495,9 @@ class gg:
                 if self.XC_calcttk.get() == 'LDA':
                     print("XC_calc = 'LDA'", end="\n", file=f1)
                 elif self.XC_calcttk.get() == 'PBE':
-                    print("XC_calc = 'GLLBSC'", end="\n", file=f1)
-                elif self.XC_calcttk.get() == 'GLLBSC':
                     print("XC_calc = 'PBE'", end="\n", file=f1)
+                elif self.XC_calcttk.get() == 'GLLBSC':
+                    print("XC_calc = 'GLLBSC'", end="\n", file=f1)
                 elif self.XC_calcttk.get() == 'revPBE':
                     print("XC_calc = 'revPBE'", end="\n", file=f1)
                 elif self.XC_calcttk.get() == 'RPBE':

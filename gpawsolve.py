@@ -471,7 +471,7 @@ if Optical_calc == False:
             num_of_bands = calc.get_number_of_bands()
             parprint('Num of bands:'+str(num_of_bands))
 
-            #bs.write(struct+'-3-Result-Band.json')
+            calc.write(struct+'-3-Result-Band.json')
             calc.write(struct+'-3-Result-Band.gpw')
 
             if Spin_calc == True:

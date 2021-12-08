@@ -6,7 +6,6 @@ shrinkgpw.py: Extracting wave functions from gpw file to get smaller files
 Usage: $ shrinkgpw.py <file.gpw>
 '''
 from ase import *
-from ase.io import read
 from gpaw import GPAW
 import sys, os
 from pathlib import Path

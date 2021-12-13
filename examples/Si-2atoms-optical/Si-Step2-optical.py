@@ -34,6 +34,8 @@ XC_calc = 'PBE'
 #Choose one for PW-EXX (Ground state calculations will be done with PBE):
 #XC_calc = 'PBE0'
 #XC_calc = 'HSE06'
+DOS_npoints = 501        # Number of points
+DOS_width = 0.1          # Width of guassian smearing.  Use width=0.0 for linear tetrahedron interpolation
 
 Spin_calc = False        # Spin polarized calculation?
 Magmom_per_atom = 1.0    # Magnetic moment per atom

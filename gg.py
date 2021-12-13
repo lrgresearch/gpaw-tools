@@ -225,6 +225,22 @@ class gg:
             else:
                 self.XC_calcttk.current(0)
 
+            # DOS number of points
+            if 'DOS_npoints' in config.__dict__.keys():
+                self.energy_maxttk.delete('0', 'end')
+                self.energy_maxttk.insert('0', config.DOS_npoints)
+            else:
+                self.energy_maxttk.delete('0', 'end')
+                self.energy_maxttk.insert('0', '501')
+
+            # DOS smearing width
+            if 'DOS_width' in config.__dict__.keys():
+                self.energy_maxttk.delete('0', 'end')
+                self.energy_maxttk.insert('0', config.DOS_width)
+            else:
+                self.energy_maxttk.delete('0', 'end')
+                self.energy_maxttk.insert('0', '0.1')
+
             # Spin Calculation
             if 'Spin_calc' in config.__dict__.keys():
                 if config.Spin_calc == True:
@@ -509,6 +525,8 @@ class gg:
                 else:
                     print("XC_calc = 'LDA'", end="\n", file=f1)
 
+                print("DOS_npoints = "+ str(self.DOS_npointsttk.get()), end="\n", file=f1)
+                print("DOS_width = "+ str(self.DOS_widthttk.get()), end="\n", file=f1)
                 print("Spin_calc = "+ str(Spin_calcvar.get()), end="\n", file=f1)
                 print("Magmom_per_atom = "+ str(self.Magmom_per_atomttk.get()), end="\n", file=f1)
                 print("gridref = "+ str(self.gridrefttk.get()), end="\n", file=f1)
@@ -729,6 +747,7 @@ class gg:
         self.band_npointsttk.pack(side='top')
         self.frame11.configure(height='200', width='200')
         self.frame11.pack(side='top')
+        # Maximum Energy
         self.frame12 = ttk.Frame(self.labelframe2)
         self.label10 = ttk.Label(self.frame12)
         self.label10.configure(text='Maximum energy')
@@ -750,7 +769,7 @@ class gg:
         self.Hubbardttk.pack(side='top')
         self.frameHubbard.configure(height='200', width='200')
         self.frameHubbard.pack(side='top')
-        
+        # XC
         self.frame14 = ttk.Frame(self.labelframe2)
         self.label11 = ttk.Label(self.frame14)
         self.label11.configure(text='Exchange Correlation (PBE0 and HSE06 are for EXX)')
@@ -761,6 +780,29 @@ class gg:
         self.XC_calcttk.current(0)
         self.frame14.configure(height='200', width='200')
         self.frame14.pack(side='top')
+        # DOS number of points
+        self.frameDOS_npoints = ttk.Frame(self.labelframe2)
+        self.labelDOS_npoints = ttk.Label(self.frameDOS_npoints)
+        self.labelDOS_npoints.configure(text='DOS number of points')
+        self.labelDOS_npoints.pack(side='left')
+        self.DOS_npointsttk = ttk.Entry(self.frameDOS_npoints)
+        self.DOS_npointsttk.delete('0', 'end')
+        self.DOS_npointsttk.insert('0', '501')
+        self.DOS_npointsttk.pack(side='top')
+        self.frameDOS_npoints.configure(height='200', width='200')
+        self.frameDOS_npoints.pack(side='top')
+        # DOS smearing width
+        self.frameDOS_width = ttk.Frame(self.labelframe2)
+        self.labelDOS_width = ttk.Label(self.frameDOS_width)
+        self.labelDOS_width.configure(text='DOS smearing (0.0 for tetrahedron)')
+        self.labelDOS_width.pack(side='left')
+        self.DOS_widthttk = ttk.Entry(self.frameDOS_width)
+        self.DOS_widthttk.delete('0', 'end')
+        self.DOS_widthttk.insert('0', '0.1')
+        self.DOS_widthttk.pack(side='top')
+        self.frameDOS_width.configure(height='200', width='200')
+        self.frameDOS_width.pack(side='top')
+        # Spin polarized?
         self.frame15 = ttk.Frame(self.labelframe2)
         self.Spin_calcttk = ttk.Checkbutton(self.frame15)
         Spin_calcvar = BooleanVar()

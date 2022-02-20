@@ -38,13 +38,15 @@ Here, `real    9m0.0719s` is the benchmark time.
 ## Some Benchmark Times
 
 ### Computers
-| Computer  | CPU                      | Cores(Threads) | CPU Speed | Memory | Hdd            | CPU GFlops | Memory Bandwidth | HDD Speed |
-| --------- | ------------------------ | -------------- | --------- | ------ | -------------- | ---------- | ---------------- | --------- |
-| 1         | 2x Intel Xeon E5-2430 v2 | 24             | 2.5 GHz   | 16Gb   | 300Gb + 1000Gb | 357        | 5 GB/s           | 259 MB/s  |
-| 2         | Intel Core i7-8550u      | 4(8)           | 1.8GHz    | 8Gb    | 512SSD         | 81         | 12 GB/s          | 1GB/s     |
-| 3         | AMD Ryzen 5 4500u        | 6              | 2.38GHz   | 8Gb    | 256SSD         | 86         | 9 GB/s           | 0.8GB/s   |
-| 4         | Intel Core i7-8700       | 6(12)          | 3.2 GHz   | 8 Gb   | 1000 Gb        | 302        | 10 GB/s          | 195 MB/s  |
-| 5         | AMD Ryzen 7 5700u        | 8(16)          | 1.8GHz    | 16Gb   | 512SSD         | 254        | 6 GB/s           | 2GB/s     |
+| Computer  | CPU                      | Cores(Threads) | CPU Speed | Memory | Hdd            | Sysbench Events(1) | Memory Bandwidth | HDD Speed |
+| --------- | ------------------------ | -------------- | --------- | ------ | -------------- | ------------------ | ---------------- | --------- |
+| 1         | 2x Intel Xeon E5-2430 v2 | 12(24)         | 2.5 GHz   | 16Gb   | 300Gb + 1000Gb | 15525.13           | 5 GB/s           | 259 MB/s  |
+| 2         | Intel Core i7-8550u      | 4(8)           | 1.8 GHz   | 8Gb    | 512SSD         | -                  | 12 GB/s          | 1GB/s     |
+| 3         | AMD Ryzen 5 4500u        | 6(6)           | 2.4 GHz   | 8Gb    | 256SSD         | -                  | 9 GB/s           | 0.8GB/s   |
+| 4         | Intel Core i7-8700       | 6(12)          | 3.2 GHz   | 8Gb    | 1000 Gb        | 13302.23           | 10 GB/s          | 195 MB/s  |
+| 5         | AMD Ryzen 7 5700u        | 8(16)          | 1.8 GHz   | 16Gb   | 512SSD         | 17201.45           | 6 GB/s           | 2GB/s     |
+| 6         | AMD Ryzen 7 4700G        | 8(16)          | 3.6 GHz   | 16Gb   | 512SSD         | 18466.64           | 10 GB/s          | 1 GB/s    |
+| 7         | Intel Xeon W3540         | 4(8)           | 2.9 GHz   | 9Gb    | -              | -                  | -                | -         |
 
 ### Benchmarks
 | Computer  | GPAW Version  | System                  | Used Core | Command                       | Benchmark File             | Time Elapsed |
@@ -60,3 +62,7 @@ Here, `real    9m0.0719s` is the benchmark time.
 | 5         | 21.6.0        | Ubuntu 20.04            | 8         | gpaw -P                       | simple_benchmark_2021.py   | 4m24s        |
 | 5         | 21.6.0        | Ubuntu 20.04            | 8         | mpirun -n                     | simple_benchmark_2021.py   | 5m15s        |
 | 5         | 21.6.0        | Ubuntu 20.04            | 15        | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 8m19s        |
+| 6         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 8         | gpaw -P                       | simple_benchmark_2021.py   | 3m50s        |
+| 7         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 8         | mpirun -n                     | simple_benchmark_2021.py   | 11m25s       |
+
+(1) : sysbench for linux is used for CPU benchmark (UBUNTU INSTALLATION: sudo apt-get install sysbench | USAGE: sysbench --test=cpu --threads=PUT-THREAD-NUMBER-HERE run).

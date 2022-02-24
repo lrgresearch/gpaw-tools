@@ -12,6 +12,7 @@ title: Release Notes
 * Saving PNG versions of band structure and DOS even in -d argument is not used.
 * Saving JSON file in addition to GPW file in band calculations.
 * `shrinkgpw.py`command for extracting wavefunctions from huge gpw files and save with a different name.
+* New benchmarks were added.
 
 ### Version 21.12.0
 

@@ -480,6 +480,8 @@ class gg:
             #Firstly, lets save all options to config file.
             with open(configname, 'w') as f1:
                 print("import numpy as np", end="\n", file=f1)
+
+                # ---------Ground------------
                 if self.Modettk.get() == 'PW':
                     print("Mode = 'PW'", end="\n", file=f1)
                 elif self.Modettk.get() == 'PW-GW':
@@ -493,21 +495,34 @@ class gg:
                 else:
                     print("Mode = 'PW'", end="\n", file=f1)
 
+                # ---------Electronic------------
+                # DOS_calc
                 print("DOS_calc = "+ str(DOS_calcvar.get()), end="\n", file=f1)
+                # Band_calc
                 print("Band_calc = "+ str(Band_calcvar.get()), end="\n", file=f1)
+                # Density_calc
                 print("Density_calc = "+ str(Density_calcvar.get()), end="\n", file=f1)
+                # Optical_calc
                 print("Optical_calc = "+ str(Optical_calcvar.get()), end="\n", file=f1)
+                # fmaxval
                 print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
+                # cut_off_energy
                 print("cut_off_energy = "+ str(self.cut_off_energyttk.get()), end="\n", file=f1)
+                # kpoints
                 print("kpts_x = "+ str(self.kpts_xttk.get()), end="\n", file=f1)
                 print("kpts_y = "+ str(self.kpts_yttk.get()), end="\n", file=f1)
                 print("kpts_z = "+ str(self.kpts_zttk.get()), end="\n", file=f1)
+                # Gamma
                 print("Gamma = "+ str(Gammavar.get()), end="\n", file=f1)
+                # band_path
                 print("band_path = '"+ str(self.band_pathttk.get())+"'", end="\n", file=f1)
+                # band_npoints
                 print("band_npoints = "+ str(self.band_npointsttk.get()), end="\n", file=f1)
+                # energy_max
                 print("energy_max = "+ str(self.energy_maxttk.get()), end="\n", file=f1)
+                # Hubbard
                 print("Hubbard = "+ str(self.Hubbardttk.get()), end="\n", file=f1)
-
+                # Exchange-Correlation
                 if self.XC_calcttk.get() == 'LDA':
                     print("XC_calc = 'LDA'", end="\n", file=f1)
                 elif self.XC_calcttk.get() == 'PBE':
@@ -524,12 +539,17 @@ class gg:
                     print("XC_calc = 'HSE06'", end="\n", file=f1)
                 else:
                     print("XC_calc = 'LDA'", end="\n", file=f1)
-
+                # DOS_npoints
                 print("DOS_npoints = "+ str(self.DOS_npointsttk.get()), end="\n", file=f1)
+                # DOS_width
                 print("DOS_width = "+ str(self.DOS_widthttk.get()), end="\n", file=f1)
+                # Spin_calc
                 print("Spin_calc = "+ str(Spin_calcvar.get()), end="\n", file=f1)
+                # Magmom_per_atom
                 print("Magmom_per_atom = "+ str(self.Magmom_per_atomttk.get()), end="\n", file=f1)
+                # gridref
                 print("gridref = "+ str(self.gridrefttk.get()), end="\n", file=f1)
+                
                 # ---------GW Parameters------------
                 # GWtype
                 if self.GWtypettk.get() == 'GW0':
@@ -548,8 +568,7 @@ class gg:
                 elif self.GWtruncationttk.get() == '0D':
                     print("GWtruncation = '0D'", end="\n", file=f1)
                 else:
-                    print("GWtruncation = 'wigner-seitz'", end="\n", file=f1)
-                    
+                    print("GWtruncation = 'wigner-seitz'", end="\n", file=f1)               
                 # GWkpoints
                 print("GWkpoints = np.array("+ str(self.GWkpointsttk.get())+")", end="\n", file=f1)
                 # GWcut_off_energy
@@ -568,7 +587,9 @@ class gg:
                 print("GWbandinterpolation = "+ str(GWbandinterpolationvar.get()), end="\n", file=f1)
 
                 # ---------Optical------------
+                # num_of_bands
                 print("num_of_bands = "+ str(self.num_of_bandsttk.get()), end="\n", file=f1)
+                # optFDsmear
                 print("optFDsmear = "+ str(self.optFDsmearttk.get()), end="\n", file=f1)
                 print("opteta = "+ str(self.optetattk.get()), end="\n", file=f1)
                 print("optdomega0 = "+ str(self.optdomega0ttk.get()), end="\n", file=f1)

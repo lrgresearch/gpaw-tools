@@ -14,6 +14,7 @@ import subprocess
 import shutil
 from ase.visualize import view
 from ase.io import read, write
+import webbrowser
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 WORK_PATH = os.getcwd()
@@ -27,7 +28,11 @@ class gg:
         global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar
         global Struct, StructLoaded, GWbandinterpolationvar
         
+        url = 'https://www.lrgresearch.org/gpaw-tools/'
         
+        def OpenUrl(url):
+            webbrowser.open_new(url)
+    
         def onOpen():
             ''' This is the open button's behaviour on the first tab.'''
             global basename, basepath, textfilenamepath
@@ -1198,9 +1203,9 @@ expediting calculations with GPAW/ASE codes.
 For licensing information, please refer to LICENSE file.'''
         self.text2.insert('0.0', _text_)
         self.text2.pack(side='left')
-        self.button1 = ttk.Button(self.frame24)
+        self.button1 = ttk.Button(self.frame24, text='gpaw-tools website', command=lambda aurl=url:OpenUrl(aurl))
         self.gg_fullsmall_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
-        self.button1.configure(image=self.gg_fullsmall_png, state='normal', text='gpaw-tools')
+        self.button1.configure(image=self.gg_fullsmall_png, state='normal')
         self.button1.pack(side='left')
         self.frame24.configure(height='200', width='900')
         self.frame24.pack(side='top')

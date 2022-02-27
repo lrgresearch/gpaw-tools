@@ -642,6 +642,8 @@ class gg:
         
         # build gui
         self.toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
+
+        # --------- Load Structure tab -----------------
         self.frame2 = ttk.Frame(self.toplevel1)
         self.notebookUpper = ttk.Notebook(self.frame2)
         self.frame1 = ttk.Frame(self.notebookUpper)
@@ -662,40 +664,62 @@ class gg:
         self.button2.configure(command=onASEload)
         self.frame1.configure(height='200', width='200')
         self.frame1.pack(side='top')
+
+
         self.notebookUpper.add(self.frame1, text='Load Structure')
+        
+        # ----------- Input Parameters tab ----------------
         self.frame4 = ttk.Frame(self.notebookUpper)
         self.frame5 = ttk.Frame(self.frame4)
+        
+        # Labelframe1: Calculator Settings -------------------------------
         self.labelframe1 = ttk.Labelframe(self.frame5)
+
+        # Label
         self.frame6 = ttk.Frame(self.labelframe1)
         self.label1 = ttk.Label(self.frame6)
         self.label1.configure(text='Calculator')
         self.label1.pack(side='left')
+
+        # Mode
         self.Modettk = ttk.Combobox(self.frame6)
         self.Modettk.configure(values=('PW', 'PW-GW', 'EXX', 'LCAO', 'FD'), state='readonly')
         self.Modettk.pack(side='top')
         self.Modettk.current(0)
         self.frame6.configure(height='200', width='200')
         self.frame6.pack(side='top')
-        # Setting DOS_calc related checkbutton
+        
+        # DOS_calc
         self.DOS_calcttk = ttk.Checkbutton(self.labelframe1)
         DOS_calcvar = BooleanVar()
         self.DOS_calcttk.configure(state='normal', variable = DOS_calcvar, onvalue=True, offvalue=False, takefocus=False, text='DOS Calculation')
         self.DOS_calcttk.pack(side='top')
+        
+        # Band_calc
         self.Band_calcttk = ttk.Checkbutton(self.labelframe1)
         Band_calcvar = BooleanVar()
         self.Band_calcttk.configure(variable = Band_calcvar, onvalue=True, offvalue=False, text='Band Structure Calculation')
         self.Band_calcttk.pack(side='top')
+        
+        # Density_calc
         self.Density_calcttk = ttk.Checkbutton(self.labelframe1)
         Density_calcvar = BooleanVar()
         self.Density_calcttk.configure(variable = Density_calcvar, onvalue=True, offvalue=False,text='All-Electron Density Calculation')
         self.Density_calcttk.pack(side='top')
-        self.checkbutton4 = ttk.Checkbutton(self.labelframe1)
+        
+        # Optical_calc
+        self.Optical_calcttk = ttk.Checkbutton(self.labelframe1)
         Optical_calcvar = BooleanVar()
-        self.checkbutton4.configure(variable = Optical_calcvar, onvalue=True, offvalue=False, text='Optical Properties Calculation')
-        self.checkbutton4.pack(side='top')
+        self.Optical_calcttk.configure(variable = Optical_calcvar, onvalue=True, offvalue=False, text='Optical Properties Calculation')
+        self.Optical_calcttk.pack(side='top')
         self.labelframe1.configure(height='200', text='Calculator Settings', width='200')
         self.labelframe1.pack(side='left')
+        # End Labelframe1 ---------------------------------------------------
+        
+        # Labelframe2: Electronic Calculation Parameters --------------------
         self.labelframe2 = ttk.Labelframe(self.frame5)
+ 
+        # Maximum Force
         self.frame7 = ttk.Frame(self.labelframe2)
         self.label5 = ttk.Label(self.frame7)
         self.label5.configure(text='Maximum Force')
@@ -706,6 +730,8 @@ class gg:
         self.fmaxvalttk.pack(side='top')
         self.frame7.configure(height='200', width='200')
         self.frame7.pack(side='top')
+
+        # Cut-off energy
         self.frame8 = ttk.Frame(self.labelframe2)
         self.label6 = ttk.Label(self.frame8)
         self.label6.configure(text='Cut-off energy (eV)')
@@ -716,6 +742,8 @@ class gg:
         self.cut_off_energyttk.pack(side='top')
         self.frame8.configure(height='200', width='200')
         self.frame8.pack(side='top')
+
+        # K-points
         self.frame9 = ttk.Frame(self.labelframe2)
         self.label7 = ttk.Label(self.frame9)
         self.label7.configure(text='K-points (x,y,z)')
@@ -738,7 +766,7 @@ class gg:
         self.frame9.configure(height='200', width='200')
         self.frame9.pack(side='top')
         
-        #Gamma
+        # Gamma
         self.frame23 = ttk.Frame(self.labelframe2)
         self.Gammattk = ttk.Checkbutton(self.frame23)
         Gammavar = BooleanVar()
@@ -747,7 +775,7 @@ class gg:
         self.frame23.configure(height='200', width='200')
         self.frame23.pack(side='top')
         
-        #Band path
+        # Band path
         self.frame10 = ttk.Frame(self.labelframe2)
         self.label8 = ttk.Label(self.frame10)
         self.label8.configure(text='Band Path (G:for Gamma)')
@@ -758,6 +786,8 @@ class gg:
         self.band_pathttk.pack(side='top')
         self.frame10.configure(height='200', width='200')
         self.frame10.pack(side='top')
+
+        # Number of points
         self.frame11 = ttk.Frame(self.labelframe2)
         self.label9 = ttk.Label(self.frame11)
         self.label9.configure(text='# of points between symmetry points')
@@ -768,6 +798,7 @@ class gg:
         self.band_npointsttk.pack(side='top')
         self.frame11.configure(height='200', width='200')
         self.frame11.pack(side='top')
+
         # Maximum Energy
         self.frame12 = ttk.Frame(self.labelframe2)
         self.label10 = ttk.Label(self.frame12)
@@ -779,6 +810,7 @@ class gg:
         self.energy_maxttk.pack(side='top')
         self.frame12.configure(height='200', width='200')
         self.frame12.pack(side='top')
+
         # Hubbard
         self.frameHubbard = ttk.Frame(self.labelframe2)
         self.labelHubbard = ttk.Label(self.frameHubbard)
@@ -790,6 +822,7 @@ class gg:
         self.Hubbardttk.pack(side='top')
         self.frameHubbard.configure(height='200', width='200')
         self.frameHubbard.pack(side='top')
+
         # XC
         self.frame14 = ttk.Frame(self.labelframe2)
         self.label11 = ttk.Label(self.frame14)
@@ -801,6 +834,7 @@ class gg:
         self.XC_calcttk.current(0)
         self.frame14.configure(height='200', width='200')
         self.frame14.pack(side='top')
+
         # DOS number of points
         self.frameDOS_npoints = ttk.Frame(self.labelframe2)
         self.labelDOS_npoints = ttk.Label(self.frameDOS_npoints)
@@ -812,6 +846,7 @@ class gg:
         self.DOS_npointsttk.pack(side='top')
         self.frameDOS_npoints.configure(height='200', width='200')
         self.frameDOS_npoints.pack(side='top')
+
         # DOS smearing width
         self.frameDOS_width = ttk.Frame(self.labelframe2)
         self.labelDOS_width = ttk.Label(self.frameDOS_width)
@@ -823,6 +858,7 @@ class gg:
         self.DOS_widthttk.pack(side='top')
         self.frameDOS_width.configure(height='200', width='200')
         self.frameDOS_width.pack(side='top')
+
         # Spin polarized?
         self.frame15 = ttk.Frame(self.labelframe2)
         self.Spin_calcttk = ttk.Checkbutton(self.frame15)
@@ -831,6 +867,7 @@ class gg:
         self.Spin_calcttk.pack(side='top')
         self.frame15.configure(height='200', width='200')
         self.frame15.pack(side='top')
+
         # Magmom_per_atom
         self.frameMagmom_per_atom = ttk.Frame(self.labelframe2)
         self.labelMagmom_per_atom = ttk.Label(self.frameMagmom_per_atom)
@@ -843,6 +880,7 @@ class gg:
         self.frameMagmom_per_atom.configure(height='200', width='200')
         self.frameMagmom_per_atom.pack(side='top')
         
+        # Grid size
         self.frame16 = ttk.Frame(self.labelframe2)
         self.label13 = ttk.Label(self.frame16)
         self.label13.configure(text='Grid size for electron density calc')
@@ -855,7 +893,12 @@ class gg:
         self.frame16.pack(side='top')
         self.labelframe2.configure(height='200', text='Electronic Calculation Parameters', width='200')
         self.labelframe2.pack(side='left')
+        # End labelframe2 ------------------------------------------
+        
+        # labelframe3: Optical Calculation Parameters --------------
         self.labelframe3 = ttk.Labelframe(self.frame5)
+
+        #num_of_bands
         self.frame17 = ttk.Frame(self.labelframe3)
         self.label14 = ttk.Label(self.frame17)
         self.label14.configure(text='Number of bands')
@@ -866,6 +909,8 @@ class gg:
         self.num_of_bandsttk.pack(side='top')
         self.frame17.configure(height='200', width='200')
         self.frame17.pack(side='top')
+
+        #optFDsmear
         self.frame18 = ttk.Frame(self.labelframe3)
         self.label15 = ttk.Label(self.frame18)
         self.label15.configure(text='Fermi-Dirac smearing value')
@@ -876,6 +921,8 @@ class gg:
         self.optFDsmearttk.pack(side='top')
         self.frame18.configure(height='200', width='200')
         self.frame18.pack(side='top')
+
+        #opteta
         self.frame19 = ttk.Frame(self.labelframe3)
         self.label16 = ttk.Label(self.frame19)
         self.label16.configure(text='Eta value')
@@ -886,6 +933,8 @@ class gg:
         self.optetattk.pack(side='top')
         self.frame19.configure(height='200', width='200')
         self.frame19.pack(side='top')
+
+        #optdomega0
         self.frame20 = ttk.Frame(self.labelframe3)
         self.label17 = ttk.Label(self.frame20)
         self.label17.configure(text='Domega0 value')
@@ -896,6 +945,7 @@ class gg:
         self.optdomega0ttk.pack(side='top')
         self.frame20.configure(height='200', width='200')
         self.frame20.pack(side='top')
+
         #optnblocks
         self.frame21 = ttk.Frame(self.labelframe3)
         self.label18 = ttk.Label(self.frame21)
@@ -907,6 +957,7 @@ class gg:
         self.optnblocksttk.pack(side='top')
         self.frame21.configure(height='200', width='200')
         self.frame21.pack(side='top')
+
         #optomega2
         self.frameoptomega2 = ttk.Frame(self.labelframe3)
         self.labeloptomega2 = ttk.Label(self.frameoptomega2)
@@ -930,13 +981,14 @@ class gg:
         self.optecutttk.pack(side='top')
         self.frameoptecut.configure(height='200', width='200')
         self.frameoptecut.pack(side='top')
-        # Conf of top frame for opt
         
         self.labelframe3.configure(height='200', text='Optical Calculation Parameters', width='200')
         self.labelframe3.pack(side='left')
         self.frame5.configure(height='200', width='200')
         self.frame5.pack(side='top')
-        # Frame for strain
+        # End labelframe3 ------------------------------------------
+        
+        # labelframe4: Frame for strain-shear ----------------------
         self.frame13 = ttk.Frame(self.frame4)
         self.labelframe4 = ttk.Labelframe(self.frame13)
         self.frame22 = ttk.Frame(self.labelframe4)
@@ -968,9 +1020,12 @@ class gg:
         self.frame22.pack(side='top')
         self.labelframe4.configure(height='200', text='Strain Relaxation', width='200')
         self.labelframe4.pack(side='left')
-        # Frame for GW parameters
+        # End labelframe4 ------------------------------------------------
+        
+        # GWframe: Frame for GW parameters -------------------------------
         self.GWframe = ttk.Frame(self.frame4)
         self.labelGWframe = ttk.Labelframe(self.GWframe)
+
         # GWtype
         self.frameGWtype = ttk.Frame(self.labelGWframe)
         self.labelGWtype = ttk.Label(self.frameGWtype)
@@ -982,6 +1037,7 @@ class gg:
         self.GWtypettk.current(0)
         self.frameGWtype.configure(height='200', width='200')
         self.frameGWtype.pack(side='top')
+
         # GWkpoints
         self.frameGWkpoints = ttk.Frame(self.labelGWframe)
         self.labelGWkpoints = ttk.Label(self.frameGWkpoints)
@@ -993,6 +1049,7 @@ class gg:
         self.GWkpointsttk.pack(side='top')
         self.frameGWkpoints.configure(height='200', width='200')
         self.frameGWkpoints.pack(side='top')
+
         # GWtruncation
         self.frameGWtruncation = ttk.Frame(self.labelGWframe)
         self.labelGWtruncation = ttk.Label(self.frameGWtruncation)
@@ -1004,6 +1061,7 @@ class gg:
         self.GWtruncationttk.current(4)
         self.frameGWtruncation.configure(height='200', width='200')
         self.frameGWtruncation.pack(side='top')
+
         # GWcut_off_energy
         self.frameGWcut_off_energy = ttk.Frame(self.labelGWframe)
         self.labelGWcut_off_energy = ttk.Label(self.frameGWcut_off_energy)
@@ -1015,6 +1073,7 @@ class gg:
         self.GWcut_off_energyttk.pack(side='top')
         self.frameGWcut_off_energy.configure(height='200', width='200')
         self.frameGWcut_off_energy.pack(side='top')
+
         # GWbandVB
         self.frameGWbandVB = ttk.Frame(self.labelGWframe)
         self.labelGWbandVB = ttk.Label(self.frameGWbandVB)
@@ -1026,6 +1085,7 @@ class gg:
         self.GWbandVBttk.pack(side='top')
         self.frameGWbandVB.configure(height='200', width='200')
         self.frameGWbandVB.pack(side='top')
+
         # GWbandCB
         self.frameGWbandCB = ttk.Frame(self.labelGWframe)
         self.labelGWbandCB = ttk.Label(self.frameGWbandCB)
@@ -1037,21 +1097,25 @@ class gg:
         self.GWbandCBttk.pack(side='top')
         self.frameGWbandCB.configure(height='200', width='200')
         self.frameGWbandCB.pack(side='top')
+
         # GWppa
         self.GWppattk = ttk.Checkbutton(self.labelGWframe)
         GWppavar = BooleanVar()
         self.GWppattk.configure(variable = GWppavar, onvalue=True, offvalue=False, text='Plasmon Pole Approximation')
         self.GWppattk.pack(side='top')
+
         # GWq0correction
         self.GWq0correctionttk = ttk.Checkbutton(self.labelGWframe)
         GWq0correctionvar = BooleanVar()
         self.GWq0correctionttk.configure(variable = GWq0correctionvar, onvalue=True, offvalue=False, text='Analytic correction to the q=0 contribution')
         self.GWq0correctionttk.pack(side='top')
+
         # GWnblock
         self.GWnblockttk = ttk.Checkbutton(self.labelGWframe)
         GWnblockvar = BooleanVar()
         self.GWnblockttk.configure(variable = GWnblockvar, onvalue=True, offvalue=False, text='Cuts chi0 into as many blocks to reduce mem.')
         self.GWnblockttk.pack(side='top')
+
         # GWbandinterpolation
         self.GWbandinterpolationttk = ttk.Checkbutton(self.labelGWframe)
         GWbandinterpolationvar = BooleanVar()
@@ -1062,23 +1126,31 @@ class gg:
         self.labelGWframe.pack(side='left')
         self.GWframe.configure(height='200', width='200')
         self.GWframe.pack(side='left')
+        # End GWframe ---------------------------------------------
         
-        # Frame for Other Parameters
+        # labelframe5: Other Parameters ---------------------------
         self.labelframe5 = ttk.Labelframe(self.frame13)
+
+        # Restart calculation
         self.restartttk = ttk.Checkbutton(self.labelframe5)
         restartvar = BooleanVar()
         self.restartttk.configure(variable = restartvar, onvalue=True, offvalue=False, text='Restart calculation from file')
         self.restartttk.pack(side='top')
+        
         self.labelframe5.configure(height='200', text='General options', width='200')
         self.labelframe5.pack(side='top')
         self.frame13.configure(height='200', width='200')
         self.frame13.pack(side='left')
         self.frame4.configure(height='200', width='200')
         self.frame4.pack(side='top')
+        # End labelframe5 -------------------------------------------
         
-        # Input parameters notebook tab
         self.notebookUpper.add(self.frame4, state='normal', text='Input Parameters')
+        
+        # ------------- Calculate tab -----------------
         self.frame3 = ttk.Frame(self.notebookUpper)
+        
+        # MPI core number
         self.frame25 = ttk.Frame(self.frame3)
         self.label21 = ttk.Label(self.frame25)
         self.label21.configure(text='MPI core number')
@@ -1089,6 +1161,8 @@ class gg:
         self.MPIcoresttk.pack(side='top')
         self.frame25.configure(height='200', width='200')
         self.frame25.pack(side='top')
+        
+        # Start calculation
         self.frame26 = ttk.Frame(self.frame3)
         self.button3 = ttk.Button(self.frame26)
         self.button3.configure(text='Start calculation')
@@ -1096,6 +1170,8 @@ class gg:
         self.button3.configure(command=onCalculate)
         self.frame26.configure(height='200', width='200')
         self.frame26.pack(side='top')
+        
+        # Log text box
         self.frame27 = ttk.Frame(self.frame3)
         self.text4 = tk.Text(self.frame27)
         self.text4.configure(height='50', width='120')
@@ -1103,9 +1179,12 @@ class gg:
         self.text4.pack(side='top')
         self.frame27.configure(height='200', width='200')
         self.frame27.pack(side='top')
+        
         self.frame3.configure(height='200', width='200')
         self.frame3.pack(side='top')
         self.notebookUpper.add(self.frame3, text='Calculate')
+
+        # --------------- About box -------------------
         self.frame24 = ttk.Frame(self.notebookUpper)
         self.text2 = tk.Text(self.frame24)
         self.text2.configure(background='#4f4f4f', foreground='#ffffff', height='14', undo='false')
@@ -1121,13 +1200,15 @@ For licensing information, please refer to LICENSE file.'''
         self.text2.pack(side='left')
         self.button1 = ttk.Button(self.frame24)
         self.gg_fullsmall_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
-        self.button1.configure(image=self.gg_fullsmall_png, state='normal', text='button1')
+        self.button1.configure(image=self.gg_fullsmall_png, state='normal', text='gpaw-tools')
         self.button1.pack(side='left')
         self.frame24.configure(height='200', width='900')
         self.frame24.pack(side='top')
         self.notebookUpper.add(self.frame24, text='About')
         self.notebookUpper.configure(height='500', width='900')
         self.notebookUpper.pack(fill='x', side='top')
+        
+        # Message log
         self.notebookBottom = ttk.Notebook(self.frame2)
         self.text1 = tk.Text(self.notebookBottom)
         self.text1.configure(background='#000000', foreground='#ffffff', height='10', width='50')

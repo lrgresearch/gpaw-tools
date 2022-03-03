@@ -12,6 +12,7 @@ bulk_configuration = Atoms('Al',
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
+Elastic_calc = False    # Elastic calculation
 DOS_calc = True         # DOS calculation
 Band_calc = True        # Band structure calculation
 Density_calc = False    # Calculate the all-electron density?

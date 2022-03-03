@@ -392,7 +392,11 @@ if Optical_calc == False:
         Cij, Bij=get_elastic_tensor(bulk_configuration,get_elementary_deformations(bulk_configuration, n=5, d=2))
         with paropen(struct+'-1.5-Result-Elastic.txt', "w") as fd:
             print("Elastic calculation results (NOT TESTED FEATURE, PLEASE CONTROL THE RESULTS):", file=fd)
-            print("----------------------------", file=fd)
+            print("EoS: Stabilized jellium equation of state (SJEOS)", file=fd)
+            print("Refs: Phys.Rev.B 63, 224115 (2001) and Phys.Rev.B 67, 026103 (2003)", file=fd)
+            print("Elastic constants: Standart elasticity theory calculated by -Elastic- library", file=fd)
+            print("Ref: European Physical Journal B; 15, 2 (2000) 265-268", file=fd)
+            print("-----------------------------------------------------------------------------", file=fd)
             print("Spacegroup: "+str(spg.get_spacegroup(bulk_configuration)), file=fd)
             print("B (GPa): "+str(B / kJ * 1.0e24), file=fd)
             print("e (eV): "+str(e), file=fd)

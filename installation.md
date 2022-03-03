@@ -8,7 +8,6 @@ title: Installation
 
 This installation notes are based on installations on Linux operating system. Here, we are using Ubuntu distro as Linux system. However, other linux distros will also work with similar commands. If you are new to Linux, please continue with Ubuntu Linux and our commands given below,
 
-## Requirements
 Required softwares for successfully running *gpaw-tools* software:
 
 * Linux Operating system (can be independently installed, virtually installed or installed as WSL distro under Windows Operating system)
@@ -16,16 +15,46 @@ Required softwares for successfully running *gpaw-tools* software:
 * Atomic Simulation Environment (ASE) (will automatically install to NumPy, SciPy, Matplotlib packages)
 * GPAW
 * BLAS, LibXC, MPI, LibKIM, OpenKIM and ScaLAPACK packages
-* Some other Python packages like kimpy, ASAP3.
+* Some other Python packages like Elastic, spglib, kimpy, ASAP3.
 
-## Installation steps
+There are two-possible installation methods:
+
+1. conda installation
+2. Manual installation
+
+## Conda installation
+
+The best and the easiest way to install ASE/GPAW/Elastic system with gpaw-tools is a conda installation.vDownload and install the miniconda. You can say ‘yes’ or ‘no’ to initialization after installing it:
+
+    $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    $ chmod +x Miniconda3-latest-Linux-x86_64.sh
+    $ ./Miniconda3-latest-Linux-x86_64.sh
+
+then you can update miniconda:
+
+    $ eval "$(/home/$USER/miniconda3/bin/conda shell.bash hook)"
+    $ conda update conda
+
+Now, we can create an environment (here ‘gpaw-env’ name is used. You can use any name) and activate it:
+
+    $ conda create --name gpaw-env
+    $ conda activate gpaw-env
+
+Then, install GPAW and Elastic packages
+
+    $ conda install -c conda-forge gpaw elastic
+
+Lastly, [download and install gpaw-tools](https://www.lrgresearch.org/gpaw-tools/installation/#4-installation-of-gpaw-tools).
+
+## Manual installation
 
 1. Choosing and preparing your Linux System,
 2. Install ASE and GPAW,
 3. Install ASAP3 and KIM,
 4. Install *gpaw-tools*.
 
-## 1. Choosing and preparing your Linux System
+
+### 1. Choosing and preparing your Linux System
 
 Windows Subsystem for Linux on Windows, Virtual machine or a Linux machine?
 
@@ -36,10 +65,10 @@ You can use *gpaw-tools* on many different systems that are supporting required 
  * [Installation on an independent Linux system](installation.md#installation-on-an-independent-linux-system)
  * [Installation on a Virtual Machine Linux system](installation.md#installation-on-a-virtual-machine-linux-system)
 
-### Running on Windows machines with WSL
+#### Running on Windows machines with WSL
 The Windows Subsystem for Linux (WSL) allows developers to run a wide range of Linux-based apps and utilities on Windows without the need for a traditional virtual machine or a dualboot setup. More information about installation can be found [here](https://docs.microsoft.com/en-us/windows/wsl/install). There are two versions of WSL which are called WSL1 and WSL2. For GPAW calculations, WSL1 is giving better computation times than WSL2. However, with the announcement of WSLg on April 2021 at the Microsoft Build 2021, WSL2 is seemed to be the future of WSL.
 
-#### Installation on a Windows 10 system (with WSL1)
+##### Installation on a Windows 10 system (with WSL1)
 This installation note is explaining how to install WSL1 and other required tools to study gpaw-tools on a Windows 10 system. WSLg is coming on default at Windows 11 and installation note for Windows 11 is explaining similar things but using WSLg. If you are using Windows 11, please continue from here.
 We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
 
@@ -78,7 +107,7 @@ and add these lines at the end of the file
 
 After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command).
 
-#### Installation on a Windows 11 system (with WSLg)
+##### Installation on a Windows 11 system (with WSLg)
 This installation note is explaining how to install WSLg and other required tools to study gpaw-tools on a Windows 11 system. WSLg is coming on default at Windows 11.
 We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
 
@@ -89,22 +118,22 @@ Open Ubuntu, finish the installation of it, then update your Linux system with:
     
 You do not need to install X server on your Windows to use with WSLg. 
 
-### Running on Linux machines
+#### Running on Linux machines
 Instead of using a Windows system as a host, you can use Linux system to do your calculations. It is rather simple and it will give you more performance.
 
-#### Installation on an independent Linux system
+##### Installation on an independent Linux system
 After [installing Ubuntu on your PC](https://ubuntu.com/tutorials/install-ubuntu-desktop#1-overview), you just need to update and upgrade, before continuing:
 
     sudo apt update
     sudo apt upgrade
     
-#### Installation on a Virtual Machine Linux system
+##### Installation on a Virtual Machine Linux system
 After [installing your Linux system inside Windows or other Linux using a virtualization software like VirtualBox](https://itsfoss.com/install-linux-in-virtualbox/), you just need to update and upgrade, before continuing:
 
     sudo apt update
     sudo apt upgrade
     
-## 2. Installation of ASE and GPAW
+### 2. Installation of ASE and GPAW
 After preparing your Linux system, you must have `ase` and `gpaw` codes on your computer. You can find more information about installation of [ASE](https://wiki.fysik.dtu.dk/ase/install.html) and [GPAW](https://wiki.fysik.dtu.dk/gpaw/install.html) from their related sites.
 
 You need Tk library for GUI, unzip for file unzipping and for further package installations, we need PIP installer
@@ -156,7 +185,7 @@ Use `gpaw info` to see information about installation. However, PAW-datasets are
     mkdir ~/.gpaw/gpaw-setups
     gpaw install-data ~/.gpaw/gpaw-setups/  
 
-## 3. Installation of ASAP and KIM for Quick Optimization
+### 3. Installation of ASAP and KIM for Quick Optimization
 
 For quick optimization, we need simple interatomic modelling. For this, we need ASAP3 for ASE, then we must install KIM with OpenKIM models and kimpy libraries.
 
@@ -168,7 +197,15 @@ For quick optimization, we need simple interatomic modelling. For this, we need 
 
 Then you can use files in https://github.com/lrgresearch/gpaw-tools/tree/main/QuickOptimize
 
-## 4. Installation of gpaw-tools
+### 4. Installation of Elastic package
+
+For the installation of Elastic package:
+
+    pip3 install setuptools_scm
+    pip3 install docutils
+    pip3 install elastic
+
+### 5. Installation of gpaw-tools
 In your home folder (~), let's download the latest development release (you can prefer stable release also, please visit https://www.lrgresearch.org/gpaw-tools/ to get the latest URL)
 
     cd ~

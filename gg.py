@@ -24,7 +24,7 @@ class gg:
     StructLoaded = False
 
     def __init__(self, master=None):
-        global DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, GWppavar, GWq0correctionvar, GWnblockvar
+        global Elastic_calcvar, DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, GWppavar, GWq0correctionvar, GWnblockvar
         global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar
         global Struct, StructLoaded, GWbandinterpolationvar
         
@@ -96,6 +96,15 @@ class gg:
             else:
                 self.Modettk.current(2)
 
+            # Elastic calculation    
+            if 'Elastic_calc' in config.__dict__.keys():
+                if config.Elastic_calc == True:
+                    Elastic_calcvar.set(True)
+                else:
+                    Elastic_calcvar.set(False)
+            else:
+                Elastic_calcvar.set(False)
+                
             # DOS calculation    
             if 'DOS_calc' in config.__dict__.keys():
                 if config.DOS_calc == True:
@@ -499,8 +508,8 @@ class gg:
                     print("Mode = 'FD'", end="\n", file=f1)
                 else:
                     print("Mode = 'PW'", end="\n", file=f1)
-
-                # ---------Electronic------------
+                # Elastic_calc
+                print("Elastic_calc = "+ str(Elastic_calcvar.get()), end="\n", file=f1)
                 # DOS_calc
                 print("DOS_calc = "+ str(DOS_calcvar.get()), end="\n", file=f1)
                 # Band_calc
@@ -509,6 +518,7 @@ class gg:
                 print("Density_calc = "+ str(Density_calcvar.get()), end="\n", file=f1)
                 # Optical_calc
                 print("Optical_calc = "+ str(Optical_calcvar.get()), end="\n", file=f1)
+                # ---------Electronic------------
                 # fmaxval
                 print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
                 # cut_off_energy
@@ -693,6 +703,12 @@ class gg:
         self.Modettk.current(0)
         self.frame6.configure(height='200', width='200')
         self.frame6.pack(side='top')
+        
+        # Elastic_calc
+        self.Elastic_calcttk = ttk.Checkbutton(self.labelframe1)
+        Elastic_calcvar = BooleanVar()
+        self.Elastic_calcttk.configure(state='normal', variable = Elastic_calcvar, onvalue=True, offvalue=False, takefocus=False, text='Elastic Calculation')
+        self.Elastic_calcttk.pack(side='top')
         
         # DOS_calc
         self.DOS_calcttk = ttk.Checkbutton(self.labelframe1)

@@ -11,12 +11,12 @@ Description = f'''
  -------------------------------------------------------------
  Calculation selector
  -------------------------------------------------------------
- | Method | Structure optim.    | Different XCs | Spin polarized | DOS | DFT+U | Band | Electron Density | Optical |
- | ------ | ------------------- | ------------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
- |   PW   | Yes (No for GLLBSC) | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
- | PW-G0W0| Yes                 | Yes           | No             | No  | No    | Yes  | No               | No      |
- | PW-EXX*| Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
- |  LCAO  | No                  | No            | No             | Yes | Yes   | Yes  | Yes              | No      |
+ | Method | Structure optim.    | Different XCs | Spin polarized | Elastic | DOS | DFT+U | Band | Electron Density | Optical |
+ | ------ | ------------------- | ------------- | -------------- | ------- | --- | ----- | ---- | ---------------- | ------- |
+ |   PW   | Yes (No for GLLBSC) | Yes           | Yes            | Yes     | Yes | Yes   | Yes  | Yes              | Yes     |
+ | PW-G0W0| Yes                 | Yes           | No             | Yes     | No  | No    | Yes  | No               | No      |
+ | PW-EXX*| Yes (with PBE)      | No            | No             | Yes     | No  | No    | No   | No               | No      |
+ |  LCAO  | No                  | No            | No             | Yes     | Yes | Yes   | Yes  | Yes              | No      |
  *: Just some ground state energy calculations for PBE0 and HSE06.
 '''
 
@@ -24,13 +24,15 @@ import getopt, sys, os
 import textwrap
 import requests
 import pickle
+import spglib as spg
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
 from ase.parallel import paropen, world, parprint, broadcast
 from gpaw import GPAW, PW, FermiDirac
 from ase.optimize.lbfgs import LBFGS
 from ase.io import read, write
-from ase.units import Bohr
+from ase.eos import calculate_eos
+from ase.units import Bohr, GPa, kJ
 import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
 from ase.constraints import UnitCellFilter
@@ -42,6 +44,7 @@ from gpaw.response.gw_bands import GWBands
 from gpaw.xc.exx import EXX
 import numpy as np
 from numpy import genfromtxt
+from elastic import get_elastic_tensor, get_elementary_deformations
 
 # DEFAULT VALUES
 # These values (with bulk configuration) can be used to run this script without using inputfile (py file)
@@ -49,6 +52,7 @@ from numpy import genfromtxt
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
+Elastic_calc = False    # Elastic calculation
 DOS_calc = False         # DOS calculation
 Band_calc = False        # Band structure calculation
 Density_calc = False    # Calculate the all-electron density?
@@ -372,6 +376,29 @@ if Optical_calc == False:
         quit()
 
     # -------------------------------------------------------------
+    # Step 1.5 - ELASTIC CALCULATION
+    # -------------------------------------------------------------
+    if Elastic_calc == True:
+        parprint('Starting elastic tensor calculations (NOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
+        calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-1.5-Log-Elastic.txt')
+        # Getting space group from SPGlib
+        parprint('Spacegroup:',spg.get_spacegroup(bulk_configuration))
+        # Calculating equation of state
+        parprint('Calculating equation of state...')
+        eos = calculate_eos(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+        v, e, B = eos.fit()
+        # Calculating elastic tensor
+        parprint('Calculating elastic tensor...')
+        Cij, Bij=get_elastic_tensor(bulk_configuration,get_elementary_deformations(bulk_configuration, n=5, d=2))
+        with paropen(struct+'-1.5-Result-Elastic.txt', "w") as fd:
+            print("Elastic calculation results (NOT TESTED FEATURE, PLEASE CONTROL THE RESULTS):", file=fd)
+            print("----------------------------", file=fd)
+            print("Spacegroup: "+str(spg.get_spacegroup(bulk_configuration)), file=fd)
+            print("B (GPa): "+str(B / kJ * 1.0e24), file=fd)
+            print("e (eV): "+str(e), file=fd)
+            print("v (Ang^3): "+str(v), file=fd)
+            print("Cij (GPa): ",Cij/GPa, file=fd)
+    # -------------------------------------------------------------
     # Step 2 - DOS CALCULATION
     # -------------------------------------------------------------
     if DOS_calc == True:
@@ -685,6 +712,9 @@ if Optical_calc == True:
 if drawfigs == True:
     # Draw graphs only on master node
     if world.rank == 0:
+        # Elastic
+        if Elastic_calc == True:
+            eos.plot(struct+'-1.5-Result-Elastic-EOS.png', show=True)
         # DOS
         if DOS_calc == True:
             if Spin_calc == True:
@@ -715,6 +745,9 @@ if drawfigs == True:
 else:
     # Draw graphs only on master node
     if world.rank == 0:
+        # Elastic
+        if Elastic_calc == True:
+            eos.plot(struct+'-1.5-Result-Elastic-EOS.png')
         # DOS
         if DOS_calc == True:
             if Spin_calc == True:

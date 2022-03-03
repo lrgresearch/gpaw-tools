@@ -8,9 +8,11 @@ title: Release Notes
 
 ### Development version
 
+* New calculation: with `Elastic_calc=True`, Equation of State and elastic tensor values will be calculated.
+* `Elastic_calc` is added to `gg.py`.
+* Many comments added to `gg.py` for better understanding the code.
 * `DOS_npoints` and `DOS_width` variables are added for number of points and smearing value, respectively.
 * Saving PNG versions of band structure and DOS even in -d argument is not used.
-* Saving JSON file in addition to GPW file in band calculations.
 * `shrinkgpw.py`command for extracting wavefunctions from huge gpw files and save with a different name.
 * New benchmarks were added.
 

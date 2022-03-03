@@ -24,7 +24,7 @@ There are two-possible installation methods:
 
 ## Conda installation
 
-The best and the easiest way to install ASE/GPAW/Elastic system with gpaw-tools is a conda installation.vDownload and install the miniconda. You can say ‘yes’ or ‘no’ to initialization after installing it:
+The best and the easiest way to install ASE/GPAW/Elastic system with gpaw-tools is a conda installation. Download and install the miniconda. You can say ‘yes’ or ‘no’ to initialization after installing it:
 
     $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
     $ chmod +x Miniconda3-latest-Linux-x86_64.sh
@@ -51,7 +51,8 @@ Lastly, [download and install gpaw-tools](https://www.lrgresearch.org/gpaw-tools
 1. Choosing and preparing your Linux System,
 2. Install ASE and GPAW,
 3. Install ASAP3 and KIM,
-4. Install *gpaw-tools*.
+4. Install Elastic package,
+5. Install *gpaw-tools*.
 
 
 ### 1. Choosing and preparing your Linux System

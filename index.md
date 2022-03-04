@@ -23,11 +23,12 @@ More information about [gpaw-tools idea](about.md), [installation](installation.
 
 ## Download
 
-**Latest stable release: v21.12.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v21.12.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v21.12.0.zip)**
+**Latest stable release: v22.3.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v22.3.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v22.3.0.zip)**
 
 Latest development release: [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
 
 ## News
+* **[gpaw-tools](releasenotes.md#version-2230)** version 22.3.0 released (Mar 4, 2022).
 * Our paper about *gpaw-tools* is published in Computational Material Science. [Download without any registration or fees](https://authors.elsevier.com/a/1ePsf3In-uvQ8R) before March 5th 2022.
 * **[gpaw-tools](releasenotes.md#version-21120)** version 21.12.0 released (Dec 2, 2021).
 * **[gpaw-tools](releasenotes.md#version-21110)** version 21.11.0 released (Nov 2, 2021).

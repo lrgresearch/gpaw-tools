@@ -8,6 +8,10 @@ title: Release Notes
 
 ### Development version
 
+* n/a
+
+### Version 22.3.0
+
 * New calculation: with `Elastic_calc=True`, Equation of State and elastic tensor values will be calculated.
 * `Elastic_calc` is added to `gg.py`.
 * A new example about elastic calculations is added.

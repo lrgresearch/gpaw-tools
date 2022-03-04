@@ -44,5 +44,10 @@ time mpirun -np $CORENUMBER gpawsolve.py -o -i ZnO_withHubbard.py
 echo "Calculating: Ground, DOS and Band without DFT+U"
 time mpirun -np $CORENUMBER gpawsolve.py -o -i ZnO_woHubbard.py
 
+# Rocksalt TiC with Elastic Calculations
+echo "Calculating: Rocksalt TiC"
+cd ../TiC-elastic-electronic
+time mpirun -np $CORENUMBER gpawsolve.py -o -i TiC.py -g TiC_mp-631_primitive-Final.cif
+
 # Finish
 echo "All calculations are finished."

@@ -12,5 +12,6 @@ There are some example calculations given with different usage scenarios. Please
 | MoS2-GW           | GW Aproximation calculation for MoS2 |
 | Si-2atoms-optical | Two step calculation. First step ground, DOS and Band calculations. Second step for optical calculation. Structure is given with CIF file. |
 | ZnO with DFT+U    | Wurtzite ZnO calculation with DFT+U. Positions are given with Bulk object. Hubbard params are: O-p: 7eV, Zn-d: 10eV|
+| TiC-elastic-electronic | Elastic (EoS and Elastic Tensor) and Electronic Properties of Rocksalt TiC |
 
 

@@ -8,7 +8,7 @@ title: Release Notes
 
 ### Development version
 
-* n/a
+* Fix: Show atom numbers starting from 1 not 0.
 
 ### Version 22.3.0
 

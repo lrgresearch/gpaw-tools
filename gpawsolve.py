@@ -435,7 +435,7 @@ if Optical_calc == False:
             with paropen(struct+'-2-Result-PDOS-Down.csv', "w") as fd:
                 print("Energy, s-orbital, p-orbital, d-orbital, f-orbital", file=fd)
                 for j in range(0, bulk_configuration.get_global_number_of_atoms()):
-                    print("Atom no: "+str(j)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
+                    print("Atom no: "+str(j+1)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
                     en, pdossd = calc.get_orbital_ldos(a=j, spin=0, angular='s', npts=DOS_npoints, width=DOS_width)
                     en, pdospd = calc.get_orbital_ldos(a=j, spin=0, angular='p', npts=DOS_npoints, width=DOS_width)
                     en, pdosdd = calc.get_orbital_ldos(a=j, spin=0, angular='d', npts=DOS_npoints, width=DOS_width)
@@ -447,7 +447,7 @@ if Optical_calc == False:
             with paropen(struct+'-2-Result-PDOS-Up.csv', "w") as fd:
                 print("Energy, s-orbital, p-orbital, d-orbital, f-orbital", file=fd)
                 for j in range(0, bulk_configuration.get_global_number_of_atoms()):
-                    print("Atom no: "+str(j)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
+                    print("Atom no: "+str(j+1)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
                     en, pdossu = calc.get_orbital_ldos(a=j, spin=1, angular='s', npts=DOS_npoints, width=DOS_width)
                     en, pdospu = calc.get_orbital_ldos(a=j, spin=1, angular='p', npts=DOS_npoints, width=DOS_width)
                     en, pdosdu = calc.get_orbital_ldos(a=j, spin=1, angular='d', npts=DOS_npoints, width=DOS_width)
@@ -459,7 +459,7 @@ if Optical_calc == False:
             with paropen(struct+'-2-Result-PDOS.csv', "w") as fd:
                 print("Energy, s-orbital, p-orbital, d-orbital, f-orbital", file=fd)
                 for j in range(0, bulk_configuration.get_global_number_of_atoms()):
-                    print("Atom no: "+str(j)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
+                    print("Atom no: "+str(j+1)+", Atom Symbol: "+chem_sym[j]+" --------------------", file=fd)
                     en, pdoss = calc.get_orbital_ldos(a=j, spin=0, angular='s', npts=DOS_npoints, width=DOS_width)
                     en, pdosp = calc.get_orbital_ldos(a=j, spin=0, angular='p', npts=DOS_npoints, width=DOS_width)
                     en, pdosd = calc.get_orbital_ldos(a=j, spin=0, angular='d', npts=DOS_npoints, width=DOS_width)

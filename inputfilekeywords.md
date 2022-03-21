@@ -12,8 +12,7 @@ title: Input File Keywords
 
 [**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GWtype](inputfilekeywords.md#gwtype), [GWkpoints](inputfilekeywords.md#gwkpoints), [GWtruncation](inputfilekeywords.md#gwtruncation), [GWcut_off_energy](inputfilekeywords.md#gwcut_off_energy), [GWbandVB](inputfilekeywords.md#gwbandvb), [GWbandCB](inputfilekeywords.md#gwbandcb), [GWppa](inputfilekeywords.md#gwppa), [GWq0correction](inputfilekeywords.md#gwq0correction), [GWnblock](inputfilekeywords.md#gwnblock)
 
-[**Optical Calculations Keywords:**](inputfilekeywords.md#optical-calculations-keywords)
-[num_of_bands](inputfilekeywords.md#num_of_bands), [optFDsmear](inputfilekeywords.md#optfdsmear), [opteta](inputfilekeywords.md#opteta), [optdomega0](inputfilekeywords.md#optdomega0), [optomega2](inputfilekeywords.md#optomega2), [optecut](inputfilekeywords.md#optecut), [optnblocks](inputfilekeywords.md#optnblocks)
+[**Optical Calculations Keywords:**](inputfilekeywords.md#optical-calculations-keywords) [opttype](inputfilekeywords.md#opttype), [optshift](inputfilekeywords.md#opthift), [optBSEvb](inputfilekeywords.md#optbsevb), [optbsecb](inputfilekeywords.md#optbsecb), [optBSEminEn](inputfilekeywords.md#optbseminen), [optBSEmaxEn](inputfilekeywords.md#optbsemaxen), [optbsenumdata](inputfilekeywords.md#optbsenumdata), [num_of_bands](inputfilekeywords.md#num_of_bands), [optFDsmear](inputfilekeywords.md#optfdsmear), [opteta](inputfilekeywords.md#opteta), [optdomega0](inputfilekeywords.md#optdomega0), [optomega2](inputfilekeywords.md#optomega2), [optecut](inputfilekeywords.md#optecut), [optnblocks](inputfilekeywords.md#optnblocks)
 
 # All Keywords
 
@@ -543,6 +542,111 @@ True
 GWnblock = True
 
 ## Optical Calculations Keywords
+### opttype
+#### Keyword type
+String
+
+#### Description
+This keyword controls the optical calculation type: random phase approximation (RPA) or Bethe-Salpeter Equation (BSE).
+
+#### Default
+BSE
+
+#### Example
+opttype = 'BSE'
+
+---
+
+### optshift
+#### Keyword type
+Float
+
+#### Description
+This keyword add a shifting to energy values. Unit is eV. Works on BSE calculations only!
+
+#### Default
+0.0
+
+#### Example
+optshift = 1.0 #eV
+
+---
+
+### optBSEvb
+#### Keyword type
+Sequence of integers
+
+#### Description
+This keyword shows the valence bands that will be used in BSE calculation.
+
+#### Default
+range(0,3)
+
+#### Example
+optBSEvb = range(120,124)
+
+---
+
+### optBSEcb
+#### Keyword type
+Sequence of integers
+
+#### Description
+This keyword shows the conduction bands that will be used in BSE calculation.
+
+#### Default
+range(4,7)
+
+#### Example
+optBSEcb = range(124,128)
+
+---
+
+### optBSEminEn
+#### Keyword type
+Float
+
+#### Description
+This keyword shows the starting energy value of result data that will be used in BSE calculation.
+
+#### Default
+0.0
+
+#### Example
+optBSEminEn = 0.0
+
+---
+
+### optBSEmaxEn
+#### Keyword type
+Float
+
+#### Description
+This keyword shows the ending energy value of result data that will be used in BSE calculation.
+
+#### Default
+20.0
+
+#### Example
+optBSEmaxEn = 10.0
+
+---
+
+### optBSEnumdata
+#### Keyword type
+Integer
+
+#### Description
+This keyword shows the number of data points in BSE calculation.
+
+#### Default
+1001
+
+#### Example
+optBSEmaxEn = 401
+
+---
+
 ### num_of_bands
 #### Keyword type
 Integer

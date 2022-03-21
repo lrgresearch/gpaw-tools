@@ -15,7 +15,7 @@
 1. A force-field quick optimization script `quickoptimization.py` for preliminary calculations using ASAP3/OpenKIM potentials. 
 2. `ciftoase.py` script for transform CIF files to ASE's own Atoms object.
 3. To choose better cut off energy, lattice parameter and k points, there are 3 scripts called `optimize_cutoff.py`, `optimize_latticeparam.py` and `optimize_kpoints.py`.
-4. And, the main solver script `gpawsolver.py` which can be run in PW (with some GW and EXX extentions) or LCAO mode. It can do strain minimization, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties in a very simple and organized way.
+4. The main solver script `gpawsolver.py` which can be run in PW (also with GW and EXX) or LCAO mode. It can do structure optimization, Equation of State and elastic tensor calculations, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties in a very simple and organized way.
 5. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) which is called `gg.py`. 
 
 ## Usage
@@ -86,12 +86,12 @@ Usage:
 
 #### Calculation selector
 
-| Method | Strain_minimization | Different XCs | Spin polarized | DOS | DFT+U | Band | Electron Density | Optical |
-| ------ | ------------------- | ------------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
-|   PW   | Yes                 | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
-| PW-GW  | Yes                 | Yes           | No             | No  | No    | Yes  | No               | No      |
-| PW-EXX*| Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
-|  LCAO  | No                  | No            | No             | Yes | Yes   | Yes  | Yes              | No      |
+| Method | Structure optim.    | Different XCs | Spin polarized | Elastic | DOS | DFT+U | Band | Electron Density | Optical |
+| ------ | ------------------- | ------------- | -------------- | ------- | --- | ----- | ---- | ---------------- | ------- |
+|   PW   | Yes (No for GLLBSC) | Yes           | Yes            | Yes     | Yes | Yes   | Yes  | Yes              | Yes     |
+| PW-G0W0| Yes                 | Yes           | No             | No      | No  | No    | Yes  | No               | No      |
+| PW-EXX*| Yes (with PBE)      | No            | No             | No      | No  | No    | No   | No               | No      |
+|  LCAO  | No                  | No            | No             | No      | Yes | Yes   | Yes  | Yes              | No      |
 
 *: Just some ground state energy calculations for PBE0 and HSE06.
 
@@ -141,6 +141,17 @@ There are many keywords can be used in input files. You can find more at [here](
 
 ## Release notes
 Release notes are listed at [here](https://www.lrgresearch.org/gpaw-tools/releasenotes/).
+
+## Citing
+Please do not forget that, gpaw-tools is a UI/GUI software. For the main DFT calculations, it uses ASE and GPAW. It also uses Elastic python package for elastic tensor solutions and ASAP with KIM database for interatomic interaction calculations. Therefore, you must know what you use, and cite them properly. Here, the basic citation information of each packages are given. There are many other packages needed to be cited. With GPAW, you may needed to cite LibXC, LCAO  Please visit their pages for many other citation possibilities. 
+
+* **ASE** : Ask Hjorth Larsen et al. "[The Atomic Simulation Environment—A Python library for working with atoms](https://doi.org/10.1088/1361-648X/aa680e)" J. Phys.: Condens. Matter Vol. 29 273002, 2017.
+* **GPAW**: J. J. Mortensen, L. B. Hansen, and K. W. Jacobsen "[Real-space grid implementation of the projector augmented wave method](https://doi.org/10.1103/PhysRevB.71.035109)" Phys. Rev. B 71, 035109 (2005) and J. Enkovaara, C. Rostgaard, J. J. Mortensen et al. "[Electronic structure calculations with GPAW: a real-space implementation of the projector augmented-wave method](https://doi.org/10.1088/0953-8984/22/25/253202)" J. Phys.: Condens. Matter 22, 253202 (2010) [OTHER POSSIBLE CITATION](https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw)
+* **KIM** : E. B. Tadmor, R. S. Elliott, J. P. Sethna, R. E. Miller and C. A. Becker, "The Potential of Atomistic Simulations and the Knowledgebase of Interatomic Models" JOM, 63, 17 (2011). doi:10.1007/s11837-011-0102-6. [OTHER POSSIBLE CITATION](https://openkim.org/how-to-cite/)
+
+For `gpaw-tools` usage you can use the following citation:
+
+* S.B. Lisesivdin, B. Sarikavak-Lisesivdin "[gpaw-tools – higher-level user interaction scripts for GPAW calculations and interatomic potential based structure optimization](https://doi.org/10.1016/j.commatsci.2022.111201)" Comput. Mater. Sci. 204, 111201 (2022).
 
 ## Licensing
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).

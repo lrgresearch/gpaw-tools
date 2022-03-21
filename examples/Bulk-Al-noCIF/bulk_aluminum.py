@@ -61,7 +61,14 @@ GWq0correction = True   # Analytic correction to the q=0 contribution applicable
 GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
 
 # OPTICAL
-num_of_bands = 16		#
+opttype = 'BSE'         # BSE or RPA
+optshift = 0.0          # Shifting of the energy
+optBSEvb = range(0,3)  # Valence bands that will be used in BSE calculation
+optBSEcb = range(4,7) # Conduction bands that will be used in BSE calculation
+optBSEminEn = 0.0       # Results will be started from this energy (BSE only)
+optBSEmaxEn = 20.0      # Results will be ended at this energy (BSE only)
+optBSEnumdata = 1001   # Number of data points in BSE  calculation
+num_of_bands = 8	# Number of bands
 optFDsmear = 0.05       # Fermi Dirac smearing for optical calculations
 opteta=0.05             # Eta for Optical calculations
 optdomega0=0.05         # Domega0 for Optical calculations

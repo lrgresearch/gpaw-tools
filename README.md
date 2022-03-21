@@ -147,9 +147,10 @@ Please do not forget that, gpaw-tools is a UI/GUI software. For the main DFT cal
 
 * **ASE** : Ask Hjorth Larsen et al. "[The Atomic Simulation Environment—A Python library for working with atoms](https://doi.org/10.1088/1361-648X/aa680e)" J. Phys.: Condens. Matter Vol. 29 273002, 2017.
 * **GPAW**: J. J. Mortensen, L. B. Hansen, and K. W. Jacobsen "[Real-space grid implementation of the projector augmented wave method](https://doi.org/10.1103/PhysRevB.71.035109)" Phys. Rev. B 71, 035109 (2005) and J. Enkovaara, C. Rostgaard, J. J. Mortensen et al. "[Electronic structure calculations with GPAW: a real-space implementation of the projector augmented-wave method](https://doi.org/10.1088/0953-8984/22/25/253202)" J. Phys.: Condens. Matter 22, 253202 (2010) [OTHER POSSIBLE CITATION](https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw)
-* **KIM** : E. B. Tadmor, R. S. Elliott, J. P. Sethna, R. E. Miller and C. A. Becker, "The Potential of Atomistic Simulations and the Knowledgebase of Interatomic Models" JOM, 63, 17 (2011). doi:10.1007/s11837-011-0102-6. [OTHER POSSIBLE CITATION](https://openkim.org/how-to-cite/)
+* **KIM** : E. B. Tadmor, R. S. Elliott, J. P. Sethna, R. E. Miller and C. A. Becker "The Potential of Atomistic Simulations and the Knowledgebase of Interatomic Models" JOM, 63, 17 (2011). doi:10.1007/s11837-011-0102-6. [OTHER POSSIBLE CITATION](https://openkim.org/how-to-cite/)
+* **Elastic**: P.T. Jochym, K. Parlinski and M. Sternik "[TiC lattice dynamics from ab initio calculations](https://doi.org/10.1007/s100510050823)", European Physical Journal B; 10, 9 (1999).
 
-For `gpaw-tools` usage you can use the following citation:
+And for `gpaw-tools` usage, please use the following citation:
 
 * S.B. Lisesivdin, B. Sarikavak-Lisesivdin "[gpaw-tools – higher-level user interaction scripts for GPAW calculations and interatomic potential based structure optimization](https://doi.org/10.1016/j.commatsci.2022.111201)" Comput. Mater. Sci. 204, 111201 (2022).
 

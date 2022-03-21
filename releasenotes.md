@@ -8,6 +8,9 @@ title: Release Notes
 
 ### Development version
 
+* Bethe-Salpeter Equation (BSE) solution is added for optical calculations.
+* 7 new keywords are added for BSE calculations. `opttype`, `optshift`, `optBSEvb`, `optbsecb`, `optBSEminEn`, `optBSEmaxEn`, `optbsenumdata`
+* CONTRIBUTING and CODE_OF_CONDUCT information is added.
 * Fix: Show atom numbers starting from 1 not 0.
 
 ### Version 22.3.0

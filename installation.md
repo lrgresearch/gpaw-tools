@@ -42,7 +42,7 @@ Now, we can create an environment (here ‘gpaw-env’ name is used. You can use
 
 Then, install GPAW and Elastic packages
 
-    $ conda install -c conda-forge gpaw elastic
+    $ conda install -c conda-forge gpaw elastic requests
 
 Lastly, [download and install gpaw-tools](https://www.lrgresearch.org/gpaw-tools/installation/#4-installation-of-gpaw-tools).
 

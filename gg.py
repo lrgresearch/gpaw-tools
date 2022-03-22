@@ -383,6 +383,71 @@ class gg:
 
             # ---------Optical------------
 
+            # Type
+            if 'opttype' in config.__dict__.keys():
+                if config.opttype == 'BSE':
+                    self.opttypettk.current(0)
+                elif config.opttype == 'RPA':
+                    self.opttypettk.current(1)
+                else:
+                    self.opttypettk.current(0)
+            else:
+                self.opttypettk.current(0)
+            
+            # Shifting
+            if 'optshift' in config.__dict__.keys():
+                self.optshiftttk.delete('0', 'end')
+                self.optshiftttk.insert('0', config.optshift)
+            else:
+                self.optshiftttk.delete('0', 'end')
+                self.optshiftttk.insert('0', '0.0')
+            
+            # Valance bands for BSE calculation
+            if 'optBSEvb' in config.__dict__.keys():
+                self.optBSEvbttk.delete('0', 'end')
+                if hasattr(config, 'optBSEvb'):
+                    self.optBSEvbttk.insert('0', str(config.optBSEvb))
+                else:
+                    self.optBSEvbttk.insert('0', 'range(0,4)')
+            else:
+                self.optBSEvbttk.delete('0', 'end')
+                self.optBSEvbttk.insert('0', 'range(0,4)')
+            
+            # Conduction bands for BSE calculation
+            if 'optBSEcb' in config.__dict__.keys():
+                self.optBSEcbttk.delete('0', 'end')
+                if hasattr(config, 'optBSEcb'):
+                    self.optBSEcbttk.insert('0', str(config.optBSEcb))
+                else:
+                    self.optBSEcbttk.insert('0', 'range(4,7)')
+            else:
+                self.optBSEcbttk.delete('0', 'end')
+                self.optBSEcbttk.insert('0', 'range(4,7)')
+            
+            # Minimum energy value for BSE calculation
+            if 'optBSEminEn' in config.__dict__.keys():
+                self.optBSEminEnttk.delete('0', 'end')
+                self.optBSEminEnttk.insert('0', config.optBSEminEn)
+            else:
+                self.optBSEminEnttk.delete('0', 'end')
+                self.optBSEminEnttk.insert('0', '0.0')
+            
+            # Maximum energy value for BSE calculation
+            if 'optBSEmaxEn' in config.__dict__.keys():
+                self.optBSEmaxEnttk.delete('0', 'end')
+                self.optBSEmaxEnttk.insert('0', config.optBSEmaxEn)
+            else:
+                self.optBSEmaxEnttk.delete('0', 'end')
+                self.optBSEmaxEnttk.insert('0', '20.0')
+            
+            # Number of data for BSE calculation
+            if 'optBSEnumdata' in config.__dict__.keys():
+                self.optBSEnumdatattk.delete('0', 'end')
+                self.optBSEnumdatattk.insert('0', config.optBSEnumdata)
+            else:
+                self.optBSEnumdatattk.delete('0', 'end')
+                self.optBSEnumdatattk.insert('0', '1001')
+            
             # Number of bands
             if 'num_of_bands' in config.__dict__.keys():
                 self.num_of_bandsttk.delete('0', 'end')
@@ -602,15 +667,42 @@ class gg:
                 print("GWbandinterpolation = "+ str(GWbandinterpolationvar.get()), end="\n", file=f1)
 
                 # ---------Optical------------
+                # opttype
+                if self.opttypettk.get() == 'BSE':
+                    print("opttype = 'BSE'", end="\n", file=f1)
+                elif self.opttypettk.get() == 'RPA':
+                    print("opttype = 'RPA'", end="\n", file=f1)
+                else:
+                    print("opttype = 'BSE'", end="\n", file=f1)
+                # optshift
+                print("optshift = "+ str(self.optshiftttk.get()), end="\n", file=f1)
+                # optBSEvb
+                print("optBSEvb = "+ str(self.optBSEvbttk.get()), end="\n", file=f1)
+                # optBSEcb
+                print("optBSEcb = "+ str(self.optBSEcbttk.get()), end="\n", file=f1)
+                # optBSEminEn
+                print("optBSEminEn = "+ str(self.optBSEminEnttk.get()), end="\n", file=f1)
+                # optBSEmaxEn
+                print("optBSEmaxEn = "+ str(self.optBSEmaxEnttk.get()), end="\n", file=f1)
+                # optBSEnumdata
+                print("optBSEnumdata = "+ str(self.optBSEnumdatattk.get()), end="\n", file=f1)
                 # num_of_bands
                 print("num_of_bands = "+ str(self.num_of_bandsttk.get()), end="\n", file=f1)
                 # optFDsmear
                 print("optFDsmear = "+ str(self.optFDsmearttk.get()), end="\n", file=f1)
+                # opteta
                 print("opteta = "+ str(self.optetattk.get()), end="\n", file=f1)
+                # optdomega0
                 print("optdomega0 = "+ str(self.optdomega0ttk.get()), end="\n", file=f1)
+                # optnblocks
                 print("optnblocks = "+ str(self.optnblocksttk.get()), end="\n", file=f1)
+                # optomega2
                 print("optomega2 = "+ str(self.optomega2ttk.get()), end="\n", file=f1)
+                # optecut
                 print("optecut = "+ str(self.optecutttk.get()), end="\n", file=f1)
+                
+                # ------------Other------------
+                # whichstrain
                 print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
 
                 # This feature is not used by gpawsolve.py, this is only usable for gg.py
@@ -919,6 +1011,90 @@ class gg:
         # labelframe3: Optical Calculation Parameters --------------
         self.labelframe3 = ttk.Labelframe(self.frame5)
 
+        # opttype
+        self.frameopttype = ttk.Frame(self.labelframe3)
+        self.labelopttype = ttk.Label(self.frameopttype)
+        self.labelopttype.configure(text='Optical Calculation Method')
+        self.labelopttype.pack(side='left')
+        self.opttypettk = ttk.Combobox(self.frameopttype)
+        self.opttypettk.configure(values=('BSE', 'RPA'), state='readonly')
+        self.opttypettk.pack(side='top')
+        self.opttypettk.current(0)
+        self.frameopttype.configure(height='200', width='200')
+        self.frameopttype.pack(side='top')
+        
+        # optshift
+        self.frameoptshift = ttk.Frame(self.labelframe3)
+        self.labeloptshift = ttk.Label(self.frameoptshift)
+        self.labeloptshift.configure(text='Energy shifting in eV')
+        self.labeloptshift.pack(side='left')
+        self.optshiftttk = ttk.Entry(self.frameoptshift)
+        self.optshiftttk.delete('0', 'end')
+        self.optshiftttk.insert('0', '0.0')
+        self.optshiftttk.pack(side='top')
+        self.frameoptshift.configure(height='200', width='200')
+        self.frameoptshift.pack(side='top')
+        
+        # optBSEvb
+        self.frameoptBSEvb = ttk.Frame(self.labelframe3)
+        self.labeloptBSEvb = ttk.Label(self.frameoptBSEvb)
+        self.labeloptBSEvb.configure(text='Valance bands(use range()):')
+        self.labeloptBSEvb.pack(side='left')
+        self.optBSEvbttk = ttk.Entry(self.frameoptBSEvb)
+        self.optBSEvbttk.delete('0', 'end')
+        self.optBSEvbttk.insert('0', 'range(0,4)')
+        self.optBSEvbttk.pack(side='top')
+        self.frameoptBSEvb.configure(height='200', width='200')
+        self.frameoptBSEvb.pack(side='top')
+        
+        # optBSEcb
+        self.frameoptBSEcb = ttk.Frame(self.labelframe3)
+        self.labeloptBSEcb = ttk.Label(self.frameoptBSEcb)
+        self.labeloptBSEcb.configure(text='Conduction bands(use range()):')
+        self.labeloptBSEcb.pack(side='left')
+        self.optBSEcbttk = ttk.Entry(self.frameoptBSEcb)
+        self.optBSEcbttk.delete('0', 'end')
+        self.optBSEcbttk.insert('0', 'range(4,7)')
+        self.optBSEcbttk.pack(side='top')
+        self.frameoptBSEcb.configure(height='200', width='200')
+        self.frameoptBSEcb.pack(side='top')
+        
+        # optBSEminEn
+        self.frameoptBSEminEn = ttk.Frame(self.labelframe3)
+        self.labeloptBSEminEn = ttk.Label(self.frameoptBSEminEn)
+        self.labeloptBSEminEn.configure(text='Min. En. for BSE calc.')
+        self.labeloptBSEminEn.pack(side='left')
+        self.optBSEminEnttk = ttk.Entry(self.frameoptBSEminEn)
+        self.optBSEminEnttk.delete('0', 'end')
+        self.optBSEminEnttk.insert('0', '0.0')
+        self.optBSEminEnttk.pack(side='top')
+        self.frameoptBSEminEn.configure(height='200', width='200')
+        self.frameoptBSEminEn.pack(side='top')
+        
+        # optBSEmaxEn
+        self.frameoptBSEmaxEn = ttk.Frame(self.labelframe3)
+        self.labeloptBSEmaxEn = ttk.Label(self.frameoptBSEmaxEn)
+        self.labeloptBSEmaxEn.configure(text='Max. En. for BSE calc.')
+        self.labeloptBSEmaxEn.pack(side='left')
+        self.optBSEmaxEnttk = ttk.Entry(self.frameoptBSEmaxEn)
+        self.optBSEmaxEnttk.delete('0', 'end')
+        self.optBSEmaxEnttk.insert('0', '20.0')
+        self.optBSEmaxEnttk.pack(side='top')
+        self.frameoptBSEmaxEn.configure(height='200', width='200')
+        self.frameoptBSEmaxEn.pack(side='top')
+        
+        # optBSEnumdata
+        self.frameoptBSEnumdata = ttk.Frame(self.labelframe3)
+        self.labeloptBSEnumdata = ttk.Label(self.frameoptBSEnumdata)
+        self.labeloptBSEnumdata.configure(text='Number of data points')
+        self.labeloptBSEnumdata.pack(side='left')
+        self.optBSEnumdatattk = ttk.Entry(self.frameoptBSEnumdata)
+        self.optBSEnumdatattk.delete('0', 'end')
+        self.optBSEnumdatattk.insert('0', '1001')
+        self.optBSEnumdatattk.pack(side='top')
+        self.frameoptBSEnumdata.configure(height='200', width='200')
+        self.frameoptBSEnumdata.pack(side='top')
+        
         #num_of_bands
         self.frame17 = ttk.Frame(self.labelframe3)
         self.label14 = ttk.Label(self.frame17)

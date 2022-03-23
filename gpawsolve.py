@@ -584,7 +584,7 @@ if Optical_calc == True:
         #from mpi4py import MPI
         if opttype == 'BSE':
             if Spin_calc == True:
-               parprint('ERROR: BSE calculations can only run with non-spin dependent data.')
+               parprint('ERROR: BSE calculations can not run with spin dependent data.')
                quit()
             parprint('Starting BSE calculations')
             bse = BSE(calc= struct+'-5-Result-Optical.gpw', ecut=optecut,

@@ -184,7 +184,7 @@ Then install gpaw
 Use `gpaw info` to see information about installation. However, PAW-datasets are not installed yet. To install it, firstly create a directory under `~/.gpaw` then install PAW datasets
 
     mkdir ~/.gpaw/gpaw-setups
-    gpaw install-data ~/.gpaw/gpaw-setups/  
+    gpaw install-data ~/.gpaw/gpaw-setups/
 
 ### 3. Installation of ASAP and KIM for Quick Optimization
 
@@ -198,16 +198,19 @@ For quick optimization, we need simple interatomic modelling. For this, we need 
 
 Then you can use files in https://github.com/lrgresearch/gpaw-tools/tree/main/QuickOptimize
 
-### 4. Installation of Elastic package
+### 4. Installation of gpaw-tools
 
-For the installation of Elastic package:
+Before, starting to installation of `gpaw-tools`, we need to install `spglib` 
+
+    pip3 install spglib
+
+and some packages to run elastic package, which is needed to run gpaw-tools: 
 
     pip3 install setuptools_scm
     pip3 install docutils
     pip3 install elastic
 
-### 5. Installation of gpaw-tools
-In your home folder (~), let's download the latest development release (you can prefer stable release also, please visit https://www.lrgresearch.org/gpaw-tools/ to get the latest URL)
+Now, all needed packages are installed and we can continue with installation of `gpaw-tools`. In your home folder (~), let's download the latest development release (you can prefer stable release also, please visit https://www.lrgresearch.org/gpaw-tools/ to get the latest URL)
 
     cd ~
     wget https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip

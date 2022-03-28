@@ -263,10 +263,10 @@ if Optical_calc == False:
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation...")
             if 'kpts_density' in globals():
-                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
+                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', convergence={}, setups= Hubbard, parallel={'domain': world.size}, 
                         spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt')
             else:
-                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
+                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', convergence={}, setups= Hubbard, parallel={'domain': world.size}, 
                         spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             if True in whichstrain:
@@ -579,8 +579,6 @@ if Optical_calc == True:
         calc.diagonalize_full_hamiltonian(nbands=num_of_bands)  # diagonalize Hamiltonian
         calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
 
-        # Getting dielectric function spectrum
-        parprint("Starting dielectric function calculation...")
         #from mpi4py import MPI
         if opttype == 'BSE':
             if Spin_calc == True:
@@ -596,16 +594,19 @@ if Optical_calc == True:
                          write_v=True,
                          integrate_gamma=0,
                          txt=struct+'-5-Result-Optical-BSE-log.txt')
+            
+            # Getting dielectric function spectrum
+            parprint("Starting dielectric function calculation...")
             # Writing to files
-            bse.get_dielectric_function(direction=0, eta=opteta,
+            bse.get_dielectric_function(direction=0, q_c = [0.0, 0.0, 0.0], eta=opteta,
                                         w_w=np.linspace(optBSEminEn, optBSEmaxEn, optBSEnumdata),
                                         filename=struct+'-5-Result-Optical-BSE_dielec_xdirection.csv',
                                         write_eig=struct+'-5-Result-Optical-BSE_eig_xdirection.dat')
-            bse.get_dielectric_function(direction=1, eta=opteta,
+            bse.get_dielectric_function(direction=1, q_c = [0.0, 0.0, 0.0], eta=opteta,
                                         w_w=np.linspace(optBSEminEn, optBSEmaxEn, optBSEnumdata),
                                         filename=struct+'-5-Result-Optical-BSE_dielec_ydirection.csv',
                                         write_eig=struct+'-5-Result-Optical-BSE_eig_ydirection.dat')
-            bse.get_dielectric_function(direction=2, eta=opteta,
+            bse.get_dielectric_function(direction=2, q_c = [0.0, 0.0, 0.0], eta=opteta,
                                         w_w=np.linspace(optBSEminEn, optBSEmaxEn, optBSEnumdata),
                                         filename=struct+'-5-Result-Optical-BSE_dielec_zdirection.csv',
                                         write_eig=struct+'-5-Result-Optical-BSE_eig_zdirection.dat')
@@ -681,8 +682,10 @@ if Optical_calc == True:
                                 omega2=optomega2,
                                 domega0=optdomega0,
                                 ecut=optecut)
-        # Writing to files as: omega, nlfc.real, nlfc.imag, lfc.real, lfc.imag 
-        # Here lfc is local field correction
+            # Writing to files as: omega, nlfc.real, nlfc.imag, lfc.real, lfc.imag 
+            # Here lfc is local field correction
+            # Getting dielectric function spectrum
+            parprint("Starting dielectric function calculation...")
             df.get_dielectric_function( direction='x', 
                                         filename=struct+'-5-Result-Optical-RPA_dielec_xdirection.csv')
             df.get_dielectric_function( direction='y',

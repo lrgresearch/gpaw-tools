@@ -10,6 +10,7 @@ title: Release Notes
 
 * Bethe-Salpeter Equation (BSE) solution is added for optical calculations.
 * 7 new keywords are added for BSE calculations. `opttype`, `optshift`, `optBSEvb`, `optbsecb`, `optBSEminEn`, `optBSEmaxEn`, `optbsenumdata`
+* `Si-2atoms-optical` example is now running for both RPA and BSE. Previously, its calculation has 2 steps , now 3 steps.
 * CONTRIBUTING and CODE_OF_CONDUCT information is added.
 * Fix: Show atom numbers starting from 1 not 0.
 

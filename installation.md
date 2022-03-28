@@ -229,4 +229,4 @@ Add the following line at the end of your ``~/.bashrc`` file.
 
 After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command). 
 
-Congratulations! You installed all necessary files to run *gpaw-tools*. You can continue with our [usage](usage.md) page, or continue with the `examples` folder in your `gpaw-tools-main` folder. All examples have README.md files.
+Congratulations! You installed all necessary files to run *gpaw-tools*. You can continue with our [usage](generalusage.md) page, or continue with the `examples` folder in your `gpaw-tools-main` folder. All examples have README.md files.

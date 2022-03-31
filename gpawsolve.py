@@ -593,7 +593,7 @@ if Optical_calc == True:
                          mode='BSE',
                          write_v=True,
                          integrate_gamma=0,
-                         txt=struct+'-5-Result-Optical-BSE-log.txt')
+                         txt=struct+'-5-Log-Optical-BSE.txt')
             
             # Getting dielectric function spectrum
             parprint("Starting dielectric function calculation...")
@@ -828,7 +828,7 @@ if drawfigs == True:
     if world.rank == 0:
         # Elastic
         if Elastic_calc == True:
-            eos.plot(struct+'-1.5-Result-Elastic-EOS.png', show=True)
+            eos.plot(struct+'-1.5-Graph-Elastic-EOS.png', show=True)
         # DOS
         if DOS_calc == True:
             if Spin_calc == True:

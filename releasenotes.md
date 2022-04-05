@@ -8,8 +8,10 @@ title: Release Notes
 
 ### Development version
 
+* New optimization script `optimize_kptsdensity.py` for k-point density optimization instead of k-point number optimization.
+* `optimize_cutoff.py`, `optimize_kpoints.py` and `optimize_latticeparam.py` have `xc_used` in parameters list.
 * Naming of some of the output files are fixed. 
-* Bethe-Salpeter Equation (BSE) solution is added for optical calculations.
+* Bethe-Salpeter Equation (BSE) solution is added to optical calculations.
 * 7 new keywords are added for BSE calculations. `opttype`, `optshift`, `optBSEvb`, `optbsecb`, `optBSEminEn`, `optBSEmaxEn`, `optbsenumdata`
 * `Si-2atoms-optical` example is now running for both RPA and BSE. Previously, its calculation has 2 steps , now 3 steps.
 * CONTRIBUTING and CODE_OF_CONDUCT information is added.

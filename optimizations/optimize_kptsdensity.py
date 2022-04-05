@@ -1,7 +1,10 @@
 '''
 optimize_kptsdensity.py: Sample K-point density optimization with GPAW
 
-Usage: $ gpaw -P<core_number> python optimize_kptsdensity.py
+Usage: $ gpaw -P<core_number> python optimize_kptsdensity.py <file.cif>
+If the atom positions are not given with an external file like <file.cif>
+it must be provided as a ASE object below part "Bulk Configuration"
+Related ASE object can be produced with ciftoase.py script.
 '''
 
 from ase import *
@@ -19,7 +22,7 @@ kptsdensity_step = 0.1
 
 
 # -------------------------------------------------------------
-# Bulk Configuration
+# Bulk Configuration - YOU DON'T NEED IF YOU USE CIF FILE
 # -------------------------------------------------------------
 bulk_configuration = Atoms(['C' for i in range(2)],
               [(   3.790492,    2.188441,    1.547462),
@@ -32,6 +35,11 @@ bulk_configuration.set_cell([[    2.526995,     0.000000,     0.000000],
 # -------------------------------------------------------------
 # CONVERGE KPOINTS
 # -------------------------------------------------------------
+# if bulk structure is given with CIF, XYZ, etc... file
+if len(sys.argv) > 1:
+    inFile = sys.argv[1]
+    bulk_configuration = read(inFile, index='-1')
+
 cell0 = bulk_configuration.cell
 with paropen('OptimizeKPoints_Table-KPointDensity.txt', 'a') as f:
     f.write('K-density  Total_Energy\n')

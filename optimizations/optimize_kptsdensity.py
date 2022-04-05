@@ -19,7 +19,7 @@ cutoffenergy = 700
 kptsdensity_min = 1.5
 kptsdensity_max = 3.0
 kptsdensity_step = 0.1
-
+xc_used = 'GLLBSCM'
 
 # -------------------------------------------------------------
 # Bulk Configuration - YOU DON'T NEED IF YOU USE CIF FILE
@@ -45,7 +45,7 @@ with paropen('OptimizeKPoints_Table-KPointDensity.txt', 'a') as f:
     f.write('K-density  Total_Energy\n')
     for k in np.arange(kptsdensity_min, kptsdensity_max, kptsdensity_step):
         bulk_configuration.calc = GPAW(mode=PW(cutoffenergy),
-                                    xc='GLLBSCM',
+                                    xc=xc_used,
                                     kpts={'density': k, 'gamma': True},
                                     parallel={'band': 1},
                                     basis='dzp',

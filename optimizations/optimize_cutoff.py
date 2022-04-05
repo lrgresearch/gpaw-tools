@@ -23,17 +23,19 @@ kpts_x = 7
 kpts_y = 7
 kpts_z = 7
 
+xc_used = 'GLLBSCM'
+
 # -------------------------------------------------------------
 # Bulk Configuration - YOU DON'T NEED IF YOU USE CIF FILE
 # -------------------------------------------------------------
-bulk_configuration = Atoms(
-    [
-    Atom('Si', ( 0.0, 0.0, 0.0 )),
-    Atom('Si', ( 1.35765, 1.35765, 1.35765 )),
-    ],
-    cell=[(0.0, 2.7153, 2.7153), (2.7153, 0.0, 2.7153), (2.7153, 2.7153, 0.0)],
-    pbc=True,
-    )
+bulk_configuration = Atoms(['C' for i in range(2)],
+              [(   3.790492,    2.188441,    1.547462),
+               (   2.526995,    1.458961,    1.031641)],
+              pbc = (True,True,True))
+bulk_configuration.set_cell([[    2.526995,     0.000000,     0.000000],
+                [    1.263497,     2.188441,     0.000000],
+                [    1.263497,     0.729480,     2.063282]],
+                scale_atoms = False)
 # -------------------------------------------------------------
 # DO NOT NEED TO CHANGE ANYTHING UNDER THIS POINT
 # -------------------------------------------------------------
@@ -46,7 +48,7 @@ with paropen('OptimizeCutOff_Table-CutOff.txt', 'a') as f:
     f.write('CutOff_Energy  Total_Energy\n')
     for ecut in range(cutoff_min, cutoff_max+1, cutoff_step):
         bulk_configuration.calc = GPAW(mode=PW(ecut),
-                                    xc='PBE',
+                                    xc=xc_used,
                                     kpts=(kpts_x, kpts_y, kpts_z),
                                     parallel={'domain': world.size},
                                     basis='dzp',

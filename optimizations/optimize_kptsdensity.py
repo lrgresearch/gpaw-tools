@@ -9,6 +9,7 @@ Related ASE object can be produced with ciftoase.py script.
 
 from ase import *
 from gpaw import GPAW, PW
+import sys
 from ase.parallel import paropen, parprint
 import numpy as np
 

@@ -14,8 +14,8 @@
 `gpaw-tools` have:
 1. A force-field quick optimization script `quickoptimization.py` for preliminary calculations using ASAP3/OpenKIM potentials. 
 2. `ciftoase.py` script for transform CIF files to ASE's own Atoms object.
-3. To choose better cut off energy, lattice parameter and k points, there are 3 scripts called `optimize_cutoff.py`, `optimize_latticeparam.py` and `optimize_kpoints.py`.
-4. The main solver script `gpawsolver.py` which can be run in PW (also with GW and EXX) or LCAO mode. It can do structure optimization, Equation of State and elastic tensor calculations, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties in a very simple and organized way.
+3. To choose better cut off energy, lattice parameter and k points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`, `optimize_kptsdensity.py` and `optimize_latticeparam.py`.
+4. The main solver script `gpawsolver.py` which can be run in PW (also with GW and EXX) or LCAO mode. It can do structure optimization, Equation of State and elastic tensor calculations, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties (RPA and BSE) in a very simple and organized way.
 5. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) which is called `gg.py`. 
 
 ## Usage
@@ -31,12 +31,14 @@ gpaw-tools-main/
 │   ├── ciftoase.py
 │   ├── optimize_cutoff.py
 │   ├── optimize_kpoints.py
+│   ├── optimize_kptsdensity.py
 │   └── optimize_latticeparam.py
 ├── quick_optimization/
 |   └── quickoptimize.py
 ├── gui_files/
 └── gpawsolve.py
 └── gg.py
+└── shrinkgpw.py
 ```
 To make the `gpawsolve.py` and `gg.py` as system-wide commands, user must include the `gpaw-tools-main` folder to the $PATH variable in the `.bashrc` file. In case of user  downloaded and extracted the `gpaw-tools-main` file to user's home directory, and to make the change permanent, user must need to define the $PATH variable in the shell configuration file `.bashrc` as
 
@@ -123,11 +125,12 @@ For `quickoptimize.py` or other optimization scripts, user may need to give ASE 
 
 Result will be printed to screen and will be saved as `geometryfile.py` in the same folder.
 
-### optimizations/optimize_cutoff (and kpoints)(and latticeparam).py
-Users must provide ASE Atoms object and simply insert the object inside these scripts. With the scripts, the user can do convergence tests for cut-off energy, k-points and can calculate the energy dependent lattice parameter values. These codes are mainly based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. Scripts can easily called with MPI as:
+### optimizations/optimize_cutoff (and kpoints)(and kptsdensity)(and latticeparam).py
+Users must provide ASE Atoms object and simply insert the object inside these scripts. With the scripts, the user can do convergence tests for cut-off energy, k-points, k-point density and can calculate the energy dependent lattice parameter values. These codes are mainly based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. Scripts can easily called with MPI as:
 
     gpaw -P <core_number> python optimize_cutoff.py
     gpaw -P <core_number> python optimize_kpoints.py
+    gpaw -P <core_number> python optimize_kptsdensity.py
     gpaw -P <core_number> python optimize_latticeparam.py
 
 ### benchmarks/

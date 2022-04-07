@@ -7,6 +7,9 @@ title: Release Notes
 ## Release notes
 
 ### Development version
+* n/a
+
+### Version 22.4.0
 
 * New optimization script `optimize_kptsdensity.py` for k-point density optimization instead of k-point number optimization.
 * `optimize_cutoff.py`, `optimize_kpoints.py` and `optimize_latticeparam.py` have `xc_used` in parameters list.

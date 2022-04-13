@@ -7,7 +7,7 @@ title: Release Notes
 ## Release notes
 
 ### Development version
-* n/a
+* For band calculations, result file in JSON format is added. This file can be opened with `ase band-structure` command.
 
 ### Version 22.4.0
 

@@ -513,7 +513,9 @@ if Optical_calc == False:
             num_of_bands = calc.get_number_of_bands()
             parprint('Num of bands:'+str(num_of_bands))
 
-            calc.write(struct+'-3-Result-Band.gpw')
+            # No need to write an additional gpaw file. Use json file to use with ase band-structure command
+            #calc.write(struct+'-3-Result-Band.gpw')
+            bs.write(struct+'-3-Result-Band.json')
 
             if Spin_calc == True:
                 eps_skn = np.array([[calc.get_eigenvalues(k,s)

@@ -6,7 +6,10 @@ Usage: $ gpaw -P<core_number> python optimize_latticeparam.py
 
 import numpy as np
 from ase import *
+from ase.io import read
+from ase.geometry.cell import cell_to_cellpar, cellpar_to_cell
 from gpaw import GPAW, PW
+import sys
 from ase.io import Trajectory
 from ase.parallel import paropen, world, parprint
 
@@ -25,7 +28,7 @@ kpts_density =2.5
 
 use_density = True # Change to "True", if you want to use k-point density instead of kpoints.
 
-a0 = 2.53 # Creating a lattice parameter list
+a0 = 3.87 # Creating a lattice parameter list
 percent = 0.05 # changing the lattice parameter how much percent?
 
 a_list = a0 * (1 + np.linspace(-percent , +percent , 11)) # do not change this line
@@ -33,7 +36,12 @@ a_list = a0 * (1 + np.linspace(-percent , +percent , 11)) # do not change this l
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
-## USE latt_a for lattice parameter
+# Read bulk structure from CIF
+if len(sys.argv) > 1:
+    inFile = sys.argv[1]
+    bulk_configuration = read(inFile, index='-1')
+
+a, b, c, alpha, beta, gamma = cell_to_cellpar(bulk_configuration.get_cell(), radians=False)
 
 # prepare arrays for total energies and correspoding volumes
 etots = []
@@ -49,18 +57,7 @@ with paropen('Optimize-Lattice_Table-LatticeParam.txt', 'w') as f:
     f.write('LattParam volume total_energy\n')
     f.write('-----------------------------\n')
     for latt_a in a_list:
-        # -------------------------------------------------------------
-        # DO NOT FORGET TO INSERT BULK CONFIGURATION UNDER HERE
-        # WITH PROPER INDENTATION!!!
-        # -------------------------------------------------------------           
-        bulk_configuration = Atoms(['C' for i in range(2)],
-              [(   3.790492*latt_a/2.526995,    2.188441*latt_a/2.526995,    1.547462*latt_a/2.526995),
-               (   2.526995*latt_a/2.526995,    1.458961*latt_a/2.526995,    1.031641*latt_a/2.526995)],
-              pbc = (True,True,True))
-        bulk_configuration.set_cell([[    2.526995*latt_a/2.526995,     0.000000,     0.000000],
-                [    1.263497*latt_a/2.526995,     2.188441*latt_a/2.526995,     0.000000],
-                [    1.263497*latt_a/2.526995,     0.729480*latt_a/2.526995,     2.063282*latt_a/2.526995]],
-                scale_atoms = False)
+        bulk_configuration.set_cell(cellpar_to_cell([a*latt_a/a, b*latt_a/a, c, alpha, beta, gamma]), scale_atoms = True)
 
         # --------------------------------------------------------------
         # create the cell, then find, store and print the total energy for a in a_list:

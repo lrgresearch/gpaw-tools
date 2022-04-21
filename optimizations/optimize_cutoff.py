@@ -2,12 +2,10 @@
 optimize_cutoff.py: Sample Cut-off Energy Optimization with GPAW
 
 Usage: $ gpaw -P<core_number> python optimize_cutoff.py <file.cif>
-If the atom positions are not given with an external file like <file.cif>
-it must be provided as a ASE object below part "Bulk Configuration"
-Related ASE object can be produced with ciftoase.py script.
 '''
 from ase import *
 from ase.io import read
+from ase.geometry.cell import cell_to_cellpar
 from gpaw import GPAW, PW
 import sys
 from ase.parallel import paropen, world, parprint
@@ -26,24 +24,16 @@ kpts_z = 7
 xc_used = 'GLLBSCM'
 
 # -------------------------------------------------------------
-# Bulk Configuration - YOU DON'T NEED IF YOU USE CIF FILE
-# -------------------------------------------------------------
-bulk_configuration = Atoms(['C' for i in range(2)],
-              [(   3.790492,    2.188441,    1.547462),
-               (   2.526995,    1.458961,    1.031641)],
-              pbc = (True,True,True))
-bulk_configuration.set_cell([[    2.526995,     0.000000,     0.000000],
-                [    1.263497,     2.188441,     0.000000],
-                [    1.263497,     0.729480,     2.063282]],
-                scale_atoms = False)
-# -------------------------------------------------------------
 # DO NOT NEED TO CHANGE ANYTHING UNDER THIS POINT
 # -------------------------------------------------------------
-# if bulk structure is given with CIF, XYZ, etc... file
+# Read bulk structure from CIF
 if len(sys.argv) > 1:
     inFile = sys.argv[1]
     bulk_configuration = read(inFile, index='-1')
 
+a, b, c, alpha, beta, gamma = cell_to_cellpar(bulk_configuration.get_cell(), radians=False)
+
+# Start trying all cut-off energies
 with paropen('OptimizeCutOff_Table-CutOff.txt', 'a') as f:
     f.write('CutOff_Energy  Total_Energy\n')
     for ecut in range(cutoff_min, cutoff_max+1, cutoff_step):

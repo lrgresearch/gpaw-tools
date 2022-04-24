@@ -8,7 +8,7 @@ title: Input File Keywords
 
 [**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [whichstrain](inputfilekeywords.md#whichstrain), [MPIcores](inputfilekeywords.md#mpicores)
 
-[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
+[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
 
 [**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GWtype](inputfilekeywords.md#gwtype), [GWkpoints](inputfilekeywords.md#gwkpoints), [GWtruncation](inputfilekeywords.md#gwtruncation), [GWcut_off_energy](inputfilekeywords.md#gwcut_off_energy), [GWbandVB](inputfilekeywords.md#gwbandvb), [GWbandCB](inputfilekeywords.md#gwbandcb), [GWppa](inputfilekeywords.md#gwppa), [GWq0correction](inputfilekeywords.md#gwq0correction), [GWnblock](inputfilekeywords.md#gwnblock)
 
@@ -362,6 +362,58 @@ LDA
 
 #### Example
 XC_calc = 'PBE'
+
+---
+### Ground_convergencce
+#### Keyword type
+Python dictionary
+
+#### Description
+This keyword controls the convergence parameters for the ground-state calculations. For default use {}.
+
+#### Default
+{'energy': 0.0005,  # eV / electron
+ 'density': 1.0e-4,  # electrons / electron
+ 'eigenstates': 4.0e-8,  # eV^2 / electron
+ 'forces': np.inf,
+ 'bands': None,
+ 'maximum iterations': None}
+
+#### Example
+Ground_convergence = {'energy': 0.005} # eV
+
+---
+### Band_convergence
+#### Keyword type
+Python dictionary
+
+#### Description
+This keyword controls the convergence parameters for the ground-state calculations.
+
+#### Default
+{'bands':8} 
+
+#### Example
+Band_convergence = {'bands':8, 'density': 1.0e-3,} 
+
+---
+### Occupations
+#### Keyword type
+Python dictionary
+
+#### Description
+This keyword controls the smearing of the occupation numbers. You can use 4 types:
+
+* improved-tetrahedron-method
+* tetrahedron-method
+* fermi-dirac
+* marzari-vanderbilt
+
+#### Default
+{'name': 'fermi-dirac', 'width': 0.05}
+
+#### Example
+Occupations = {'name': 'marzari-vanderbilt', 'width': 0.2}
 
 ---
 

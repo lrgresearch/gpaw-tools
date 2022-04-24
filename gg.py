@@ -261,16 +261,16 @@ class gg:
                 self.Band_convergencettk.delete('0', 'end')
                 self.Band_convergencettk.insert('0', "{'bands':8}")
 
-            # Occupations
-            if 'Occupations' in config.__dict__.keys():
-                self.Occupationsttk.delete('0', 'end')
-                if hasattr(config, 'Occupations'):
-                    self.Occupationsttk.insert('0', str(config.Occupations))
+            # Occupation
+            if 'Occupation' in config.__dict__.keys():
+                self.Occupationttk.delete('0', 'end')
+                if hasattr(config, 'Occupation'):
+                    self.Occupationttk.insert('0', str(config.Occupation))
                 else:
-                    self.Occupationsttk.insert('0', "{'name': 'fermi-dirac', 'width': 0.05}")
+                    self.Occupationttk.insert('0', "{'name': 'fermi-dirac', 'width': 0.05}")
             else:
-                self.Occupationsttk.delete('0', 'end')
-                self.Occupationsttk.insert('0', "{'name': 'fermi-dirac', 'width': 0.05}")
+                self.Occupationttk.delete('0', 'end')
+                self.Occupationttk.insert('0', "{'name': 'fermi-dirac', 'width': 0.05}")
 
             # DOS number of points
             if 'DOS_npoints' in config.__dict__.keys():
@@ -656,8 +656,8 @@ class gg:
                 print("Ground_convergence = "+ str(self.Ground_convergencettk.get()), end="\n", file=f1)
                 # Band_convergence
                 print("Band_convergence = "+ str(self.Band_convergencettk.get()), end="\n", file=f1)
-                # Occupations
-                print("Occupations = "+ str(self.Occupationsttk.get()), end="\n", file=f1)
+                # Occupation
+                print("Occupation = "+ str(self.Occupationttk.get()), end="\n", file=f1)
                 # DOS_npoints
                 print("DOS_npoints = "+ str(self.DOS_npointsttk.get()), end="\n", file=f1)
                 # DOS_width
@@ -1011,17 +1011,17 @@ class gg:
         self.frameBand_convergence.configure(height='200', width='200')
         self.frameBand_convergence.pack(side='top')
         
-        # Occupations
-        self.frameOccupations = ttk.Frame(self.labelframe2)
-        self.labelOccupations = ttk.Label(self.frameOccupations)
-        self.labelOccupations.configure(text='Occupations ({} for def):')
-        self.labelOccupations.pack(side='left')
-        self.Occupationsttk = ttk.Entry(self.frameOccupations)
-        self.Occupationsttk.delete('0', 'end')
-        self.Occupationsttk.insert('0', "{'name': 'fermi-dirac', 'width': 0.05}")
-        self.Occupationsttk.pack(side='top')
-        self.frameOccupations.configure(height='200', width='200')
-        self.frameOccupations.pack(side='top')
+        # Occupation
+        self.frameOccupation = ttk.Frame(self.labelframe2)
+        self.labelOccupation = ttk.Label(self.frameOccupation)
+        self.labelOccupation.configure(text='Occupation ({} for def):')
+        self.labelOccupation.pack(side='left')
+        self.Occupationttk = ttk.Entry(self.frameOccupation)
+        self.Occupationttk.delete('0', 'end')
+        self.Occupationttk.insert('0', "{'name': 'fermi-dirac', 'width': 0.05}")
+        self.Occupationttk.pack(side='top')
+        self.frameOccupation.configure(height='200', width='200')
+        self.frameOccupation.pack(side='top')
         
         # DOS number of points
         self.frameDOS_npoints = ttk.Frame(self.labelframe2)

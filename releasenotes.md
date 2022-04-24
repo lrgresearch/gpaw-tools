@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* Fix `do_all_examples.sh` Bash script.
 * Optimization scripts do not need ASE object insertation. They can run with using CIF file as an argument.
 * RawPDOS, which gives PDOS over orbitals, is added.
 * For band calculations, result file in JSON format is added. This file can be opened with `ase band-structure` command.

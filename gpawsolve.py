@@ -88,7 +88,7 @@ XC_calc = 'LDA'
 
 Ground_convergence = {}   # Convergence items for ground state calculations
 Band_convergence = {'bands':8}   # Convergence items for band calculations
-Occupations = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
+Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
 
 DOS_npoints = 501        # Number of points
 DOS_width = 0.1          # Width of Gaussian smearing. Use 0.0 for linear tetrahedron interpolation
@@ -271,11 +271,11 @@ if Optical_calc == False:
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
                         spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
-                        convergence = Ground_convergence, occupations = Occupations)
+                        convergence = Ground_convergence, occupations = Occupation)
             else:
                 calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
                         spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
-                        convergence = Ground_convergence, occupations = Occupations)
+                        convergence = Ground_convergence, occupations = Occupation)
             bulk_configuration.calc = calc
             if True in whichstrain:
                 if XC_calc == 'GLLBSC':
@@ -305,10 +305,10 @@ if Optical_calc == False:
             parprint("Starting PW ground state calculation with PBE...")
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupations, txt=struct+'-1-Log-Ground.txt')
+                        convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             else:
                 calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupations, txt=struct+'-1-Log-Ground.txt')
+                        convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
@@ -340,10 +340,10 @@ if Optical_calc == False:
             parprint("Starting PW only ground state calculation for GW calculation...")
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupations, txt=struct+'-1-Log-Ground.txt')
+                        convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             else:
                 calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, 
-                        convergence = Ground_convergence, occupations = Occupations, txt=struct+'-1-Log-Ground.txt')
+                        convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
@@ -376,10 +376,10 @@ if Optical_calc == False:
             parprint("Starting LCAO ground state calculation...")
             if 'kpts_density' in globals():
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupations, parallel={'domain': world.size})
+                        convergence = Ground_convergence, occupations = Occupation, parallel={'domain': world.size})
             else:
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupations, parallel={'domain': world.size})
+                        convergence = Ground_convergence, occupations = Occupation, parallel={'domain': world.size})
             bulk_configuration.calc = calc
             relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider much tighter fmax!
@@ -430,7 +430,7 @@ if Optical_calc == False:
     if DOS_calc == True:
         parprint("Starting DOS calculation...")
         calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-2-Log-DOS.txt',
-                convergence = Ground_convergence, occupations = Occupations)
+                convergence = Ground_convergence, occupations = Occupation)
         #energies, weights = calc.get_dos(npts=800, width=0)
         dos = DOS(calc, npts=DOS_npoints, width=DOS_width)
         
@@ -593,7 +593,7 @@ if Optical_calc == False:
             calc = GPAW(struct+'-1-Result-Ground.gpw',
                     txt=struct+'-3-Log-Band.txt',
                     fixdensity=True,
-                    symmetry='off', occupations = Occupations,
+                    symmetry='off', occupations = Occupation,
                     kpts={'path': band_path, 'npoints': band_npoints},
                     convergence=Band_convergence)
 

@@ -8,7 +8,7 @@ title: Release Notes
 
 ### Development version
 
-* 3 new keywords `Ground_convergence`, Band_convergence` and `Occupation` are added to `gpawsolve.py`, `gg.py` and examples.
+* 3 new keywords `Ground_convergence`, `Band_convergence` and `Occupation` are added to `gpawsolve.py`, `gg.py` and examples.
 * Fix `do_all_examples.sh` Bash script.
 * Optimization scripts do not need ASE object insertation. They can run with using CIF file as an argument.
 * RawPDOS, which gives PDOS over orbitals, is added.

@@ -35,6 +35,11 @@ XC_calc = 'LDA'
 #Choose one for PW-EXX (Ground state calculations will be done with PBE):
 #XC_calc = 'PBE0'
 #XC_calc = 'HSE06'
+
+Ground_convergence = {}   # Convergence items for ground state calculations
+Band_convergence = {'bands':8}   # Convergence items for band calculations
+Occupations = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
+
 DOS_npoints = 501        # Number of points
 DOS_width = 0.1          # Width of Gaussian smearing.  Use 0.0 for linear tetrahedron interpolation
 

@@ -33,8 +33,10 @@ echo "Calculating: Si-2atoms-optical"
 cd ../Si-2atoms-optical
 echo "Step 1: Ground, DOS and Band"
 time mpirun -np $CORENUMBER gpawsolve.py -o -i Si-Step1-ground_dos_band.py -g Si_mp-149_primitive_Example.cif
-echo "Step 2: Optical"
-time gpawsolve.py -o -i Si-Step2-optical.py -g Si_mp-149_primitive_Example.cif
+echo "Step 2: Optical - RPA"
+time gpawsolve.py -o -i Si-Step2-optical-RPA.py -g Si_mp-149_primitive_Example.cif
+echo "Step 3: Optical - BSE"
+time gpawsolve.py -o -i Si-Step2-optical-BSE.py -g Si_mp-149_primitive_Example.cif
 
 # Wurtzite ZnO with DFT+U
 echo "Calculating: ZnO with DFT+U"

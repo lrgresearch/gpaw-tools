@@ -270,8 +270,8 @@ if Optical_calc == False:
     # -------------------------------------------------------------
 
     if Mode == 'PW':
-        if XC_calc in ['HSE06', 'PBE0']:
-            parprint('Error: '+XC_calc+' can be used only in PW-EXX mode...')
+        if XC_calc in ['B3LYP', 'PBE0']:
+            parprint('ERROR: '+XC_calc+' can be used only in PW-EXX mode...')
             quit()
         if Spin_calc == True:
            numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
@@ -280,21 +280,36 @@ if Optical_calc == False:
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation...")
-            if 'kpts_density' in globals():
-                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
-                        spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
-                        convergence = Ground_convergence, occupations = Occupation)
-            else:
-                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
-                        spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
-                        convergence = Ground_convergence, occupations = Occupation)
-            bulk_configuration.calc = calc
             if True in whichstrain:
-                if XC_calc == 'GLLBSC':
-                    parprint("Structure optimization LBFGS can not be used with GLLBSC xc.")
-                    parprint("Do structure optimization with PBE, then use its final CIF as input.")
+                if XC_calc in ['GLLBSC', 'GLLBSCM', 'HSE06', 'HSE03']:
+                    parprint("ERROR: Structure optimization LBFGS can not be used with "+XC_calc+" xc.")
+                    parprint("Do manual structure optimization, or do with PBE, then use its final CIF as input.")
                     parprint("Quiting...")
                     quit()
+            if XC_calc in ['HSE06', 'HSE03']:
+                parprint('Starting Hybrid XC calculations...')
+                if 'kpts_density' in globals():
+                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', parallel={'band': 1, 'kpt': 1},
+                            eigensolver=Davidson(niter=1), 
+                            spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                            convergence = Ground_convergence, occupations = Occupation)
+                else:
+                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', parallel={'band': 1, 'kpt': 1},
+                            eigensolver=Davidson(niter=1), 
+                            spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                            convergence = Ground_convergence, occupations = Occupation)
+            else:
+                parprint('Starting calculations with '+XC_calc+'...')
+                if 'kpts_density' in globals():
+                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
+                            spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                            convergence = Ground_convergence, occupations = Occupation)
+                else:
+                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
+                            spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                            convergence = Ground_convergence, occupations = Occupation)
+            bulk_configuration.calc = calc
+            if True in whichstrain:
                 uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
                 relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!

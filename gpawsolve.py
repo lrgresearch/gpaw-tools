@@ -213,10 +213,22 @@ try:
         drawfigs = True
     
     if args.version == True:
-        response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest")
-        parprint('gpawtools: This is the version '+str(__version__))
-        parprint('The latest stable release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
-        parprint('Download the latest stable release at: '+response.json()["tarball_url"])
+        import gpaw
+        import ase
+        try:
+            response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest", timeout=5)
+            parprint('-------------------------------------------------------------------------------------------------------')
+            parprint('gpaw-tools: This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', and ASE '+ase.__version__)
+            parprint('-------------------------------------------------------------------------------------------------------')
+            parprint('The latest STABLE release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
+            parprint('Download the latest STABLE tarball release at: '+response.json()["tarball_url"])
+            parprint('Download the latest STABLE zipball release at: '+response.json()["tarball_url"])
+            parprint('Download the latest DEV zipball release at: https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip')
+        except (requests.ConnectionError, requests.Timeout) as exception:
+            parprint('-------------------------------------------------------------------------------------------------------')
+            parprint('gpaw-tools: This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', ASE '+ase.__version__)
+            parprint('-------------------------------------------------------------------------------------------------------')
+            parprint('No internet connection available.')
         quit()
         
     if args.restart == True:

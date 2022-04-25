@@ -28,7 +28,7 @@ import spglib as spg
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
 from ase.parallel import paropen, world, parprint, broadcast
-from gpaw import GPAW, PW, FermiDirac
+from gpaw import GPAW, PW, Davidson, FermiDirac
 from ase.optimize.lbfgs import LBFGS
 from ase.io import read, write
 from ase.eos import calculate_eos

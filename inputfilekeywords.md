@@ -348,12 +348,15 @@ This keyword controls the which exchange-correlation functional is used in the c
 
 * LDA
 * PBE
-* GLLBSC
+* GLLBSC (-)
 * revPBE
 * RPBE
-* B3LYP
+* HSE03 (-)
+* HSE06 (-)
+* B3LYP (can be used only with PW-EXX)
 * PBE0  (can be used only with PW-EXX)
-* HSE06 (can be used only with PW-EXX)
+
+(-): whichstrain keyword must be [False, False, False, False, False, False]
 
 Because GPAW is using libxc, there are many exchange-correlation functionals available to use. However, the above functionals are used and tested successfully with gpaw-tools. Please try other possible functionals, make us know, send us input files.
 
@@ -388,13 +391,13 @@ Ground_convergence = {'energy': 0.005} # eV
 Python dictionary
 
 #### Description
-This keyword controls the convergence parameters for the ground-state calculations.
+This keyword controls the convergence parameters for the band calculations.
 
 #### Default
 {'bands':8} 
 
 #### Example
-Band_convergence = {'bands':8, 'density': 1.0e-3,} 
+Band_convergence = {'bands':8, 'eigenstates': 1.0e-8,} 
 
 ---
 ### Occupations

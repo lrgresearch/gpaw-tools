@@ -222,7 +222,7 @@ try:
             parprint('-------------------------------------------------------------------------------------------------------')
             parprint('The latest STABLE release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
             parprint('Download the latest STABLE tarball release at: '+response.json()["tarball_url"])
-            parprint('Download the latest STABLE zipball release at: '+response.json()["tarball_url"])
+            parprint('Download the latest STABLE zipball release at: '+response.json()["zipball_url"])
             parprint('Download the latest DEV zipball release at: https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip')
         except (requests.ConnectionError, requests.Timeout) as exception:
             parprint('-------------------------------------------------------------------------------------------------------')

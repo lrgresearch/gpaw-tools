@@ -367,7 +367,7 @@ LDA
 XC_calc = 'PBE'
 
 ---
-### Ground_convergencce
+### Ground_convergence
 #### Keyword type
 Python dictionary
 

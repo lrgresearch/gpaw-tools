@@ -16,6 +16,7 @@ Optical_calc = False     # Calculate the optical properties
 # -------------------------------------------------------------
 # ELECTRONIC
 fmaxval = 0.05 			#
+Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
 cut_off_energy = 340 	# eV
 #kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 kpts_x = 3			    # kpoints in x direction

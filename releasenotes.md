@@ -8,7 +8,9 @@ title: Release Notes
 
 ### Development version
 
-* -v argument now shows version information of gpaw-tools, and used GPAW, and ASE. It gives more choice for possible tarball and zipball packages. Also, it does not give an error in case of no internet connection available.
+*  New keyword `Fix_symmetry` for preserving the spacegroup symmetry during optimisation.
+* `gpawsolve.py` now prints previous and final spacegroup information and usable special points information for band structure calculations.
+* `-v` argument now shows version information of gpaw-tools, and used GPAW, and ASE. It gives more choice for possible tarball and zipball packages. Also, it does not give an error in case of no internet connection available.
 * 3 new keywords `Ground_convergence`, `Band_convergence` and `Occupation` are added to `gpawsolve.py`, `gg.py` and examples.
 * Fix `do_all_examples.sh` Bash script.
 * Optimization scripts do not need ASE object insertation. They can run with using CIF file as an argument.

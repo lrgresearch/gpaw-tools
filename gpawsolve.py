@@ -38,6 +38,7 @@ from ase.units import Bohr, GPa, kJ
 import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
 from ase.constraints import UnitCellFilter
+from ase.spacegroup.symmetrize import FixSymmetry
 from ase.io.cif import write_cif
 from pathlib import Path
 from gpaw.response.df import DielectricFunction
@@ -67,6 +68,7 @@ Optical_calc = False     # Calculate the optical properties
 # -------------------------------------------------------------
 # ELECTRONIC
 fmaxval = 0.05 			#
+Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
 cut_off_energy = 340 	# eV
 #kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 kpts_x = 5 			    # kpoints in x direction
@@ -305,6 +307,9 @@ if Optical_calc == False:
                             convergence = Ground_convergence, occupations = Occupation)
             else:
                 parprint('Starting calculations with '+XC_calc+'...')
+                # Fix the spacegroup in the geometric optimization if wanted
+                if Fix_symmetry == True:
+                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
                 if 'kpts_density' in globals():
                     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
                             spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
@@ -335,6 +340,9 @@ if Optical_calc == False:
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation with PBE...")
+            # Fix the spacegroup in the geometric optimization if wanted
+            if Fix_symmetry == True:
+                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': kpts_density, 'gamma': Gamma},
                         convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
@@ -372,6 +380,9 @@ if Optical_calc == False:
         if restart == False:
             # PW Ground State Calculations
             parprint("Starting PW only ground state calculation for GW calculation...")
+            # Fix the spacegroup in the geometric optimization if wanted
+            if Fix_symmetry == True:
+                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': kpts_density, 'gamma': Gamma},
                         convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
@@ -410,6 +421,9 @@ if Optical_calc == False:
     elif Mode == 'LCAO':
         if restart == False:
             parprint("Starting LCAO ground state calculation...")
+            # Fix the spacegroup in the geometric optimization if wanted
+            if Fix_symmetry == True:
+                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
                         convergence = Ground_convergence, occupations = Occupation, parallel={'domain': world.size})

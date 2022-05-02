@@ -27,6 +27,8 @@ import pickle
 import spglib as spg
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
+from ase.spacegroup import get_spacegroup
+from ase.dft.kpoints import get_special_points
 from ase.parallel import paropen, world, parprint, broadcast
 from gpaw import GPAW, PW, Davidson, FermiDirac
 from ase.optimize.lbfgs import LBFGS
@@ -249,6 +251,9 @@ else:
     struct = Path(inFile).stem
     bulk_configuration = read(inFile, index='-1')
     parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
+    #parprint("ASE Spacegroup of CIF file:",get_spacegroup(bulk_configuration))
+    parprint("Spacegroup of CIF file (SPGlib):",spg.get_spacegroup(bulk_configuration))
+    parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
 
 # Control if outdir is set or not
 if outdir is False:
@@ -343,6 +348,8 @@ if Optical_calc == False:
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             # Writes final configuration as CIF file
             write_cif(struct+'-Final.cif', bulk_configuration)
+            # Print final spacegroup information
+            parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
         else:
             parprint("Passing PW ground state calculation...")
 
@@ -380,6 +387,8 @@ if Optical_calc == False:
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             # Writes final configuration as CIF file
             write_cif(struct+'-Final.cif', bulk_configuration)
+            # Print final spacegroup information
+            parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
         else:
             parprint("Passing ground state calculation for GW calculation...")
 
@@ -414,6 +423,8 @@ if Optical_calc == False:
             calc.write(struct+'-1-Result-Ground.gpw', mode='all')
             # Writes final configuration as CIF file
             write_cif(struct+'-Final.cif', bulk_configuration)
+            # Print final spacegroup information
+            parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
         else:
             parprint("Passing LCAO ground state calculation...")
 

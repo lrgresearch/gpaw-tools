@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* Proper error handling for restart mode "file not found" error. 
 * New keyword `Fix_symmetry` added to `gpawsolve.py`, `gg.py` for preserving the spacegroup symmetry during optimisation.
 * Small changes in the `gg.py`
 * `gpawsolve.py` now prints previous and final spacegroup information and usable special points information for band structure calculations.

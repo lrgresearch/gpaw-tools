@@ -335,6 +335,10 @@ if Optical_calc == False:
             write_cif(struct+'-Final.cif', bulk_configuration)
         else:
             parprint("Passing PW ground state calculation...")
+            # Control the ground state GPW file
+            if not os.path.exists(struct+'-1-Result-Ground.gpw'):
+                parprint('ERROR:'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                quit()
 
     elif Mode == 'PW-EXX':
         if restart == False:
@@ -360,6 +364,10 @@ if Optical_calc == False:
             parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
         else:
             parprint("Passing PW ground state calculation...")
+            # Control the ground state GPW file
+            if not os.path.exists(struct+'-1-Result-Ground.gpw'):
+                parprint('ERROR:'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                quit()
 
         if XC_calc in ['HSE06', 'PBE0']:
             parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
@@ -402,6 +410,10 @@ if Optical_calc == False:
             parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
         else:
             parprint("Passing ground state calculation for GW calculation...")
+            # Control the ground state GPW file
+            if not os.path.exists(struct+'-1-Result-Ground.gpw'):
+                parprint('ERROR:'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                quit()
 
         # We start by setting up a G0W0 calculator object
         gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB), 
@@ -441,6 +453,10 @@ if Optical_calc == False:
             parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
         else:
             parprint("Passing LCAO ground state calculation...")
+            # Control the ground state GPW file
+            if not os.path.exists(struct+'-1-Result-Ground.gpw'):
+                parprint('ERROR:'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                quit()
 
     elif Mode == 'FD':
         parprint("FD mode is not implemented in gpaw-tools yet...")

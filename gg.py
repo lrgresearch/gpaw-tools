@@ -25,7 +25,7 @@ class gg:
 
     def __init__(self, master=None):
         global Elastic_calcvar, DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, GWppavar, GWq0correctionvar, GWnblockvar
-        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar
+        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar, Fix_symmetryvar
         global Struct, StructLoaded, GWbandinterpolationvar
         
         url = 'https://www.lrgresearch.org/gpaw-tools/'
@@ -148,6 +148,15 @@ class gg:
             else:
                 self.fmaxvalttk.delete('0', 'end')
                 self.fmaxvalttk.insert('0', '0.05')
+            
+            # Fix_symmetry    
+            if 'Fix_symmetry' in config.__dict__.keys():
+                if config.Fix_symmetry == True:
+                    Fix_symmetryvar.set(True)
+                else:
+                    Fix_symmetryvar.set(False)
+            else:
+                Fix_symmetryvar.set(False)
 
             # Cut-off energy
             if 'cut_off_energy' in config.__dict__.keys():
@@ -619,6 +628,8 @@ class gg:
                 # ---------Electronic------------
                 # fmaxval
                 print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
+                #Fix_symmetry
+                print("Fix_symmetry = "+ str(Fix_symmetryvar.get()), end="\n", file=f1)
                 # cut_off_energy
                 print("cut_off_energy = "+ str(self.cut_off_energyttk.get()), end="\n", file=f1)
                 # kpoints
@@ -882,6 +893,15 @@ class gg:
         self.fmaxvalttk.pack(side='top')
         self.frame7.configure(height='200', width='200')
         self.frame7.pack(side='top')
+        
+        # Fix symmetry during optimization?
+        self.frameFix_symmetry = ttk.Frame(self.labelframe2)
+        self.Fix_symmetryttk = ttk.Checkbutton(self.frameFix_symmetry)
+        Fix_symmetryvar = BooleanVar()
+        self.Fix_symmetryttk.configure(variable = Fix_symmetryvar, onvalue=True, offvalue=False, text='Fix Symmetry')
+        self.Fix_symmetryttk.pack(side='top')
+        self.frameFix_symmetry.configure(height='200', width='200')
+        self.frameFix_symmetry.pack(side='top')
 
         # Cut-off energy
         self.frame8 = ttk.Frame(self.labelframe2)
@@ -1477,7 +1497,7 @@ For licensing information, please refer to LICENSE file.'''
         self.frame24.configure(height='200', width='900')
         self.frame24.pack(side='top')
         self.notebookUpper.add(self.frame24, text='About')
-        self.notebookUpper.configure(height='500', width='900')
+        self.notebookUpper.configure(height='600', width='900')
         self.notebookUpper.pack(fill='x', side='top')
         
         # Message log
@@ -1490,10 +1510,10 @@ For licensing information, please refer to LICENSE file.'''
         self.notebookBottom.add(self.text1, text='Message Log')
         self.notebookBottom.configure(height='100', width='900')
         self.notebookBottom.pack(fill='x', side='top')
-        self.frame2.configure(height='600', width='900')
+        self.frame2.configure(height='800', width='900')
         self.frame2.pack(fill='both', side='top')
         self.gg_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
-        self.toplevel1.configure(height='600', width='900')
+        self.toplevel1.configure(height='800', width='900')
         self.toplevel1.iconphoto(True, self.gg_png)
         self.toplevel1.resizable(False, False)
         self.toplevel1.title('gpaw-tools GUI')

@@ -415,7 +415,7 @@ This keyword controls the convergence parameters for the band calculations.
 {'bands':8} 
 
 #### Example
-Band_convergence = {'bands':8, 'eigenstates': 1.0e-8,} 
+Band_convergence = {'bands':8, 'eigenstates': 1.0e-8} 
 
 ---
 ### Occupations

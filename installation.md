@@ -46,6 +46,9 @@ Then, install GPAW and Elastic packages
 
 Lastly, [download and install gpaw-tools](https://www.lrgresearch.org/gpaw-tools/installation/#4-installation-of-gpaw-tools).
 
+NOTE: Sometimes, after this step, `mpirun -np <core_number> command.py` runs `command.py` seperately in a number of `core_number` instances. If you observe this kind of execution, please deactivate `conda deactivate` then remove environment `conda remove --name gpaw-env --all` then create same environment again `conda create --name gpaw-env` then activate it `conda activate gpaw-env` and then install all files again `conda install -c conda-forge gpaw elastic requests`. Problem must be solved. If it is not solved, please open a [new issue](https://github.com/lrgresearch/gpaw-tools/issues/new/choose) about your problem.
+{: .text-red-200 }
+
 ## Manual installation
 
 1. Choosing and preparing your Linux System,

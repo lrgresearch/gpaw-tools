@@ -369,7 +369,7 @@ if Optical_calc == False:
                 parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
                 quit()
 
-        if XC_calc in ['HSE06', 'PBE0']:
+        if XC_calc in ['B3LYP', 'PBE0']:
             parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
             calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, txt=struct+'-1-Log-EXX_mode.txt')
             bulk_configuration.calc_exx = calc_exx

@@ -62,14 +62,16 @@ Change `<core_number>` with core numbers to use. For getting a maximum performan
 Usage:
 `$ mpirun -np <core_number> gpawsolve.py <args>`
 
-### Calculation selector
+### Calculation selector (Not complete, not up-to-date information)
 
-| Method | Strain_minimization | Different XCs | Spin polarized | DOS | DFT+U | Band | Electron Density | Optical |
-| ------ | ------------------- | ------------- | -------------- | --- | ----- | ---- | ---------------- | ------- |
-|   PW   | Yes                 | Yes           | Yes            | Yes | Yes   | Yes  | Yes              | Yes     |
-| PW-G0W0| Yes                 | Yes           | No             | No  | No    | Yes  | No               | No      |
-| PW-EXX*| Yes (with PBE)      | No            | No             | No  | No    | No   | No               | No      |
-|  LCAO  | No                  | No            | No             | Yes | Yes   | Yes  | Yes              | No      |
+ | Method | XCs                 | Structure optim. | Spin polarized | Ground | Elastic | DOS | DFT+U | Band | Electron Density | Optical |
+ | ------ | ------------------- | ---------------- | -------------- | ------ | ------- | --- | ----- | ---- | ---------------- | ------- |
+ |   PW   | Local and LibXC     | Yes              | Yes            | Yes    | Yes     | Yes | Yes   | Yes  | Yes              | Yes     |
+ |   PW   | GLLBSC / M          | No               | Yes            | Yes    | Yes     | Yes | No    | Yes  | Yes              | Yes     |
+ |   PW   | HSE03, HSE06        | No               | Yes            | Yes    | n/a     | Yes | No    | No   | No               | No      |
+ | PW-G0W0| Local and LibXC     | No               | No             | Yes    | No      | No  | No    | Some | No               | No      |
+ | PW-EXX*| B3LYP, PBE0         | Yes (with PBE)   | No             | Yes    | No      | No  | No    | No   | No               | No      |
+ |  LCAO  | Local and LibXC     | Yes              | Yes            | Yes    | Yes     | Yes | Yes   | Yes  | Yes              | No      |
 
 *: Just some ground state energy calculations for PBE0 and HSE06.
 

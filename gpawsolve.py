@@ -296,12 +296,12 @@ if Optical_calc == False:
             if XC_calc in ['HSE06', 'HSE03']:
                 parprint('Starting Hybrid XC calculations...')
                 if 'kpts_density' in globals():
-                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', parallel={'band': 1, 'kpt': 1},
+                    calc = GPAW(mode=PW(cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
                             eigensolver=Davidson(niter=1), 
                             spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
                 else:
-                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', parallel={'band': 1, 'kpt': 1},
+                    calc = GPAW(mode=PW(cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
                             eigensolver=Davidson(niter=1), 
                             spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
@@ -658,12 +658,20 @@ if Optical_calc == False:
                 print ('Fermi Level: ', ef, end="\n", file=f)
 
         else:
-            calc = GPAW(struct+'-1-Result-Ground.gpw',
-                    txt=struct+'-3-Log-Band.txt',
-                    fixdensity=True,
-                    symmetry='off', occupations = Occupation,
-                    kpts={'path': band_path, 'npoints': band_npoints},
-                    convergence=Band_convergence)
+            if XC_calc in ['HSE06', 'HSE03']:
+                calc = GPAW(struct+'-1-Result-Ground.gpw', xc={'name': XC_calc, 'backend': 'pw'},
+                        parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), 
+                        txt=struct+'-3-Log-Band.txt',
+                        fixdensity=True, symmetry='off', occupations = Occupation,
+                        kpts={'path': band_path, 'npoints': band_npoints}, convergence=Band_convergence)
+                
+            else:
+                calc = GPAW(struct+'-1-Result-Ground.gpw',
+                        txt=struct+'-3-Log-Band.txt',
+                        fixdensity=True,
+                        symmetry='off', occupations = Occupation,
+                        kpts={'path': band_path, 'npoints': band_npoints},
+                        convergence=Band_convergence)
 
             calc.get_potential_energy()
             bs = calc.band_structure()

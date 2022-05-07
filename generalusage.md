@@ -16,12 +16,14 @@ gpaw-tools/
 │   ├── ciftoase.py
 │   ├── optimize_cutoff.py
 │   ├── optimize_kpoints.py
+│   ├── optimize_kptsdensity.py
 │   └── optimize_latticeparam.py
 ├── quick_optimization/
 |   └── quickoptimize.py
 ├── gui_files/
 └── gpawsolve.py
 └── gg.py
+└── shrinkgpw.py
 ```
 
 ## gpawsolve.py

@@ -222,7 +222,7 @@ try:
         try:
             response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest", timeout=5)
             parprint('-------------------------------------------------------------------------------------------------------')
-            parprint('gpaw-tools: This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', and ASE '+ase.__version__)
+            parprint('\033[95mgpaw-tools:\033[0m This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', and ASE '+ase.__version__)
             parprint('-------------------------------------------------------------------------------------------------------')
             parprint('The latest STABLE release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
             parprint('Download the latest STABLE tarball release at: '+response.json()["tarball_url"])
@@ -278,7 +278,7 @@ if Optical_calc == False:
 
     if Mode == 'PW':
         if XC_calc in ['B3LYP', 'PBE0']:
-            parprint('ERROR: '+XC_calc+' can be used only in PW-EXX mode...')
+            parprint('\033[91mERROR:\033[0m'+XC_calc+' can be used only in PW-EXX mode...')
             quit()
         if Spin_calc == True:
            numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
@@ -289,7 +289,7 @@ if Optical_calc == False:
             parprint("Starting PW ground state calculation...")
             if True in whichstrain:
                 if XC_calc in ['GLLBSC', 'GLLBSCM', 'HSE06', 'HSE03']:
-                    parprint("ERROR: Structure optimization LBFGS can not be used with "+XC_calc+" xc.")
+                    parprint("\033[91mERROR:\033[0m Structure optimization LBFGS can not be used with "+XC_calc+" xc.")
                     parprint("Do manual structure optimization, or do with PBE, then use its final CIF as input.")
                     parprint("Quiting...")
                     quit()
@@ -337,7 +337,7 @@ if Optical_calc == False:
             parprint("Passing PW ground state calculation...")
             # Control the ground state GPW file
             if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                parprint('ERROR:'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
                 quit()
 
     elif Mode == 'PW-EXX':
@@ -366,7 +366,7 @@ if Optical_calc == False:
             parprint("Passing PW ground state calculation...")
             # Control the ground state GPW file
             if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                parprint('ERROR:'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
                 quit()
 
         if XC_calc in ['HSE06', 'PBE0']:
@@ -381,7 +381,7 @@ if Optical_calc == False:
                 else:
                     print('EXX Energy: ',calc_exx.get_exx_energy() , file=fd)
                     print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
-            parprint('ATTENTION:EXX mode results are only listed at: '+struct+'-1-Result-Ground-EXX_mode.txt')
+            parprint('\033[94mINFORMATION:\033[0mEXX mode results are only listed at: '+struct+'-1-Result-Ground-EXX_mode.txt')
             parprint('          Other files (DOS, band, etc...) are the results calculated with PBE.')
 
     elif Mode == 'PW-GW':
@@ -412,7 +412,7 @@ if Optical_calc == False:
             parprint("Passing ground state calculation for GW calculation...")
             # Control the ground state GPW file
             if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                parprint('ERROR:'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
                 quit()
 
         # We start by setting up a G0W0 calculator object
@@ -455,21 +455,21 @@ if Optical_calc == False:
             parprint("Passing LCAO ground state calculation...")
             # Control the ground state GPW file
             if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                parprint('ERROR:'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
                 quit()
 
     elif Mode == 'FD':
-        parprint("FD mode is not implemented in gpaw-tools yet...")
+        parprint("\033[91mERROR:\033[0mFD mode is not implemented in gpaw-tools yet...")
         quit()
     else:
-        parprint("Please enter correct mode information.")
+        parprint("\033[91mERROR:\033[0mPlease enter correct mode information.")
         quit()
 
     # -------------------------------------------------------------
     # Step 1.5 - ELASTIC CALCULATION
     # -------------------------------------------------------------
     if Elastic_calc == True:
-        parprint('Starting elastic tensor calculations (NOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
+        parprint('Starting elastic tensor calculations (\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
         calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-1.5-Log-Elastic.txt')
         # Getting space group from SPGlib
         parprint('Spacegroup:',spg.get_spacegroup(bulk_configuration))
@@ -731,7 +731,7 @@ if Optical_calc == True:
                     occupations=FermiDirac(optFDsmear))
         except FileNotFoundError as err:
             # output error, and return with an error code
-            parprint('ERROR: Optical computations must be done separately. Please do ground calculations first.')
+            parprint('\033[91mERROR:\033[0mOptical computations must be done separately. Please do ground calculations first.')
             quit()
     
         calc.get_potential_energy()
@@ -742,7 +742,7 @@ if Optical_calc == True:
         #from mpi4py import MPI
         if opttype == 'BSE':
             if Spin_calc == True:
-               parprint('ERROR: BSE calculations can not run with spin dependent data.')
+               parprint('\033[91mERROR:\033[0mBSE calculations can not run with spin dependent data.')
                quit()
             parprint('Starting BSE calculations')
             bse = BSE(calc= struct+'-5-Result-Optical.gpw', ecut=optecut,
@@ -972,13 +972,13 @@ if Optical_calc == True:
                 print (end="\n", file=f1)
             
         else:
-            parprint('Unknown optical calculation type.')
+            parprint('\033[91mERROR:\033[0mUnknown optical calculation type.')
             quit()
 
     elif Mode == 'LCAO':
-        parprint('Not implemented in LCAO mode yet.')
+        parprint('\033[91mERROR:\033[0mNot implemented in LCAO mode yet.')
     else:
-        parprint('Not implemented in FD mode yet.')
+        parprint('\033[91mERROR:\033[0mNot implemented in FD mode yet.')
 
 # -------------------------------------------------------------
 # Step Last - DRAWING BAND STRUCTURE AND DOS

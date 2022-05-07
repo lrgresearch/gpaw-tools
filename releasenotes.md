@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* Colorize errors, warnings and information output with ANSI codes.
 * Proper error handling for restart mode "file not found" error. 
 * New keyword `Fix_symmetry` added to `gpawsolve.py`, `gg.py` for preserving the spacegroup symmetry during optimisation.
 * Small changes in the `gg.py`

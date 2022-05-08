@@ -8,6 +8,8 @@ title: Release Notes
 
 ### Development version
 
+* Successful HSE03, HSE06 calculations for ground state, DOS and band structure.
+* New example for HSE06 calculations: `Si-with-HSE`.
 * Colorize errors, warnings and information output with ANSI codes.
 * Proper error handling for restart mode "file not found" error. 
 * New keyword `Fix_symmetry` added to `gpawsolve.py`, `gg.py` for preserving the spacegroup symmetry during optimisation.

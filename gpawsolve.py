@@ -661,10 +661,10 @@ if Optical_calc == False:
 
         else:
             if XC_calc in ['HSE06', 'HSE03']:
-                calc = GPAW(struct+'-1-Result-Ground.gpw', xc={'name': XC_calc, 'backend': 'pw'},
-                        parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), 
+                calc = GPAW(struct+'-1-Result-Ground.gpw',
+                        parallel={'band': 1, 'kpt': 1}, 
                         txt=struct+'-3-Log-Band.txt',
-                        fixdensity=True, symmetry='off', occupations = Occupation,
+                        symmetry='off', occupations = Occupation,
                         kpts={'path': band_path, 'npoints': band_npoints}, convergence=Band_convergence)
                 
             else:

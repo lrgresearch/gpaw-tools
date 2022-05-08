@@ -19,7 +19,7 @@ Description = f'''
  | PW-G0W0| Local and LibXC     | No               | No             | Yes    | No      | No  | No    | Some | No               | No      |
  | PW-EXX*| B3LYP, PBE0         | Yes (with PBE)   | No             | Yes    | No      | No  | No    | No   | No               | No      |
  |  LCAO  | Local and LibXC     | Yes              | Yes            | Yes    | Yes     | Yes | Yes   | Yes  | Yes              | No      |
- *: Just some ground state energy calculations for PBE0 and HSE06.
+ *: Just some ground state energy calculations.
 '''
 
 import getopt, sys, os

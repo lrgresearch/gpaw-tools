@@ -8,6 +8,10 @@ title: Release Notes
 
 ### Development version
 
+* n/a
+
+### Version 22.5.0
+
 * Successful HSE03, HSE06 calculations for ground state, DOS and band structure.
 * New example for HSE06 calculations: `Si-with-HSE`.
 * Colorize errors, warnings and information output with ANSI codes.

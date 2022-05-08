@@ -160,7 +160,7 @@ bulk_configuration = Atoms(
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
 # Version
-__version__ = "v22.4.1b1"
+__version__ = "v22.5.0"
 
 # To print Description variable with argparse
 class RawFormatter(HelpFormatter):

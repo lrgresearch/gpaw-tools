@@ -14,6 +14,7 @@ title: Release Notes
 * Proper error handling for restart mode "file not found" error. 
 * New keyword `Fix_symmetry` added to `gpawsolve.py`, `gg.py` for preserving the spacegroup symmetry during optimisation.
 * Small changes in the `gg.py`
+* No need to import ASE object inside optimization scripts. Optimizations are working with CIF files only.
 * `gpawsolve.py` now prints previous and final spacegroup information and usable special points information for band structure calculations.
 * `-v` argument now shows version information of gpaw-tools, and used GPAW, and ASE. It gives more choice for possible tarball and zipball packages. Also, it does not give an error in case of no internet connection available.
 * 3 new keywords `Ground_convergence`, `Band_convergence` and `Occupation` are added to `gpawsolve.py`, `gg.py` and examples.

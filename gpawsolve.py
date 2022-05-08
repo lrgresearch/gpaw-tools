@@ -29,7 +29,6 @@ import pickle
 import spglib as spg
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
-from ase.spacegroup import get_spacegroup
 from ase.dft.kpoints import get_special_points
 from ase.parallel import paropen, world, parprint, broadcast
 from gpaw import GPAW, PW, Davidson, FermiDirac
@@ -255,7 +254,6 @@ else:
     struct = Path(inFile).stem
     bulk_configuration = read(inFile, index='-1')
     parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
-    #parprint("ASE Spacegroup of CIF file:",get_spacegroup(bulk_configuration))
     parprint("Spacegroup of CIF file (SPGlib):",spg.get_spacegroup(bulk_configuration))
     parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
 

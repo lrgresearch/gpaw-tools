@@ -65,7 +65,7 @@ Windows Subsystem for Linux on Windows, Virtual machine or a Linux machine?
 You can use *gpaw-tools* on many different systems that are supporting required libraries. In this installation notes, we are using Linux systems. We would like to give some information on installation on Linux on Windows machines, virtual machines or a pure Linux machine. You can also use a Mac system, however because we do not have a Mac system to control it we couldn't give the installation notes for a Mac system. Please do not hesitate to send us if you have installation notes for a Mac system.
 
  * [Installation on a Windows 10 system](installation.md#installation-on-a-windows-10-system-with-wsl1)
- * [Installation on a Windows 11 system](installation.md#installation-on-a-windows-11-system-with-wslg)
+ * [Installation on a Windows 11 system](https://www.lrgresearch.org/gpaw-tools/installation/#installation-on-a-windows-11-system-with-wsl2-and-wslg)
  * [Installation on an independent Linux system](installation.md#installation-on-an-independent-linux-system)
  * [Installation on a Virtual Machine Linux system](installation.md#installation-on-a-virtual-machine-linux-system)
 

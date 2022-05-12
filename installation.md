@@ -111,8 +111,8 @@ and add these lines at the end of the file
 
 After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command).
 
-##### Installation on a Windows 11 system (with WSLg)
-This installation note is explaining how to install WSLg and other required tools to study gpaw-tools on a Windows 11 system. WSLg is coming on default at Windows 11.
+##### Installation on a Windows 11 system (with WSL2 and WSLg)
+This installation note is explaining how to install WSLg and other required tools to study gpaw-tools on a Windows 11 system. WSL2 is coming on default at Windows 11. With WSLg you will not need to install xming to your windows system and Ubuntu packages libglu1-mesa-dev freeglut3 freeglut3-dev mesa-common-dev to your system.
 We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
 
 Open Ubuntu, finish the installation of it, then update your Linux system with:
@@ -121,6 +121,19 @@ Open Ubuntu, finish the installation of it, then update your Linux system with:
     sudo apt upgrade
     
 You do not need to install X server on your Windows to use with WSLg. 
+
+##### WSL2 memory problem
+By default the WSL2 will consume up to 50% of the total system memory upto 8GB at max. However, it is possible to configure an upper limit for the memory and swap usage. Firstly, you must create a .wslconfig file in your Windows related home directory (C:\Users\<user>\.wslconfig). And for 14GB RAM and 32 GB Swap, add following information to that file:
+
+    [wsl2]
+    memory=14GB
+    swap=32GB
+
+Then, open powershell or terminal and run:
+
+    wsl --shutdown
+
+Then, you can continue with new RAM-Swap settings.
 
 #### Running on Linux machines
 Instead of using a Windows system as a host, you can use Linux system to do your calculations. It is rather simple and it will give you more performance.
@@ -231,3 +244,4 @@ Add the following line at the end of your ``~/.bashrc`` file.
 After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command). 
 
 Congratulations! You installed all necessary files to run *gpaw-tools*. You can continue with our [usage](generalusage.md) page, or continue with the `examples` folder in your `gpaw-tools-main` folder. All examples have README.md files.
+

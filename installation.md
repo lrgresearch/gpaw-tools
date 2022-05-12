@@ -203,15 +203,13 @@ Then you can use files in https://github.com/lrgresearch/gpaw-tools/tree/main/Qu
 
 ### 4. Installation of gpaw-tools
 
-Before, starting to installation of `gpaw-tools`, we need to install `spglib` 
+Before, starting to installation of `gpaw-tools`, we need to install `spglib` and `elastic` packages and their dependencies. If you used conda to install previous packages, you do not need to run the following command.
 
-    pip3 install spglib
+    pip3 install spglib setuptools_scm docutils elastic
 
-and some packages to run elastic package, which is needed to run gpaw-tools: 
+Also, lastly, it is good to use a job queue system when you have many inputs to run. GPAW / gpaw-tools can be run with task managers like SLURM. However, if you use your GPAW / gpaw-tools system on your local server/workstation, using Task Spooler is a good idea. It only works on one server for one user. It makes a queue, and run your commands in order. To install tsp command to your Ubuntu system, use:
 
-    pip3 install setuptools_scm
-    pip3 install docutils
-    pip3 install elastic
+    sudo apt install task-spooler
 
 Now, all needed packages are installed and we can continue with installation of `gpaw-tools`. In your home folder (~), let's download the latest development release (you can prefer stable release also, please visit https://www.lrgresearch.org/gpaw-tools/ to get the latest URL)
 

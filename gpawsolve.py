@@ -22,7 +22,7 @@ Description = f'''
  *: Just some ground state energy calculations.
 '''
 
-import getopt, sys, os
+import getopt, sys, os, time
 import textwrap
 import requests
 import pickle
@@ -162,6 +162,8 @@ bulk_configuration = Atoms(
 # Version
 __version__ = "v22.5.1b1"
 
+# Start time
+time0 = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
 # To print Description variable with argparse
 class RawFormatter(HelpFormatter):
     def _fill_text(self, text, width, indent):
@@ -275,7 +277,6 @@ if Optical_calc == False:
     # -------------------------------------------------------------
     # Step 1 - GROUND STATE
     # -------------------------------------------------------------
-
     if Mode == 'PW':
         if XC_calc in ['B3LYP', 'PBE0']:
             parprint('\033[91mERROR:\033[0m'+XC_calc+' can be used only in PW-EXX mode...')
@@ -285,6 +286,8 @@ if Optical_calc == False:
            bulk_configuration.set_initial_magnetic_moments(numm)
         
         if restart == False:
+            # Start ground state
+            time11 = time.time()
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation...")
             if True in whichstrain:
@@ -464,11 +467,14 @@ if Optical_calc == False:
     else:
         parprint("\033[91mERROR:\033[0mPlease enter correct mode information.")
         quit()
-
+    # Finish ground state
+    time12 = time.time()
     # -------------------------------------------------------------
     # Step 1.5 - ELASTIC CALCULATION
     # -------------------------------------------------------------
     if Elastic_calc == True:
+        # Start elastic calc
+        time151 = time.time()
         parprint('Starting elastic tensor calculations (\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
         calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-1.5-Log-Elastic.txt')
         # Getting space group from SPGlib
@@ -492,10 +498,14 @@ if Optical_calc == False:
             print("e (eV): "+str(e), file=fd)
             print("v (Ang^3): "+str(v), file=fd)
             print("Cij (GPa): ",Cij/GPa, file=fd)
+        # Finish elastic calc
+        time152 = time.time()
     # -------------------------------------------------------------
     # Step 2 - DOS CALCULATION
     # -------------------------------------------------------------
     if DOS_calc == True:
+        # Start DOS calc
+        time21 = time.time()
         parprint("Starting DOS calculation...")
         calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-2-Log-DOS.txt',
                 convergence = Ground_convergence, occupations = Occupation)
@@ -633,10 +643,14 @@ if Optical_calc == False:
                     for x in zip(en-ef, pdoss, pdosp, pdospx, pdospy, pdospz, pdosd, pdosdxy, pdosdyz, pdosd3z2_r2, pdosdzx, pdosdx2_y2, pdosf):
                         print(*x, sep=", ", file=fd)
                 print("---------------------------------------------------- --------------------", file=fd)
+        # Finish DOS calc
+        time22 = time.time()
     # -------------------------------------------------------------
     # Step 3 - BAND STRUCTURE CALCULATION
     # -------------------------------------------------------------
     if Band_calc == True:
+        # Start Band calc
+        time31 = time.time()
         parprint("Starting band structure calculation...")
         if Mode == 'PW-GW':      
             GW = GWBands(calc=struct+'-1-Result-Ground.gpw', fixdensity=True,
@@ -709,11 +723,14 @@ if Optical_calc == False:
                         for k in range(band_npoints):
                             print(k, eps_skn[0, k, n], end="\n", file=f)
                         print (end="\n", file=f)
-
+        # Finish Band calc
+        time32 = time.time()
     # -------------------------------------------------------------
     # Step 4 - ALL-ELECTRON DENSITY
     # -------------------------------------------------------------
     if Density_calc == True:
+        #Start Density calc
+        time41 = time.time()
         parprint("Starting All-electron density calculation...")
         calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-4-Log-ElectronDensity.txt')
         bulk_configuration.calc = calc
@@ -723,11 +740,15 @@ if Optical_calc == False:
         # Writing pseudo and all electron densities to cube file with Bohr unit
         write(struct+'-4-Result-All-electron_nall.cube', bulk_configuration, data=n * Bohr**3)
         write(struct+'-4-Result-All-electron_npseudo.cube', bulk_configuration, data=np * Bohr**3)
+        # Finish Density calc
+        time42 = time.time()
 
 # -------------------------------------------------------------
 # Step 5 - OPTICAL CALCULATION
 # -------------------------------------------------------------
 if Optical_calc == True:
+    #Start Optical calc
+    time51 = time.time()
     if Mode == 'PW':
         parprint("Starting optical calculation...")
         try:
@@ -987,6 +1008,29 @@ if Optical_calc == True:
         parprint('\033[91mERROR:\033[0mNot implemented in LCAO mode yet.')
     else:
         parprint('\033[91mERROR:\033[0mNot implemented in FD mode yet.')
+    # Finish Optical calc
+    time52 = time.time()
+
+# -------------------------------------------------------------
+# Step 6 - TIME
+# -------------------------------------------------------------
+
+with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+    print("gpawsolve.py execution timings (seconds):", end="\n", file=f1)
+    print("Execution started:", time0, end="\n", file=f1)
+    if 'time11' in globals():
+        print('Ground state: ', round((time12-time11),2), end="\n", file=f1)
+    if Elastic_calc == True:
+        print('Elastic calculation: ', round((time152-time151),2), end="\n", file=f1)
+    if DOS_calc == True:
+        print('Elastic calculation: ', round((time22-time21),2), end="\n", file=f1)
+    if Band_calc == True:
+        print('Band calculation: ', round((time32-time31),2), end="\n", file=f1)
+    if Density_calc == True:
+        print('Density calculation: ', round((time42-time41),2), end="\n", file=f1)
+    if Optical_calc == True:
+        print('Optical calculation: ', round((time52-time51),2), end="\n", file=f1)
+    print("---------------------------------", end="\n", file=f1)
 
 # -------------------------------------------------------------
 # Step Last - DRAWING BAND STRUCTURE AND DOS
@@ -1056,4 +1100,3 @@ else:
                 #plt.show()
             else:
                 bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=energy_max)
-                

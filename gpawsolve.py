@@ -11,14 +11,14 @@ Description = f'''
  -------------------------------------------------------------
  Calculation selector
  -------------------------------------------------------------
- | Method | XCs                 | Structure optim. | Spin polarized | Ground | Elastic | DOS | DFT+U | Band | Electron Density | Optical |
- | ------ | ------------------- | ---------------- | -------------- | ------ | ------- | --- | ----- | ---- | ---------------- | ------- |
- |   PW   | Local and LibXC     | Yes              | Yes            | Yes    | Yes     | Yes | Yes   | Yes  | Yes              | Yes     |
- |   PW   | GLLBSC / M          | No               | Yes            | Yes    | Yes     | Yes | No    | Yes  | Yes              | Yes     |
- |   PW   | HSE03, HSE06        | No               | Yes            | Yes    | n/a     | Yes | No    | No   | No               | No      |
- | PW-G0W0| Local and LibXC     | No               | No             | Yes    | No      | No  | No    | Some | No               | No      |
- | PW-EXX*| B3LYP, PBE0         | Yes (with PBE)   | No             | Yes    | No      | No  | No    | No   | No               | No      |
- |  LCAO  | Local and LibXC     | Yes              | Yes            | Yes    | Yes     | Yes | Yes   | Yes  | Yes              | No      |
+ | Method | XCs             | Structure optim. | Spin | Ground | Elastic | DOS | DFT+U | Band | Density | Optical |
+ | ------ | --------------- | ---------------- | ---- | ------ | ------- | --- | ----- | ---- | ------- | ------- |
+ |   PW   | Local and LibXC | Yes              | Yes  | Yes    | Yes     | Yes | Yes   | Yes  | Yes     | Yes     |
+ |   PW   | GLLBSC / M      | No               | Yes  | Yes    | Yes     | Yes | No    | Yes  | Yes     | Yes     |
+ |   PW   | HSE03, HSE06    | No               | Yes  | Yes    | n/a     | Yes | No    | No   | No      | No      |
+ | PW-G0W0| Local and LibXC | No               | No   | Yes    | No      | No  | No    | Some | No      | No      |
+ | PW-EXX*| B3LYP, PBE0     | Yes (with PBE)   | No   | Yes    | No      | No  | No    | No   | No      | No      |
+ |  LCAO  | Local and LibXC | Yes              | Yes  | Yes    | Yes     | Yes | Yes   | Yes  | Yes     | No      |
  *: Just some ground state energy calculations.
 '''
 

@@ -24,7 +24,7 @@ There are two-possible installation methods:
 
 ## Conda installation
 
-The best and the easiest way to install ASE/GPAW/Elastic system with gpaw-tools is a conda installation. Download and install the miniconda. You can say ‘yes’ or ‘no’ to initialization after installing it:
+The best and the easiest way to install ASE/GPAW/Elastic system with gpaw-tools is a conda installation. **However, GPAW can run nearly 20 times slower with conda installation. Please keep this in mind.** Download and install the miniconda. You can say ‘yes’ or ‘no’ to initialization after installing it:
 
     $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
     $ chmod +x Miniconda3-latest-Linux-x86_64.sh
@@ -123,7 +123,7 @@ Open Ubuntu, finish the installation of it, then update your Linux system with:
 You do not need to install X server on your Windows to use with WSLg. 
 
 ##### WSL2 memory problem
-By default the WSL2 will consume up to 50% of the total system memory upto 8GB at max. However, it is possible to configure an upper limit for the memory and swap usage. Firstly, you must create a .wslconfig file in your Windows related home directory (C:\Users\<user>\.wslconfig). And for 14GB RAM and 32 GB Swap, add following information to that file:
+By default the WSL2 will consume up to 50% of the total system memory upto 8GB at max. However, it is possible to configure an upper limit for the memory and swap usage. Firstly, you must create a .wslconfig file in your Windows related home directory (C:\Users\<user>). And for 14GB RAM and 32 GB Swap, add following information to that file:
 
     [wsl2]
     memory=14GB

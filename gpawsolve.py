@@ -1023,7 +1023,7 @@ with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
     if Elastic_calc == True:
         print('Elastic calculation: ', round((time152-time151),2), end="\n", file=f1)
     if DOS_calc == True:
-        print('Elastic calculation: ', round((time22-time21),2), end="\n", file=f1)
+        print('DOS calculation: ', round((time22-time21),2), end="\n", file=f1)
     if Band_calc == True:
         print('Band calculation: ', round((time32-time31),2), end="\n", file=f1)
     if Density_calc == True:

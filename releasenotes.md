@@ -8,7 +8,11 @@ title: Release Notes
 
 ### Development version
 
-* n/a
+* Fix LCAO spinpol calculation (Thanks to Toma Susi).
+* Include new keyword `Mixer_type`.
+* Fix help description text width problem.
+* Execution timing data of all calculations are saved to `FILENAME-6-Result-Log-Timings.txt` file.
+* Instead of direct execution, all tasks are added to task-spooler queue in `do_all_examples.sh`script.
 
 ### Version 22.5.0
 

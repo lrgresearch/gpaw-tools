@@ -31,7 +31,7 @@ from argparse import ArgumentParser, HelpFormatter
 from ase import *
 from ase.dft.kpoints import get_special_points
 from ase.parallel import paropen, world, parprint, broadcast
-from gpaw import GPAW, PW, Davidson, FermiDirac
+from gpaw import GPAW, PW, Davidson, FermiDirac, MixerSum, MixerDif, Mixer
 from ase.optimize.lbfgs import LBFGS
 from ase.io import read, write
 from ase.eos import calculate_eos
@@ -94,6 +94,7 @@ XC_calc = 'LDA'
 Ground_convergence = {}   # Convergence items for ground state calculations
 Band_convergence = {'bands':8}   # Convergence items for band calculations
 Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
+Mixer_type = MixerSum(0.05, 5, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)
 
 DOS_npoints = 501        # Number of points
 DOS_width = 0.1          # Width of Gaussian smearing. Use 0.0 for linear tetrahedron interpolation
@@ -300,12 +301,12 @@ if Optical_calc == False:
                 parprint('Starting Hybrid XC calculations...')
                 if 'kpts_density' in globals():
                     calc = GPAW(mode=PW(cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
-                            eigensolver=Davidson(niter=1), 
+                            eigensolver=Davidson(niter=1), mixer=Mixer_type,
                             spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
                 else:
                     calc = GPAW(mode=PW(cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
-                            eigensolver=Davidson(niter=1), 
+                            eigensolver=Davidson(niter=1), mixer=Mixer_type,
                             spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
             else:
@@ -315,11 +316,13 @@ if Optical_calc == False:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
                 if 'kpts_density' in globals():
                     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
-                            spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                            spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, 
+                            mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
                 else:
                     calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
-                            spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                            spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, 
+                            mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
             bulk_configuration.calc = calc
             if True in whichstrain:
@@ -352,10 +355,10 @@ if Optical_calc == False:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
+                        convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             else:
                 calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
+                        convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
@@ -396,10 +399,12 @@ if Optical_calc == False:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
+                        convergence = Ground_convergence, 
+                        mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             else:
                 calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, 
-                        convergence = Ground_convergence, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
+                        convergence = Ground_convergence, 
+                        mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
             relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
@@ -441,10 +446,12 @@ if Optical_calc == False:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupation, parallel={'domain': world.size})
+                        convergence = Ground_convergence,
+                        mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             else:
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence, occupations = Occupation, parallel={'domain': world.size})
+                        convergence = Ground_convergence,
+                        mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             bulk_configuration.calc = calc
             relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider much tighter fmax!

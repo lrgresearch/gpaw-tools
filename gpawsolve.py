@@ -439,6 +439,9 @@ if Optical_calc == False:
                     print(*x, sep=", ", file=fd)
 
     elif Mode == 'LCAO':
+        if Spin_calc == True:
+           numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
+           bulk_configuration.set_initial_magnetic_moments(numm)
         if restart == False:
             parprint("Starting LCAO ground state calculation...")
             # Fix the spacegroup in the geometric optimization if wanted
@@ -446,11 +449,11 @@ if Optical_calc == False:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence,
+                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc,
                         mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             else:
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence,
+                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc,
                         mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             bulk_configuration.calc = calc
             relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')

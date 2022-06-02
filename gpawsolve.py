@@ -94,7 +94,7 @@ XC_calc = 'LDA'
 Ground_convergence = {}   # Convergence items for ground state calculations
 Band_convergence = {'bands':8}   # Convergence items for band calculations
 Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
-Mixer_type = MixerSum(0.05, 5, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)
+Mixer_type = MixerSum(0.1, 3, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)
 
 DOS_npoints = 501        # Number of points
 DOS_width = 0.1          # Width of Gaussian smearing. Use 0.0 for linear tetrahedron interpolation

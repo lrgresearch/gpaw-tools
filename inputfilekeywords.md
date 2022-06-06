@@ -6,7 +6,7 @@ title: Input File Keywords
 
 # Input File Keywords
 
-[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [whichstrain](inputfilekeywords.md#whichstrain), [MPIcores](inputfilekeywords.md#mpicores)
+[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [whichstrain](inputfilekeywords.md#whichstrain), [MPIcores](inputfilekeywords.md#mpicores)
 
 [**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
 
@@ -31,13 +31,51 @@ This keyword controls the running mode of the GPAW. Available options are:
 * PW-GW
 * EXX
 * LCAO
-* FD.
+* FD
 
 #### Default
 PW
 
 #### Example
 Mode = 'PW'
+
+---
+
+### Geo_optim
+#### Keyword type
+Logical
+
+#### Description
+This keyword controls the execution of geometric optimization. Available options are:
+
+* True
+* False
+
+User can implement a filter for optimization of supercell and atoms with keyword `whichstrain`. More information about [whichstrain](inputfilekeywords.md#whichstrain).
+
+#### Default
+False
+
+#### Example
+Geo_optim = True
+
+---
+
+### Elastic_calc
+#### Keyword type
+Logical
+
+#### Description
+This keyword controls the performing of Elastic calculations or not. Available options are:
+
+* True
+* False
+
+#### Default
+False
+
+#### Example
+Elastic_calc = True
 
 ---
 
@@ -126,11 +164,13 @@ This keyword controls the hich components of strain will be relaxed. There are s
 And these six independent components are in order:
 
 * EpsilonX
-* EpsilonY, 
+* EpsilonY
 * EpsilonZ
 * ShearYZ
 * ShearXZ
 * ShearXY
+
+**IMPORTANT**: This keyword is only working when `Geo_optim = True` and under PW mode. This feature is not implemented in LCAO mode.
 
 
 #### Default

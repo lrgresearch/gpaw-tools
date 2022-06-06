@@ -8,6 +8,9 @@ title: Release Notes
 
 ### Development version
 
+* `Geo_optim` keyword for better optimization usage with filters (whichstrain).
+* Examples are simplified. Most of the unnecessary keywords are removed.
+* Proper logging for LCAO ground state calculations
 * Fix LCAO spinpol calculation (Thanks to Toma Susi).
 * Include new keyword `Mixer_type`.
 * Fix help description text width problem.

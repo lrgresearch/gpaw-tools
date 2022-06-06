@@ -38,7 +38,7 @@ from ase.eos import calculate_eos
 from ase.units import Bohr, GPa, kJ
 import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
-from ase.constraints import UnitCellFilter
+from ase.constraints import ExpCellFilter
 from ase.spacegroup.symmetrize import FixSymmetry
 from ase.io.cif import write_cif
 from pathlib import Path
@@ -58,6 +58,7 @@ from elastic import get_elastic_tensor, get_elementary_deformations
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
+Geo_optim = False       # Geometric optimization with LFBGS
 Elastic_calc = False    # Elastic calculation
 DOS_calc = False         # DOS calculation
 Band_calc = False        # Band structure calculation
@@ -80,16 +81,8 @@ band_path = 'LGL'	    # Brillouin zone high symmetry points
 band_npoints = 60		# Number of points between high symmetry points
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Hubbard = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
-#Exchange-Correlation, choose one:
-XC_calc = 'LDA'
-#XC_calc = 'PBE'
-#XC_calc = 'GLLBSC'
-#XC_calc = 'revPBE'
-#XC_calc = 'RPBE'
-#XC_calc = 'B3LYP'
-#Choose one for PW-EXX (Ground state calculations will be done with PBE):
-#XC_calc = 'PBE0'
-#XC_calc = 'HSE06'
+
+XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
 
 Ground_convergence = {}   # Convergence items for ground state calculations
 Band_convergence = {'bands':8}   # Convergence items for band calculations
@@ -325,9 +318,12 @@ if Optical_calc == False:
                             mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
             bulk_configuration.calc = calc
-            if True in whichstrain:
-                uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-                relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+            if Geo_optim == True:
+                if True in whichstrain:
+                    uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
+                    relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+                else:
+                    relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
@@ -456,10 +452,26 @@ if Optical_calc == False:
                         convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                         mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             bulk_configuration.calc = calc
-            relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
-            relax.run(fmax=fmaxval)  # Consider much tighter fmax!
-            bulk_configuration.get_potential_energy()
-            calc.write(struct+'-1-Result-Ground.gpw', mode='all')
+            if Geo_optim == True:
+                if True in whichstrain:
+                    #uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
+                    #relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+                    parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (whichstrain keyword) is not implemented in LCAO mode.')
+                    quit()
+                else:
+                    relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+                relax.run(fmax=fmaxval)  # Consider tighter fmax!
+            else:
+                bulk_configuration.set_calculator(calc)
+                bulk_configuration.get_potential_energy()
+            #relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+            #relax.run(fmax=fmaxval)  # Consider much tighter fmax!
+            #bulk_configuration.get_potential_energy()
+            if Density_calc == True:
+                #This line makes huge GPW files. Therefore it is better to use this if else
+                calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+            else:
+                calc.write(struct+'-1-Result-Ground.gpw')
             # Writes final configuration as CIF file
             write_cif(struct+'-Final.cif', bulk_configuration)
             # Print final spacegroup information

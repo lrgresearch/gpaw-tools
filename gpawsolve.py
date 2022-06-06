@@ -449,11 +449,11 @@ if Optical_calc == False:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc,
+                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                         mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             else:
                 calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc,
+                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                         mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             bulk_configuration.calc = calc
             relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')

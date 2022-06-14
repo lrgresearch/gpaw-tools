@@ -54,10 +54,10 @@ This keyword controls the execution of geometric optimization. Available options
 User can implement a filter for optimization of supercell and atoms with keyword `whichstrain`. More information about [whichstrain](inputfilekeywords.md#whichstrain).
 
 #### Default
-False
+True
 
 #### Example
-Geo_optim = True
+Geo_optim = False
 
 ---
 

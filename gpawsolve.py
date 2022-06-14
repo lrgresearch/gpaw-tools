@@ -68,9 +68,12 @@ Optical_calc = False     # Calculate the optical properties
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------
-# ELECTRONIC
-fmaxval = 0.05 			#
+# GEOMETRY
+fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
+Damping = 1.0     # The calculated step is multiplied with this number before added to the positions
 Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
+
+# ELECTRONIC
 cut_off_energy = 340 	# eV
 #kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 kpts_x = 5 			    # kpoints in x direction
@@ -321,9 +324,9 @@ if Optical_calc == False:
             if Geo_optim == True:
                 if True in whichstrain:
                     uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
-                    relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+                    relax = LBFGS(uf, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
                 else:
-                    relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+                    relax = LBFGS(bulk_configuration, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
@@ -357,7 +360,7 @@ if Optical_calc == False:
                         convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-            relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+            relax = LBFGS(uf, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             # Writes final configuration as CIF file
@@ -403,7 +406,7 @@ if Optical_calc == False:
                         mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-            relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+            relax = LBFGS(uf, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             bulk_configuration.get_potential_energy()
             calc.diagonalize_full_hamiltonian()
@@ -455,16 +458,16 @@ if Optical_calc == False:
             if Geo_optim == True:
                 if True in whichstrain:
                     #uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
-                    #relax = LBFGS(uf, trajectory=struct+'-1-Result-Ground.traj')
+                    #relax = LBFGS(uf, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
                     parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (whichstrain keyword) is not implemented in LCAO mode.')
                     quit()
                 else:
-                    relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+                    relax = LBFGS(bulk_configuration, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
                 bulk_configuration.get_potential_energy()
-            #relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+            #relax = LBFGS(bulk_configuration, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
             #relax.run(fmax=fmaxval)  # Consider much tighter fmax!
             #bulk_configuration.get_potential_energy()
             if Density_calc == True:

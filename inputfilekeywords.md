@@ -6,9 +6,11 @@ title: Input File Keywords
 
 # Input File Keywords
 
-[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [whichstrain](inputfilekeywords.md#whichstrain), [MPIcores](inputfilekeywords.md#mpicores)
+[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPIcores](inputfilekeywords.md#mpicores)
 
-[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
+[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [Damping](inputfilekeywords.md#damping), [whichstrain](inputfilekeywords.md#whichstrain), 
+
+[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
 
 [**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GWtype](inputfilekeywords.md#gwtype), [GWkpoints](inputfilekeywords.md#gwkpoints), [GWtruncation](inputfilekeywords.md#gwtruncation), [GWcut_off_energy](inputfilekeywords.md#gwcut_off_energy), [GWbandVB](inputfilekeywords.md#gwbandvb), [GWbandCB](inputfilekeywords.md#gwbandcb), [GWppa](inputfilekeywords.md#gwppa), [GWq0correction](inputfilekeywords.md#gwq0correction), [GWnblock](inputfilekeywords.md#gwnblock)
 
@@ -151,36 +153,6 @@ Optical_calc = False
 
 ---
 
-### whichstrain
-#### Keyword type
-Python List of Logical values
-
-#### Description
-This keyword controls the hich components of strain will be relaxed. There are six independent components indicating the strain are relaxed or not. Here:
-
-* True = relax to zero
-* False = fixed
-
-And these six independent components are in order:
-
-* EpsilonX
-* EpsilonY
-* EpsilonZ
-* ShearYZ
-* ShearXZ
-* ShearXY
-
-**IMPORTANT**: This keyword is only working when `Geo_optim = True` and under PW mode. This feature is not implemented in LCAO mode.
-
-
-#### Default
-[False, False, False, False, False, False]
-
-#### Example
-whichstrain=[True, True, False, False, False, False] #For a x-y 2D nanosheet only first 2 component will be true
-
----
-
 ### MPIcores
 #### Keyword type
 Integer
@@ -226,6 +198,51 @@ False
 
 #### Example
 Fix_symmetry = True
+
+---
+
+### Damping
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the damping of the maximum movement of an atom. It is just the calculated step multiplied with this number before added to the positions.
+
+#### Default
+1.0
+
+#### Example
+Damping = 0.5
+
+---
+
+### whichstrain
+#### Keyword type
+Python List of Logical values
+
+#### Description
+This keyword controls the hich components of strain will be relaxed. There are six independent components indicating the strain are relaxed or not. Here:
+
+* True = relax to zero
+* False = fixed
+
+And these six independent components are in order:
+
+* EpsilonX
+* EpsilonY
+* EpsilonZ
+* ShearYZ
+* ShearXZ
+* ShearXY
+
+**IMPORTANT**: This keyword is only working when `Geo_optim = True` and under PW mode. This feature is not implemented in LCAO mode.
+
+
+#### Default
+[False, False, False, False, False, False]
+
+#### Example
+whichstrain=[True, True, False, False, False, False] #For a x-y 2D nanosheet only first 2 component will be true
 
 ---
 

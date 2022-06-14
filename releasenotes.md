@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* Include new keyword `Damping`.
 * `Geo_optim` keyword for better optimization usage with filters (whichstrain).
 * Examples are simplified. Most of the unnecessary keywords are removed.
 * Proper logging for LCAO ground state calculations

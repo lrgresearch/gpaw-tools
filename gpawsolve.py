@@ -58,7 +58,7 @@ from elastic import get_elastic_tensor, get_elementary_deformations
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
-Geo_optim = False       # Geometric optimization with LFBGS
+Geo_optim = True       # Geometric optimization with LFBGS
 Elastic_calc = False    # Elastic calculation
 DOS_calc = False         # DOS calculation
 Band_calc = False        # Band structure calculation

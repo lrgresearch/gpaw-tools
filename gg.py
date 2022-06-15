@@ -24,9 +24,9 @@ class gg:
     StructLoaded = False
 
     def __init__(self, master=None):
-        global Elastic_calcvar, DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar, GWppavar, GWq0correctionvar, GWnblockvar
+        global Geo_optim, Elastic_calcvar, DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar
         global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar, Fix_symmetryvar
-        global Struct, StructLoaded, GWbandinterpolationvar
+        global GWppavar, GWq0correctionvar, GWnblockvar, Struct, StructLoaded, GWbandinterpolationvar
         
         url = 'https://www.lrgresearch.org/gpaw-tools/'
         
@@ -96,6 +96,15 @@ class gg:
             else:
                 self.Modettk.current(2)
 
+            # Geometric Optimization   
+            if 'Geo_optim' in config.__dict__.keys():
+                if config.Geo_optim == True:
+                    Geo_optimvar.set(True)
+                else:
+                    Geo_optimvar.set(False)
+            else:
+                Geo_optimvar.set(False)
+            
             # Elastic calculation    
             if 'Elastic_calc' in config.__dict__.keys():
                 if config.Elastic_calc == True:
@@ -149,6 +158,30 @@ class gg:
                 self.fmaxvalttk.delete('0', 'end')
                 self.fmaxvalttk.insert('0', '0.05')
             
+            # Max_step
+            if 'Max_step' in config.__dict__.keys():
+                self.Max_stepttk.delete('0', 'end')
+                self.Max_stepttk.insert('0', config.Max_step)
+            else:
+                self.Max_stepttk.delete('0', 'end')
+                self.Max_stepttk.insert('0', '0.2')
+            
+            # Alpha
+            if 'Alpha' in config.__dict__.keys():
+                self.Alphattk.delete('0', 'end')
+                self.Alphattk.insert('0', config.Alpha)
+            else:
+                self.Alphattk.delete('0', 'end')
+                self.Alphattk.insert('0', '70.0')
+
+            # Damping
+            if 'Damping' in config.__dict__.keys():
+                self.Dampingttk.delete('0', 'end')
+                self.Dampingttk.insert('0', config.Damping)
+            else:
+                self.Dampingttk.delete('0', 'end')
+                self.Dampingttk.insert('0', '1.0')
+                        
             # Fix_symmetry    
             if 'Fix_symmetry' in config.__dict__.keys():
                 if config.Fix_symmetry == True:
@@ -157,6 +190,45 @@ class gg:
                     Fix_symmetryvar.set(False)
             else:
                 Fix_symmetryvar.set(False)
+                
+            # Relax cell
+            if 'whichstrain' in config.__dict__.keys():
+                if config.whichstrain[0] == True:
+                    EpsXvar.set(True)
+                else:
+                    EpsXvar.set(False)
+
+                if config.whichstrain[1] == True:
+                    EpsYvar.set(True)
+                else:
+                    EpsYvar.set(False)
+
+                if config.whichstrain[2] == True:
+                    EpsZvar.set(True)
+                else:
+                    EpsZvar.set(False)
+
+                if config.whichstrain[3] == True:
+                    ShearYZvar.set(True)
+                else:
+                    ShearYZvar.set(False)
+
+                if config.whichstrain[4] == True:
+                    ShearXZvar.set(True)
+                else:
+                    ShearXZvar.set(False)
+
+                if config.whichstrain[5] == True:
+                    ShearXYvar.set(True)
+                else:
+                    ShearXYvar.set(False)
+            else:
+                EpsXvar.set(False)
+                EpsYvar.set(False)
+                EpsZvar.set(False)
+                ShearYZvar.set(False)
+                ShearXZvar.set(False)
+                ShearXYvar.set(False)
 
             # Cut-off energy
             if 'cut_off_energy' in config.__dict__.keys():
@@ -546,45 +618,6 @@ class gg:
                 self.optecutttk.delete('0', 'end')
                 self.optecutttk.insert('0', '100')
 
-            # Strain-Shear
-            if 'whichstrain' in config.__dict__.keys():
-                if config.whichstrain[0] == True:
-                    EpsXvar.set(True)
-                else:
-                    EpsXvar.set(False)
-
-                if config.whichstrain[1] == True:
-                    EpsYvar.set(True)
-                else:
-                    EpsYvar.set(False)
-
-                if config.whichstrain[2] == True:
-                    EpsZvar.set(True)
-                else:
-                    EpsZvar.set(False)
-
-                if config.whichstrain[3] == True:
-                    ShearYZvar.set(True)
-                else:
-                    ShearYZvar.set(False)
-
-                if config.whichstrain[4] == True:
-                    ShearXZvar.set(True)
-                else:
-                    ShearXZvar.set(False)
-
-                if config.whichstrain[5] == True:
-                    ShearXYvar.set(True)
-                else:
-                    ShearXYvar.set(False)
-            else:
-                EpsXvar.set(False)
-                EpsYvar.set(False)
-                EpsZvar.set(False)
-                ShearYZvar.set(False)
-                ShearXZvar.set(False)
-                ShearXYvar.set(False)
-
             #Core number
             if 'MPIcores' in config.__dict__.keys():
                 self.MPIcoresttk.delete('0', 'end')
@@ -615,6 +648,8 @@ class gg:
                     print("Mode = 'FD'", end="\n", file=f1)
                 else:
                     print("Mode = 'PW'", end="\n", file=f1)
+                # Geo_optim
+                print("Geo_optim = "+ str(Geo_optimvar.get()), end="\n", file=f1)
                 # Elastic_calc
                 print("Elastic_calc = "+ str(Elastic_calcvar.get()), end="\n", file=f1)
                 # DOS_calc
@@ -625,11 +660,21 @@ class gg:
                 print("Density_calc = "+ str(Density_calcvar.get()), end="\n", file=f1)
                 # Optical_calc
                 print("Optical_calc = "+ str(Optical_calcvar.get()), end="\n", file=f1)
-                # ---------Electronic------------
+                # ---------Geometry------------
                 # fmaxval
                 print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
+                # Max_step
+                print("Max_step = "+ str(self.Max_stepttk.get()), end="\n", file=f1)
+                # Alpha
+                print("Alpha = "+ str(self.Alphattk.get()), end="\n", file=f1)
+                # Damping
+                print("Damping = "+ str(self.Dampingttk.get()), end="\n", file=f1)
                 #Fix_symmetry
                 print("Fix_symmetry = "+ str(Fix_symmetryvar.get()), end="\n", file=f1)
+                # whichstrain
+                print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
+
+                # ---------Electronic------------
                 # cut_off_energy
                 print("cut_off_energy = "+ str(self.cut_off_energyttk.get()), end="\n", file=f1)
                 # kpoints
@@ -752,9 +797,6 @@ class gg:
                 print("optecut = "+ str(self.optecutttk.get()), end="\n", file=f1)
                 
                 # ------------Other------------
-                # whichstrain
-                print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
-
                 # This feature is not used by gpawsolve.py, this is only usable for gg.py
                 print("MPIcores = "+ str(self.MPIcoresttk.get()), end="\n", file=f1)
 
@@ -846,6 +888,12 @@ class gg:
         self.frame6.configure(height='200', width='200')
         self.frame6.pack(side='top')
         
+        # Geo_optim
+        self.Geo_optimttk = ttk.Checkbutton(self.labelframe1)
+        Geo_optimvar = BooleanVar()
+        self.Geo_optimttk.configure(state='normal', variable = Geo_optimvar, onvalue=True, offvalue=False, takefocus=False, text='Geometric Optimization')
+        self.Geo_optimttk.pack(side='top')
+        
         # Elastic_calc
         self.Elastic_calcttk = ttk.Checkbutton(self.labelframe1)
         Elastic_calcvar = BooleanVar()
@@ -875,15 +923,17 @@ class gg:
         Optical_calcvar = BooleanVar()
         self.Optical_calcttk.configure(variable = Optical_calcvar, onvalue=True, offvalue=False, text='Optical Properties Calculation')
         self.Optical_calcttk.pack(side='top')
-        self.labelframe1.configure(height='200', text='Calculator Settings', width='200')
-        self.labelframe1.pack(side='left')
-        # End Labelframe1 ---------------------------------------------------
         
-        # Labelframe2: Electronic Calculation Parameters --------------------
-        self.labelframe2 = ttk.Labelframe(self.frame5)
- 
+        # Empty Line
+        self.frameEmpty = ttk.Frame(self.labelframe1)
+        self.labelEmpty = ttk.Label(self.frameEmpty)
+        self.labelEmpty.configure(text=' ')
+        self.labelEmpty.pack(side='left')
+        self.frameEmpty.configure(height='200', width='200')
+        self.frameEmpty.pack(side='top')
+        
         # Maximum Force
-        self.frame7 = ttk.Frame(self.labelframe2)
+        self.frame7 = ttk.Frame(self.labelframe1)
         self.label5 = ttk.Label(self.frame7)
         self.label5.configure(text='Maximum Force')
         self.label5.pack(side='left')
@@ -894,14 +944,59 @@ class gg:
         self.frame7.configure(height='200', width='200')
         self.frame7.pack(side='top')
         
+        # Maximum Step
+        self.frameMax_step = ttk.Frame(self.labelframe1)
+        self.labelMax_step = ttk.Label(self.frameMax_step)
+        self.labelMax_step.configure(text='Maximum Step')
+        self.labelMax_step.pack(side='left')
+        self.Max_stepttk = ttk.Entry(self.frameMax_step)
+        self.Max_stepttk.delete('0', 'end')
+        self.Max_stepttk.insert('0', '0.2')
+        self.Max_stepttk.pack(side='top')
+        self.frameMax_step.configure(height='200', width='200')
+        self.frameMax_step.pack(side='top')
+        
+        # Alpha
+        self.frameAlpha = ttk.Frame(self.labelframe1)
+        self.labelAlpha = ttk.Label(self.frameAlpha)
+        self.labelAlpha.configure(text='Alpha')
+        self.labelAlpha.pack(side='left')
+        self.Alphattk = ttk.Entry(self.frameAlpha)
+        self.Alphattk.delete('0', 'end')
+        self.Alphattk.insert('0', '70.0')
+        self.Alphattk.pack(side='top')
+        self.frameAlpha.configure(height='200', width='200')
+        self.frameAlpha.pack(side='top')
+        
+        # Damping
+        self.frameDamping = ttk.Frame(self.labelframe1)
+        self.labelDamping = ttk.Label(self.frameDamping)
+        self.labelDamping.configure(text='Damping Coef.')
+        self.labelDamping.pack(side='left')
+        self.Dampingttk = ttk.Entry(self.frameDamping)
+        self.Dampingttk.delete('0', 'end')
+        self.Dampingttk.insert('0', '1.0')
+        self.Dampingttk.pack(side='top')
+        self.frameDamping.configure(height='200', width='200')
+        self.frameDamping.pack(side='top')
+        
         # Fix symmetry during optimization?
-        self.frameFix_symmetry = ttk.Frame(self.labelframe2)
+        self.frameFix_symmetry = ttk.Frame(self.labelframe1)
         self.Fix_symmetryttk = ttk.Checkbutton(self.frameFix_symmetry)
         Fix_symmetryvar = BooleanVar()
         self.Fix_symmetryttk.configure(variable = Fix_symmetryvar, onvalue=True, offvalue=False, text='Fix Symmetry')
         self.Fix_symmetryttk.pack(side='top')
         self.frameFix_symmetry.configure(height='200', width='200')
         self.frameFix_symmetry.pack(side='top')
+        
+        self.labelframe1.configure(height='200', text='Run Modes and Geometry Settings', width='200')
+        self.labelframe1.pack(side='left')
+        # End Labelframe1 ---------------------------------------------------
+        
+        # Labelframe2: Electronic Calculation Parameters --------------------
+        self.labelframe2 = ttk.Labelframe(self.frame5)
+ 
+
 
         # Cut-off energy
         self.frame8 = ttk.Frame(self.labelframe2)
@@ -1280,7 +1375,7 @@ class gg:
         self.frame5.pack(side='top')
         # End labelframe3 ------------------------------------------
         
-        # labelframe4: Frame for strain-shear ----------------------
+        # labelframe4: Frame for Cell relaxation ----------------------
         self.frame13 = ttk.Frame(self.frame4)
         self.labelframe4 = ttk.Labelframe(self.frame13)
         self.frame22 = ttk.Frame(self.labelframe4)
@@ -1310,7 +1405,7 @@ class gg:
         self.ShearXYttk.pack(side='top')
         self.frame22.configure(height='200', width='200')
         self.frame22.pack(side='top')
-        self.labelframe4.configure(height='200', text='Strain Relaxation', width='200')
+        self.labelframe4.configure(height='200', text='Cell Relaxation (Geometric Optim. must be selected)', width='200')
         self.labelframe4.pack(side='left')
         # End labelframe4 ------------------------------------------------
         
@@ -1494,10 +1589,10 @@ For licensing information, please refer to LICENSE file.'''
         self.gg_fullsmall_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
         self.button1.configure(image=self.gg_fullsmall_png, state='normal')
         self.button1.pack(side='left')
-        self.frame24.configure(height='200', width='900')
+        self.frame24.configure(height='200', width='1200')
         self.frame24.pack(side='top')
         self.notebookUpper.add(self.frame24, text='About')
-        self.notebookUpper.configure(height='600', width='900')
+        self.notebookUpper.configure(height='600', width='1200')
         self.notebookUpper.pack(fill='x', side='top')
         
         # Message log
@@ -1508,12 +1603,12 @@ For licensing information, please refer to LICENSE file.'''
         self.text1.insert('0.0', _text_)
         self.text1.pack(side='top')
         self.notebookBottom.add(self.text1, text='Message Log')
-        self.notebookBottom.configure(height='100', width='900')
+        self.notebookBottom.configure(height='100', width='1200')
         self.notebookBottom.pack(fill='x', side='top')
-        self.frame2.configure(height='800', width='900')
+        self.frame2.configure(height='800', width='1200')
         self.frame2.pack(fill='both', side='top')
         self.gg_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
-        self.toplevel1.configure(height='800', width='900')
+        self.toplevel1.configure(height='800', width='1200')
         self.toplevel1.iconphoto(True, self.gg_png)
         self.toplevel1.resizable(False, False)
         self.toplevel1.title('gpaw-tools GUI')

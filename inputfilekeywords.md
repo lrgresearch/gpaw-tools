@@ -8,7 +8,7 @@ title: Input File Keywords
 
 [**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPIcores](inputfilekeywords.md#mpicores)
 
-[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [Damping](inputfilekeywords.md#damping), [whichstrain](inputfilekeywords.md#whichstrain), 
+[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [Max_step](inputfilekeywords.md#max-step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [whichstrain](inputfilekeywords.md#whichstrain)
 
 [**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
 
@@ -167,7 +167,7 @@ NOTE: `gg.py` can run `gpawsolve.py` with only `mpirun -np <corenumber>` command
 #### Example
 MPIcores = 4
 
-## Electronic Calculations Keywords
+## Geometric Optimization Keywords
 ### fmaxval
 #### Keyword type
 Float
@@ -182,7 +182,48 @@ This keyword controls the maximum force tolerance in BFGS type geometry optimiza
 fmaxval = 0.05 # eV/Ang
 
 ---
+### Max_step
+#### Keyword type
+Float
 
+#### Description
+This keyword controls how far a single atom allowed to move. Default is 0.2 Ang.
+
+#### Default
+0.2
+
+#### Example
+Max_step = 0.2 # Ang
+
+---
+### Alpha
+#### Keyword type
+Float
+
+#### Description
+Initial guess for the Hessian (curvature of energy surface)
+
+#### Default
+70.0
+
+#### Example
+Alpha = 70.0
+
+---
+### Damping
+#### Keyword type
+Float
+
+#### Description
+The calculated step is multiplied with this number before added to the positions
+
+#### Default
+1.0
+
+#### Example
+Damping = 1.0
+
+---
 ### Fix_symmetry
 #### Keyword type
 Logical
@@ -245,7 +286,7 @@ And these six independent components are in order:
 whichstrain=[True, True, False, False, False, False] #For a x-y 2D nanosheet only first 2 component will be true
 
 ---
-
+## Electronic Calculations Keywords
 ### cut_off_energy
 #### Keyword type
 Integer

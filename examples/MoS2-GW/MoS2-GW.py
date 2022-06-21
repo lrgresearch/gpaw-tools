@@ -13,9 +13,18 @@ Optical_calc = False     # Calculate the optical properties
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------
+# GEOMETRY
+Minimizer = 'LBFGS'     # LBFGS or FIRE
+fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
+Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
+Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
+Damping = 1.0           # LBFGS only: The calculated step is multiplied with this number before added to the positions
+Fix_symmetry = True    # True for preserving the spacegroup symmetry during optimisation
+# Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
+# Example: For a x-y 2D nanosheet only first 2 component will be true
+whichstrain=[False, False, False, False, False, False]
+
 # ELECTRONIC
-fmaxval = 0.05 			#
-Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
 cut_off_energy = 300 	# eV
 #kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 kpts_x = 3 			    # kpoints in x direction
@@ -54,9 +63,4 @@ GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as m
 GWbandinterpolation = False
 
 #GENERAL
-# Which components of strain will be relaxed
-# EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
-# Geo_optim must be True to work.
-# Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[False, False, False, False, False, False]
 MPIcores = 4            # Number of cores in calculation.

@@ -23,10 +23,11 @@ tsp mpirun -np $CORENUMBER gpawsolve.py -o -i graphene.py -g graphene4x4.cif
 echo "Step 2: Graphene with defect"
 tsp mpirun -np $CORENUMBER gpawsolve.py -o -i graphene.py -g graphene4x4withdefect.cif
 
+# Not working after GPAW 22.1.0, needs future fix.
 # MoS2-GW -------------------
-echo "Adding: MoS2-GW"
-cd ../MoS2-GW
-tsp gpawsolve.py -o -i MoS2-GW.py -g MoS2-structure.cif
+#echo "Adding: MoS2-GW"
+#cd ../MoS2-GW
+#tsp gpawsolve.py -o -i MoS2-GW.py -g MoS2-structure.cif
 
 # Si-2atoms-optical ----------------
 echo "adding: Si-2atoms-optical"

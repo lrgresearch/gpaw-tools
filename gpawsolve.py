@@ -69,10 +69,11 @@ Optical_calc = False     # Calculate the optical properties
 # Parameters
 # -------------------------------------------------------------
 # GEOMETRY
+Minimizer = 'LBFGS'     # LBFGS or FIRE
 fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
-Max_step = 0.2    # How far is a single atom allowed to move. Default is 0.2 Ang.
-Alpha = 70.0      # Initial guess for the Hessian (curvature of energy surface)
-Damping = 1.0     # The calculated step is multiplied with this number before added to the positions
+Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
+Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
+Damping = 1.0           # LBFGS only: The calculated step is multiplied with this number before added to the positions
 Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
 # Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
@@ -325,9 +326,18 @@ if Optical_calc == False:
             if Geo_optim == True:
                 if True in whichstrain:
                     uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
-                    relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                    if Minimizer == 'FIRE':
+                        from ase.optimize.fire import FIRE
+                        relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                    else:
+                        relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                        
                 else:
-                    relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                    if Minimizer == 'FIRE':
+                        from ase.optimize.fire import FIRE
+                        relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                    else:
+                        relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
@@ -360,8 +370,12 @@ if Optical_calc == False:
                 calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
                         convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
-            uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-            relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+            uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
+            if Minimizer == 'FIRE':
+                from ase.optimize.fire import FIRE
+                relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+            else:
+                relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             # Writes final configuration as CIF file
@@ -406,8 +420,12 @@ if Optical_calc == False:
                         convergence = Ground_convergence, 
                         mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
-            uf = UnitCellFilter(bulk_configuration, mask=whichstrain)
-            relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+            uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
+            if Minimizer == 'FIRE':
+                from ase.optimize.fire import FIRE
+                relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+            else:
+                relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             bulk_configuration.get_potential_energy()
             calc.diagonalize_full_hamiltonian()
@@ -463,7 +481,11 @@ if Optical_calc == False:
                     parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (whichstrain keyword) is not implemented in LCAO mode.')
                     quit()
                 else:
-                    relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                    if Minimizer == 'FIRE':
+                        from ase.optimize.fire import FIRE
+                        relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                    else:
+                        relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)

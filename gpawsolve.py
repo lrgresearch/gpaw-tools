@@ -71,8 +71,8 @@ Optical_calc = False     # Calculate the optical properties
 # GEOMETRY
 Minimizer = 'LBFGS'     # LBFGS or FIRE
 fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
-Max_step = 0.2          # How far is a single atom allowed to move. Default is 0.2 Ang.
-Alpha = 70.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
+Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
+Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
 Damping = 1.0           # LBFGS only: The calculated step is multiplied with this number before added to the positions
 Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
 # Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY

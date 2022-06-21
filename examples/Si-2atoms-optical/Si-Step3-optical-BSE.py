@@ -1,5 +1,3 @@
-import numpy as np
-
 Outdirname = 'Si-results'
 
 # -------------------------------------------------------------
@@ -42,17 +40,6 @@ Spin_calc = False        # Spin polarized calculation?
 Magmom_per_atom = 1.0    # Magnetic moment per atom
 gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
-#GW Parameters
-GWtype = 'GW0'          # GW0 or G0W0
-GWkpoints = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
-GWtruncation = '2D'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
-GWcut_off_energy = 50   # Cut-off energy
-GWbandVB = 8            # Valence band number
-GWbandCB = 18           # Conduction band number
-GWppa = True            # Plasmon Pole Approximation
-GWq0correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
-GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
-
 # OPTICAL
 opttype = 'BSE'         # BSE or RPA
 optshift = 0.0          # Shifting of the energy
@@ -71,9 +58,4 @@ optnblocks=4            # Split matrices in nblocks blocks and distribute them G
                         # or frequencies over processes
 
 #GENERAL
-# Which components of strain will be relaxed
-# EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
-# Geo_optim must be True to work.
-# Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[False, False, False, False, False, False]
 MPIcores = 4            # Number of cores in calculation.

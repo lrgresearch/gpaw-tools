@@ -8,7 +8,7 @@ title: Input File Keywords
 
 [**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPIcores](inputfilekeywords.md#mpicores)
 
-[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [fmaxval](inputfilekeywords.md#fmaxval), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [whichstrain](inputfilekeywords.md#whichstrain)
+[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Minimizer](inputfilekeywords.md#minimizer), [fmaxval](inputfilekeywords.md#fmaxval), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [whichstrain](inputfilekeywords.md#whichstrain)
 
 [**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
 
@@ -168,6 +168,23 @@ NOTE: `gg.py` can run `gpawsolve.py` with only `mpirun -np <corenumber>` command
 MPIcores = 4
 
 ## Geometric Optimization Keywords
+### Minimizer
+#### Keyword type
+String
+
+#### Description
+This keyword controls the energy minimization algorithm for the geometry optimization. Available options are:
+
+* LBFGS
+* FIRE
+
+#### Default
+LBFGS
+
+#### Example
+Minimizer = 'FIRE'
+
+---
 ### fmaxval
 #### Keyword type
 Float

@@ -94,7 +94,7 @@ class gg:
                 else:
                     self.Modettk.current(0)
             else:
-                self.Modettk.current(2)
+                self.Modettk.current(0)
 
             # Geometric Optimization   
             if 'Geo_optim' in config.__dict__.keys():
@@ -150,6 +150,21 @@ class gg:
             else:
                 Optical_calcvar.set(False)
 
+            # Optimizer
+            if 'Optimizer' in config.__dict__.keys():
+                if config.Optimizer == 'QuasiNewton':
+                    self.Optimizerttk.current(0)
+                elif config.Optimizer == 'GPMin':
+                    self.Optimizerttk.current(1)
+                elif config.Optimizer == 'LBFGS':
+                    self.Optimizerttk.current(2)
+                elif config.Optimizer == 'FIRE':
+                    self.Optimizerttk.current(3)
+                else:
+                    self.Optimizerttk.current(0)
+            else:
+                self.Optimizerttk.current(0)
+            
             # Fmax
             if 'fmaxval' in config.__dict__.keys():
                 self.fmaxvalttk.delete('0', 'end')
@@ -253,6 +268,22 @@ class gg:
                 self.kpts_yttk.insert('0', '1')
                 self.kpts_zttk.delete('0', 'end')
                 self.kpts_zttk.insert('0', '1')
+                
+            # Grid points
+            if 'gpts_x' in config.__dict__.keys():
+                self.gpts_xttk.delete('0', 'end')
+                self.gpts_xttk.insert('0', config.gpts_x)
+                self.gpts_yttk.delete('0', 'end')
+                self.gpts_yttk.insert('0', config.gpts_y)
+                self.gpts_zttk.delete('0', 'end')
+                self.gpts_zttk.insert('0', config.gpts_z)
+            else:
+                self.gpts_xttk.delete('0', 'end')
+                self.gpts_xttk.insert('0', '1')
+                self.gpts_yttk.delete('0', 'end')
+                self.gpts_yttk.insert('0', '1')
+                self.gpts_zttk.delete('0', 'end')
+                self.gpts_zttk.insert('0', '1')
 
             # Gamma
             if 'Gamma' in config.__dict__.keys():
@@ -661,6 +692,17 @@ class gg:
                 # Optical_calc
                 print("Optical_calc = "+ str(Optical_calcvar.get()), end="\n", file=f1)
                 # ---------Geometry------------
+                # Optimizer
+                if self.Optimizerttk.get() == 'PW':
+                    print("Optimizer = 'QuasiNewton'", end="\n", file=f1)
+                elif self.Optimizerttk.get() == 'PW-GW':
+                    print("Optimizer = 'GPMin'", end="\n", file=f1)
+                elif self.Optimizerttk.get() == 'EXX':
+                    print("Optimizer = 'LBFGS'", end="\n", file=f1)
+                elif self.Optimizerttk.get() == 'LCAO':
+                    print("Optimizer = 'FIRE'", end="\n", file=f1)
+                else:
+                    print("Optimizer = 'QuasiNewton'", end="\n", file=f1)
                 # fmaxval
                 print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
                 # Max_step
@@ -681,6 +723,10 @@ class gg:
                 print("kpts_x = "+ str(self.kpts_xttk.get()), end="\n", file=f1)
                 print("kpts_y = "+ str(self.kpts_yttk.get()), end="\n", file=f1)
                 print("kpts_z = "+ str(self.kpts_zttk.get()), end="\n", file=f1)
+                # Grid points
+                print("gpts_x = "+ str(self.gpts_xttk.get()), end="\n", file=f1)
+                print("gpts_y = "+ str(self.gpts_yttk.get()), end="\n", file=f1)
+                print("gpts_z = "+ str(self.gpts_zttk.get()), end="\n", file=f1)
                 # Gamma
                 print("Gamma = "+ str(Gammavar.get()), end="\n", file=f1)
                 # band_path
@@ -932,6 +978,20 @@ class gg:
         self.frameEmpty.configure(height='200', width='200')
         self.frameEmpty.pack(side='top')
         
+        # Label
+        self.frame28 = ttk.Frame(self.labelframe1)
+        self.label1 = ttk.Label(self.frame28)
+        self.label1.configure(text='Optimizer')
+        self.label1.pack(side='left')
+        
+        # Optimizer
+        self.Optimizerttk = ttk.Combobox(self.frame28)
+        self.Optimizerttk.configure(values=('QuasiNewton', 'GPMin', 'LBFGS', 'FIRE'), state='readonly')
+        self.Optimizerttk.pack(side='top')
+        self.Optimizerttk.current(0)
+        self.frame28.configure(height='200', width='200')
+        self.frame28.pack(side='top')
+        
         # Maximum Force
         self.frame7 = ttk.Frame(self.labelframe1)
         self.label5 = ttk.Label(self.frame7)
@@ -1018,20 +1078,43 @@ class gg:
         self.kpts_xttk = ttk.Entry(self.frame9)
         self.kpts_xttk.configure(width='4')
         self.kpts_xttk.delete('0', 'end')
-        self.kpts_xttk.insert('0', '1')
+        self.kpts_xttk.insert('0', '5')
         self.kpts_xttk.pack(side='left')
         self.kpts_yttk = ttk.Entry(self.frame9)
         self.kpts_yttk.configure(width='4')
         self.kpts_yttk.delete('0', 'end')
-        self.kpts_yttk.insert('0', '1')
+        self.kpts_yttk.insert('0', '5')
         self.kpts_yttk.pack(side='left')
         self.kpts_zttk = ttk.Entry(self.frame9)
         self.kpts_zttk.configure(width='4')
         self.kpts_zttk.delete('0', 'end')
-        self.kpts_zttk.insert('0', '1')
+        self.kpts_zttk.insert('0', '5')
         self.kpts_zttk.pack(side='top')
         self.frame9.configure(height='200', width='200')
         self.frame9.pack(side='top')
+        
+        # Grid points
+        self.frame29 = ttk.Frame(self.labelframe2)
+        self.label12 = ttk.Label(self.frame29)
+        self.label12.configure(text='Grid points (LCAO only) (x,y,z)')
+        self.label12.pack(side='left')
+        self.gpts_xttk = ttk.Entry(self.frame29)
+        self.gpts_xttk.configure(width='4')
+        self.gpts_xttk.delete('0', 'end')
+        self.gpts_xttk.insert('0', '8')
+        self.gpts_xttk.pack(side='left')
+        self.gpts_yttk = ttk.Entry(self.frame29)
+        self.gpts_yttk.configure(width='4')
+        self.gpts_yttk.delete('0', 'end')
+        self.gpts_yttk.insert('0', '8')
+        self.gpts_yttk.pack(side='left')
+        self.gpts_zttk = ttk.Entry(self.frame29)
+        self.gpts_zttk.configure(width='4')
+        self.gpts_zttk.delete('0', 'end')
+        self.gpts_zttk.insert('0', '8')
+        self.gpts_zttk.pack(side='top')
+        self.frame29.configure(height='200', width='200')
+        self.frame29.pack(side='top')
         
         # Gamma
         self.frame23 = ttk.Frame(self.labelframe2)

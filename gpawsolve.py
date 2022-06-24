@@ -32,7 +32,7 @@ from ase import *
 from ase.dft.kpoints import get_special_points
 from ase.parallel import paropen, world, parprint, broadcast
 from gpaw import GPAW, PW, Davidson, FermiDirac, MixerSum, MixerDif, Mixer
-from ase.optimize.lbfgs import LBFGS
+from ase.optimize import QuasiNewton
 from ase.io import read, write
 from ase.eos import calculate_eos
 from ase.units import Bohr, GPa, kJ
@@ -69,7 +69,7 @@ Optical_calc = False     # Calculate the optical properties
 # Parameters
 # -------------------------------------------------------------
 # GEOMETRY
-Minimizer = 'LBFGS'     # LBFGS or FIRE
+Optimizer = 'QuasiNewton' # QuasiNewton, GPMin, LBFGS or FIRE
 fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
 Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
 Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
@@ -85,6 +85,11 @@ cut_off_energy = 340 	# eV
 kpts_x = 5 			    # kpoints in x direction
 kpts_y = 5				# kpoints in y direction
 kpts_z = 5				# kpoints in z direction
+gpts_density = 0.2      # (for LCAO) Unit is Å. If the user prefers to use this, gpts_x,y,z will not be used automatically.
+gpts_x = 8              # grid points in x direction (for LCAO)
+gpts_y = 8              # grid points in y direction (for LCAO)
+gpts_z = 8              # grid points in z direction (for LCAO)
+
 Gamma = True
 band_path = 'LGL'	    # Brillouin zone high symmetry points
 band_npoints = 60		# Number of points between high symmetry points
@@ -326,18 +331,31 @@ if Optical_calc == False:
             if Geo_optim == True:
                 if True in whichstrain:
                     uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
-                    if Minimizer == 'FIRE':
+                    # Optimizer Selection
+                    if Optimizer == 'FIRE':
                         from ase.optimize.fire import FIRE
                         relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    else:
+                    elif  Optimizer == 'LBFGS':
+                        from ase.optimize.lbfgs import LBFGS
                         relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                        
+                    elif  Optimizer == 'GPMin':
+                        from ase.optimize import GPMin
+                        relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
+                    else:
+                        relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
                 else:
-                    if Minimizer == 'FIRE':
+                    # Optimizer Selection
+                    if Optimizer == 'FIRE':
                         from ase.optimize.fire import FIRE
                         relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    else:
+                    elif  Optimizer == 'LBFGS':
+                        from ase.optimize.lbfgs import LBFGS
                         relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                    elif  Optimizer == 'GPMin':
+                        from ase.optimize import GPMin
+                        relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+                    else:
+                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
@@ -371,11 +389,18 @@ if Optical_calc == False:
                         convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
-            if Minimizer == 'FIRE':
+            # Optimizer Selection
+            if Optimizer == 'FIRE':
                 from ase.optimize.fire import FIRE
                 relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            else:
+            elif  Optimizer == 'LBFGS':
+                from ase.optimize.lbfgs import LBFGS
                 relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+            elif  Optimizer == 'GPMin':
+                from ase.optimize import GPMin
+                relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
+            else:
+                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             # Writes final configuration as CIF file
@@ -421,11 +446,18 @@ if Optical_calc == False:
                         mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
-            if Minimizer == 'FIRE':
+            # Optimizer Selection
+            if Optimizer == 'FIRE':
                 from ase.optimize.fire import FIRE
                 relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            else:
+            elif  Optimizer == 'LBFGS':
+                from ase.optimize.lbfgs import LBFGS
                 relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+            elif  Optimizer == 'GPMin':
+                from ase.optimize import GPMin
+                relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
+            else:
+                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             bulk_configuration.get_potential_energy()
             calc.diagonalize_full_hamiltonian()
@@ -465,14 +497,24 @@ if Optical_calc == False:
             # Fix the spacegroup in the geometric optimization if wanted
             if Fix_symmetry == True:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-            if 'kpts_density' in globals():
-                calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                        mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+            if 'gpts_density' in globals():
+                if 'kpts_density' in globals():
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
+                            convergence = Ground_convergence, h=gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                else:
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
+                            convergence = Ground_convergence, h=gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             else:
-                calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                        mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                if 'kpts_density' in globals():
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
+                            convergence = Ground_convergence, gpts=(gpts_x, gpts_y, gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                else:
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
+                            convergence = Ground_convergence, gpts=(gpts_x, gpts_y, gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             bulk_configuration.calc = calc
             if Geo_optim == True:
                 if True in whichstrain:
@@ -481,11 +523,18 @@ if Optical_calc == False:
                     parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (whichstrain keyword) is not implemented in LCAO mode.')
                     quit()
                 else:
-                    if Minimizer == 'FIRE':
+                    # Optimizer Selection
+                    if Optimizer == 'FIRE':
                         from ase.optimize.fire import FIRE
                         relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    else:
+                    elif  Optimizer == 'LBFGS':
+                        from ase.optimize.lbfgs import LBFGS
                         relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                    elif  Optimizer == 'GPMin':
+                        from ase.optimize import GPMin
+                        relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+                    else:
+                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)

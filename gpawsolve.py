@@ -85,6 +85,11 @@ cut_off_energy = 340 	# eV
 kpts_x = 5 			    # kpoints in x direction
 kpts_y = 5				# kpoints in y direction
 kpts_z = 5				# kpoints in z direction
+gpts_density = 0.2      # (for LCAO) Unit is Å. If the user prefers to use this, gpts_x,y,z will not be used automatically.
+gpts_x = 8              # grid points in x direction (for LCAO)
+gpts_y = 8              # grid points in y direction (for LCAO)
+gpts_z = 8              # grid points in z direction (for LCAO)
+
 Gamma = True
 band_path = 'LGL'	    # Brillouin zone high symmetry points
 band_npoints = 60		# Number of points between high symmetry points
@@ -492,14 +497,24 @@ if Optical_calc == False:
             # Fix the spacegroup in the geometric optimization if wanted
             if Fix_symmetry == True:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-            if 'kpts_density' in globals():
-                calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                        mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+            if 'gpts_density' in globals():
+                if 'kpts_density' in globals():
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
+                            convergence = Ground_convergence, h=gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                else:
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
+                            convergence = Ground_convergence, h=gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             else:
-                calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence, gpts=(32, 32, 32), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                        mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                if 'kpts_density' in globals():
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
+                            convergence = Ground_convergence, gpts=(gpts_x, gpts_y, gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                else:
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
+                            convergence = Ground_convergence, gpts=(gpts_x, gpts_y, gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             bulk_configuration.calc = calc
             if Geo_optim == True:
                 if True in whichstrain:

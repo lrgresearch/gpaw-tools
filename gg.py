@@ -268,6 +268,22 @@ class gg:
                 self.kpts_yttk.insert('0', '1')
                 self.kpts_zttk.delete('0', 'end')
                 self.kpts_zttk.insert('0', '1')
+                
+            # Grid points
+            if 'gpts_x' in config.__dict__.keys():
+                self.gpts_xttk.delete('0', 'end')
+                self.gpts_xttk.insert('0', config.gpts_x)
+                self.gpts_yttk.delete('0', 'end')
+                self.gpts_yttk.insert('0', config.gpts_y)
+                self.gpts_zttk.delete('0', 'end')
+                self.gpts_zttk.insert('0', config.gpts_z)
+            else:
+                self.gpts_xttk.delete('0', 'end')
+                self.gpts_xttk.insert('0', '1')
+                self.gpts_yttk.delete('0', 'end')
+                self.gpts_yttk.insert('0', '1')
+                self.gpts_zttk.delete('0', 'end')
+                self.gpts_zttk.insert('0', '1')
 
             # Gamma
             if 'Gamma' in config.__dict__.keys():
@@ -707,6 +723,10 @@ class gg:
                 print("kpts_x = "+ str(self.kpts_xttk.get()), end="\n", file=f1)
                 print("kpts_y = "+ str(self.kpts_yttk.get()), end="\n", file=f1)
                 print("kpts_z = "+ str(self.kpts_zttk.get()), end="\n", file=f1)
+                # Grid points
+                print("gpts_x = "+ str(self.gpts_xttk.get()), end="\n", file=f1)
+                print("gpts_y = "+ str(self.gpts_yttk.get()), end="\n", file=f1)
+                print("gpts_z = "+ str(self.gpts_zttk.get()), end="\n", file=f1)
                 # Gamma
                 print("Gamma = "+ str(Gammavar.get()), end="\n", file=f1)
                 # band_path
@@ -1058,20 +1078,43 @@ class gg:
         self.kpts_xttk = ttk.Entry(self.frame9)
         self.kpts_xttk.configure(width='4')
         self.kpts_xttk.delete('0', 'end')
-        self.kpts_xttk.insert('0', '1')
+        self.kpts_xttk.insert('0', '5')
         self.kpts_xttk.pack(side='left')
         self.kpts_yttk = ttk.Entry(self.frame9)
         self.kpts_yttk.configure(width='4')
         self.kpts_yttk.delete('0', 'end')
-        self.kpts_yttk.insert('0', '1')
+        self.kpts_yttk.insert('0', '5')
         self.kpts_yttk.pack(side='left')
         self.kpts_zttk = ttk.Entry(self.frame9)
         self.kpts_zttk.configure(width='4')
         self.kpts_zttk.delete('0', 'end')
-        self.kpts_zttk.insert('0', '1')
+        self.kpts_zttk.insert('0', '5')
         self.kpts_zttk.pack(side='top')
         self.frame9.configure(height='200', width='200')
         self.frame9.pack(side='top')
+        
+        # Grid points
+        self.frame29 = ttk.Frame(self.labelframe2)
+        self.label12 = ttk.Label(self.frame29)
+        self.label12.configure(text='Grid points (LCAO only) (x,y,z)')
+        self.label12.pack(side='left')
+        self.gpts_xttk = ttk.Entry(self.frame29)
+        self.gpts_xttk.configure(width='4')
+        self.gpts_xttk.delete('0', 'end')
+        self.gpts_xttk.insert('0', '8')
+        self.gpts_xttk.pack(side='left')
+        self.gpts_yttk = ttk.Entry(self.frame29)
+        self.gpts_yttk.configure(width='4')
+        self.gpts_yttk.delete('0', 'end')
+        self.gpts_yttk.insert('0', '8')
+        self.gpts_yttk.pack(side='left')
+        self.gpts_zttk = ttk.Entry(self.frame29)
+        self.gpts_zttk.configure(width='4')
+        self.gpts_zttk.delete('0', 'end')
+        self.gpts_zttk.insert('0', '8')
+        self.gpts_zttk.pack(side='top')
+        self.frame29.configure(height='200', width='200')
+        self.frame29.pack(side='top')
         
         # Gamma
         self.frame23 = ttk.Frame(self.labelframe2)

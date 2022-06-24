@@ -12,7 +12,7 @@ Optical_calc = False     # Calculate the optical properties
 # Parameters
 # -------------------------------------------------------------
 # GEOMETRY
-Minimizer = 'LBFGS'     # LBFGS or FIRE
+Minimizer = 'LBFGS'     # QuasiNewton, GPMin, LBFGS or FIRE
 fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
 Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
 Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
@@ -28,6 +28,10 @@ cut_off_energy = 340 	# eV
 kpts_x = 4 			    # kpoints in x direction
 kpts_y = 4				# kpoints in y direction
 kpts_z = 1				# kpoints in z direction
+gpts_density = 0.2      # (for LCAO) Unit is Å. If the user prefers to use this, gpts_x,y,z will not be used automatically.
+gpts_x = 8              # grid points in x direction (for LCAO)
+gpts_y = 8              # grid points in y direction (for LCAO)
+gpts_z = 8              # grid points in z direction (for LCAO)
 Gamma = True
 band_path = 'GKMG'	    # Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points

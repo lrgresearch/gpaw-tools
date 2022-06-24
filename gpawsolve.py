@@ -342,7 +342,7 @@ if Optical_calc == False:
                         from ase.optimize import GPMin
                         relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
                     else:
-                        relax = QuasiNewton(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')       
+                        relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
                 else:
                     # Optimizer Selection
                     if Minimizer == 'FIRE':
@@ -355,7 +355,7 @@ if Optical_calc == False:
                         from ase.optimize import GPMin
                         relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
                     else:
-                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
@@ -400,7 +400,7 @@ if Optical_calc == False:
                 from ase.optimize import GPMin
                 relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
             else:
-                relax = QuasiNewton(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')       
+                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             # Writes final configuration as CIF file
@@ -457,7 +457,7 @@ if Optical_calc == False:
                 from ase.optimize import GPMin
                 relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
             else:
-                relax = QuasiNewton(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')       
+                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             bulk_configuration.get_potential_energy()
             calc.diagonalize_full_hamiltonian()
@@ -534,7 +534,7 @@ if Optical_calc == False:
                         from ase.optimize import GPMin
                         relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
                     else:
-                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')       
+                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)

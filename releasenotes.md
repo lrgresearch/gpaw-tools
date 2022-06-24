@@ -8,8 +8,9 @@ title: Release Notes
 
 ### Development version
 
-* New keyword `Minimizer`. Users can now choose LFBGS or FIRE minimizer for geometry optimization. 
+* New keyword `Optimizer`. Users can now choose QuasiNewton, GPMin, LFBGS or FIRE minimizer for geometry optimization. 
 * `gg.py` includes all new keywords.
+* Grid point density or manual grid points for axis (LCAO only).
 * Include new keywords for LBFGS geometry optimization `Damping`, `Alpha` and `Max_step`.
 * `Geo_optim` keyword for better optimization usage with filters (whichstrain).
 * Examples are simplified. Most of the unnecessary keywords are removed.

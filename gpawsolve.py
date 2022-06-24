@@ -69,7 +69,7 @@ Optical_calc = False     # Calculate the optical properties
 # Parameters
 # -------------------------------------------------------------
 # GEOMETRY
-Minimizer = 'QuasiNewton' # QuasiNewton, GPMin, LBFGS or FIRE
+Optimizer = 'QuasiNewton' # QuasiNewton, GPMin, LBFGS or FIRE
 fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
 Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
 Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
@@ -332,26 +332,26 @@ if Optical_calc == False:
                 if True in whichstrain:
                     uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
                     # Optimizer Selection
-                    if Minimizer == 'FIRE':
+                    if Optimizer == 'FIRE':
                         from ase.optimize.fire import FIRE
                         relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Minimizer == 'LBFGS':
+                    elif  Optimizer == 'LBFGS':
                         from ase.optimize.lbfgs import LBFGS
                         relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Minimizer == 'GPMin':
+                    elif  Optimizer == 'GPMin':
                         from ase.optimize import GPMin
                         relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
                     else:
                         relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
                 else:
                     # Optimizer Selection
-                    if Minimizer == 'FIRE':
+                    if Optimizer == 'FIRE':
                         from ase.optimize.fire import FIRE
                         relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Minimizer == 'LBFGS':
+                    elif  Optimizer == 'LBFGS':
                         from ase.optimize.lbfgs import LBFGS
                         relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Minimizer == 'GPMin':
+                    elif  Optimizer == 'GPMin':
                         from ase.optimize import GPMin
                         relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
                     else:
@@ -390,13 +390,13 @@ if Optical_calc == False:
             bulk_configuration.calc = calc
             uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
             # Optimizer Selection
-            if Minimizer == 'FIRE':
+            if Optimizer == 'FIRE':
                 from ase.optimize.fire import FIRE
                 relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            elif  Minimizer == 'LBFGS':
+            elif  Optimizer == 'LBFGS':
                 from ase.optimize.lbfgs import LBFGS
                 relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-            elif  Minimizer == 'GPMin':
+            elif  Optimizer == 'GPMin':
                 from ase.optimize import GPMin
                 relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
             else:
@@ -447,13 +447,13 @@ if Optical_calc == False:
             bulk_configuration.calc = calc
             uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
             # Optimizer Selection
-            if Minimizer == 'FIRE':
+            if Optimizer == 'FIRE':
                 from ase.optimize.fire import FIRE
                 relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            elif  Minimizer == 'LBFGS':
+            elif  Optimizer == 'LBFGS':
                 from ase.optimize.lbfgs import LBFGS
                 relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-            elif  Minimizer == 'GPMin':
+            elif  Optimizer == 'GPMin':
                 from ase.optimize import GPMin
                 relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
             else:
@@ -524,13 +524,13 @@ if Optical_calc == False:
                     quit()
                 else:
                     # Optimizer Selection
-                    if Minimizer == 'FIRE':
+                    if Optimizer == 'FIRE':
                         from ase.optimize.fire import FIRE
                         relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Minimizer == 'LBFGS':
+                    elif  Optimizer == 'LBFGS':
                         from ase.optimize.lbfgs import LBFGS
                         relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Minimizer == 'GPMin':
+                    elif  Optimizer == 'GPMin':
                         from ase.optimize import GPMin
                         relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
                     else:

@@ -94,7 +94,7 @@ class gg:
                 else:
                     self.Modettk.current(0)
             else:
-                self.Modettk.current(2)
+                self.Modettk.current(0)
 
             # Geometric Optimization   
             if 'Geo_optim' in config.__dict__.keys():
@@ -150,6 +150,21 @@ class gg:
             else:
                 Optical_calcvar.set(False)
 
+            # Optimizer
+            if 'Optimizer' in config.__dict__.keys():
+                if config.Optimizer == 'QuasiNewton':
+                    self.Optimizerttk.current(0)
+                elif config.Optimizer == 'GPMin':
+                    self.Optimizerttk.current(1)
+                elif config.Optimizer == 'LBFGS':
+                    self.Optimizerttk.current(2)
+                elif config.Optimizer == 'FIRE':
+                    self.Optimizerttk.current(3)
+                else:
+                    self.Optimizerttk.current(0)
+            else:
+                self.Optimizerttk.current(0)
+            
             # Fmax
             if 'fmaxval' in config.__dict__.keys():
                 self.fmaxvalttk.delete('0', 'end')
@@ -661,6 +676,17 @@ class gg:
                 # Optical_calc
                 print("Optical_calc = "+ str(Optical_calcvar.get()), end="\n", file=f1)
                 # ---------Geometry------------
+                # Optimizer
+                if self.Optimizerttk.get() == 'PW':
+                    print("Optimizer = 'QuasiNewton'", end="\n", file=f1)
+                elif self.Optimizerttk.get() == 'PW-GW':
+                    print("Optimizer = 'GPMin'", end="\n", file=f1)
+                elif self.Optimizerttk.get() == 'EXX':
+                    print("Optimizer = 'LBFGS'", end="\n", file=f1)
+                elif self.Optimizerttk.get() == 'LCAO':
+                    print("Optimizer = 'FIRE'", end="\n", file=f1)
+                else:
+                    print("Optimizer = 'QuasiNewton'", end="\n", file=f1)
                 # fmaxval
                 print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
                 # Max_step
@@ -931,6 +957,20 @@ class gg:
         self.labelEmpty.pack(side='left')
         self.frameEmpty.configure(height='200', width='200')
         self.frameEmpty.pack(side='top')
+        
+        # Label
+        self.frame28 = ttk.Frame(self.labelframe1)
+        self.label1 = ttk.Label(self.frame28)
+        self.label1.configure(text='Optimizer')
+        self.label1.pack(side='left')
+        
+        # Optimizer
+        self.Optimizerttk = ttk.Combobox(self.frame28)
+        self.Optimizerttk.configure(values=('QuasiNewton', 'GPMin', 'LBFGS', 'FIRE'), state='readonly')
+        self.Optimizerttk.pack(side='top')
+        self.Optimizerttk.current(0)
+        self.frame28.configure(height='200', width='200')
+        self.frame28.pack(side='top')
         
         # Maximum Force
         self.frame7 = ttk.Frame(self.labelframe1)

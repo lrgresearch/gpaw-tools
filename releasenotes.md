@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* New default optimizer is QuasiNewton (BFGSLineSearch).
 * New keyword `Optimizer`. Users can now choose QuasiNewton, GPMin, LFBGS or FIRE minimizer for geometry optimization. 
 * `gg.py` includes all new keywords.
 * Grid point density or manual grid points for axis (LCAO only).

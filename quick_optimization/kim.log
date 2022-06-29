@@ -1,0 +1,44 @@
+2022-06-29:13:02:04+03 * 0 * information * 0x32ffc70 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:02:04+03 * 1 * information * 0x32ffc70 * KIM_LogImplementation.cpp:120 * Log object destroyed.
+2022-06-29:13:02:04+03 * 0 * information * 0x32ffc70 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:02:04+03 * 0 * information * 0x32e92a0 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:02:04+03 * 1 * information * 0x32e92a0 * KIM_LogImplementation.cpp:242 * Log object renamed.  ID changed to '0x32ffc70_Collections'.
+2022-06-29:13:02:04+03 * 2 * information * 0x32ffc70_Collections * KIM_LogImplementation.cpp:246 * Log object renamed.  ID changed from '0x32e92a0'.
+2022-06-29:13:02:04+03 * 1 * warning * 0x32ffc70 * KIM_ModelImplementation.cpp:874 * Use of the GetParameterFileName(0, 0x7fff57e0dd00). function is deprecated. Please use GetParameterFileBasename() instead.
+2022-06-29:13:02:05+03 * 0 * error * 0x32ffc70 * KIM_SharedLibrary.cpp:348 * SharedLibrary not open.
+2022-06-29:13:02:05+03 * 0 * information * 0x32ffc70_Collections * KIM_LogImplementation.cpp:120 * Log object destroyed.
+2022-06-29:13:02:05+03 * 0 * information * 0x32e92a0 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:02:05+03 * 1 * information * 0x32e92a0 * KIM_LogImplementation.cpp:242 * Log object renamed.  ID changed to '0x32ffc70_0x32e92a0'.
+2022-06-29:13:02:05+03 * 2 * information * 0x32ffc70_0x32e92a0 * KIM_LogImplementation.cpp:246 * Log object renamed.  ID changed from '0x32e92a0'.
+2022-06-29:13:02:05+03 * 3 * information * 0x32ffc70_0x32e92a0 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2022-06-29:13:02:05+03 * 4 * information * 0x32ffc70_0x32e92a0 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2022-06-29:13:02:05+03 * 5 * information * 0x32ffc70_0x32e92a0 * KIM_LogImplementation.cpp:120 * Log object destroyed.
+2022-06-29:13:02:05+03 * 1 * information * 0x32ffc70 * KIM_LogImplementation.cpp:120 * Log object destroyed.
+2022-06-29:13:05:08+03 * 0 * information * 0x22dd570 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:05:08+03 * 1 * information * 0x22dd570 * KIM_LogImplementation.cpp:120 * Log object destroyed.
+2022-06-29:13:05:08+03 * 0 * information * 0x22dd570 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:05:08+03 * 0 * information * 0x22cdc70 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:05:08+03 * 1 * information * 0x22cdc70 * KIM_LogImplementation.cpp:242 * Log object renamed.  ID changed to '0x22dd570_Collections'.
+2022-06-29:13:05:08+03 * 2 * information * 0x22dd570_Collections * KIM_LogImplementation.cpp:246 * Log object renamed.  ID changed from '0x22cdc70'.
+2022-06-29:13:05:08+03 * 1 * warning * 0x22dd570 * KIM_ModelImplementation.cpp:874 * Use of the GetParameterFileName(0, 0x7ffd92691340). function is deprecated. Please use GetParameterFileBasename() instead.
+2022-06-29:13:05:08+03 * 2 * error * 0x22dd570 * KIM_SharedLibrary.cpp:348 * SharedLibrary not open.
+2022-06-29:13:05:08+03 * 3 * information * 0x22dd570_Collections * KIM_LogImplementation.cpp:120 * Log object destroyed.
+2022-06-29:13:05:08+03 * 0 * information * 0x22cdc70 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:05:08+03 * 1 * information * 0x22cdc70 * KIM_LogImplementation.cpp:242 * Log object renamed.  ID changed to '0x22dd570_0x22cdc70'.
+2022-06-29:13:05:08+03 * 2 * information * 0x22dd570_0x22cdc70 * KIM_LogImplementation.cpp:246 * Log object renamed.  ID changed from '0x22cdc70'.
+2022-06-29:13:05:08+03 * 3 * information * 0x22dd570_0x22cdc70 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2022-06-29:13:05:08+03 * 4 * information * 0x22dd570_0x22cdc70 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2022-06-29:13:05:41+03 * 0 * information * 0x20edff0 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:05:41+03 * 1 * information * 0x20edff0 * KIM_LogImplementation.cpp:120 * Log object destroyed.
+2022-06-29:13:05:41+03 * 0 * information * 0x20edff0 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:05:41+03 * 0 * information * 0x20de5f0 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:05:41+03 * 1 * information * 0x20de5f0 * KIM_LogImplementation.cpp:242 * Log object renamed.  ID changed to '0x20edff0_Collections'.
+2022-06-29:13:05:41+03 * 2 * information * 0x20edff0_Collections * KIM_LogImplementation.cpp:246 * Log object renamed.  ID changed from '0x20de5f0'.
+2022-06-29:13:05:41+03 * 1 * warning * 0x20edff0 * KIM_ModelImplementation.cpp:874 * Use of the GetParameterFileName(0, 0x7ffed45d3c20). function is deprecated. Please use GetParameterFileBasename() instead.
+2022-06-29:13:05:41+03 * 2 * error * 0x20edff0 * KIM_SharedLibrary.cpp:348 * SharedLibrary not open.
+2022-06-29:13:05:41+03 * 3 * information * 0x20edff0_Collections * KIM_LogImplementation.cpp:120 * Log object destroyed.
+2022-06-29:13:05:41+03 * 0 * information * 0x20de5f0 * KIM_LogImplementation.cpp:110 * Log object created.  Default verbosity level is 'information'.
+2022-06-29:13:05:41+03 * 1 * information * 0x20de5f0 * KIM_LogImplementation.cpp:242 * Log object renamed.  ID changed to '0x20edff0_0x20de5f0'.
+2022-06-29:13:05:41+03 * 2 * information * 0x20edff0_0x20de5f0 * KIM_LogImplementation.cpp:246 * Log object renamed.  ID changed from '0x20de5f0'.
+2022-06-29:13:05:41+03 * 3 * information * 0x20edff0_0x20de5f0 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2022-06-29:13:05:41+03 * 4 * information * 0x20edff0_0x20de5f0 * LennardJones612Implementation.cpp:650 * Register callback supportStatus

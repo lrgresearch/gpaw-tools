@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 '''
-quickoptimize.py: Quick Geometric Optimization
-                  using interatomic potentials.
-More information: $ quickoptimize.py -h
+asapsolve.py: Quick Geometric Optimization
+              using interatomic potentials.
+More information: $ asapsolve.py -h
 '''
 
 Description = f''' 
  Usage: 
- $ python quickoptimize.py <args>
+ $ asapsolve.py <args>
  
  -------------------------------------------------------------
    Some potentials

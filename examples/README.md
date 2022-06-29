@@ -2,7 +2,7 @@
 
 There are some example calculations given with different usage scenarios. Please send us more calculations to include here.
 
-## Example List
+## GPAW Example List
 
 | Name              | Notes  | 
 | ----------------- | ------ |
@@ -15,3 +15,8 @@ There are some example calculations given with different usage scenarios. Please
 | TiC-elastic-electronic | Elastic (EoS and Elastic Tensor) and Electronic Properties of Rocksalt TiC |
 | Si-with-HSE | Ground state, DOS and band structure of Si with HSE06 Hybrid XC | 
 
+## ASAP3 Example List
+
+| Name              | Notes  | 
+| ----------------- | ------ |
+| ASAP3-Example     | Germanene nanosheet example with a general potential.          |

@@ -29,7 +29,7 @@ Latest development release: [download (tar.gz)](https://github.com/lrgresearch/g
 
 ## News
 * **[gpaw-tools](releasenotes.md#version-2270)** version 22.7.0 released (July 12, 2022).
-* * **[gpaw-tools](releasenotes.md#version-2250)** version 22.5.0 released (May 8, 2022).
+* **[gpaw-tools](releasenotes.md#version-2250)** version 22.5.0 released (May 8, 2022).
 * **[gpaw-tools](releasenotes.md#version-2240)** version 22.4.0 released (Apr 7, 2022).
 * **[gpaw-tools](releasenotes.md#version-2230)** version 22.3.0 released (Mar 4, 2022).
 * Our [paper](https://doi.org/10.1016/j.commatsci.2022.111201) about *gpaw-tools* is published in Computational Material Science.

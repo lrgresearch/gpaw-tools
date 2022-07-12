@@ -13,22 +13,23 @@ title: Home
 [Download now](#download){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/lrgresearch/gpaw-tools){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 `gpaw-tools` have:
-1. A force-field quick optimization script `quickoptimization.py` for preliminary calculations using ASAP3/OpenKIM potentials. 
+1. A force-field quick optimization script `asapsolve.py` for preliminary calculations using ASAP3/OpenKIM potentials. 
 2. `ciftoase.py` script for transform CIF files to ASE's own Atoms object.
 3. To choose better cut off energy, lattice parameter and k points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`,`optimize_kptsdensity.py` and `optimize_latticeparam.py`.
-4. The main solver script `gpawsolver.py` which can be run in PW (also with GW and EXX) or LCAO mode. It can do structure optimization, Equation of State and elastic tensor calculations, can use several different XCs, can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties (RPA and BSE) in a very simple and organized way.
+4. The main solver script `gpawsolver.py` which can be run in PW (also with GW and EXX) or LCAO mode. It can do structure optimization, Equation of State and elastic tensor calculations, can use several different XCs (also hybird XCs), can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties (RPA and BSE) in a very simple and organized way.
 5. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) which is called `gg.py`.
 
-More information about [gpaw-tools idea](about.md), [installation](installation.md), [usage](usage.md) and [release notes](releasenotes.md) can be found at related pages.
+More information about [gpaw-tools idea](about.md), [installation](installation.md), [usage](generalusage.md) and [release notes](releasenotes.md) can be found at related pages.
 
 ## Download
 
-**Latest stable release: v22.5.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v22.5.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v22.5.0.zip)**
+**Latest stable release: v22.7.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v22.7.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v22.7.0.zip)**
 
 Latest development release: [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
 
 ## News
-* **[gpaw-tools](releasenotes.md#version-2250)** version 22.5.0 released (May 8, 2022).
+* **[gpaw-tools](releasenotes.md#version-2270)** version 22.7.0 released (July 12, 2022).
+* * **[gpaw-tools](releasenotes.md#version-2250)** version 22.5.0 released (May 8, 2022).
 * **[gpaw-tools](releasenotes.md#version-2240)** version 22.4.0 released (Apr 7, 2022).
 * **[gpaw-tools](releasenotes.md#version-2230)** version 22.3.0 released (Mar 4, 2022).
 * Our [paper](https://doi.org/10.1016/j.commatsci.2022.111201) about *gpaw-tools* is published in Computational Material Science.

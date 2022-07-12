@@ -109,7 +109,7 @@ Basic DFT calculations can be done graphically with the script `gg.py`. This scr
 ### asapsolve.py
 Inter-atomic potentials are useful tool to perform a quick geometric optimization of the studied system before starting a precise DFT calculation. The `asapsolve.py` script is written for geometric optimizations with inter-atomic potentials. The bulk configuration of atoms can be provided by the user given as CIF file. A general potential is given for any calculation. However, user can provide the necessary OpenKIM potential by changing the related line in the input file.
 
-Mainly, asap.py is not related to GPAW. However it is dependent to ASAP3/OpenKIM and Kimpy. Therefore, the user must install necessary libraries before using the script:
+Mainly, `asapsolve.py` is not related to GPAW. However it is dependent to ASAP3/OpenKIM and Kimpy. Therefore, the user must install necessary libraries before using the script:
 
     pip install --upgrade --user ase asap3
     sudo add-apt-repository ppa:openkim/latest

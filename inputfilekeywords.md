@@ -3,20 +3,22 @@ layout: default
 navigation_weight: 6
 title: Input File Keywords
 ---
-
 # Input File Keywords
+There are two scripts that use input files in gpaw-tools. One of them is the main DFT script `gpawsolve.py`, and other is MD script `asapsolve.py`. You can find the keyword lists of each script below:
+* [**gpawsolve.py Keyword List**](inputfilekeywords.md#gpawsolvepy-keyword-list)
+* [**asapsolve.py Keyword List**](inputfilekeywords.md#asapsolvepy-keyword-list)
+
+# `gpawsolve.py` Keyword List
 
 [**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPIcores](inputfilekeywords.md#mpicores)
 
-[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Minimizer](inputfilekeywords.md#minimizer), [fmaxval](inputfilekeywords.md#fmaxval), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [whichstrain](inputfilekeywords.md#whichstrain)
+[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Optimizer](inputfilekeywords.md#optimizer), [fmaxval](inputfilekeywords.md#fmaxval), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [whichstrain](inputfilekeywords.md#whichstrain)
 
-[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
+[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [gpts_density](inputfilekeywords.md#gpts_density), [gpts_x](inputfilekeywords.md#gpts_x), [gpts_y](inputfilekeywords.md#gpts_y), [gpts_z](inputfilekeywords.md#gpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
 
 [**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GWtype](inputfilekeywords.md#gwtype), [GWkpoints](inputfilekeywords.md#gwkpoints), [GWtruncation](inputfilekeywords.md#gwtruncation), [GWcut_off_energy](inputfilekeywords.md#gwcut_off_energy), [GWbandVB](inputfilekeywords.md#gwbandvb), [GWbandCB](inputfilekeywords.md#gwbandcb), [GWppa](inputfilekeywords.md#gwppa), [GWq0correction](inputfilekeywords.md#gwq0correction), [GWnblock](inputfilekeywords.md#gwnblock)
 
 [**Optical Calculations Keywords:**](inputfilekeywords.md#optical-calculations-keywords) [opttype](inputfilekeywords.md#opttype), [optshift](inputfilekeywords.md#opthift), [optBSEvb](inputfilekeywords.md#optbsevb), [optbsecb](inputfilekeywords.md#optbsecb), [optBSEminEn](inputfilekeywords.md#optbseminen), [optBSEmaxEn](inputfilekeywords.md#optbsemaxen), [optbsenumdata](inputfilekeywords.md#optbsenumdata), [num_of_bands](inputfilekeywords.md#num_of_bands), [optFDsmear](inputfilekeywords.md#optfdsmear), [opteta](inputfilekeywords.md#opteta), [optdomega0](inputfilekeywords.md#optdomega0), [optomega2](inputfilekeywords.md#optomega2), [optecut](inputfilekeywords.md#optecut), [optnblocks](inputfilekeywords.md#optnblocks)
-
-# All Keywords
 
 ## General Keywords
 
@@ -376,6 +378,66 @@ This keyword controls the number of kpoints in z direction. If `kpts_density` is
 
 #### Example
 kpts_z = 5
+
+---
+
+### gpts_density
+#### Keyword type
+Float
+
+#### Description
+This keyword controls gpoint density. If `gpts_density` is included in an input file, the `gpts_x`, `gpts_y` and `gpts_z` variables will be ignored automatically. Unit is pts per Å.
+
+#### Default
+0.2.
+
+#### Example
+gpts_density = 0.2     # pts per Å^-1
+
+---
+
+### gpts_x
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of grid points in x direction. If `gpts_density` is included in an input file, the `gpts_x` variable will be ignored automatically. Unit is number of points.
+
+#### Default
+8
+
+#### Example
+gpts_x = 8
+
+---
+
+### gpts_y
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of grid points in y direction. If `gpts_density` is included in an input file, the `gpts_y` variable will be ignored automatically. Unit is number of points.
+
+#### Default
+8
+
+#### Example
+gpts_y = 8
+
+---
+
+### gpts_z
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of grid points in z direction. If `gpts_density` is included in an input file, the `gpts_z` variable will be ignored automatically. Unit is number of points.
+
+#### Default
+8
+
+#### Example
+gpts_z = 8
 
 ---
 
@@ -1002,3 +1064,141 @@ This keyword controls the Split matrices in nblocks blocks and distribute them G
 #### Example
 optnblocks = 4
 
+# `asapsolve.py` Keyword List
+
+[**MD Keywords:**](inputfilekeywords.md#md-keywords) [PotentialUsed](inputfilekeywords.md#potentialused), [Temperature](inputfilekeywords.md#temperature), [Time](inputfilekeywords.md#time), [Friction](inputfilekeywords.md#friction), [Scaled](inputfilekeywords.md#scaled), [Manualpbc](inputfilekeywords.md#manualpbc), [pbcmanual](inputfilekeywords.md#pbcmanual), [SolveDoubleElementProblem](inputfilekeywords.md#solvedoubleelementproblem)
+
+## MD Keywords
+
+---
+
+### PotentialUsed
+#### Keyword type
+String
+
+#### Description
+This keyword controls the interatomic potential used in the calculation.
+
+#### Default
+'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
+
+#### Example
+PotentialUsed = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
+
+---
+
+### Temperature
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the temperature used in the calculation. Unit is Kelvin.
+
+#### Default
+1
+
+#### Example
+Temperature = 300 #K
+
+---
+
+### Time
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the timestep used in the calculation. Unit is femtosecond
+
+#### Default
+5
+
+#### Example
+Time = 10 #fs
+
+---
+
+### Friction
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the friction used in the calculation.
+
+#### Default
+0.05
+
+#### Example
+Friction = 0.1
+
+---
+
+### Scaled
+#### Keyword type
+Boolean
+
+#### Description
+This keyword controls the usage of scaled or cartesian coordinates in the calculation.
+
+#### Default
+False
+
+#### Example
+Scaled = True
+
+---
+
+### Manualpbc
+#### Keyword type
+Boolean
+
+#### Description
+This keyword controls the usage manual constraint axis in the calculation. If it used as True, [pbcmanual](inputfilekeywords.md#pbcmanual) keyword must be used.
+
+#### Default
+False
+
+#### Example
+Manualpbc = True
+
+---
+
+### pbcmanual
+#### Keyword type
+Python List of Logical values
+
+#### Description
+This keyword controls the which components of axes will be constrained. Here:
+
+* True = constrained
+* False = not constrained
+
+And these 3 independent components are in order:
+
+* X
+* Y
+* Z
+
+**IMPORTANT**: This keyword is only working when `Manualpbc = True`
+
+#### Default
+[True, True, False]
+
+#### Example
+pbcmanual = [True, False, False]
+
+---
+
+### SolveDoubleElementProblem
+#### Keyword type
+Boolean
+
+#### Description
+This keyword is used for a possible problem. If you have double number of elements in your final file, please use this keyword as `True`.
+
+#### Default
+True
+
+#### Example
+SolveDoubleElementProblem = False
+
+---

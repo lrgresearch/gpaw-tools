@@ -8,7 +8,7 @@ title: Release Notes
 
 ### Development version
 
-* n/a
+* `find3Dmin.py` A script which draws 3D contour plot of E vs. latticeparams and show the minimum datapoint using the optimize_latticeparam.py's output, is added.
 
 ### Version 22.7.0
 

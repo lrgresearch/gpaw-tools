@@ -4,7 +4,7 @@ navigation_weight: 5
 title: Release Notes
 ---
 
-## Release notes
+# Release notes
 
 ### Development version
 

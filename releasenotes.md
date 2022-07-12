@@ -8,6 +8,8 @@ title: Release Notes
 
 ### Development version
 
+* `optimize_latticeparam.py` now can work for both lattice params a and c. Also draws 3D fig of Energy dependent latt_a - latt_c.
+*  `quickoptimize.py` works like `gpawsolve.py` now. Its name is now `asapsolve.py`. 
 * New default optimizer is QuasiNewton (BFGSLineSearch).
 * New keyword `Optimizer`. Users can now choose QuasiNewton, GPMin, LFBGS or FIRE minimizer for geometry optimization. 
 * `gg.py` includes all new keywords.

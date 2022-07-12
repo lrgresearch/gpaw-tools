@@ -230,10 +230,8 @@ Now, all needed packages are installed and we can continue with installation of 
     wget https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip
     unzip main.zip
 
-All files will be extracted to a folder called `gpaw-tools-main`. We need to make some files executable, and add this folder to `~/.bashrc` file to system-wide reach.
+All files will be extracted to a folder called `gpaw-tools-main`. We need to make this folder to `~/.bashrc` file to system-wide reach.
 
-    cd gpaw-tools-main/
-    chmod +x gg.py gpawsolve.py
     nano ~/.bashrc
 
 Add the following line at the end of your ``~/.bashrc`` file.

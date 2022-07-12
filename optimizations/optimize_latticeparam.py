@@ -10,15 +10,12 @@ from ase import *
 from ase.io import read
 from ase.geometry.cell import cell_to_cellpar, cellpar_to_cell
 from gpaw import GPAW, PW
-import sys, getopt
+import sys
 from ase.io import Trajectory
-from ase.parallel import paropen, world, parprint, broadcast
-from argparse import ArgumentParser
-import matplotlib
+from ase.parallel import paropen, world, parprint
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
 # -------------------------------------------------------------
 # ENTER PARAMETERS
 # -------------------------------------------------------------

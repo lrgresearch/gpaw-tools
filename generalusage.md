@@ -18,9 +18,8 @@ gpaw-tools/
 │   ├── optimize_kpoints.py
 │   ├── optimize_kptsdensity.py
 │   └── optimize_latticeparam.py
-├── quick_optimization/
-|   └── quickoptimize.py
 ├── gui_files/
+└── asapsolve.py
 └── gpawsolve.py
 └── gg.py
 └── shrinkgpw.py
@@ -81,17 +80,34 @@ Usage:
 Basic DFT calculations can be done graphically with the script `gg.py`. This script is behaving as a GUI to run `gpawsolve.py` script. To execute the GUI, type simply:
   gg.py
 
-## quick_optimize/quickoptimize.py
-Inter-atomic potentials are useful tool to perform a quick geometric optimization of the studied system before starting a precise DFT calculation. The `quickoptimize.py` script is written for geometric optimizations with inter-atomic potentials. The bulk configuration of atoms can be provided by the user in the script as an ASE Atoms object or given as an argument for the CIF file. A general potential is given for any calculation. However, user can provide the necessary OpenKIM potentialby changing the related line in the script.
+## asapsolve.py
+Inter-atomic potentials are useful tool to perform a quick geometric optimization of the studied system before starting a precise DFT calculation. The `asapsolve.py` script is written for geometric optimizations with inter-atomic potentials. The bulk configuration of atoms can be provided by the user given as CIF file. A general potential is given for any calculation. However, user can provide the necessary OpenKIM potential by changing the related line in the input file.
 
-Mainly, quickoptimize.py is not related to GPAW. However it is dependent to ASAP3/OpenKIM and Kimpy. Therefore, the user must install necessary libraries before using the script.
+Mainly, `asapsolve.py` is not related to GPAW. However it is dependent to ASAP3/OpenKIM and Kimpy. Therefore, the user must install necessary libraries before using the script:
 
-The script can be called as: from the command line  in the script itself:
+    pip install --upgrade --user ase asap3
+    sudo add-apt-repository ppa:openkim/latest
+    sudo apt-get update
+    sudo apt-get install libkim-api-dev openkim-models libkim-api2 pkg-config
+    pip3 install kimpy
 
-    python quickoptimize.py                      (if the user wants to provide structure as ASE Atoms object)
-    python quickoptimize.py <geometryfile.cif>   (if the user wants to provide structure as a CIF file
+Main usage is:
 
+`$ asapsolve.py <args>`
 
+### Arguments
+
+`asapsolve.py -v -i <inputfile.py> -h -g <geometryfile.cif>`
+
+Argument list:
+```
+-g, --geometry   : Use a CIF file for geometry
+-i, --input      : Use an input file for variables (input.py) 
+
+-h --help        : Help
+-v --version     : Version information of running code and the latest stable code. Also gives download link.
+ ```
+ 
 ## optimizations/ciftoase.py
 For `quickoptimize.py` or other optimization scripts, user may need to give ASE Atoms object instead of using a CIF file. This script changes a CIF file information to ASE Atoms object. Because there is a problem in the read method of ASE.io, sometimes it can give a double number of atoms. If the user lives this kind of problem, there is a setting inside the script. User can run the script like:
 
@@ -106,18 +122,29 @@ Users must provide ASE Atoms object and simply insert the object inside these sc
     gpaw -P <core_number> python optimize_kpoints.py
     gpaw -P <core_number> python optimize_latticeparam.py
 
+`optimize_latticeparam.py` can perform simultaneous calculation for lattice parameters a and c. And can also draw 3D contour graph for Energy versus lattice parameters (a and c).
+
 ## benchmarks/
 GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcomed.
 
 ## examples/
 There are some example calculations given with different usage scenarios in the code. Please send us more calculations to include.
 
+### GPAW Example List
+
 | Name              | Notes  | 
 | ----------------- | ------ |
 | Bulk-Al-noCIF     | Ground, DOS and Band calculations of Bulk Aluminum with PW. Positions are given with Atom object.          |
 | Cr2O-spin         |Spin-dependent electronic properties of CrO2 |
-| Graphene-LCAO | Pristine graphene and graphene with defect with LCAO. Uses single config for two calculations. |
-| MoS2-GW           | GW Aproximation calculation for MoS2 |
-| Si-2atoms-optical | Two step calculation. First step ground, DOS and Band calculations. Second step for optical calculation. Structure is given with CIF file. |
-|ZnO with DFT+U     | Wurtzite ZnO calculation with DFT+U. Positions are given with Bulk object. Hubbard params are: O-p: 7eV, Zn-d: 10eV |
+| Graphene-LCAO     | Pristine graphene and graphene with defect with LCAO. Uses single config for two calculations. |
+| MoS2-GW           | GW Approximation calculation for MoS2 |
+| Si-2atoms-optical | Three step calculation. First step ground, DOS and Band calculations. Second and third steps for RPA and BSE optical calculations, respectively. Structure is given with CIF file. |
+| ZnO with DFT+U    | Wurtzite ZnO calculation with DFT+U. Positions are given with Bulk object. Hubbard params are: O-p: 7eV, Zn-d: 10eV|
+| TiC-elastic-electronic | Elastic (EoS and Elastic Tensor) and Electronic Properties of Rocksalt TiC |
+| Si-with-HSE | Ground state, DOS and band structure of Si with HSE06 Hybrid XC | 
 
+### ASAP3 Example List
+
+| Name              | Notes  | 
+| ----------------- | ------ |
+| ASAP3-Example     | Germanene nanosheet example with a general potential.          |

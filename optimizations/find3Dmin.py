@@ -5,12 +5,9 @@ find3Dmin.py: Draw 3D contour plot of E vs. latticeparams and show the minimum d
 Usage: $ python find3Dmin
 '''
 
-import sys
-import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 # Load from  optimize_latticeparam.py's output

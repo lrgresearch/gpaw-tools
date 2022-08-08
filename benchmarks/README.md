@@ -47,6 +47,7 @@ Here, `real    9m0.0719s` is the benchmark time.
 | 5         | AMD Ryzen 7 5700u        | 8(16)          | 1.8 GHz   | 16Gb   | 512SSD         | 17201.45           | 6 GB/s           | 2GB/s     |
 | 6         | AMD Ryzen 7 4700G        | 8(16)          | 3.6 GHz   | 16Gb   | 512SSD         | 18466.64           | 10 GB/s          | 1 GB/s    |
 | 7         | Intel Xeon W3540         | 4(8)           | 2.9 GHz   | 9Gb    | -              | -                  | -                | -         |
+| 8         | Intel i5-8250u           | 4(8)           | 1.6 GHz   | 8 Gb   | -              | -                  | -                | -         |
 
 ### Benchmarks
 | Computer  | GPAW Version  | System                  | Used Core | Command                       | Benchmark File             | Time Elapsed |
@@ -64,5 +65,6 @@ Here, `real    9m0.0719s` is the benchmark time.
 | 5         | 21.6.0        | Ubuntu 20.04            | 15        | mpirun --use-hwthread-cpus -n | simple_benchmark_2021.py   | 8m19s        |
 | 6         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 8         | gpaw -P                       | simple_benchmark_2021.py   | 3m50s        |
 | 7         | 21.6.0        | W10Pro - WSL1 - Ub20.04 | 8         | mpirun -n                     | simple_benchmark_2021.py   | 11m25s       |
+| 8         | 22.1.0        | W10Pro - WSL1 - Ub20.04 | 2         | mpirun -n                     | simple_benchmark_2021.py   | 15m28s       |
 
 (1) : sysbench for linux is used for CPU benchmark (UBUNTU INSTALLATION: sudo apt-get install sysbench | USAGE: sysbench --test=cpu --threads=PUT-THREAD-NUMBER-HERE run).

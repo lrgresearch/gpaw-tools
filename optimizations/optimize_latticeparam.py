@@ -41,7 +41,7 @@ percent_c = 0.10 # changing the lattice parameter how much percent? (for lattice
 
 # If you want to optimize only on lattice param a or c, just make the other datapoint_count_x = 1
 datapoint_count_a = 11 # how many data points for lattice param a?
-datapoint_count_c = 11 # how many data points for lattice param c?
+datapoint_count_c = 1 # how many data points for lattice param c?
 
 Draw_figure = False # Draw 3D figure for latt_a - latt_c optimization.
 

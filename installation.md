@@ -212,13 +212,14 @@ For quick optimization, we need simple interatomic modelling. For this, we need 
     sudo apt-get install libkim-api-dev openkim-models libkim-api2 pkg-config
     pip3 install kimpy
 
-Then you can use files in https://github.com/lrgresearch/gpaw-tools/tree/main/QuickOptimize
+Then you can continue on installation of gpaw-tools.
 
 ### 4. Installation of gpaw-tools
 
-Before, starting to installation of `gpaw-tools`, we need to install `spglib` and `elastic` packages and their dependencies. If you used conda to install previous packages, you do not need to run the following command.
+Before, starting to installation of `gpaw-tools`, we need to install `spglib` and `elastic` packages and their dependencies. If you used conda to install previous packages, you do not need to run the following commands (If you try to run these two command as a single command you may have receive an error).
 
-    pip3 install spglib setuptools_scm docutils elastic
+    pip3 install setuptools_scm
+    pip3 install spglib docutils elastic
 
 Also, lastly, it is good to use a job queue system when you have many inputs to run. GPAW / gpaw-tools can be run with task managers like SLURM. However, if you use your GPAW / gpaw-tools system on your local server/workstation, using Task Spooler is a good idea. It only works on one server for one user. It makes a queue, and run your commands in order. To install tsp command to your Ubuntu system, use:
 

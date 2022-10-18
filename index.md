@@ -28,7 +28,10 @@ More information about [gpaw-tools idea](about.md), [installation](installation.
 Latest development release: [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
 
 ## News
+* A new oral presentation about *gpaw-tools* is presented at MSNG2022 (September 22, 2022).
+* We had a small deparment-wide hands-on activity about installation and basic usage of ASE, GPAW and gpaw-tools software at Gazi Univ. Dept. of Phys. (August 8, 2022). 
 * **[gpaw-tools](releasenotes.md#version-2270)** version 22.7.0 released (July 12, 2022).
+* A new poster presentation about *gpaw-tools* is presented at 2022 Workshop on Recent Developments in Electronic Structure (June 2, 2022).
 * **[gpaw-tools](releasenotes.md#version-2250)** version 22.5.0 released (May 8, 2022).
 * **[gpaw-tools](releasenotes.md#version-2240)** version 22.4.0 released (Apr 7, 2022).
 * **[gpaw-tools](releasenotes.md#version-2230)** version 22.3.0 released (Mar 4, 2022).

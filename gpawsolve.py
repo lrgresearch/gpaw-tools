@@ -595,6 +595,7 @@ if Optical_calc == False:
             print("e (eV): "+str(e), file=fd)
             print("v (Ang^3): "+str(v), file=fd)
             print("Cij (GPa): ",Cij/GPa, file=fd)
+            print("The general ordering of Cij components is (except triclinic): C11,C22,C33,C12,C13,C23,C44,C55,C66,C16,C26,C36,C45.", file=fd)
         # Finish elastic calc
         time152 = time.time()
     # -------------------------------------------------------------

@@ -260,8 +260,12 @@ else:
     struct = Path(inFile).stem
     bulk_configuration = read(inFile, index='-1')
     parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
-    parprint("Spacegroup of CIF file (SPGlib):",spg.get_spacegroup(bulk_configuration))
+    parprint("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration))
     parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
+    with paropen(struct+'-0-Result-Spacegroup-and-SpecialPoints.txt', "w") as fd:
+        print("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()), file=fd)
+        print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
+        print("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()), file=fd)
 
 # Control if outdir is set or not
 if outdir is False:

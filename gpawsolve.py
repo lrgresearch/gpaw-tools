@@ -5,7 +5,7 @@ gpawsolve.py: High-level Interaction Script for GPAW
 More information: $ gpawsolve.py -h
 '''
 
-Description = f''' 
+Description = f'''
  Usage: 
  $ mpirun -np <corenumbers> gpawsolve.py <args>
  -------------------------------------------------------------
@@ -54,7 +54,7 @@ from elastic import get_elastic_tensor, get_elementary_deformations
 
 # DEFAULT VALUES
 # These values (with bulk configuration) can be used to run this script without using inputfile (py file)
-# and configuration file (cif file). 
+# and configuration file (cif file).
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
@@ -177,8 +177,8 @@ class RawFormatter(HelpFormatter):
 parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
 
 
-parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true', 
-                    help="""Save everything to a output directory with naming /inputfile. If there is no input file given and 
+parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true',
+                    help="""Save everything to a output directory with naming /inputfile. If there is no input file given and
                     Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
                     If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
 parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
@@ -222,7 +222,7 @@ try:
 
     if args.drawfigs == True:
         drawfigs = True
-    
+
     if args.version == True:
         import gpaw
         import ase
@@ -241,9 +241,8 @@ try:
             parprint('-------------------------------------------------------------------------------------------------------')
             parprint('No internet connection available.')
         quit()
-        
     if args.restart == True:
-        restart = True        
+        restart = True
 
 except getopt.error as err:
     # output error, and return with an error code
@@ -290,9 +289,8 @@ if Optical_calc == False:
             parprint('\033[91mERROR:\033[0m'+XC_calc+' can be used only in PW-EXX mode...')
             quit()
         if Spin_calc == True:
-           numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
-           bulk_configuration.set_initial_magnetic_moments(numm)
-        
+            numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
+            bulk_configuration.set_initial_magnetic_moments(numm)
         if restart == False:
             # Start ground state
             time11 = time.time()
@@ -322,13 +320,13 @@ if Optical_calc == False:
                 if Fix_symmetry == True:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
                 if 'kpts_density' in globals():
-                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
-                            spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, 
+                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size},
+                            spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma},
                             mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
                 else:
-                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size}, 
-                            spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, 
+                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size},
+                            spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
                             mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
             bulk_configuration.calc = calc
@@ -346,7 +344,7 @@ if Optical_calc == False:
                         from ase.optimize import GPMin
                         relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
                     else:
-                        relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
+                        relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
                 else:
                     # Optimizer Selection
                     if Optimizer == 'FIRE':
@@ -384,7 +382,7 @@ if Optical_calc == False:
             parprint("Starting PW ground state calculation with PBE...")
             # Fix the spacegroup in the geometric optimization if wanted
             if Fix_symmetry == True:
-                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
+                bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': kpts_density, 'gamma': Gamma},
                         convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
@@ -404,7 +402,7 @@ if Optical_calc == False:
                 from ase.optimize import GPMin
                 relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
             else:
-                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
+                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             # Writes final configuration as CIF file
@@ -439,14 +437,14 @@ if Optical_calc == False:
             parprint("Starting PW only ground state calculation for GW calculation...")
             # Fix the spacegroup in the geometric optimization if wanted
             if Fix_symmetry == True:
-                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
+                bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'kpts_density' in globals():
                 calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, 
+                        convergence = Ground_convergence,
                         mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             else:
-                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, 
-                        convergence = Ground_convergence, 
+                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
+                        convergence = Ground_convergence,
                         mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
             uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
@@ -461,7 +459,7 @@ if Optical_calc == False:
                 from ase.optimize import GPMin
                 relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
             else:
-                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
+                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
             relax.run(fmax=fmaxval)  # Consider tighter fmax!
             bulk_configuration.get_potential_energy()
             calc.diagonalize_full_hamiltonian()
@@ -478,7 +476,7 @@ if Optical_calc == False:
                 quit()
 
         # We start by setting up a G0W0 calculator object
-        gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB), 
+        gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB),
                   method=GWtype,truncation=GWtruncation, nblocksmax=GWnblock,
                   maxiter=5, q0_correction=GWq0correction,
                   mixing=0.5,savepckl=True,
@@ -490,17 +488,17 @@ if Optical_calc == False:
             print('Quasi particle (QP) energies in eV. Take CB-VB for the bandgap', file=fd)
             print('To see other energy contributions, use python -mpickle <picklefile>', file=fd)
             for x in zip(results['qp']):
-                    print(*x, sep=", ", file=fd)
+                print(*x, sep=", ", file=fd)
 
     elif Mode == 'LCAO':
         if Spin_calc == True:
-           numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
-           bulk_configuration.set_initial_magnetic_moments(numm)
+            numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
+            bulk_configuration.set_initial_magnetic_moments(numm)
         if restart == False:
             parprint("Starting LCAO ground state calculation...")
             # Fix the spacegroup in the geometric optimization if wanted
             if Fix_symmetry == True:
-                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
+                bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
             if 'gpts_density' in globals():
                 if 'kpts_density' in globals():
                     calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
@@ -531,14 +529,14 @@ if Optical_calc == False:
                     if Optimizer == 'FIRE':
                         from ase.optimize.fire import FIRE
                         relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Optimizer == 'LBFGS':
+                    elif Optimizer == 'LBFGS':
                         from ase.optimize.lbfgs import LBFGS
                         relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Optimizer == 'GPMin':
+                    elif Optimizer == 'GPMin':
                         from ase.optimize import GPMin
                         relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
                     else:
-                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')       
+                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=fmaxval)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
@@ -613,7 +611,7 @@ if Optical_calc == False:
                 convergence = Ground_convergence, occupations = Occupation)
         #energies, weights = calc.get_dos(npts=800, width=0)
         dos = DOS(calc, npts=DOS_npoints, width=DOS_width)
-        
+
         if Spin_calc == True:
             energies = dos.get_energies()
             weights = dos.get_dos(spin=0)
@@ -633,7 +631,6 @@ if Optical_calc == False:
         parprint("Calculating and saving PDOS...")
         chem_sym = bulk_configuration.get_chemical_symbols()
         ef = calc.get_fermi_level()
-        
         if Spin_calc == True:
             #Spin down
             with paropen(struct+'-2-Result-PDOS-Down.csv', "w") as fd:
@@ -647,12 +644,10 @@ if Optical_calc == False:
                     for x in zip(en-ef, pdossd, pdospd, pdosdd, pdosfd):
                         print(*x, sep=", ", file=fd)
                 print("---------------------------------------------------- --------------------", file=fd)
-                
             # RAW PDOS for spin down
             parprint("Calculating and saving Raw PDOS for spin down...")
             rawdos = DOSCalculator.from_calculator(struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=True)
             energies = rawdos.get_energies(npoints=DOS_npoints)
-              
             with paropen(struct+'-2-Result-RawPDOS-Down.csv', "w") as fd:
                 print("Energy, s-total, p-total, px, py, pz, d-total, dxy, dyz, d3z2_r2, dzx, dx2_y2, f-total", file=fd)
                 for j in range(0, bulk_configuration.get_global_number_of_atoms()):

@@ -1,6 +1,6 @@
 # Example: HSE calculations of Silicon
 
-This example uses hybrid XC HSE06 for the calculations. It can do ground state, DOS and band structure calculations. Because HSE calculations are much more slower than standard PBE calculations (Sometimes few thousand times slower), convergence values listed in the input file, kept low to finish the calculation quicker. 
+This example uses hybrid XC HSE06 for the calculations. It can do ground state, DOS and band structure calculations. Because HSE calculations are much more slower than standard PBE calculations (Sometimes few thousand times slower with conda), convergence values listed in the input file, kept low to finish the calculation quicker. 
 
 Please use proper convergence values and always use HPC for your HSE calculations :)
 

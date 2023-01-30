@@ -70,45 +70,46 @@ Optical_calc = False     # Calculate the optical properties
 # -------------------------------------------------------------
 # GEOMETRY
 Optimizer = 'QuasiNewton' # QuasiNewton, GPMin, LBFGS or FIRE
-fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
+Max_F_tolerance = 0.05 	# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
 Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
 Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
 Damping = 1.0           # LBFGS only: The calculated step is multiplied with this number before added to the positions
 Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
 # Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
-whichstrain=[False, False, False, False, False, False]
+Relax_cell = [False, False, False, False, False, False]
 
-# ELECTRONIC
-cut_off_energy = 340 	# eV
-#kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
-kpts_x = 5 			    # kpoints in x direction
-kpts_y = 5				# kpoints in y direction
-kpts_z = 5				# kpoints in z direction
-gpts_density = 0.2      # (for LCAO) Unit is Å. If the user prefers to use this, gpts_x,y,z will not be used automatically.
-gpts_x = 8              # grid points in x direction (for LCAO)
-gpts_y = 8              # grid points in y direction (for LCAO)
-gpts_z = 8              # grid points in z direction (for LCAO)
-
-Gamma = True
-band_path = 'LGL'	    # Brillouin zone high symmetry points
-band_npoints = 60		# Number of points between high symmetry points
-energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
-Hubbard = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
-
+# GROUND - SCF
+Cut_off_energy = 340 	# eV
+#Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, Ground_kpts_x,y,z will not be used automatically.
+Ground_kpts_x = 5 	# kpoints in x direction
+Ground_kpts_y = 5	# kpoints in y direction
+Ground_kpts_z = 5	# kpoints in z direction
+Ground_gpts_dens = 0.2     # (for LCAO) Unit is Å. If the user prefers to use this, Ground_gpts_x,y,z will not be used automatically.
+Ground_gpts_x = 8              # grid points in x direction (for LCAO)
+Ground_gpts_y = 8              # grid points in y direction (for LCAO)
+Ground_gpts_z = 8              # grid points in z direction (for LCAO)
+Setup_params = {}            # Can be used like {'N': ':p,6.0'} for Hubbard, can also be used for many corrections.https://wiki.fysik.dtu.dk/gpaw/devel/setups.html#gpaw.setup.Setup For none use {}
 XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
-
 Ground_convergence = {}   # Convergence items for ground state calculations
-Band_convergence = {'bands':8}   # Convergence items for band calculations
 Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
 Mixer_type = MixerSum(0.1, 3, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)
+Spin_calc = False        # Spin polarized calculation?
+Magmom_per_atom = 1.0    # Magnetic moment per atom
 
+# DOS - NSCF
 DOS_npoints = 501        # Number of points
 DOS_width = 0.1          # Width of Gaussian smearing. Use 0.0 for linear tetrahedron interpolation
 
-Spin_calc = False        # Spin polarized calculation?
-Magmom_per_atom = 1.0    # Magnetic moment per atom
-gridref = 4             # refine grid for all electron density (1, 2 [=default] and 4)
+# BAND
+Gamma = True
+Band_path = 'LGL'	    # Brillouin zone high symmetry points
+Band_npoints = 60		# Number of points between high symmetry points
+Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
+Band_convergence = {'bands':8}   # Convergence items for band calculations
+
+#DENSITY
+Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 #GW Parameters
 GWtype = 'GW0'          # GW0 or G0W0
@@ -296,7 +297,7 @@ if Optical_calc == False:
             time11 = time.time()
             # PW Ground State Calculations
             parprint("Starting PW ground state calculation...")
-            if True in whichstrain:
+            if True in Relax_cell:
                 if XC_calc in ['GLLBSC', 'GLLBSCM', 'HSE06', 'HSE03']:
                     parprint("\033[91mERROR:\033[0m Structure optimization LBFGS can not be used with "+XC_calc+" xc.")
                     parprint("Do manual structure optimization, or do with PBE, then use its final CIF as input.")
@@ -304,35 +305,35 @@ if Optical_calc == False:
                     quit()
             if XC_calc in ['HSE06', 'HSE03']:
                 parprint('Starting Hybrid XC calculations...')
-                if 'kpts_density' in globals():
-                    calc = GPAW(mode=PW(cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
+                if 'Ground_kpts_density' in globals():
+                    calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
                             eigensolver=Davidson(niter=1), mixer=Mixer_type,
-                            spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                            spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
                 else:
-                    calc = GPAW(mode=PW(cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
+                    calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
                             eigensolver=Davidson(niter=1), mixer=Mixer_type,
-                            spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                            spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
             else:
                 parprint('Starting calculations with '+XC_calc+'...')
                 # Fix the spacegroup in the geometric optimization if wanted
                 if Fix_symmetry == True:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-                if 'kpts_density' in globals():
-                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size},
-                            spinpol=Spin_calc, kpts={'density': kpts_density, 'gamma': Gamma},
+                if 'Ground_kpts_density' in globals():
+                    calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, nbands='200%', setups= Setup_params, parallel={'domain': world.size},
+                            spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                             mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
                 else:
-                    calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, nbands='200%', setups= Hubbard, parallel={'domain': world.size},
-                            spinpol=Spin_calc, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
+                    calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, nbands='200%', setups= Setup_params, parallel={'domain': world.size},
+                            spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
                             mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                             convergence = Ground_convergence, occupations = Occupation)
             bulk_configuration.calc = calc
             if Geo_optim == True:
-                if True in whichstrain:
-                    uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
+                if True in Relax_cell:
+                    uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
                     # Optimizer Selection
                     if Optimizer == 'FIRE':
                         from ase.optimize.fire import FIRE
@@ -358,7 +359,7 @@ if Optical_calc == False:
                         relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
                     else:
                         relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                relax.run(fmax=fmaxval)  # Consider tighter fmax!
+                relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
                 bulk_configuration.get_potential_energy()
@@ -383,14 +384,14 @@ if Optical_calc == False:
             # Fix the spacegroup in the geometric optimization if wanted
             if Fix_symmetry == True:
                 bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-            if 'kpts_density' in globals():
-                calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': kpts_density, 'gamma': Gamma},
+            if 'Ground_kpts_density' in globals():
+                calc = GPAW(mode=PW(Cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                         convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             else:
-                calc = GPAW(mode=PW(cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'size': (kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
+                calc = GPAW(mode=PW(Cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
                         convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
-            uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
+            uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
             # Optimizer Selection
             if Optimizer == 'FIRE':
                 from ase.optimize.fire import FIRE
@@ -403,7 +404,7 @@ if Optical_calc == False:
                 relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
             else:
                 relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            relax.run(fmax=fmaxval)  # Consider tighter fmax!
+            relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
             # Writes final configuration as CIF file
             write_cif(struct+'-Final.cif', bulk_configuration)
@@ -438,16 +439,16 @@ if Optical_calc == False:
             # Fix the spacegroup in the geometric optimization if wanted
             if Fix_symmetry == True:
                 bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-            if 'kpts_density' in globals():
-                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': kpts_density, 'gamma': Gamma},
+            if 'Ground_kpts_density' in globals():
+                calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                         convergence = Ground_convergence,
                         mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             else:
-                calc = GPAW(mode=PW(cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
+                calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
                         convergence = Ground_convergence,
                         mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
             bulk_configuration.calc = calc
-            uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
+            uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
             # Optimizer Selection
             if Optimizer == 'FIRE':
                 from ase.optimize.fire import FIRE
@@ -460,7 +461,7 @@ if Optical_calc == False:
                 relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
             else:
                 relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            relax.run(fmax=fmaxval)  # Consider tighter fmax!
+            relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
             bulk_configuration.get_potential_energy()
             calc.diagonalize_full_hamiltonian()
             calc.write(struct+'-1-Result-Ground.gpw', mode="all")
@@ -499,30 +500,30 @@ if Optical_calc == False:
             # Fix the spacegroup in the geometric optimization if wanted
             if Fix_symmetry == True:
                 bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-            if 'gpts_density' in globals():
-                if 'kpts_density' in globals():
-                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
-                            convergence = Ground_convergence, h=gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+            if 'Ground_gpts_dens' in globals():
+                if 'Ground_kpts_density' in globals():
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
+                            convergence = Ground_convergence, h=Ground_gpts_dens, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                             mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
                 else:
-                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                            convergence = Ground_convergence, h=gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
+                            convergence = Ground_convergence, h=Ground_gpts_dens, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                             mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             else:
-                if 'kpts_density' in globals():
-                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'density': kpts_density, 'gamma': Gamma},
-                            convergence = Ground_convergence, gpts=(gpts_x, gpts_y, gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                if 'Ground_kpts_density' in globals():
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
+                            convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                             mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
                 else:
-                    calc = GPAW(mode='lcao', basis='dzp', setups= Hubbard, kpts={'size':(kpts_x, kpts_y, kpts_z), 'gamma': Gamma},
-                            convergence = Ground_convergence, gpts=(gpts_x, gpts_y, gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                    calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
+                            convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                             mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
             bulk_configuration.calc = calc
             if Geo_optim == True:
-                if True in whichstrain:
-                    #uf = ExpCellFilter(bulk_configuration, mask=whichstrain)
+                if True in Relax_cell:
+                    #uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
                     #relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (whichstrain keyword) is not implemented in LCAO mode.')
+                    parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (Relax_cell keyword) is not implemented in LCAO mode.')
                     quit()
                 else:
                     # Optimizer Selection
@@ -537,12 +538,12 @@ if Optical_calc == False:
                         relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
                     else:
                         relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                relax.run(fmax=fmaxval)  # Consider tighter fmax!
+                relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
             else:
                 bulk_configuration.set_calculator(calc)
                 bulk_configuration.get_potential_energy()
             #relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-            #relax.run(fmax=fmaxval)  # Consider much tighter fmax!
+            #relax.run(fmax=Max_F_tolerance)  # Consider much tighter fmax!
             #bulk_configuration.get_potential_energy()
             if Density_calc == True:
                 #This line makes huge GPW files. Therefore it is better to use this if else
@@ -774,14 +775,14 @@ if Optical_calc == False:
                         parallel={'band': 1, 'kpt': 1}, 
                         txt=struct+'-3-Log-Band.txt',
                         symmetry='off', occupations = Occupation,
-                        kpts={'path': band_path, 'npoints': band_npoints}, convergence=Band_convergence)
+                        kpts={'path': Band_path, 'npoints': Band_npoints}, convergence=Band_convergence)
                 
             else:
                 calc = GPAW(struct+'-1-Result-Ground.gpw',
                         txt=struct+'-3-Log-Band.txt',
                         fixdensity=True,
                         symmetry='off', occupations = Occupation,
-                        kpts={'path': band_path, 'npoints': band_npoints},
+                        kpts={'path': Band_path, 'npoints': Band_npoints},
                         convergence=Band_convergence)
 
             calc.get_potential_energy()
@@ -796,28 +797,28 @@ if Optical_calc == False:
 
             if Spin_calc == True:
                 eps_skn = np.array([[calc.get_eigenvalues(k,s)
-                                    for k in range(band_npoints)]
+                                    for k in range(Band_npoints)]
                                     for s in range(2)]) - ef
                 parprint(eps_skn.shape)
                 with paropen(struct+'-3-Result-Band-Down.dat', 'w') as f1:
                     for n1 in range(num_of_bands):
-                        for k1 in range(band_npoints):
+                        for k1 in range(Band_npoints):
                             print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
                         print (end="\n", file=f1)
 
                 with paropen(struct+'-3-Result-Band-Up.dat', 'w') as f2:
                     for n2 in range(num_of_bands):
-                        for k2 in range(band_npoints):
+                        for k2 in range(Band_npoints):
                             print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
                         print (end="\n", file=f2)
 
             else:
                 eps_skn = np.array([[calc.get_eigenvalues(k,s)
-                                    for k in range(band_npoints)]
+                                    for k in range(Band_npoints)]
                                     for s in range(1)]) - ef
                 with paropen(struct+'-3-Result-Band.dat', 'w') as f:
                     for n in range(num_of_bands):
-                        for k in range(band_npoints):
+                        for k in range(Band_npoints):
                             print(k, eps_skn[0, k, n], end="\n", file=f)
                         print (end="\n", file=f)
         # Finish Band calc
@@ -832,7 +833,7 @@ if Optical_calc == False:
         calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-4-Log-ElectronDensity.txt')
         bulk_configuration.calc = calc
         np = calc.get_pseudo_density()
-        n = calc.get_all_electron_density(gridrefinement=gridref)
+        n = calc.get_all_electron_density(gridrefinement=Refine_grid)
         
         # Writing pseudo and all electron densities to cube file with Bohr unit
         write(struct+'-4-Result-All-electron_nall.cube', bulk_configuration, data=n * Bohr**3)
@@ -1164,7 +1165,7 @@ if drawfigs == True:
                 plt.savefig(struct+'-3-Graph-Band.png')
                 plt.show()
             else:
-                bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=energy_max)
+                bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max)
 else:
     # Draw graphs only on master node
     if world.rank == 0:
@@ -1196,4 +1197,4 @@ else:
                 plt.savefig(struct+'-3-Graph-Band.png')
                 #plt.show()
             else:
-                bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=energy_max)
+                bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max)

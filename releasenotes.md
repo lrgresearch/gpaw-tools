@@ -8,8 +8,8 @@ title: Release Notes
 
 ### Development version
 
-* With time, `gpawsolve.py` uses many variables in it and in input files. However, it do not have a proper naming convention for these variables. Also some of the variable names are misleading the use. From this version, `gpawsolve.py` will use Snake_case variables. Variables that are affected: mode -> Mode, fmaxval -> Max_F_tolerance, whichstrain -> Relax_cell, cut_off_energy -> Cut_off_energy, kpts_density -> Ground_kpts_dens, kpts_x -> Ground_kpts_x, kpts_y -> Ground_kpts_y,
-kpts_z -> Ground_kpts_y, gpts_density -> Ground_gpts_dens, gpts_x -> Ground_gpts_x, gpts_y -> Ground_gpts_y, gpts_z -> Ground_gpts_z, Hubbard -> Setup_params, band_path -> Band_path, band_npoints -> Band_npoints, gridref -> Refine_grid energy_max -> Energy_max.
+* With time, `gpawsolve.py` uses many variables in it and in input files. However, it do not have a proper naming convention for these variables. Also some of the variable names are misleading the user. From this version, `gpawsolve.py` will use Snake_case variables. Variables that are affected: *mode -> Mode, fmaxval -> Max_F_tolerance, whichstrain -> Relax_cell, cut_off_energy -> Cut_off_energy, kpts_density -> Ground_kpts_dens, kpts_x -> Ground_kpts_x, kpts_y -> Ground_kpts_y,
+kpts_z -> Ground_kpts_y, gpts_density -> Ground_gpts_dens, gpts_x -> Ground_gpts_x, gpts_y -> Ground_gpts_y, gpts_z -> Ground_gpts_z, Hubbard -> Setup_params, band_path -> Band_path, band_npoints -> Band_npoints, gridref -> Refine_grid energy_max -> Energy_max.*
 * `find3Dmin.py` A script which draws 3D contour plot of E vs. latticeparams and show the minimum datapoint using the optimize_latticeparam.py's output, is added.
 
 ### Version 22.7.0

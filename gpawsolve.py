@@ -105,6 +105,7 @@ DOS_width = 0.1          # Width of Gaussian smearing. Use 0.0 for linear tetrah
 Gamma = True
 Band_path = 'LGL'	    # Brillouin zone high symmetry points
 Band_npoints = 60		# Number of points between high symmetry points
+Band_num_of_bands = 8	# Number of bands
 Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Band_convergence = {'bands':8}   # Convergence items for band calculations
 
@@ -131,7 +132,7 @@ optBSEcb = range(4,7) # Conduction bands that will be used in BSE calculation
 optBSEminEn = 0.0       # Results will be started from this energy (BSE only)
 optBSEmaxEn = 20.0      # Results will be ended at this energy (BSE only)
 optBSEnumdata = 1001   # Number of data points in BSE  calculation
-num_of_bands = 8	# Number of bands
+Opt_num_of_bands = 8	# Number of bands
 optFDsmear = 0.05       # Fermi Dirac smearing for optical calculations
 opteta=0.05             # Eta for Optical calculations
 optdomega0=0.05         # Domega0 for Optical calculations
@@ -788,8 +789,8 @@ if Optical_calc == False:
             calc.get_potential_energy()
             bs = calc.band_structure()
             ef = calc.get_fermi_level()
-            num_of_bands = calc.get_number_of_bands()
-            parprint('Num of bands:'+str(num_of_bands))
+            Band_num_of_bands = calc.get_number_of_bands()
+            parprint('Num of bands:'+str(Band_num_of_bands))
 
             # No need to write an additional gpaw file. Use json file to use with ase band-structure command
             #calc.write(struct+'-3-Result-Band.gpw')
@@ -801,13 +802,13 @@ if Optical_calc == False:
                                     for s in range(2)]) - ef
                 parprint(eps_skn.shape)
                 with paropen(struct+'-3-Result-Band-Down.dat', 'w') as f1:
-                    for n1 in range(num_of_bands):
+                    for n1 in range(Band_num_of_bands):
                         for k1 in range(Band_npoints):
                             print(k1, eps_skn[0, k1, n1], end="\n", file=f1)
                         print (end="\n", file=f1)
 
                 with paropen(struct+'-3-Result-Band-Up.dat', 'w') as f2:
-                    for n2 in range(num_of_bands):
+                    for n2 in range(Band_num_of_bands):
                         for k2 in range(Band_npoints):
                             print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
                         print (end="\n", file=f2)
@@ -817,7 +818,7 @@ if Optical_calc == False:
                                     for k in range(Band_npoints)]
                                     for s in range(1)]) - ef
                 with paropen(struct+'-3-Result-Band.dat', 'w') as f:
-                    for n in range(num_of_bands):
+                    for n in range(Band_num_of_bands):
                         for k in range(Band_npoints):
                             print(k, eps_skn[0, k, n], end="\n", file=f)
                         print (end="\n", file=f)
@@ -852,7 +853,7 @@ if Optical_calc == True:
         try:
             calc = GPAW(struct+'-1-Result-Ground.gpw',
                     txt=struct+'-5-Log-Optical.txt',
-                    nbands=num_of_bands,
+                    nbands=Opt_num_of_bands,
                     fixdensity=True,
                     symmetry='off',
                     occupations=FermiDirac(optFDsmear))
@@ -863,7 +864,7 @@ if Optical_calc == True:
     
         calc.get_potential_energy()
 
-        calc.diagonalize_full_hamiltonian(nbands=num_of_bands)  # diagonalize Hamiltonian
+        calc.diagonalize_full_hamiltonian(nbands=Opt_num_of_bands)  # diagonalize Hamiltonian
         calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
 
         #from mpi4py import MPI
@@ -875,7 +876,7 @@ if Optical_calc == True:
             bse = BSE(calc= struct+'-5-Result-Optical.gpw', ecut=optecut,
                          valence_bands=optBSEvb,
                          conduction_bands=optBSEcb,
-                         nbands=num_of_bands,
+                         nbands=Opt_num_of_bands,
                          eshift=optshift,
                          mode='BSE',
                          write_v=True,

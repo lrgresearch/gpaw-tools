@@ -48,9 +48,7 @@ class gg:
             basepath = p.parents[0]
             #textfile.close()
             self.text1.insert(tk.END, "File opened: "+basename+" \n")
-            # Opening a working directory
-            #if not os.path.isdir(os.path.join(basepath,basename)):
-                #os.makedirs(os.path.join(basepath,basename), exist_ok=True)
+
             asestruct = read(textfilenamepath, index='-1')
             Struct = asestruct
             StructLoaded = True

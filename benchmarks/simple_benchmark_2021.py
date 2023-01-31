@@ -9,10 +9,8 @@ For using all threads provided by Intel Hyperthreading technology:
 '''
 
 from ase import *
-from ase.parallel import paropen, world
 from gpaw import GPAW, PW
 from ase.optimize.lbfgs import LBFGS
-from ase.io import read, write
 import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
 from pathlib import Path

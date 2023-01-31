@@ -51,7 +51,7 @@ Magmom_per_atom = 1.0    # Magnetic moment per atom
 Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 #GW Parameters
-GW_type = 'G0W0'          # GW0 or G0W0
+GW_calc_type = 'G0W0'          # GW0 or G0W0
 GW_kpoints_list = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
 GW_truncation = '2D'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
 GW_cut_off_energy = 60   # Cut-off energy

@@ -113,16 +113,16 @@ Band_convergence = {'bands':8}   # Convergence items for band calculations
 Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 #GW Parameters
-GWtype = 'GW0'          # GW0 or G0W0
-GWkpoints = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
-GWtruncation = 'None'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
-GWcut_off_energy = 50   # Cut-off energy
-GWbandVB = 8            # Valence band number
-GWbandCB = 18           # Conduction band number
-GWppa = True            # Plasmon Pole Approximation
-GWq0correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
-GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
-GWbandinterpolation = True # Interpolate band
+GW_calc_type = 'GW0'          # GW0 or G0W0
+GW_kpoints_list = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
+GW_truncation = 'None'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
+GW_cut_off_energy = 50   # Cut-off energy
+GW_valence_band_no = 8            # Valence band number
+GW_conudction_band_no = 18           # Conduction band number
+GW_PPA = True            # Plasmon Pole Approximation
+GW_q0_correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
+GW_nblocks_max = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
+GW_interpolate_band = True # Interpolate band
 
 # OPTICAL
 Opt_calc_type = 'BSE'         # BSE or RPA
@@ -479,7 +479,7 @@ if Optical_calc == False:
 
         # We start by setting up a G0W0 calculator object
         gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GW_valence_band_no, GW_conduction_band_no),
-                  method=GW_type,truncation=GW_truncation, nblocksmax=GW_nblocks_max,
+                  method=GW_calc_type,truncation=GW_truncation, nblocksmax=GW_nblocks_max,
                   maxiter=5, q0_correction=GW_q0_correction,
                   mixing=0.5,savepckl=True,
                   ecut=GW_cut_off_energy, ppa=GW_PPA)

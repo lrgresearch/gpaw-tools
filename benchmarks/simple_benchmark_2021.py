@@ -89,14 +89,6 @@ for x in zip(energies, weights):
     print(*x, sep=", ", file=fd)
 fd.close()
 
-if draw_dos == "yes":
-    ax = plt.gca()
-    ax.plot(energies, weights)
-    ax.set_xlabel('Energy [eV]')
-    ax.set_ylabel('DOS [1/eV]')
-    plt.savefig(struct+'-2-Graph-DOS.png')
-    #plt.show()
-
 # -------------------------------------------------------------
 # Step 3 - BAND STRUCTURE CALCULATION
 # -------------------------------------------------------------
@@ -113,8 +105,6 @@ bs = calc.band_structure()
 ef = calc.get_fermi_level()
 #bs.write(struct+'-3-Result-Band.json')
 calc.write(struct+'-3-Result-Band.gpw')
-if draw_band == "yes":
-    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=energy_max)
 
 # Extract eigenenergies into a file for plotting with some external package
 

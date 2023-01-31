@@ -3,15 +3,15 @@ Current file is a similar to our electronic structure calculation script.
 For better performance do not use `total number of cores` that your computer provides. Instead, try to use `total number of cores - 1` as general. Use `time` command to measure the time passed as (prefered version of running GPAW is):
 
 
-       gpaw -P7 python simple_benchmark_2021.py
+       gpaw -P7 python simple_benchmark_2023.py
 
 or (this will take a little bit longer)
 
-       time mpiexec -n 7 gpaw python simple_benchmark_2021.py
+       time mpiexec -n 7 gpaw python simple_benchmark_2023.py
        
 or if your CPU supports threads (sometimes this may take even longer)
 
-       time mpiexec --use-hwthread-cpus -n 15 gpaw python simple_benchmark_2021.py
+       time mpiexec --use-hwthread-cpus -n 15 gpaw python simple_benchmark_2023.py
 
 These commands will result something like:
 ```

@@ -26,7 +26,7 @@ class gg:
     def __init__(self, master=None):
         global Geo_optim, Elastic_calcvar, DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar
         global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar, Fix_symmetryvar
-        global GWppavar, GWq0correctionvar, GWnblockvar, Struct, StructLoaded, GWbandinterpolationvar
+        global GW_PPAvar, GW_q0_correctionvar, GW_nblocks_maxvar, Struct, StructLoaded, GW_interpolate_bandvar
         
         url = 'https://www.lrgresearch.org/gpaw-tools/'
         
@@ -163,13 +163,13 @@ class gg:
             else:
                 self.Optimizerttk.current(0)
             
-            # Fmax
-            if 'fmaxval' in config.__dict__.keys():
-                self.fmaxvalttk.delete('0', 'end')
-                self.fmaxvalttk.insert('0', config.fmaxval)
+            # Max_F_tolerance
+            if 'Max_F_tolerance' in config.__dict__.keys():
+                self.Max_F_tolerancettk.delete('0', 'end')
+                self.Max_F_tolerancettk.insert('0', config.Max_F_tolerance)
             else:
-                self.fmaxvalttk.delete('0', 'end')
-                self.fmaxvalttk.insert('0', '0.05')
+                self.Max_F_tolerancettk.delete('0', 'end')
+                self.Max_F_tolerancettk.insert('0', '0.05')
             
             # Max_step
             if 'Max_step' in config.__dict__.keys():
@@ -205,33 +205,33 @@ class gg:
                 Fix_symmetryvar.set(False)
                 
             # Relax cell
-            if 'whichstrain' in config.__dict__.keys():
-                if config.whichstrain[0] == True:
+            if 'Relax_cell' in config.__dict__.keys():
+                if config.Relax_cell[0] == True:
                     EpsXvar.set(True)
                 else:
                     EpsXvar.set(False)
 
-                if config.whichstrain[1] == True:
+                if config.Relax_cell[1] == True:
                     EpsYvar.set(True)
                 else:
                     EpsYvar.set(False)
 
-                if config.whichstrain[2] == True:
+                if config.Relax_cell[2] == True:
                     EpsZvar.set(True)
                 else:
                     EpsZvar.set(False)
 
-                if config.whichstrain[3] == True:
+                if config.Relax_cell[3] == True:
                     ShearYZvar.set(True)
                 else:
                     ShearYZvar.set(False)
 
-                if config.whichstrain[4] == True:
+                if config.Relax_cell[4] == True:
                     ShearXZvar.set(True)
                 else:
                     ShearXZvar.set(False)
 
-                if config.whichstrain[5] == True:
+                if config.Relax_cell[5] == True:
                     ShearXYvar.set(True)
                 else:
                     ShearXYvar.set(False)
@@ -244,44 +244,44 @@ class gg:
                 ShearXYvar.set(False)
 
             # Cut-off energy
-            if 'cut_off_energy' in config.__dict__.keys():
-                self.cut_off_energyttk.delete('0', 'end')
-                self.cut_off_energyttk.insert('0', config.cut_off_energy)
+            if 'Cut_off_energy' in config.__dict__.keys():
+                self.Cut_off_energyttk.delete('0', 'end')
+                self.Cut_off_energyttk.insert('0', config.Cut_off_energy)
             else:
-                self.cut_off_energyttk.delete('0', 'end')
-                self.cut_off_energyttk.insert('0', '340')
+                self.Cut_off_energyttk.delete('0', 'end')
+                self.Cut_off_energyttk.insert('0', '340')
 
-            # Kpoints
-            if 'kpts_x' in config.__dict__.keys():
-                self.kpts_xttk.delete('0', 'end')
-                self.kpts_xttk.insert('0', config.kpts_x)
-                self.kpts_yttk.delete('0', 'end')
-                self.kpts_yttk.insert('0', config.kpts_y)
-                self.kpts_zttk.delete('0', 'end')
-                self.kpts_zttk.insert('0', config.kpts_z)
+            # K-points
+            if 'Ground_kpts_x' in config.__dict__.keys():
+                self.Ground_kpts_xttk.delete('0', 'end')
+                self.Ground_kpts_xttk.insert('0', config.Ground_kpts_x)
+                self.Ground_kpts_yttk.delete('0', 'end')
+                self.Ground_kpts_yttk.insert('0', config.Ground_kpts_y)
+                self.Ground_kpts_zttk.delete('0', 'end')
+                self.Ground_kpts_zttk.insert('0', config.Ground_kpts_z)
             else:
-                self.kpts_xttk.delete('0', 'end')
-                self.kpts_xttk.insert('0', '1')
-                self.kpts_yttk.delete('0', 'end')
-                self.kpts_yttk.insert('0', '1')
-                self.kpts_zttk.delete('0', 'end')
-                self.kpts_zttk.insert('0', '1')
+                self.Ground_kpts_xttk.delete('0', 'end')
+                self.Ground_kpts_xttk.insert('0', '1')
+                self.Ground_kpts_yttk.delete('0', 'end')
+                self.Ground_kpts_yttk.insert('0', '1')
+                self.Ground_kpts_zttk.delete('0', 'end')
+                self.Ground_kpts_zttk.insert('0', '1')
                 
             # Grid points
-            if 'gpts_x' in config.__dict__.keys():
-                self.gpts_xttk.delete('0', 'end')
-                self.gpts_xttk.insert('0', config.gpts_x)
-                self.gpts_yttk.delete('0', 'end')
-                self.gpts_yttk.insert('0', config.gpts_y)
-                self.gpts_zttk.delete('0', 'end')
-                self.gpts_zttk.insert('0', config.gpts_z)
+            if 'Ground_gpts_x' in config.__dict__.keys():
+                self.Ground_gpts_xttk.delete('0', 'end')
+                self.Ground_gpts_xttk.insert('0', config.Ground_gpts_x)
+                self.Ground_gpts_yttk.delete('0', 'end')
+                self.Ground_gpts_yttk.insert('0', config.Ground_gpts_y)
+                self.Ground_gpts_zttk.delete('0', 'end')
+                self.Ground_gpts_zttk.insert('0', config.Ground_gpts_z)
             else:
-                self.gpts_xttk.delete('0', 'end')
-                self.gpts_xttk.insert('0', '1')
-                self.gpts_yttk.delete('0', 'end')
-                self.gpts_yttk.insert('0', '1')
-                self.gpts_zttk.delete('0', 'end')
-                self.gpts_zttk.insert('0', '1')
+                self.Ground_gpts_xttk.delete('0', 'end')
+                self.Ground_gpts_xttk.insert('0', '1')
+                self.Ground_gpts_yttk.delete('0', 'end')
+                self.Ground_gpts_yttk.insert('0', '1')
+                self.Ground_gpts_zttk.delete('0', 'end')
+                self.Ground_gpts_zttk.insert('0', '1')
 
             # Gamma
             if 'Gamma' in config.__dict__.keys():
@@ -293,40 +293,48 @@ class gg:
                 Gammavar.set(False)
 
             # Band path
-            if 'band_path' in config.__dict__.keys():
-                self.band_pathttk.delete('0', 'end')
-                self.band_pathttk.insert('0', config.band_path)
+            if 'Band_path' in config.__dict__.keys():
+                self.Band_pathttk.delete('0', 'end')
+                self.Band_pathttk.insert('0', config.Band_path)
             else:
-                self.band_pathttk.delete('0', 'end')
-                self.band_pathttk.insert('0', 'GX')
+                self.Band_pathttk.delete('0', 'end')
+                self.Band_pathttk.insert('0', 'GX')
 
-            # Npoints
-            if 'band_npoints' in config.__dict__.keys():
-                self.band_npointsttk.delete('0', 'end')
-                self.band_npointsttk.insert('0', config.band_npoints)
+            # N-points
+            if 'Band_npoints' in config.__dict__.keys():
+                self.Band_npointsttk.delete('0', 'end')
+                self.Band_npointsttk.insert('0', config.Band_npoints)
             else:
-                self.band_npointsttk.delete('0', 'end')
-                self.band_npointsttk.insert('0', '40')
+                self.Band_npointsttk.delete('0', 'end')
+                self.Band_npointsttk.insert('0', '40')
+                
+            # Number of bands
+            if 'Band_num_of_bands' in config.__dict__.keys():
+                self.Band_num_of_bandsttk.delete('0', 'end')
+                self.Band_num_of_bandsttk.insert('0', config.Band_num_of_bands)
+            else:
+                self.Band_num_of_bandsttk.delete('0', 'end')
+                self.Band_num_of_bandsttk.insert('0', '8')
 
             # Max energy for figure
-            if 'energy_max' in config.__dict__.keys():
-                self.energy_maxttk.delete('0', 'end')
-                self.energy_maxttk.insert('0', config.energy_max)
+            if 'Energy_max' in config.__dict__.keys():
+                self.Energy_maxttk.delete('0', 'end')
+                self.Energy_maxttk.insert('0', config.Energy_max)
             else:
-                self.energy_maxttk.delete('0', 'end')
-                self.energy_maxttk.insert('0', '15')
+                self.Energy_maxttk.delete('0', 'end')
+                self.Energy_maxttk.insert('0', '15')
 
             
-            # Hubbard
-            if 'Hubbard' in config.__dict__.keys():
-                self.Hubbardttk.delete('0', 'end')
-                if hasattr(config, 'Hubbard'):
-                    self.Hubbardttk.insert('0', str(config.Hubbard))
+            # Setup parameters
+            if 'Setup_params' in config.__dict__.keys():
+                self.Setup_paramsttk.delete('0', 'end')
+                if hasattr(config, 'Setup_params'):
+                    self.Setup_paramsttk.insert('0', str(config.Setup_params))
                 else:
-                    self.Hubbardttk.insert('0', '{}')
+                    self.Setup_paramsttk.insert('0', '{}')
             else:
-                self.Hubbardttk.delete('0', 'end')
-                self.Hubbardttk.insert('0', '{}')
+                self.Setup_paramsttk.delete('0', 'end')
+                self.Setup_paramsttk.insert('0', '{}')
 
             # XCs
             if 'XC_calc' in config.__dict__.keys():
@@ -416,244 +424,244 @@ class gg:
                 self.Magmom_per_atomttk.insert('0', '0.0')
 
             #Gridref for electron density
-            if 'gridref' in config.__dict__.keys():
-                self.gridrefttk.delete('0', 'end')
-                self.gridrefttk.insert('0', config.gridref)
+            if 'Refine_grid' in config.__dict__.keys():
+                self.Refine_gridttk.delete('0', 'end')
+                self.Refine_gridttk.insert('0', config.Refine_grid)
             else:
-                self.gridrefttk.delete('0', 'end')
-                self.gridrefttk.insert('0', '2')        
+                self.Refine_gridttk.delete('0', 'end')
+                self.Refine_gridttk.insert('0', '2')        
 
             # ---------GW Parameters---------
             
-            # GWtype
-            if 'gridref' in config.__dict__.keys():
-                if config.GWtype == 'GW0':
-                    self.GWtypettk.current(0)
-                elif config.GWtype == 'G0W0':
-                    self.GWtypettk.current(1)
+            # GW calculation type
+            if 'GW_calc_type' in config.__dict__.keys():
+                if config.GW_calc_type == 'GW0':
+                    self.GW_calc_typettk.current(0)
+                elif config.GW_calc_type == 'G0W0':
+                    self.GW_calc_typettk.current(1)
                 else:
-                    self.GWtypettk.current(0)
+                    self.GW_calc_typettk.current(0)
             else:
-                self.GWtypettk.current(0)
+                self.GW_calc_typettk.current(0)
             
             # GWkpoints
-            if 'GWkpoints' in config.__dict__.keys():
-                self.GWkpointsttk.delete('0', 'end')
-                if hasattr(config, 'GWkpoints'):
-                    self.GWkpointsttk.insert('0', str(config.GWkpoints.tolist()))
+            if 'GW_kpoints_list' in config.__dict__.keys():
+                self.GW_kpoints_listttk.delete('0', 'end')
+                if hasattr(config, 'GW_kpoints_list'):
+                    self.GW_kpoints_listttk.insert('0', str(config.GW_kpoints_list.tolist()))
                 else:
-                    self.GWkpointsttk.insert('0', '[[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]')
+                    self.GW_kpoints_listttk.insert('0', '[[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]')
             else:
-                self.GWkpointsttk.delete('0', 'end')
-                self.GWkpointsttk.insert('0', '[[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]')
+                self.GW_kpoints_listttk.delete('0', 'end')
+                self.GW_kpoints_listttk.insert('0', '[[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]')
             
-            # GWtruncation
-            if 'GWtruncation' in config.__dict__.keys():
-                if config.GWtruncation is None:
-                    self.GWtruncationttk.current(0)
-                elif config.GWtruncation == '2D':
-                    self.GWtruncationttk.current(1)
-                elif config.GWtruncation == '1D':
-                    self.GWtruncationttk.current(2)
-                elif config.GWtruncation == '0D':
-                    self.GWtruncationttk.current(3)
-                elif config.GWtruncation == 'wigner-seitz':
-                    self.GWtruncationttk.current(4)
+            # GW truncation
+            if 'GW_truncation' in config.__dict__.keys():
+                if config.GW_truncation is None:
+                    self.GW_truncationttk.current(0)
+                elif config.GW_truncation == '2D':
+                    self.GW_truncationttk.current(1)
+                elif config.GW_truncation == '1D':
+                    self.GW_truncationttk.current(2)
+                elif config.GW_truncation == '0D':
+                    self.GW_truncationttk.current(3)
+                elif config.GW_truncation == 'wigner-seitz':
+                    self.GW_truncationttk.current(4)
                 else:
-                    self.GWtruncationttk.current(0)
+                    self.GW_truncationttk.current(0)
             else:
-                self.GWtruncationttk.current(0)
+                self.GW_truncationttk.current(0)
 
-            # GWcut_off_energy
-            if 'GWcut_off_energy' in config.__dict__.keys():
-                self.GWcut_off_energyttk.delete('0', 'end')
-                self.GWcut_off_energyttk.insert('0', config.GWcut_off_energy)
+            # GW Cut off energy
+            if 'GW_cut_off_energy' in config.__dict__.keys():
+                self.GW_cut_off_energyttk.delete('0', 'end')
+                self.GW_cut_off_energyttk.insert('0', config.GW_cut_off_energy)
             else:
-                self.GWcut_off_energyttk.delete('0', 'end')
-                self.GWcut_off_energyttk.insert('0', '50')
+                self.GW_cut_off_energyttk.delete('0', 'end')
+                self.GW_cut_off_energyttk.insert('0', '50')
 
-            # GWbandVB
-            if 'GWbandVB' in config.__dict__.keys():
-                self.GWbandVBttk.delete('0', 'end')
-                self.GWbandVBttk.insert('0', config.GWbandVB)
+            # GW valance band number
+            if 'GW_valence_band_no' in config.__dict__.keys():
+                self.GW_valence_band_nottk.delete('0', 'end')
+                self.GW_valence_band_nottk.insert('0', config.GW_valence_band_no)
             else:
-                self.GWbandVBttk.delete('0', 'end')
-                self.GWbandVBttk.insert('0', '8')
+                self.GW_valence_band_nottk.delete('0', 'end')
+                self.GW_valence_band_nottk.insert('0', '8')
 
-            # GWbandCB
-            if 'GWbandCB' in config.__dict__.keys():
-                self.GWbandCBttk.delete('0', 'end')
-                self.GWbandCBttk.insert('0', config.GWbandCB)
+            # GW conduction band number
+            if 'GW_conduction_band_no' in config.__dict__.keys():
+                self.GW_conduction_band_nottk.delete('0', 'end')
+                self.GW_conduction_band_nottk.insert('0', config.GW_conduction_band_no)
             else:
-                self.GWbandCBttk.delete('0', 'end')
-                self.GWbandCBttk.insert('0', '18')
+                self.GW_conduction_band_nottk.delete('0', 'end')
+                self.GW_conduction_band_nottk.insert('0', '18')
 
-            # GWppa
-            if 'GWppa' in config.__dict__.keys():
-                if config.GWppa == True:
-                    GWppavar.set(True)
+            # GW PPA
+            if 'GW_PPA' in config.__dict__.keys():
+                if config.GW_PPA == True:
+                    GW_PPAvar.set(True)
                 else:
-                    GWppavar.set(False)
+                    GW_PPAvar.set(False)
             else:
-                GWppavar.set(False)
+                GW_PPAvar.set(False)
                 
-            # GWq0correction
-            if 'GWq0correction' in config.__dict__.keys():
-                if config.GWq0correction == True:
-                    GWq0correctionvar.set(True)
+            # GW q0 correction
+            if 'GW_q0_correction' in config.__dict__.keys():
+                if config.GW_q0_correction == True:
+                    GW_q0_correctionvar.set(True)
                 else:
-                    GWq0correctionvar.set(False)
+                    GW_q0_correctionvar.set(False)
             else:
-                GWq0correctionvar.set(False)
+                GW_q0_correctionvar.set(False)
 
-            # GWnblock
-            if 'GWnblock' in config.__dict__.keys():
-                if config.GWnblock == True:
-                    GWnblockvar.set(True)
+            # GW nblocks
+            if 'GW_nblocks_max' in config.__dict__.keys():
+                if config.GW_nblocks_max == True:
+                    GW_nblocks_maxvar.set(True)
                 else:
-                    GWnblockvar.set(False)
+                    GW_nblocks_maxvar.set(False)
             else:
-                GWnblockvar.set(False)
+                GW_nblocks_maxvar.set(False)
 
-            # GWbandinterpolation
-            if 'GWbandinterpolation' in config.__dict__.keys():
-                if config.GWbandinterpolation == True:
-                    GWbandinterpolationvar.set(True)
+            # GW band interpolation
+            if 'GW_interpolate_band' in config.__dict__.keys():
+                if config.GW_interpolate_band == True:
+                    GW_interpolate_bandvar.set(True)
                 else:
-                    GWbandinterpolationvar.set(False)
+                   GW_interpolate_bandvar.set(False)
             else:
-                GWbandinterpolationvar.set(True)
+                GW_interpolate_bandvar.set(True)
 
             # ---------Optical------------
 
             # Type
-            if 'opttype' in config.__dict__.keys():
-                if config.opttype == 'BSE':
-                    self.opttypettk.current(0)
-                elif config.opttype == 'RPA':
-                    self.opttypettk.current(1)
+            if 'Opt_calc_type' in config.__dict__.keys():
+                if config.Opt_calc_type == 'BSE':
+                    self.Opt_calc_typettk.current(0)
+                elif config.Opt_calc_type == 'RPA':
+                    self.Opt_calc_typettk.current(1)
                 else:
-                    self.opttypettk.current(0)
+                    self.Opt_calc_typettk.current(0)
             else:
-                self.opttypettk.current(0)
+                self.Opt_calc_typettk.current(0)
             
             # Shifting
-            if 'optshift' in config.__dict__.keys():
-                self.optshiftttk.delete('0', 'end')
-                self.optshiftttk.insert('0', config.optshift)
+            if 'Opt_shift_en' in config.__dict__.keys():
+                self.Opt_shift_entttk.delete('0', 'end')
+                self.Opt_shift_enttk.insert('0', config.Opt_shift_en)
             else:
-                self.optshiftttk.delete('0', 'end')
-                self.optshiftttk.insert('0', '0.0')
+                self.Opt_shift_enttk.delete('0', 'end')
+                self.Opt_shift_enttk.insert('0', '0.0')
             
             # Valance bands for BSE calculation
-            if 'optBSEvb' in config.__dict__.keys():
-                self.optBSEvbttk.delete('0', 'end')
-                if hasattr(config, 'optBSEvb'):
-                    self.optBSEvbttk.insert('0', str(config.optBSEvb))
+            if 'Opt_BSE_valence' in config.__dict__.keys():
+                self.Opt_BSE_valencettk.delete('0', 'end')
+                if hasattr(config, 'Opt_BSE_valence'):
+                    self.Opt_BSE_valencettk.insert('0', str(config.Opt_BSE_valence))
                 else:
-                    self.optBSEvbttk.insert('0', 'range(0,4)')
+                    self.Opt_BSE_valencettk.insert('0', 'range(0,4)')
             else:
-                self.optBSEvbttk.delete('0', 'end')
-                self.optBSEvbttk.insert('0', 'range(0,4)')
+                self.Opt_BSE_valencettk.delete('0', 'end')
+                self.Opt_BSE_valencettk.insert('0', 'range(0,4)')
             
             # Conduction bands for BSE calculation
-            if 'optBSEcb' in config.__dict__.keys():
-                self.optBSEcbttk.delete('0', 'end')
-                if hasattr(config, 'optBSEcb'):
-                    self.optBSEcbttk.insert('0', str(config.optBSEcb))
+            if 'Opt_BSE_conduction' in config.__dict__.keys():
+                self.Opt_BSE_conductionttk.delete('0', 'end')
+                if hasattr(config, 'Opt_BSE_conduction'):
+                    self.Opt_BSE_conductionttk.insert('0', str(config.Opt_BSE_conduction))
                 else:
-                    self.optBSEcbttk.insert('0', 'range(4,7)')
+                    self.Opt_BSE_conductionttk.insert('0', 'range(4,7)')
             else:
-                self.optBSEcbttk.delete('0', 'end')
-                self.optBSEcbttk.insert('0', 'range(4,7)')
+                self.Opt_BSE_conductionttk.delete('0', 'end')
+                self.Opt_BSE_conductionttk.insert('0', 'range(4,7)')
             
             # Minimum energy value for BSE calculation
-            if 'optBSEminEn' in config.__dict__.keys():
-                self.optBSEminEnttk.delete('0', 'end')
-                self.optBSEminEnttk.insert('0', config.optBSEminEn)
+            if 'Opt_BSE_min_en' in config.__dict__.keys():
+                self.Opt_BSE_min_enttk.delete('0', 'end')
+                self.Opt_BSE_min_enttk.insert('0', config.Opt_BSE_min_en)
             else:
-                self.optBSEminEnttk.delete('0', 'end')
-                self.optBSEminEnttk.insert('0', '0.0')
+                self.Opt_BSE_min_enttk.delete('0', 'end')
+                self.Opt_BSE_min_enttk.insert('0', '0.0')
             
             # Maximum energy value for BSE calculation
-            if 'optBSEmaxEn' in config.__dict__.keys():
-                self.optBSEmaxEnttk.delete('0', 'end')
-                self.optBSEmaxEnttk.insert('0', config.optBSEmaxEn)
+            if 'Opt_BSE_max_en' in config.__dict__.keys():
+                self.Opt_BSE_max_enttk.delete('0', 'end')
+                self.Opt_BSE_max_enttk.insert('0', config.Opt_BSE_max_en)
             else:
-                self.optBSEmaxEnttk.delete('0', 'end')
-                self.optBSEmaxEnttk.insert('0', '20.0')
+                self.Opt_BSE_max_enttk.delete('0', 'end')
+                self.Opt_BSE_max_enttk.insert('0', '20.0')
             
             # Number of data for BSE calculation
-            if 'optBSEnumdata' in config.__dict__.keys():
-                self.optBSEnumdatattk.delete('0', 'end')
-                self.optBSEnumdatattk.insert('0', config.optBSEnumdata)
+            if 'Opt_BSE_num_of_data' in config.__dict__.keys():
+                self.Opt_BSE_num_of_datattk.delete('0', 'end')
+                self.Opt_BSE_num_of_datattk.insert('0', config.Opt_BSE_num_of_data)
             else:
-                self.optBSEnumdatattk.delete('0', 'end')
-                self.optBSEnumdatattk.insert('0', '1001')
+                self.Opt_BSE_num_of_datattk.delete('0', 'end')
+                self.Opt_BSE_num_of_datattk.insert('0', '1001')
             
             # Number of bands
-            if 'num_of_bands' in config.__dict__.keys():
-                self.num_of_bandsttk.delete('0', 'end')
-                self.num_of_bandsttk.insert('0', config.num_of_bands)
+            if 'Opt_num_of_bands' in config.__dict__.keys():
+                self.Opt_num_of_bandsttk.delete('0', 'end')
+                self.Opt_num_of_bandsttk.insert('0', config.Opt_num_of_bands)
             else:
-                self.num_of_bandsttk.delete('0', 'end')
-                self.num_of_bandsttk.insert('0', '16')
+                self.Opt_num_of_bandsttk.delete('0', 'end')
+                self.Opt_num_of_bandsttk.insert('0', '8')
 
             # Fermi-Dirac Smearing
-            if 'optFDsmear' in config.__dict__.keys():
-                self.optFDsmearttk.delete('0', 'end')
-                self.optFDsmearttk.insert('0', config.optFDsmear)
+            if 'Opt_FD_smearing' in config.__dict__.keys():
+                self.Opt_FD_smearingttk.delete('0', 'end')
+                self.Opt_FD_smearingttk.insert('0', config.Opt_FD_smearing)
             else:
-                self.optFDsmearttk.delete('0', 'end')
-                self.optFDsmearttk.insert('0', '0.05')
+                self.Opt_FD_smearingttk.delete('0', 'end')
+                self.Opt_FD_smearingttk.insert('0', '0.05')
 
             # Eta
-            if 'opteta' in config.__dict__.keys():
-                self.optetattk.delete('0', 'end')
-                self.optetattk.insert('0', config.opteta)
+            if 'Opt_eta' in config.__dict__.keys():
+                self.Opt_etattk.delete('0', 'end')
+                self.Opt_etattk.insert('0', config.Opt_eta)
             else:
-                self.optetattk.delete('0', 'end')
-                self.optetattk.insert('0', '0.05')
+                self.Opt_etattk.delete('0', 'end')
+                self.Opt_etattk.insert('0', '0.05')
 
             # DOmega0
-            if 'optdomega0' in config.__dict__.keys():
-                self.optdomega0ttk.delete('0', 'end')
-                self.optdomega0ttk.insert('0', config.optdomega0)
+            if 'Opt_domega0' in config.__dict__.keys():
+                self.Opt_domega0ttk.delete('0', 'end')
+                self.Opt_domega0ttk.insert('0', config.Opt_domega0)
             else:
-                self.optdomega0ttk.delete('0', 'end')
-                self.optdomega0ttk.insert('0', '0.05')
+                self.Opt_domega0ttk.delete('0', 'end')
+                self.Opt_domega0ttk.insert('0', '0.05')
 
             # Optical nblocks
-            if 'optnblocks' in config.__dict__.keys():
-                self.optnblocksttk.delete('0', 'end')
-                self.optnblocksttk.insert('0', config.optnblocks)
+            if 'Opt_nblocks' in config.__dict__.keys():
+                self.Opt_nblocksttk.delete('0', 'end')
+                self.Opt_nblocksttk.insert('0', config.Opt_nblocks)
             else:
-                self.optnblocksttk.delete('0', 'end')
-                self.optnblocksttk.insert('0', '4')
+                self.Opt_nblocksttk.delete('0', 'end')
+                self.Opt_nblocksttk.insert('0', '4')
             
             # Omega2
-            if 'optomega2' in config.__dict__.keys():
-                self.optomega2ttk.delete('0', 'end')
-                self.optomega2ttk.insert('0', config.optomega2)
+            if 'Opt_omega2' in config.__dict__.keys():
+                self.Opt_omega2ttk.delete('0', 'end')
+                self.Opt_omega2ttk.insert('0', config.Opt_omega2)
             else:
-                self.optomega2ttk.delete('0', 'end')
-                self.optomega2ttk.insert('0', '5.0')
+                self.Opt_omega2ttk.delete('0', 'end')
+                self.Opt_omega2ttk.insert('0', '5.0')
 
             # Optical cut off
-            if 'optecut' in config.__dict__.keys():
-                self.optecutttk.delete('0', 'end')
-                self.optecutttk.insert('0', config.optecut)
+            if 'Opt_cut_of_energy' in config.__dict__.keys():
+                self.Opt_cut_of_energyttk.delete('0', 'end')
+                self.Opt_cut_of_energyttk.insert('0', config.Opt_cut_of_energy)
             else:
-                self.optecutttk.delete('0', 'end')
-                self.optecutttk.insert('0', '100')
+                self.Opt_cut_of_energyttk.delete('0', 'end')
+                self.Opt_cut_of_energyttk.insert('0', '100')
 
             #Core number
-            if 'MPIcores' in config.__dict__.keys():
-                self.MPIcoresttk.delete('0', 'end')
-                self.MPIcoresttk.insert('0', config.MPIcores)
+            if 'MPI_cores' in config.__dict__.keys():
+                self.MPI_coresttk.delete('0', 'end')
+                self.MPI_coresttk.insert('0', config.MPI_cores)
             else:
-                self.MPIcoresttk.delete('0', 'end')
-                self.MPIcoresttk.insert('0', '1')
+                self.MPI_coresttk.delete('0', 'end')
+                self.MPI_coresttk.insert('0', '1')
             
             # Text for textbox
             self.text1.insert(tk.END, "Configuration loaded, please continue with Input parameters tab \n")

@@ -8,6 +8,7 @@ title: Release Notes
 
 ### Development version
 
+* Wrong usage of GW calculation type in `gg.py` is corrected.
 * All variable changes are also corrected in `gg.py`.
 * `simple_benchmark2021.py` is simplified and renamed as `simple_benchmark2021.py`.
 * Variables of GW calculation inputs are also changed to Snake_case: GWtype -> GW_type, GWkpoints -> GW_kpoints_list, GWtruncation -> GW_truncation, GWcut_off_energy -> GW_cut_off_energy, GWbandVB -> GW_valence_band_no, GWbandCB -> GW_conduction_band_no, GWppa -> GW_PPA, GWq0correction -> GW_q0_correction, GWnblock -> GW_nblocks_max, GWbandinterpolation -> GW_interpolate_band.

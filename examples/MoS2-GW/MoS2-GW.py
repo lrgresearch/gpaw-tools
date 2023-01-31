@@ -51,16 +51,16 @@ Magmom_per_atom = 1.0    # Magnetic moment per atom
 Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 #GW Parameters
-GWtype = 'G0W0'          # GW0 or G0W0
-GWkpoints = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
-GWtruncation = '2D'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
-GWcut_off_energy = 60   # Cut-off energy
-GWbandVB = 8            # Valence band number
-GWbandCB = 18           # Conduction band number
-GWppa = True            # Plasmon Pole Approximation
-GWq0correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
-GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
-GWbandinterpolation = False
+GW_type = 'G0W0'          # GW0 or G0W0
+GW_kpoints_list = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
+GW_truncation = '2D'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
+GW_cut_off_energy = 60   # Cut-off energy
+GW_valence_band_no = 8            # Valence band number
+GW_conduction_band_no = 18           # Conduction band number
+GW_PPA = True            # Plasmon Pole Approximation
+GW_q0_correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
+GW_nblocks_max = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
+GW_interpolate_band = False
 
 #GENERAL
 MPIcores = 4            # Number of cores in calculation.

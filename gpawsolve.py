@@ -477,11 +477,11 @@ if Optical_calc == False:
                 quit()
 
         # We start by setting up a G0W0 calculator object
-        gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GWbandVB, GWbandCB),
-                  method=GWtype,truncation=GWtruncation, nblocksmax=GWnblock,
-                  maxiter=5, q0_correction=GWq0correction,
+        gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GW_valence_band_no, GW_conduction_band_no),
+                  method=GW_type,truncation=GW_truncation, nblocksmax=GW_nblocks_max,
+                  maxiter=5, q0_correction=GW_q0_correction,
                   mixing=0.5,savepckl=True,
-                  ecut=GWcut_off_energy, ppa=GWppa)
+                  ecut=GW_cut_off_energy, ppa=GW_PPA)
         parprint("Starting PW ground state calculation with G0W0 approximation...")
         gw.calculate()
         results = pickle.load(open(struct+'-1-_results.pckl', 'rb'))
@@ -752,10 +752,10 @@ if Optical_calc == False:
         parprint("Starting band structure calculation...")
         if Mode == 'PW-GW':      
             GW = GWBands(calc=struct+'-1-Result-Ground.gpw', fixdensity=True,
-                 gw_file=struct+'-1-_results.pckl',kpoints=GWkpoints)
+                 gw_file=struct+'-1-_results.pckl',kpoints=GW_kpoints_list)
 
             # Getting results without spin-orbit
-            results = GW.get_gw_bands(SO=False, interpolate=GWbandinterpolation, vac=True)
+            results = GW.get_gw_bands(SO=False, interpolate=GW_interpolate_band, vac=True)
 
             # Extracting data
             X = results['X']
@@ -1159,7 +1159,7 @@ if drawfigs == True:
             if Mode == 'PW-GW':
                 f = plt.figure()
                 plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
-                plt.xticks(X, GWkpoints, fontsize=8)
+                plt.xticks(X, GW_kpoints_list, fontsize=8)
                 plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
                 plt.tight_layout()
                 plt.savefig(struct+'-3-Graph-Band.png')
@@ -1191,7 +1191,7 @@ else:
             if Mode == 'PW-GW':
                 f = plt.figure()
                 plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
-                plt.xticks(X, GWkpoints, fontsize=8)
+                plt.xticks(X, GW_kpoints_list, fontsize=8)
                 plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
                 plt.tight_layout()
                 plt.savefig(struct+'-3-Graph-Band.png')

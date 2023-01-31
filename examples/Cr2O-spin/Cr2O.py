@@ -13,7 +13,7 @@ Optical_calc = False     # Calculate the optical properties
 # -------------------------------------------------------------
 # GEOMETRY
 Optimizer = 'LBFGS'     # QuasiNewton, GPMin, LBFGS or FIRE
-fmaxval = 0.05 			# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
+Max_F_tolerance = 0.05 	# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
 Max_step = 0.2          # How far is a single atom allowed to move. Default is 0.2 Ang.
 Alpha = 70.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
 Damping = 1.0           # LBFGS only: The calculated step is multiplied with this number before added to the positions
@@ -31,6 +31,7 @@ Ground_kpts_z = 3				# kpoints in z direction
 Gamma = True
 Band_path = 'GXWKG'	    # Brillouin zone high symmetry points
 Band_npoints = 40		# Number of points between high symmetry points
+Band_num_of_bands = 8	# Number of bands
 Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 
@@ -48,4 +49,4 @@ Magmom_per_atom = 1.0    # Magnetic moment per atom
 Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 #GENERAL
-MPIcores = 4            # Number of cores in calculation.
+MPI_cores = 4            # Number of cores in calculation.

@@ -31,6 +31,7 @@ Ground_kpts_z = 3				# kpoints in z direction
 Gamma = True
 Band_path = 'GXWKGLUWLK'	    # Brillouin zone high symmetry points
 Band_npoints = 401		# Number of points between high symmetry points
+Band_num_of_bands = 8	# Number of bands
 Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 
@@ -52,4 +53,4 @@ Magmom_per_atom = 1.0    # Magnetic moment per atom
 Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
 #GENERAL
-MPIcores = 4            # Number of cores in calculation.
+MPI_cores = 4            # Number of cores in calculation.

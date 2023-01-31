@@ -63,4 +63,4 @@ GW_nblocks_max = True         # Cuts chi0 into as many blocks to reduce mem. req
 GW_interpolate_band = False
 
 #GENERAL
-MPIcores = 4            # Number of cores in calculation.
+MPI_cores = 4            # Number of cores in calculation.

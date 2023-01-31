@@ -22,6 +22,7 @@ Ground_kpts_z = 4			# kpoints in z direction
 Gamma = True
 Band_path = 'GXWKL'	    # Brillouin zone high symmetry points
 Band_npoints = 40		# Number of points between high symmetry points
+Band_num_of_bands = 8	# Number of bands
 Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 
@@ -36,24 +37,24 @@ DOS_width = 0.1          # Width of Gaussian smearing. Use 0.0 for linear tetrah
 
 Spin_calc = False        # Spin polarized calculation?
 Magmom_per_atom = 1.0    # Magnetic moment per atom
-Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
+Refine_grid = 4          # refine grid for all electron density (1, 2 [=default] and 4)
 
 # OPTICAL
-opttype = 'BSE'         # BSE or RPA
-optshift = 0.0          # Shifting of the energy
-optBSEvb = range(0,3)  # Valence bands that will be used in BSE calculation
-optBSEcb = range(4,7) # Conduction bands that will be used in BSE calculation
-optBSEminEn = 0.0       # Results will be started from this energy (BSE only)
-optBSEmaxEn = 20.0      # Results will be ended at this energy (BSE only)
-optBSEnumdata = 1001   # Number of data points in BSE  calculation
-num_of_bands = 8	# Number of bands
-optFDsmear = 0.05       # Fermi Dirac smearing for optical calculations
-opteta=0.05             # Eta for Optical calculations
-optdomega0=0.05         # Domega0 for Optical calculations
-optomega2=5.0           # Frequency at which the non-lin freq grid has doubled the spacing
-optecut=100             # Cut-off energy for optical calculations
-optnblocks=4            # Split matrices in nblocks blocks and distribute them G-vectors
-                        # or frequencies over processes
+Opt_calc_type = 'BSE'      # BSE or RPA
+Opt_shift_en = 0.0         # Shifting of the energy
+Opt_BSE_valence = range(0,3)    # Valence bands that will be used in BSE calculation
+Opt_BSE_conduction = range(4,7) # Conduction bands that will be used in BSE calculation
+Opt_BSE_min_en = 0.0       # Results will be started from this energy (BSE only)
+Opt_BSE_max_en = 20.0      # Results will be ended at this energy (BSE only)
+Opt_BSE_num_of_data = 1001 # Number of data points in BSE  calculation
+Opt_num_of_bands = 8	   # Number of bands
+Opt_FD_smearing = 0.05     # Fermi Dirac smearing for optical calculations
+Opt_eta = 0.05             # Eta for Optical calculations
+Opt_domega0 = 0.05         # Domega0 for Optical calculations
+Opt_omega2 = 5.0           # Frequency at which the non-lin freq grid has doubled the spacing
+Opt_cut_of_energy = 100    # Cut-off energy for optical calculations
+Opt_nblocks = 4            # Split matrices in nblocks blocks and distribute them G-vectors
+                           # or frequencies over processes or can use world.size
 
 #GENERAL
-MPIcores = 4            # Number of cores in calculation.
+MPI_cores = 4            # Number of cores in calculation.

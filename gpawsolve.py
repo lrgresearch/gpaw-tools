@@ -125,24 +125,24 @@ GWnblock = True         # Cuts chi0 into as many blocks to reduce mem. req. as m
 GWbandinterpolation = True # Interpolate band
 
 # OPTICAL
-opttype = 'BSE'         # BSE or RPA
-optshift = 0.0          # Shifting of the energy
-optBSEvb = range(0,3)  # Valence bands that will be used in BSE calculation
-optBSEcb = range(4,7) # Conduction bands that will be used in BSE calculation
-optBSEminEn = 0.0       # Results will be started from this energy (BSE only)
-optBSEmaxEn = 20.0      # Results will be ended at this energy (BSE only)
-optBSEnumdata = 1001   # Number of data points in BSE  calculation
+Opt_calc_type = 'BSE'         # BSE or RPA
+Opt_shift_en = 0.0          # Shifting of the energy
+Opt_BSE_valence = range(0,3)  # Valence bands that will be used in BSE calculation
+Opt_BSE_conduction = range(4,7) # Conduction bands that will be used in BSE calculation
+Opt_BSE_min_en = 0.0       # Results will be started from this energy (BSE only)
+Opt_BSE_max_en = 20.0      # Results will be ended at this energy (BSE only)
+Opt_BSE_num_of_data = 1001   # Number of data points in BSE  calculation
 Opt_num_of_bands = 8	# Number of bands
-optFDsmear = 0.05       # Fermi Dirac smearing for optical calculations
-opteta=0.05             # Eta for Optical calculations
-optdomega0=0.05         # Domega0 for Optical calculations
-optomega2=5.0           # Frequency at which the non-lin freq grid has doubled the spacing
-optecut=100             # Cut-off energy for optical calculations
-optnblocks=4            # Split matrices in nblocks blocks and distribute them G-vectors
-                        # or frequencies over processes
+Opt_FD_smearing = 0.05       # Fermi Dirac smearing for optical calculations
+Opt_eta = 0.05             # Eta for Optical calculations
+Opt_domega0 = 0.05         # Domega0 for Optical calculations
+Opt_omega2 = 5.0           # Frequency at which the non-lin freq grid has doubled the spacing
+Opt_cut_of_energy = 100             # Cut-off energy for optical calculations
+Opt_nblocks = 4            # Split matrices in nblocks blocks and distribute them G-vectors
+                        # or frequencies over processes. Also can use world.size
 
 #GENERAL
-MPIcores = 4            # This is for gg.py. Not used in this script.
+MPI_cores = 4            # This is for gg.py. Not used in this script.
 
 # -------------------------------------------------------------
 # Bulk Configuration
@@ -856,7 +856,7 @@ if Optical_calc == True:
                     nbands=Opt_num_of_bands,
                     fixdensity=True,
                     symmetry='off',
-                    occupations=FermiDirac(optFDsmear))
+                    occupations=FermiDirac(Opt_FD_smearing))
         except FileNotFoundError as err:
             # output error, and return with an error code
             parprint('\033[91mERROR:\033[0mOptical computations must be done separately. Please do ground calculations first.')
@@ -868,16 +868,16 @@ if Optical_calc == True:
         calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
 
         #from mpi4py import MPI
-        if opttype == 'BSE':
+        if Opt_calc_type == 'BSE':
             if Spin_calc == True:
                parprint('\033[91mERROR:\033[0mBSE calculations can not run with spin dependent data.')
                quit()
             parprint('Starting BSE calculations')
-            bse = BSE(calc= struct+'-5-Result-Optical.gpw', ecut=optecut,
-                         valence_bands=optBSEvb,
-                         conduction_bands=optBSEcb,
+            bse = BSE(calc= struct+'-5-Result-Optical.gpw', ecut=Opt_cut_of_energy,
+                         valence_bands=Opt_BSE_valence,
+                         conduction_bands=Opt_BSE_conduction,
                          nbands=Opt_num_of_bands,
-                         eshift=optshift,
+                         eshift=Opt_shift_en,
                          mode='BSE',
                          write_v=True,
                          integrate_gamma=0,
@@ -886,16 +886,16 @@ if Optical_calc == True:
             # Getting dielectric function spectrum
             parprint("Starting dielectric function calculation...")
             # Writing to files
-            bse.get_dielectric_function(direction=0, q_c = [0.0, 0.0, 0.0], eta=opteta,
-                                        w_w=np.linspace(optBSEminEn, optBSEmaxEn, optBSEnumdata),
+            bse.get_dielectric_function(direction=0, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
+                                        w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
                                         filename=struct+'-5-Result-Optical-BSE_dielec_xdirection.csv',
                                         write_eig=struct+'-5-Result-Optical-BSE_eig_xdirection.dat')
-            bse.get_dielectric_function(direction=1, q_c = [0.0, 0.0, 0.0], eta=opteta,
-                                        w_w=np.linspace(optBSEminEn, optBSEmaxEn, optBSEnumdata),
+            bse.get_dielectric_function(direction=1, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
+                                        w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
                                         filename=struct+'-5-Result-Optical-BSE_dielec_ydirection.csv',
                                         write_eig=struct+'-5-Result-Optical-BSE_eig_ydirection.dat')
-            bse.get_dielectric_function(direction=2, q_c = [0.0, 0.0, 0.0], eta=opteta,
-                                        w_w=np.linspace(optBSEminEn, optBSEmaxEn, optBSEnumdata),
+            bse.get_dielectric_function(direction=2, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
+                                        w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
                                         filename=struct+'-5-Result-Optical-BSE_dielec_zdirection.csv',
                                         write_eig=struct+'-5-Result-Optical-BSE_eig_zdirection.dat')
                                         
@@ -963,13 +963,13 @@ if Optical_calc == True:
                     print(dielec_z[n][0], dielec_z[n][1], dielec_z[n][2], opt_n_bse_z[n], opt_k_bse_z[n], opt_abs_bse_z[n], opt_ref_bse_z[n], end="\n", file=f1)
                 print (end="\n", file=f1)
 
-        elif opttype == 'RPA':
+        elif Opt_calc_type == 'RPA':
             parprint('Starting RPA calculations')
             df = DielectricFunction(calc=struct+'-5-Result-Optical.gpw',
-                                eta=opteta, nblocks=world.size,
-                                omega2=optomega2,
-                                domega0=optdomega0,
-                                ecut=optecut)
+                                eta=Opt_eta, nblocks=Opt_nblocks,
+                                omega2=Opt_omega2,
+                                domega0=Opt_domega0,
+                                ecut=Opt_cut_of_energy)
             # Writing to files as: omega, nlfc.real, nlfc.imag, lfc.real, lfc.imag 
             # Here lfc is local field correction
             # Getting dielectric function spectrum

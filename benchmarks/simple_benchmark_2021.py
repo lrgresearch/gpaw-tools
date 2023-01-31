@@ -1,11 +1,11 @@
 '''
 gpaw-tools: Simple Benchmark Calculation for GPAW
 Usage: 
-  $ gpaw -P8 python simple_benchmark_2021.py
+  $ gpaw -P8 python simple_benchmark_2023.py
 For AMD CPUs or using Intel CPUs without hyperthreading: (Example CPU is intel here, 4 cores or 8 threads)
-  $ mpirun -n 4 gpaw python simple_benchmark_2021.py
+  $ mpirun -n 4 gpaw python simple_benchmark_2023.py
 For using all threads provided by Intel Hyperthreading technology:
-  $ mpirun --use-hwthread-cpus -n 8 gpaw python simple_benchmark_2021.py
+  $ mpirun --use-hwthread-cpus -n 8 gpaw python simple_benchmark_2023.py
 '''
 
 from ase import *
@@ -27,8 +27,6 @@ band_path = 'GZ'	# Brillouin zone high symmetry points
 band_npoints = 40		# Number of points between high symmetry points 
 energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 num_of_bands = 40		#
-draw_dos = "no"			# Draw DOS on screen (yes for draw, small letters)
-draw_band = "no"			# Draw band structure on screen (yes for draw, small letters)
 # -------------------------------------------------------------
 # Bulk Configuration
 # -------------------------------------------------------------
@@ -66,25 +64,25 @@ struct = Path(__file__).stem # All files will get their names from this file
 # -------------------------------------------------------------
 # Step 1 - GROUND STATE
 # -------------------------------------------------------------
-calc = GPAW(mode=PW(cut_off_energy), kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-1-Log-Ground.txt')
+calc = GPAW(mode=PW(cut_off_energy), kpts=[kpts_x, kpts_y, kpts_z], txt=struct+'-GROUND-Log.txt')
 bulk_configuration.calc = calc
 
-relax = LBFGS(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+relax = LBFGS(bulk_configuration, trajectory=struct+'-GROUND-Result.traj')
 relax.run(fmax=fmaxval)  # Consider much tighter fmax!
 
 bulk_configuration.get_potential_energy()
-calc.write(struct+'-1-Result-Ground.gpw')
+calc.write(struct+'-GROUND-Result.gpw')
 
 # -------------------------------------------------------------
 # Step 2 - DOS CALCULATION
 # -------------------------------------------------------------
-calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt')
+calc = GPAW(struct+'-GROUND-Result-Ground.gpw', txt=struct+'-DOS-Log.txt')
 #energies, weights = calc.get_dos(npts=800, width=0)
 dos = DOS(calc, npts=500, width=0)
 energies = dos.get_energies()
 weights = dos.get_dos()
 
-fd = open(struct+'-2-Result-DOS.txt', "w")
+fd = open(struct+'-DOS-Result.txt', "w")
 for x in zip(energies, weights):
     print(*x, sep=", ", file=fd)
 fd.close()
@@ -92,8 +90,8 @@ fd.close()
 # -------------------------------------------------------------
 # Step 3 - BAND STRUCTURE CALCULATION
 # -------------------------------------------------------------
-calc = GPAW(struct+'-1-Result-Ground.gpw',
-	    txt=struct+'-3-Log-Band.txt',
+calc = GPAW(struct+'-GROUND-Result.gpw',
+	    txt=struct+'-BAND-Log.txt',
 	    nbands=num_of_bands,
 	    fixdensity=True,
 	    symmetry='off',
@@ -103,18 +101,18 @@ calc = GPAW(struct+'-1-Result-Ground.gpw',
 calc.get_potential_energy()
 bs = calc.band_structure()
 ef = calc.get_fermi_level()
-#bs.write(struct+'-3-Result-Band.json')
-calc.write(struct+'-3-Result-Band.gpw')
+#bs.write(struct+'-BAND-Result.json')
+calc.write(struct+'-BAND-Result.gpw')
 
 # Extract eigenenergies into a file for plotting with some external package
 
 import numpy as np
-calc = GPAW(struct+'-3-Result-Band.gpw', txt=None)
+calc = GPAW(struct+'-BAND-Result.gpw', txt=None)
 eps_skn = np.array([[calc.get_eigenvalues(k,s)
                      for k in range(band_npoints)]
                     for s in range(1)]) - ef
 
-f = open(struct+'-3-Result-Band.dat', 'w')
+f = open(struct+'-BAND-Result.dat', 'w')
 for n in range(num_of_bands):
     for k in range(band_npoints):
         print(k, eps_skn[0, k, n], end="\n", file=f)
@@ -125,7 +123,7 @@ f.close()
 # - - - - - - - - - COLUMNED OUTPUT - - - - - - - - - - 
 # create a  matrix of zeroes
 arr = [[0 for col in range(2*num_of_bands+1)] for row in range(band_npoints+1)]
-f = open(struct+'-3-Result-Band.dat', 'r')
+f = open(struct+'-BAND-Result.dat', 'r')
 lines = f.readlines()
 f.close()
 a = 0 
@@ -140,7 +138,7 @@ for i in range(0, num_of_bands, 1):
    a = a + 2
 
 # writing to output file
-f = open(struct+'-3-Result-Band-withColumns.dat', 'w')
+f = open(struct+'-BAND-Result-withColumns.dat', 'w')
 stringline = ""
 
 for i in range(0, band_npoints, 1):

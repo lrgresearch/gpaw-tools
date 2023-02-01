@@ -709,8 +709,8 @@ class gg:
                     print("Optimizer = 'FIRE'", end="\n", file=f1)
                 else:
                     print("Optimizer = 'QuasiNewton'", end="\n", file=f1)
-                # fmaxval
-                print("fmaxval = "+ str(self.fmaxvalttk.get()), end="\n", file=f1)
+                # Maximum Force tolerance
+                print("Max_F_tolerance = "+ str(self.Max_F_tolerancettk.get()), end="\n", file=f1)
                 # Max_step
                 print("Max_step = "+ str(self.Max_stepttk.get()), end="\n", file=f1)
                 # Alpha
@@ -719,30 +719,30 @@ class gg:
                 print("Damping = "+ str(self.Dampingttk.get()), end="\n", file=f1)
                 #Fix_symmetry
                 print("Fix_symmetry = "+ str(Fix_symmetryvar.get()), end="\n", file=f1)
-                # whichstrain
-                print("whichstrain = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
+                # Cell relaxation
+                print("Relax_cell = ["+str(EpsXvar.get())+", "+str(EpsYvar.get())+", "+str(EpsZvar.get())+", "+str(ShearYZvar.get())+", "+str(ShearXZvar.get())+", "+str(ShearXYvar.get())+"]", end="\n", file=f1)
 
                 # ---------Electronic------------
-                # cut_off_energy
-                print("cut_off_energy = "+ str(self.cut_off_energyttk.get()), end="\n", file=f1)
-                # kpoints
-                print("kpts_x = "+ str(self.kpts_xttk.get()), end="\n", file=f1)
-                print("kpts_y = "+ str(self.kpts_yttk.get()), end="\n", file=f1)
-                print("kpts_z = "+ str(self.kpts_zttk.get()), end="\n", file=f1)
+                # Cut_off_energy
+                print("Cut_off_energy = "+ str(self.Cut_off_energyttk.get()), end="\n", file=f1)
+                # K-points
+                print("Ground_kpts_x = "+ str(self.Ground_kpts_xttk.get()), end="\n", file=f1)
+                print("Ground_kpts_y = "+ str(self.Ground_kpts_yttk.get()), end="\n", file=f1)
+                print("Ground_kpts_z = "+ str(self.Ground_kpts_zttk.get()), end="\n", file=f1)
                 # Grid points
-                print("gpts_x = "+ str(self.gpts_xttk.get()), end="\n", file=f1)
-                print("gpts_y = "+ str(self.gpts_yttk.get()), end="\n", file=f1)
-                print("gpts_z = "+ str(self.gpts_zttk.get()), end="\n", file=f1)
+                print("Ground_gpts_x = "+ str(self.Ground_gpts_xttk.get()), end="\n", file=f1)
+                print("Ground_gpts_y = "+ str(self.Ground_gpts_yttk.get()), end="\n", file=f1)
+                print("Ground_gpts_z = "+ str(self.Ground_gpts_zttk.get()), end="\n", file=f1)
                 # Gamma
                 print("Gamma = "+ str(Gammavar.get()), end="\n", file=f1)
-                # band_path
-                print("band_path = '"+ str(self.band_pathttk.get())+"'", end="\n", file=f1)
-                # band_npoints
-                print("band_npoints = "+ str(self.band_npointsttk.get()), end="\n", file=f1)
-                # energy_max
-                print("energy_max = "+ str(self.energy_maxttk.get()), end="\n", file=f1)
-                # Hubbard
-                print("Hubbard = "+ str(self.Hubbardttk.get()), end="\n", file=f1)
+                # Band_path
+                print("Band_path = '"+ str(self.Band_pathttk.get())+"'", end="\n", file=f1)
+                # Band_npoints
+                print("Band_npoints = "+ str(self.Band_npointsttk.get()), end="\n", file=f1)
+                # Energy_max
+                print("Energy_max = "+ str(self.Energy_maxttk.get()), end="\n", file=f1)
+                # Setup_params
+                print("Setup_params = "+ str(self.Setup_paramsttk.get()), end="\n", file=f1)
                 # Exchange-Correlation
                 if self.XC_calcttk.get() == 'LDA':
                     print("XC_calc = 'LDA'", end="\n", file=f1)
@@ -774,89 +774,89 @@ class gg:
                 print("Spin_calc = "+ str(Spin_calcvar.get()), end="\n", file=f1)
                 # Magmom_per_atom
                 print("Magmom_per_atom = "+ str(self.Magmom_per_atomttk.get()), end="\n", file=f1)
-                # gridref
-                print("gridref = "+ str(self.gridrefttk.get()), end="\n", file=f1)
+                # Refine grid
+                print("Refine_grid = "+ str(self.Refine_gridttk.get()), end="\n", file=f1)
                 
                 # ---------GW Parameters------------
-                # GWtype
-                if self.GWtypettk.get() == 'GW0':
-                    print("GWtype = 'GW0'", end="\n", file=f1)
-                elif self.GWtypettk.get() == 'G0W0':
-                    print("GWtype = 'G0W0'", end="\n", file=f1)
+                # GW calculation type
+                if self.GW_calc_typettk.get() == 'GW0':
+                    print("GW_calc_type = 'GW0'", end="\n", file=f1)
+                elif self.GW_calc_typettk.get() == 'G0W0':
+                    print("GW_calc_type = 'G0W0'", end="\n", file=f1)
                 else:
-                    print("GWtype = 'GW0'", end="\n", file=f1)
-                # GWtruncation
-                if self.GWtruncationttk.get() == '':
-                    print("GWtruncation = None", end="\n", file=f1)
-                elif self.GWtruncationttk.get() == '2D':
-                    print("GWtruncation = '2D'", end="\n", file=f1)
-                elif self.GWtruncationttk.get() == '1D':
-                    print("GWtruncation = '1D'", end="\n", file=f1)
-                elif self.GWtruncationttk.get() == '0D':
-                    print("GWtruncation = '0D'", end="\n", file=f1)
+                    print("GW_calc_type = 'GW0'", end="\n", file=f1)
+                # GW truncation
+                if self.GW_truncationttk.get() == '':
+                    print("GW_truncation = None", end="\n", file=f1)
+                elif self.GW_truncationttk.get() == '2D':
+                    print("GW_truncation = '2D'", end="\n", file=f1)
+                elif self.GW_truncationttk.get() == '1D':
+                    print("GW_truncation = '1D'", end="\n", file=f1)
+                elif self.GW_truncationttk.get() == '0D':
+                    print("GW_truncation = '0D'", end="\n", file=f1)
                 else:
-                    print("GWtruncation = 'wigner-seitz'", end="\n", file=f1)               
-                # GWkpoints
-                print("GWkpoints = np.array("+ str(self.GWkpointsttk.get())+")", end="\n", file=f1)
-                # GWcut_off_energy
-                print("GWcut_off_energy = "+ str(self.GWcut_off_energyttk.get()), end="\n", file=f1)
-                # GWbandVB
-                print("GWbandVB = "+ str(self.GWbandVBttk.get()), end="\n", file=f1)
-                # GWbandCB
-                print("GWbandCB = "+ str(self.GWbandCBttk.get()), end="\n", file=f1)
-                # GWppa
-                print("GWppa = "+ str(GWppavar.get()), end="\n", file=f1)
-                # GWq0correction
-                print("GWq0correction = "+ str(GWq0correctionvar.get()), end="\n", file=f1)
-                # GWnblock
-                print("GWnblock = "+ str(GWnblockvar.get()), end="\n", file=f1)
-                # GWbandinterpolation
-                print("GWbandinterpolation = "+ str(GWbandinterpolationvar.get()), end="\n", file=f1)
+                    print("GW_truncation = 'wigner-seitz'", end="\n", file=f1)               
+                # GW K-points
+                print("GW_kpoints_list = np.array("+ str(self.GW_kpoints_listttk.get())+")", end="\n", file=f1)
+                # GW_cut_off_energy
+                print("GW_cut_off_energy = "+ str(self.GW_cut_off_energyttk.get()), end="\n", file=f1)
+                # GW_valence_band_no
+                print("GW_valence_band_no = "+ str(self.GW_valence_band_nottk.get()), end="\n", file=f1)
+                # GW_conduction_band_no
+                print("GW_conduction_band_no = "+ str(self.GW_conduction_band_nottk.get()), end="\n", file=f1)
+                # GW_PPA
+                print("GW_PPA = "+ str(GW_PPAvar.get()), end="\n", file=f1)
+                # GW q0 correction
+                print("GW_q0_correction = "+ str(GW_q0_correctionvar.get()), end="\n", file=f1)
+                # GW nblocks maximum split
+                print("GW_nblocks_max = "+ str(GW_nblocks_maxvar.get()), end="\n", file=f1)
+                # GW band interpolation
+                print("GW_interpolate_band = "+ str(GW_interpolate_bandvar.get()), end="\n", file=f1)
 
                 # ---------Optical------------
-                # opttype
-                if self.opttypettk.get() == 'BSE':
-                    print("opttype = 'BSE'", end="\n", file=f1)
-                elif self.opttypettk.get() == 'RPA':
-                    print("opttype = 'RPA'", end="\n", file=f1)
+                # Opt_calc_type
+                if self.Opt_calc_typettk.get() == 'BSE':
+                    print("Opt_calc_type = 'BSE'", end="\n", file=f1)
+                elif self.Opt_calc_typettk.get() == 'RPA':
+                    print("Opt_calc_type = 'RPA'", end="\n", file=f1)
                 else:
-                    print("opttype = 'BSE'", end="\n", file=f1)
-                # optshift
-                print("optshift = "+ str(self.optshiftttk.get()), end="\n", file=f1)
-                # optBSEvb
-                print("optBSEvb = "+ str(self.optBSEvbttk.get()), end="\n", file=f1)
-                # optBSEcb
-                print("optBSEcb = "+ str(self.optBSEcbttk.get()), end="\n", file=f1)
-                # optBSEminEn
-                print("optBSEminEn = "+ str(self.optBSEminEnttk.get()), end="\n", file=f1)
-                # optBSEmaxEn
-                print("optBSEmaxEn = "+ str(self.optBSEmaxEnttk.get()), end="\n", file=f1)
-                # optBSEnumdata
-                print("optBSEnumdata = "+ str(self.optBSEnumdatattk.get()), end="\n", file=f1)
-                # num_of_bands
-                print("num_of_bands = "+ str(self.num_of_bandsttk.get()), end="\n", file=f1)
-                # optFDsmear
-                print("optFDsmear = "+ str(self.optFDsmearttk.get()), end="\n", file=f1)
-                # opteta
-                print("opteta = "+ str(self.optetattk.get()), end="\n", file=f1)
-                # optdomega0
-                print("optdomega0 = "+ str(self.optdomega0ttk.get()), end="\n", file=f1)
-                # optnblocks
-                print("optnblocks = "+ str(self.optnblocksttk.get()), end="\n", file=f1)
-                # optomega2
-                print("optomega2 = "+ str(self.optomega2ttk.get()), end="\n", file=f1)
-                # optecut
-                print("optecut = "+ str(self.optecutttk.get()), end="\n", file=f1)
+                    print("Opt_calc_type = 'BSE'", end="\n", file=f1)
+                # Opt_shift_en
+                print("Opt_shift_en = "+ str(self.Opt_shift_enttk.get()), end="\n", file=f1)
+                # Opt_BSE_valence
+                print("Opt_BSE_valence = "+ str(self.Opt_BSE_valencettk.get()), end="\n", file=f1)
+                # Opt_BSE_conduction
+                print("Opt_BSE_conduction = "+ str(self.Opt_BSE_conductionttk.get()), end="\n", file=f1)
+                # Opt_BSE_min_en
+                print("Opt_BSE_min_en = "+ str(self.Opt_BSE_min_enttk.get()), end="\n", file=f1)
+                # Opt_BSE_max_en
+                print("Opt_BSE_max_en = "+ str(self.Opt_BSE_max_enttk.get()), end="\n", file=f1)
+                # Opt_BSE_num_of_data
+                print("Opt_BSE_num_of_data = "+ str(self.Opt_BSE_num_of_datattk.get()), end="\n", file=f1)
+                # Opt_num_of_bands
+                print("Opt_num_of_bands = "+ str(self.Opt_num_of_bandsttk.get()), end="\n", file=f1)
+                # Opt_FD_smearing
+                print("Opt_FD_smearing = "+ str(self.Opt_FD_smearingttk.get()), end="\n", file=f1)
+                # Opt_eta
+                print("Opt_eta = "+ str(self.Opt_etattk.get()), end="\n", file=f1)
+                # Opt_domega0
+                print("Opt_domega0 = "+ str(self.Opt_domega0ttk.get()), end="\n", file=f1)
+                # Opt_nblocks
+                print("Opt_nblocks = "+ str(self.Opt_nblocksttk.get()), end="\n", file=f1)
+                # Opt_omega2
+                print("Opt_omega2 = "+ str(self.Opt_omega2ttk.get()), end="\n", file=f1)
+                # Opt_cut_of_energy
+                print("Opt_cut_of_energy = "+ str(self.Opt_cut_of_energy.get()), end="\n", file=f1)
                 
                 # ------------Other------------
                 # This feature is not used by gpawsolve.py, this is only usable for gg.py
-                print("MPIcores = "+ str(self.MPIcoresttk.get()), end="\n", file=f1)
+                print("MPI_cores = "+ str(self.MPI_coresttk.get()), end="\n", file=f1)
 
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
             if restartvar == True:
-                gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -r -d -i '+str(configname)+' -g '+str(textfilenamepath)
+                gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -o -r -d -i '+str(configname)+' -g '+str(textfilenamepath)
             else:
-                gpawcommand = 'mpirun -np '+str(self.MPIcoresttk.get())+' gpawsolve.py -o -d -i '+str(configname)+' -g '+str(textfilenamepath)
+                gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -o -d -i '+str(configname)+' -g '+str(textfilenamepath)
             proc = subprocess.Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
 
@@ -899,12 +899,12 @@ class gg:
         self.notebookUpper = ttk.Notebook(self.frame2)
         self.frame1 = ttk.Frame(self.notebookUpper)
         self.loadCIFfilettk = ttk.Button(self.frame1)
-        self.loadCIFfilettk.configure(state='normal', text='Load Input (CIF, XSF, XSD, XYZ, etc.) File')
+        self.loadCIFfilettk.configure(state='normal', text='Load Geometry (CIF) File')
         self.loadCIFfilettk.pack(pady='10', side='top')
         self.loadCIFfilettk.configure(command=onOpen)
         
         self.loadConfigfilettk = ttk.Button(self.frame1)
-        self.loadConfigfilettk.configure(state='normal', text='Load Configuration File')
+        self.loadConfigfilettk.configure(state='normal', text='Load Input (PY) File')
         self.loadConfigfilettk.pack(pady='10', side='top')
         self.loadConfigfilettk.configure(command=onConfigOpen)
 

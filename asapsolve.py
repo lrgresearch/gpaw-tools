@@ -40,19 +40,19 @@ from ase.calculators.kim import KIM
 # Simulation parameters
 
 #More potential can be found from https://openkim.org
-PotentialUsed = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
+OpenKIM_potential = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
 Temperature = 1 #Kelvin
 Time = 5 # fs
 Friction = 0.05
 
 Scaled = False #Scaled or cartessian coordinates
-Manualpbc = False # If you need manual constraint axis
+Manual_PBC = False # If you need manual constraint axis
 
-# IF Manualpbc is true then change following:
-pbcmanual=[True,True,False]
+# IF Manual_PBC is true then change following:
+PBC_constraints = [True,True,False]
 
 # If you have double number of elements in your final file
-SolveDoubleElementProblem = True
+Solve_double_element_problem = True
 
 # If you do not want to use a CIF file for geometry, please provide
 # ASE Atoms object information below. You can use ciftoase.py to
@@ -163,7 +163,7 @@ struct = os.path.join(structpath,struct)
 # -------------------------------------------------------------
 asestruct = bulk_configuration
 
-asestruct.set_calculator(KIM(PotentialUsed, options={"ase_neigh": False}))
+asestruct.set_calculator(KIM(OpenKIM_potential, options={"ase_neigh": False}))
 
 dyn = Langevin(asestruct, timestep=Time*units.fs, trajectory=struct+'-Results.traj', logfile=struct+'-Log.txt', temperature_K=Temperature, friction=Friction)
 
@@ -188,7 +188,7 @@ with open(struct+'Results.py', 'w') as f:
     nn=0
     mm=0
 
-    if SolveDoubleElementProblem == True:
+    if Solve_double_element_problem == True:
         for n in asestruct.get_chemical_symbols():
             nn=nn+1
             for m in positions:
@@ -202,15 +202,15 @@ with open(struct+'Results.py', 'w') as f:
                 f.write("    Atom('"+n+"', ( "+str(m[0])+", "+str(m[1])+", "+str(m[2])+" )),\n")
     f.write("    ],\n")
     f.write("    cell=[("+str(asestruct.cell[0,0])+", "+str(asestruct.cell[0,1])+", "+str(asestruct.cell[0,2])+"), ("+str(asestruct.cell[1,0])+", "+str(asestruct.cell[1,1])+", "+str(asestruct.cell[1,2])+"), ("+str(asestruct.cell[2,0])+", "+str(asestruct.cell[2,1])+", "+str(asestruct.cell[2,2])+")],\n")
-    if Manualpbc == False:
+    if Manual_PBC == False:
         f.write("    pbc=True,\n")
     else:
-        f.write("    pbc=["+str(pbcmanual[0])+","+str(pbcmanual[1])+","+str(pbcmanual[2])+"],\n")
+        f.write("    pbc=["+str(PBC_constraints[0])+","+str(PBC_constraints[1])+","+str(PBC_constraints[2])+"],\n")
     f.write("    )\n")
 
 # PRINT SCREEEN PART -----------------------------------
 print("Result:")
-with open(struct+'Results.py', 'r') as f:
+with open(struct+'FinalStructure.py', 'r') as f:
     lines = f.readline()
     while lines:
         print(lines)
@@ -219,8 +219,8 @@ with open(struct+'Results.py', 'r') as f:
 print("    )")
 print("ATTENTION: If you have double number of atoms, it may be caused by ")
 print("           repeating ASE bug https://gitlab.com/ase/ase/-/issues/169 ")
-print("           Please assign SolveDoubleElementProblem variable as True in this script if necessary.")
+print("           Please assign Solve_double_element_problem variable as True in this script if necessary.")
 
 
 # CIF export
-write_cif(struct+'-Optimized.cif', bulk_configuration)
+write_cif(struct+'-FinalStructure.cif', bulk_configuration)

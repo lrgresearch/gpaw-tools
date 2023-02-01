@@ -6,8 +6,6 @@
 ![Release date:](https://img.shields.io/github/release-date/lrgresearch/gpaw-tools)
 [![Commits:](https://img.shields.io/github/commit-activity/m/lrgresearch/gpaw-tools)](https://github.com/lrgresearch/gpaw-tools/commits/main)
 [![Last Commit:](https://img.shields.io/github/last-commit/lrgresearch/gpaw-tools)](https://github.com/lrgresearch/gpaw-tools/commits/main)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/lrgresearch/gpaw-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lrgresearch/gpaw-tools/alerts/)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/lrgresearch/gpaw-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lrgresearch/gpaw-tools/context:python)
 ## Introduction
 *gpaw-tools* is a powerful and user-friendly tool for conducting Density Functional Theory (DFT) and molecular dynamics (MD) calculations. Our goal is to make DFT and MD calculations more accessible and easy to use for individuals and small groups, by providing a simple command-line interface and graphical user interface.
 

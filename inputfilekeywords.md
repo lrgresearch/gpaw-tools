@@ -1111,13 +1111,13 @@ optnblocks = 4
 
 # `asapsolve.py` Keyword List
 
-[**MD Keywords:**](inputfilekeywords.md#md-keywords) [PotentialUsed](inputfilekeywords.md#potentialused), [Temperature](inputfilekeywords.md#temperature), [Time](inputfilekeywords.md#time), [Friction](inputfilekeywords.md#friction), [Scaled](inputfilekeywords.md#scaled), [Manualpbc](inputfilekeywords.md#manualpbc), [pbcmanual](inputfilekeywords.md#pbcmanual), [SolveDoubleElementProblem](inputfilekeywords.md#solvedoubleelementproblem)
+[**MD Keywords:**](inputfilekeywords.md#md-keywords) [OpenKIM_potential](inputfilekeywords.md#openkim_potential), [Temperature](inputfilekeywords.md#temperature), [Time](inputfilekeywords.md#time), [Friction](inputfilekeywords.md#friction), [Scaled](inputfilekeywords.md#scaled), [Manual_PBC](inputfilekeywords.md#manual_pbc), [pbc_constraints](inputfilekeywords.md#pbc_constraints), [Solve_double_element_problem](inputfilekeywords.md#solve_double_element_problem)
 
 ## MD Keywords
 
 ---
 
-### PotentialUsed
+### OpenKIM_potential
 #### Keyword type
 String
 
@@ -1128,7 +1128,7 @@ This keyword controls the interatomic potential used in the calculation.
 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
 
 #### Example
-PotentialUsed = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
+OpenKIM_potential = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
 
 ---
 
@@ -1192,22 +1192,22 @@ Scaled = True
 
 ---
 
-### Manualpbc
+### Manual_PBC
 #### Keyword type
 Boolean
 
 #### Description
-This keyword controls the usage manual constraint axis in the calculation. If it used as True, [pbcmanual](inputfilekeywords.md#pbcmanual) keyword must be used.
+This keyword controls the usage manual constraint axis in the calculation. If it used as True, [PBC_constraints](inputfilekeywords.md#pbc_constraints) keyword must be used.
 
 #### Default
 False
 
 #### Example
-Manualpbc = True
+Manual_PBC = True
 
 ---
 
-### pbcmanual
+### PBC_constraints
 #### Keyword type
 Python List of Logical values
 
@@ -1223,17 +1223,17 @@ And these 3 independent components are in order:
 * Y
 * Z
 
-**IMPORTANT**: This keyword is only working when `Manualpbc = True`
+**IMPORTANT**: This keyword is only working when `Manual_PBC = True`
 
 #### Default
 [True, True, False]
 
 #### Example
-pbcmanual = [True, False, False]
+PBC_constraints = [True, False, False]
 
 ---
 
-### SolveDoubleElementProblem
+### Solve_double_element_problem
 #### Keyword type
 Boolean
 
@@ -1244,6 +1244,6 @@ This keyword is used for a possible problem. If you have double number of elemen
 True
 
 #### Example
-SolveDoubleElementProblem = False
+Solve_double_element_problem = False
 
 ---

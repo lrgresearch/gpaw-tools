@@ -10,15 +10,15 @@ There are two scripts that use input files in gpaw-tools. One of them is the mai
 
 # `gpawsolve.py` Keyword List
 
-[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPIcores](inputfilekeywords.md#mpicores)
+[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPI_cores](inputfilekeywords.md#mpi_cores)
 
-[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Optimizer](inputfilekeywords.md#optimizer), [fmaxval](inputfilekeywords.md#fmaxval), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [whichstrain](inputfilekeywords.md#whichstrain)
+[**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Optimizer](inputfilekeywords.md#optimizer), [Max_F_tolerance](inputfilekeywords.md#max_f_tolerance), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [Relax_cell](inputfilekeywords.md#relax_cell)
 
-[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [cut_off_energy](inputfilekeywords.md#cut_off_energy), [kpts_density](inputfilekeywords.md#kpts_density), [kpts_x](inputfilekeywords.md#kpts_x), [kpts_y](inputfilekeywords.md#kpts_y), [kpts_z](inputfilekeywords.md#kpts_z), [gpts_density](inputfilekeywords.md#gpts_density), [gpts_x](inputfilekeywords.md#gpts_x), [gpts_y](inputfilekeywords.md#gpts_y), [gpts_z](inputfilekeywords.md#gpts_z), [Gamma](inputfilekeywords.md#gamma), [band_path](inputfilekeywords.md#band_path), [band_npoints](inputfilekeywords.md#band_npoints), [energy_max](inputfilekeywords.md#energy_max), [Hubbard](inputfilekeywords.md#hubbard), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [gridref](inputfilekeywords.md#gridref)
+[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [Cut_off_energy](inputfilekeywords.md#cut_off_energy), [Ground_kpts_density](inputfilekeywords.md#ground_kpts_density), [Ground_kpts_x](inputfilekeywords.md#ground_kpts_x), [Ground_kpts_y](inputfilekeywords.md#ground_kpts_y), [Ground_kpts_z](inputfilekeywords.md#ground_kpts_z), [Ground_gpts_density](inputfilekeywords.md#ground_gpts_density), [Ground_gpts_x](inputfilekeywords.md#ground_gpts_x), [Ground_gpts_y](inputfilekeywords.md#ground_gpts_y), [ground_gpts_z](inputfilekeywords.md#ground_gpts_z), [Gamma](inputfilekeywords.md#gamma), [Band_path](inputfilekeywords.md#band_path), [Band_npoints](inputfilekeywords.md#band_npoints), [Band_num_of_bands](inputfilekeywords.md#band_num_of_bands), [Energy_max](inputfilekeywords.md#energy_max), [Setup_params](inputfilekeywords.md#setup_params), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [DOS_convergence](inputfilekeywords.md#dos_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [Refine_grid](inputfilekeywords.md#refine_grid)
 
-[**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GWtype](inputfilekeywords.md#gwtype), [GWkpoints](inputfilekeywords.md#gwkpoints), [GWtruncation](inputfilekeywords.md#gwtruncation), [GWcut_off_energy](inputfilekeywords.md#gwcut_off_energy), [GWbandVB](inputfilekeywords.md#gwbandvb), [GWbandCB](inputfilekeywords.md#gwbandcb), [GWppa](inputfilekeywords.md#gwppa), [GWq0correction](inputfilekeywords.md#gwq0correction), [GWnblock](inputfilekeywords.md#gwnblock)
+[**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GW_calc_type](inputfilekeywords.md#gw_calc_type), [GW_kpoints_list](inputfilekeywords.md#gw_kpoints_list), [GW_truncation](inputfilekeywords.md#gw_truncation), [GW_cut_off_energy](inputfilekeywords.md#gw_cut_off_energy), [GW_valence_band_no](inputfilekeywords.md#gw_valence_band_no), [GW_conduction_band_no](inputfilekeywords.md#gw_conduction_band_no), [GW_PPA](inputfilekeywords.md#GW_PPA), [GW_q0_correction](inputfilekeywords.md#gw_q0_correction), [GW_nblocks_max](inputfilekeywords.md#gw_nblocks_max), [GW_interpolate_band](inputfilekeywords.md#gw_interpolate_band)
 
-[**Optical Calculations Keywords:**](inputfilekeywords.md#optical-calculations-keywords) [opttype](inputfilekeywords.md#opttype), [optshift](inputfilekeywords.md#opthift), [optBSEvb](inputfilekeywords.md#optbsevb), [optbsecb](inputfilekeywords.md#optbsecb), [optBSEminEn](inputfilekeywords.md#optbseminen), [optBSEmaxEn](inputfilekeywords.md#optbsemaxen), [optbsenumdata](inputfilekeywords.md#optbsenumdata), [num_of_bands](inputfilekeywords.md#num_of_bands), [optFDsmear](inputfilekeywords.md#optfdsmear), [opteta](inputfilekeywords.md#opteta), [optdomega0](inputfilekeywords.md#optdomega0), [optomega2](inputfilekeywords.md#optomega2), [optecut](inputfilekeywords.md#optecut), [optnblocks](inputfilekeywords.md#optnblocks)
+[**Optical Calculations Keywords:**](inputfilekeywords.md#optical-calculations-keywords) [Opt_calc_type](inputfilekeywords.md#opt_calc_type), [Opt_shift_en](inputfilekeywords.md#opt_shift_en), [Opt_BSE_valence](inputfilekeywords.md#opt_bse_valence), [Opt_BSE_conduction](inputfilekeywords.md#opt_bse_conduction), [Opt_BSE_min_en](inputfilekeywords.md#opt_bse_min_en), [Opt_BSE_max_en](inputfilekeywords.md#opt_bse_max_en), [Opt_BSE_num_of_data](inputfilekeywords.md#opt_bse_num_of_data), [Opt_num_of_bands](inputfilekeywords.md#opt_num_of_bands), [Opt_FD_smearing](inputfilekeywords.md#opt_fd_smearing), [Opt_eta](inputfilekeywords.md#opt_eta), [Opt_domega0](inputfilekeywords.md#opt_domega0), [Opt_omega2](inputfilekeywords.md#opt_omega2), [Opt_cut_of_energy](inputfilekeywords.md#opt_cut_of_energy), [Opt_nblocks](inputfilekeywords.md#opt_nblocks)
 
 ## General Keywords
 
@@ -489,6 +489,21 @@ band_npoints = 50
 
 ---
 
+### Band_num_of_bands
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of bands in the calculation. 
+
+#### Default
+8
+
+#### Example
+Band_num_of_bands = 8
+
+---
+
 ### energy_max
 #### Keyword type
 Integer
@@ -593,6 +608,21 @@ This keyword controls the convergence parameters for the band calculations.
 
 #### Example
 Band_convergence = {'bands':8, 'eigenstates': 1.0e-8} 
+
+---
+
+### DOS_convergence
+#### Keyword type
+Python dictionary
+
+#### Description
+This keyword controls the convergence parameters for the DOS calculations.
+
+#### Default
+{} 
+
+#### Example
+DOS_convergence = {'eigenstates': 1.0e-8} 
 
 ---
 ### Occupations
@@ -854,6 +884,21 @@ True
 
 #### Example
 GWnblock = True
+
+---
+
+### GW_interpolate_band
+#### Keyword type
+Logical
+
+#### Description
+This keyword controls the behaviour of drawing the band with interpolating the values between the points.
+
+#### Default
+True
+
+#### Example
+GW_interpolate_band = True
 
 ## Optical Calculations Keywords
 ### opttype

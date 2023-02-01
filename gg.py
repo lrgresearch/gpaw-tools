@@ -405,6 +405,25 @@ class gg:
             else:
                 self.energy_maxttk.delete('0', 'end')
                 self.energy_maxttk.insert('0', '0.1')
+                
+            # DOS_convergence
+            if 'DOS_convergence' in config.__dict__.keys():
+                self.DOS_convergencettk.delete('0', 'end')
+                if hasattr(config, 'DOS_convergence'):
+                    self.DOS_convergencettk.insert('0', str(config.DOS_convergence))
+                else:
+                    self.DOS_convergencettk.insert('0', "{'bands':8}")
+            else:
+                self.DOS_convergencettk.delete('0', 'end')
+                self.DOS_convergencettk.insert('0', "{'bands':8}")
+                
+            # Number of bands in Bands calculation
+            if 'Band_num_of_bands' in config.__dict__.keys():
+                self.Band_num_of_bandsttk.delete('0', 'end')
+                self.Band_num_of_bandsttk.insert('0', config.Band_num_of_bands)
+            else:
+                self.Band_num_of_bandsttk.delete('0', 'end')
+                self.Band_num_of_bandsttk.insert('0', '8')
 
             # Spin Calculation
             if 'Spin_calc' in config.__dict__.keys():
@@ -770,6 +789,10 @@ class gg:
                 print("DOS_npoints = "+ str(self.DOS_npointsttk.get()), end="\n", file=f1)
                 # DOS_width
                 print("DOS_width = "+ str(self.DOS_widthttk.get()), end="\n", file=f1)
+                # DOS_convergence
+                print("DOS_convergence = "+ str(self.DOS_convergencettk.get()), end="\n", file=f1)
+                # Band_num_of_bands
+                print("Band_num_of_bands = "+ str(self.Band_num_of_bandsttk.get()), end="\n", file=f1)
                 # Spin_calc
                 print("Spin_calc = "+ str(Spin_calcvar.get()), end="\n", file=f1)
                 # Magmom_per_atom
@@ -1250,6 +1273,30 @@ class gg:
         self.DOS_widthttk.pack(side='top')
         self.frameDOS_width.configure(height='200', width='200')
         self.frameDOS_width.pack(side='top')
+        
+        # DOS convergence
+        self.frameDOS_convergence = ttk.Frame(self.labelframe2)
+        self.labelDOS_convergence = ttk.Label(self.frameDOS_convergence)
+        self.labelDOS_convergence.configure(text='Convergence for DOS calc ({} for def):')
+        self.labelDOS_convergence.pack(side='left')
+        self.DOS_convergencettk = ttk.Entry(self.frameDOS_convergence)
+        self.DOS_convergencettk.delete('0', 'end')
+        self.DOS_convergencettk.insert('0', '{}')
+        self.DOS_convergencettk.pack(side='top')
+        self.frameDOS_convergence.configure(height='200', width='200')
+        self.frameDOS_convergence.pack(side='top')
+        
+        # Number of bands in Band calculation
+        self.frameBand_num_of_bands = ttk.Frame(self.labelframe2)
+        self.labelBand_num_of_bands = ttk.Label(self.frameBand_num_of_bands)
+        self.labelBand_num_of_bands.configure(text='Number of bands')
+        self.labelBand_num_of_bands.pack(side='left')
+        self.Band_num_of_bandsttk = ttk.Entry(self.frameBand_num_of_bands)
+        self.Band_num_of_bandsttk.delete('0', 'end')
+        self.Band_num_of_bandsttk.insert('0', '8')
+        self.Band_num_of_bandsttk.pack(side='top')
+        self.frameBand_num_of_bands.configure(height='200', width='200')
+        self.frameBand_num_of_bands.pack(side='top')
 
         # Spin polarized?
         self.frame15 = ttk.Frame(self.labelframe2)

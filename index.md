@@ -25,11 +25,12 @@ More information about [gpaw-tools idea](about.md), [installation](installation.
 
 ## Download
 
-**Latest stable release: v22.7.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v22.7.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v22.7.0.zip)**
+**Latest stable release: v23.2.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v23.2.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v23.2.0.zip)**
 
 Latest development release: [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
 
 ## News
+* **[gpaw-tools](releasenotes.md#version-2320)** version 23.2.0 released. It is a version with major changes and it is **incompatible with the previous versions**. Please use input files in example folder to create new input files (February 1, 2023).
 * A new oral presentation about *gpaw-tools* is presented at MSNG2022 (September 22, 2022).
 * We had a small deparment-wide hands-on activity about installation and basic usage of ASE, GPAW and gpaw-tools software at Gazi Univ. Dept. of Phys. (August 8, 2022). 
 * **[gpaw-tools](releasenotes.md#version-2270)** version 22.7.0 released (July 12, 2022).

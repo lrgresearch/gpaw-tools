@@ -263,10 +263,6 @@ else:
     parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
     parprint("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration))
     parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
-    with paropen(struct+'-0-Result-Spacegroup-and-SpecialPoints.txt', "w") as fd:
-        print("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()), file=fd)
-        print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
-        print("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()), file=fd)
 
 # Control if outdir is set or not
 if outdir is False:
@@ -281,6 +277,14 @@ else:
     if not os.path.isdir(structpath):
         os.makedirs(structpath, exist_ok=True)
     struct = os.path.join(structpath,struct)
+
+# -------------------------------------------------------------
+# Step 0 - STRUCTURE
+# -------------------------------------------------------------
+with paropen(struct+'-0-Result-Spacegroup-and-SpecialPoints.txt', "w") as fd:
+    print("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()), file=fd)
+    print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
+    print("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()), file=fd)
 
 if Optical_calc == False:
     # -------------------------------------------------------------

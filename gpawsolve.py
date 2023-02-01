@@ -37,7 +37,6 @@ from ase.io import read, write
 from ase.eos import calculate_eos
 from ase.units import Bohr, GPa, kJ
 import matplotlib.pyplot as plt
-from ase.dft.dos import DOS
 from ase.constraints import ExpCellFilter
 from ase.spacegroup.symmetrize import FixSymmetry
 from ase.io.cif import write_cif

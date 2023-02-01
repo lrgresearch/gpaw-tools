@@ -14,7 +14,7 @@ There are two scripts that use input files in gpaw-tools. One of them is the mai
 
 [**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Optimizer](inputfilekeywords.md#optimizer), [Max_F_tolerance](inputfilekeywords.md#max_f_tolerance), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [Relax_cell](inputfilekeywords.md#relax_cell)
 
-[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [Cut_off_energy](inputfilekeywords.md#cut_off_energy), [Ground_kpts_density](inputfilekeywords.md#ground_kpts_density), [Ground_kpts_x](inputfilekeywords.md#ground_kpts_x), [Ground_kpts_y](inputfilekeywords.md#ground_kpts_y), [Ground_kpts_z](inputfilekeywords.md#ground_kpts_z), [Ground_gpts_density](inputfilekeywords.md#ground_gpts_density), [Ground_gpts_x](inputfilekeywords.md#ground_gpts_x), [Ground_gpts_y](inputfilekeywords.md#ground_gpts_y), [ground_gpts_z](inputfilekeywords.md#ground_gpts_z), [Gamma](inputfilekeywords.md#gamma), [Band_path](inputfilekeywords.md#band_path), [Band_npoints](inputfilekeywords.md#band_npoints), [Band_num_of_bands](inputfilekeywords.md#band_num_of_bands), [Energy_max](inputfilekeywords.md#energy_max), [Setup_params](inputfilekeywords.md#setup_params), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [DOS_convergence](inputfilekeywords.md#dos_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [Refine_grid](inputfilekeywords.md#refine_grid)
+[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [Cut_off_energy](inputfilekeywords.md#cut_off_energy), [Ground_kpts_density](inputfilekeywords.md#ground_kpts_density), [Ground_kpts_x](inputfilekeywords.md#ground_kpts_x), [Ground_kpts_y](inputfilekeywords.md#ground_kpts_y), [Ground_kpts_z](inputfilekeywords.md#ground_kpts_z), [Ground_gpts_density](inputfilekeywords.md#ground_gpts_density), [Ground_gpts_x](inputfilekeywords.md#ground_gpts_x), [Ground_gpts_y](inputfilekeywords.md#ground_gpts_y), [ground_gpts_z](inputfilekeywords.md#ground_gpts_z), [Gamma](inputfilekeywords.md#gamma), [Band_path](inputfilekeywords.md#band_path), [Band_npoints](inputfilekeywords.md#band_npoints), [Energy_max](inputfilekeywords.md#energy_max), [Setup_params](inputfilekeywords.md#setup_params), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [DOS_convergence](inputfilekeywords.md#dos_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [Refine_grid](inputfilekeywords.md#refine_grid)
 
 [**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GW_calc_type](inputfilekeywords.md#gw_calc_type), [GW_kpoints_list](inputfilekeywords.md#gw_kpoints_list), [GW_truncation](inputfilekeywords.md#gw_truncation), [GW_cut_off_energy](inputfilekeywords.md#gw_cut_off_energy), [GW_valence_band_no](inputfilekeywords.md#gw_valence_band_no), [GW_conduction_band_no](inputfilekeywords.md#gw_conduction_band_no), [GW_PPA](inputfilekeywords.md#GW_PPA), [GW_q0_correction](inputfilekeywords.md#gw_q0_correction), [GW_nblocks_max](inputfilekeywords.md#gw_nblocks_max), [GW_interpolate_band](inputfilekeywords.md#gw_interpolate_band)
 
@@ -155,7 +155,7 @@ Optical_calc = False
 
 ---
 
-### MPIcores
+### MPI_cores
 #### Keyword type
 Integer
 
@@ -167,10 +167,10 @@ NOTE: `gg.py` can run `gpawsolve.py` with only `mpirun -np <corenumber>` command
 4
 
 #### Example
-MPIcores = 4
+MPI_cores = 4
 
 ## Geometric Optimization Keywords
-### Minimizer
+### Optimizer
 #### Keyword type
 String
 
@@ -184,10 +184,10 @@ This keyword controls the energy minimization algorithm for the geometry optimiz
 LBFGS
 
 #### Example
-Minimizer = 'FIRE'
+Optimizer = 'FIRE'
 
 ---
-### fmaxval
+### Max_F_tolerance
 #### Keyword type
 Float
 
@@ -198,7 +198,7 @@ This keyword controls the maximum force tolerance in BFGS type geometry optimiza
 0.05
 
 #### Example
-fmaxval = 0.05 # eV/Ang
+Max_F_tolerance = 0.05 # eV/Ang
 
 ---
 ### Max_step
@@ -261,22 +261,7 @@ Fix_symmetry = True
 
 ---
 
-### Damping
-#### Keyword type
-Float
-
-#### Description
-This keyword controls the damping of the maximum movement of an atom. It is just the calculated step multiplied with this number before added to the positions.
-
-#### Default
-1.0
-
-#### Example
-Damping = 0.5
-
----
-
-### whichstrain
+### Relax_cell
 #### Keyword type
 Python List of Logical values
 
@@ -302,11 +287,11 @@ And these six independent components are in order:
 [False, False, False, False, False, False]
 
 #### Example
-whichstrain=[True, True, False, False, False, False] #For a x-y 2D nanosheet only first 2 component will be true
+Relax_cell = [True, True, False, False, False, False] #For a x-y 2D nanosheet only first 2 component will be true
 
 ---
 ## Electronic Calculations Keywords
-### cut_off_energy
+### Cut_off_energy
 #### Keyword type
 Integer
 
@@ -317,127 +302,127 @@ This keyword controls the plane wave cut off energy value. Unit is eV. Can be us
 340 eV
 
 #### Example
-cut_off_energy = 500 # eV
+Cut_off_energy = 500 # eV
 
 ---
 
-### kpts_density
+### Ground_kpts_density
 #### Keyword type
 Float
 
 #### Description
-This keyword controls kpoint density. It is deactivated normally. Monkhorst-Pack mesh is used with `kpts_x`, `kpts_y` and `kpts_z` variables. If `kpts_density` is included in an input file, the `kpts_x`, `kpts_y` and `kpts_z` variables will be ignored automatically. Unit is pts per Å^-1.
+This keyword controls kpoint density. It is deactivated normally. Monkhorst-Pack mesh is used with `Ground_kpts_x`, `Ground_kpts_y` and `Ground_kpts_z` variables. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_x`, `Ground_kpts_y` and `Ground_kpts_z` variables will be ignored automatically. Unit is pts per Å^-1.
 
 #### Default
 Not used in default.
 
 #### Example
-kpts_density = 2.5     # pts per Å^-1
+Ground_kpts_density = 2.5     # pts per Å^-1
 
 ---
 
-### kpts_x
+### Ground_kpts_x
 #### Keyword type
 Integer
 
 #### Description
-This keyword controls the number of kpoints in x direction. If `kpts_density` is included in an input file, the `kpts_x` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of kpoints in x direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_x` variable will be ignored automatically. Unit is number of points.
 
 #### Default
 5
 
 #### Example
-kpts_x = 5
+Ground_kpts_x = 5
 
 ---
 
-### kpts_y
+### Ground_kpts_y
 #### Keyword type
 Integer
 
 #### Description
-This keyword controls the number of kpoints in y direction. If `kpts_density` is included in an input file, the `kpts_y` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of kpoints in y direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_y` variable will be ignored automatically. Unit is number of points.
 
 #### Default
 5
 
 #### Example
-kpts_y = 5
+Ground_kpts_y = 5
 
 ---
 
-### kpts_z
+### Ground_kpts_z
 #### Keyword type
 Integer
 
 #### Description
-This keyword controls the number of kpoints in z direction. If `kpts_density` is included in an input file, the `kpts_z` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of kpoints in z direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_z` variable will be ignored automatically. Unit is number of points.
 
 #### Default
 5
 
 #### Example
-kpts_z = 5
+Ground_kpts_z = 5
 
 ---
 
-### gpts_density
+### Ground_gpts_density
 #### Keyword type
 Float
 
 #### Description
-This keyword controls gpoint density. If `gpts_density` is included in an input file, the `gpts_x`, `gpts_y` and `gpts_z` variables will be ignored automatically. Unit is pts per Å.
+This keyword controls gpoint density (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_x`, `Ground_gpts_y` and `Ground_gpts_z` variables will be ignored automatically. Unit is pts per Å.
 
 #### Default
 0.2.
 
 #### Example
-gpts_density = 0.2     # pts per Å^-1
+Ground_gpts_density = 0.2     # pts per Å^-1
 
 ---
 
-### gpts_x
+### Ground_gpts_x
 #### Keyword type
 Integer
 
 #### Description
-This keyword controls the number of grid points in x direction. If `gpts_density` is included in an input file, the `gpts_x` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of grid points in x direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_x` variable will be ignored automatically. Unit is number of points.
 
 #### Default
 8
 
 #### Example
-gpts_x = 8
+Ground_gpts_x = 8
 
 ---
 
-### gpts_y
+### Ground_gpts_y
 #### Keyword type
 Integer
 
 #### Description
-This keyword controls the number of grid points in y direction. If `gpts_density` is included in an input file, the `gpts_y` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of grid points in y direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_y` variable will be ignored automatically. Unit is number of points.
 
 #### Default
 8
 
 #### Example
-gpts_y = 8
+Ground_gpts_y = 8
 
 ---
 
-### gpts_z
+### Ground_gpts_z
 #### Keyword type
 Integer
 
 #### Description
-This keyword controls the number of grid points in z direction. If `gpts_density` is included in an input file, the `gpts_z` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of grid points in z direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_z` variable will be ignored automatically. Unit is number of points.
 
 #### Default
 8
 
 #### Example
-gpts_z = 8
+Ground_gpts_z = 8
 
 ---
 
@@ -459,7 +444,7 @@ Gamma = False
 
 ---
 
-### band_path
+### Band_path
 #### Keyword type
 String
 
@@ -470,11 +455,11 @@ This keyword controls the path of high-symmetry points in band structure diagram
 'LGL'
 
 #### Example
-band_path = 'GMKG'
+Band_path = 'GMKG'
 
 ---
 
-### band_npoints
+### Band_npoints
 #### Keyword type
 Integer
 
@@ -485,26 +470,11 @@ This keyword controls the number of points between the first and the last high s
 60
 
 #### Example
-band_npoints = 50
+Band_npoints = 50
 
 ---
 
-### Band_num_of_bands
-#### Keyword type
-Integer
-
-#### Description
-This keyword controls the number of bands in the calculation. 
-
-#### Default
-8
-
-#### Example
-Band_num_of_bands = 8
-
----
-
-### energy_max
+### Energy_max
 #### Keyword type
 Integer
 
@@ -515,37 +485,22 @@ This keyword controls the maximum energy value when the software is used with -d
 15
 
 #### Example
-energy_max = 10 # eV
+Energy_max = 10 # eV
 
 ---
 
-### energy_max
-#### Keyword type
-Integer
-
-#### Description
-This keyword controls the maximum energy value when the software is used with -d (draw) argument. number of points between the first and the last high symmetry points. Unit is eV.
-
-#### Default
-15
-
-#### Example
-energy_max = 10 # eV
-
----
-
-### Hubbard
+### Setup_params
 #### Keyword type
 Python dictionary
 
 #### Description
-This keyword controls the implementation of Hubbard parameter on the related orbitals of related elements. For none use {}. Unit is eV.
+This keyword controls the implementation of setup parameter on the related orbitals of related elements. For none use {}. More information can be found [here](https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#manual-setups).Unit is eV.
 
 #### Default
 {}
 
 #### Example
-energy_max = {'N': ':p,6.0'} # eV
+Setup_params = {'N': ':p,6.0'} # eV
 
 ---
 
@@ -622,7 +577,7 @@ This keyword controls the convergence parameters for the DOS calculations.
 {} 
 
 #### Example
-DOS_convergence = {'eigenstates': 1.0e-8} 
+DOS_convergence = {'maximum iterations': 100} 
 
 ---
 ### Occupations
@@ -743,7 +698,7 @@ This keyword controls the value of magnetic moment of each atom. Please do not f
 Magmom_per_atom = 1.0
 
 ## GW Calculations Keywords
-### GWtype
+### GW_calc_type
 #### Keyword type
 String
 
@@ -757,11 +712,11 @@ This keyword controls the type GW calculation. Available options are:
 GW0
 
 #### Example
-GWtype = 'GW0'
+GW_calc_type = 'GW0'
 
 ---
 
-### GWkpoints
+### GW_kpoints_list
 #### Keyword type
 NumPy Array
 
@@ -772,11 +727,11 @@ This keyword represents the kpoint coordinates for the GW calculation.
 np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])
 
 #### Example
-GWkpoints = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])
+GW_kpoints_list = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])
 
 ---
 
-### GWtruncation 
+### GW_truncation 
 #### Keyword type
 NumPy Array
 
@@ -793,11 +748,11 @@ This keyword controls the truncation of Coulomb potential for the GW calculation
 None
 
 #### Example
-GWtruncation = '2D'
+GW_truncation = '2D'
 
 ---
 
-### GWcut_off_energy
+### GW_cut_off_energy
 #### Keyword type
 Integer
 
@@ -808,11 +763,11 @@ This keyword controls the cut off energy value for the GW calculations. Unit is 
 50 eV
 
 #### Example
-GWcut_off_energy = 50
+GW_cut_off_energy = 50
 
 ---
 
-### GWbandVB
+### GW_valence_band_no
 #### Keyword type
 Integer
 
@@ -823,11 +778,11 @@ This keyword controls the number of the band for the valence band for GW calcula
 8 (Default value is not a general value. Please find correct band for your calculation.)
 
 #### Example
-GWbandVB = 8
+GW_valence_band_no = 8
 
 ---
 
-### GWbandCB
+### GW_conduction_band_no
 #### Keyword type
 Integer
 
@@ -838,11 +793,11 @@ This keyword controls the number of the band for the conduction band for GW calc
 18 (Default value is not a general value. Please find correct band for your calculation.)
 
 #### Example
-GWbandCB = 18
+GW_conduction_band_no = 18
 
 ---
 
-### GWppa
+### GW_PPA
 #### Keyword type
 Logical
 
@@ -853,11 +808,11 @@ This keyword controls the usage of Plasmon Pole Approximation (PPA) for GW calcu
 True
 
 #### Example
-GWppa = True
+GW_PPA = True
 
 ---
 
-### GWq0correction
+### GW_q0_correction
 #### Keyword type
 Logical
 
@@ -868,11 +823,11 @@ This keyword controls the usage of analytic correction to the q=0 contribution a
 True
 
 #### Example
-GWq0correction = True
+GW_q0_correction = True
 
 ---
 
-### GWnblock
+### GW_nblocks_max
 #### Keyword type
 Logical
 
@@ -883,7 +838,7 @@ This keyword controls the behaviour of cutting chi0 into as many blocks to reduc
 True
 
 #### Example
-GWnblock = True
+GW_nblocks_max = True
 
 ---
 
@@ -901,7 +856,7 @@ True
 GW_interpolate_band = True
 
 ## Optical Calculations Keywords
-### opttype
+### Opt_calc_type
 #### Keyword type
 String
 
@@ -912,11 +867,11 @@ This keyword controls the optical calculation type: random phase approximation (
 BSE
 
 #### Example
-opttype = 'BSE'
+Opt_calc_type = 'BSE'
 
 ---
 
-### optshift
+### Opt_shift_en
 #### Keyword type
 Float
 
@@ -927,11 +882,11 @@ This keyword add a shifting to energy values. Unit is eV. Works on BSE calculati
 0.0
 
 #### Example
-optshift = 1.0 #eV
+Opt_shift_en = 1.0 #eV
 
 ---
 
-### optBSEvb
+### Opt_BSE_valence
 #### Keyword type
 Sequence of integers
 
@@ -942,11 +897,11 @@ This keyword shows the valence bands that will be used in BSE calculation.
 range(0,3)
 
 #### Example
-optBSEvb = range(120,124)
+Opt_BSE_valence = range(120,124)
 
 ---
 
-### optBSEcb
+### Opt_BSE_conduction
 #### Keyword type
 Sequence of integers
 
@@ -957,11 +912,11 @@ This keyword shows the conduction bands that will be used in BSE calculation.
 range(4,7)
 
 #### Example
-optBSEcb = range(124,128)
+Opt_BSE_conduction = range(124,128)
 
 ---
 
-### optBSEminEn
+### Opt_BSE_min_en
 #### Keyword type
 Float
 
@@ -972,11 +927,11 @@ This keyword shows the starting energy value of result data that will be used in
 0.0
 
 #### Example
-optBSEminEn = 0.0
+Opt_BSE_min_en = 0.0
 
 ---
 
-### optBSEmaxEn
+### Opt_BSE_max_en
 #### Keyword type
 Float
 
@@ -987,11 +942,11 @@ This keyword shows the ending energy value of result data that will be used in B
 20.0
 
 #### Example
-optBSEmaxEn = 10.0
+Opt_BSE_max_en = 10.0
 
 ---
 
-### optBSEnumdata
+### Opt_BSE_num_of_data
 #### Keyword type
 Integer
 
@@ -1002,11 +957,11 @@ This keyword shows the number of data points in BSE calculation.
 1001
 
 #### Example
-optBSEmaxEn = 401
+Opt_BSE_num_of_data = 401
 
 ---
 
-### num_of_bands
+### Opt_num_of_bands
 #### Keyword type
 Integer
 
@@ -1017,11 +972,11 @@ This keyword controls the number of bands used in optical calculations.
 16
 
 #### Example
-num_of_bands = 8
+Opt_num_of_bands = 8
 
 ---
 
-### optFDsmear
+### Opt_FD_smearing
 #### Keyword type
 Float
 
@@ -1032,11 +987,11 @@ This keyword controls the Fermi Dirac smearing for optical calculations.
 0.05
 
 #### Example
-optFDsmear = 0.02
+Opt_FD_smearing = 0.02
 
 ---
 
-### opteta
+### Opt_eta
 #### Keyword type
 Float
 
@@ -1047,11 +1002,11 @@ This keyword controls the broadening parameter -eta- used in dielectric function
 0.2
 
 #### Example
-optFDsmear = 0.05
+Opt_eta = 0.1
 
 ---
 
-### optdomega0
+### Opt_domega0
 #### Keyword type
 Float
 
@@ -1062,11 +1017,11 @@ This keyword controls the  [Δω0 parameter](https://wiki.fysik.dtu.dk/gpaw/tuto
 0.1 eV
 
 #### Example
-optdomega0 = 0.05 # eV
+Opt_domega0 = 0.05 # eV
 
 ---
 
-### optomega2
+### Opt_omega2
 #### Keyword type
 Float
 
@@ -1077,11 +1032,11 @@ This keyword controls the  [ω2 parameter](https://wiki.fysik.dtu.dk/gpaw/tutori
 10.0 eV
 
 #### Example
-optomega2 = 2.0 # eV
+Opt_omega2 = 2.0 # eV
 
 ---
 
-### optecut
+### Opt_cut_of_energy
 #### Keyword type
 Float
 
@@ -1092,22 +1047,22 @@ This keyword controls the planewave energy cutoff in dielectric function calcula
 10.0 eV
 
 #### Example
-optecut = 20.0 # eV
+Opt_cut_of_energy = 20.0 # eV
 
 ---
 
-### optnblocks
+### Opt_nblocks
 #### Keyword type
 Integer
 
 #### Description
-This keyword controls the Split matrices in nblocks blocks and distribute them G-vectors or frequencies over processes.
+This keyword controls the split matrices in nblocks blocks and distribute them G-vectors or frequencies over processes.
 
 #### Default
 4
 
 #### Example
-optnblocks = 4
+Opt_nblocks = 4
 
 # `asapsolve.py` Keyword List
 

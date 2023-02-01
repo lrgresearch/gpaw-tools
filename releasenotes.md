@@ -8,6 +8,8 @@ title: Release Notes
 
 ### Development version
 
+* Correction of the creating output file that writes spacegroup and special points to a wrong folder.
+* Making `do_all_cexamples.sh` script executable.
 * Wrong usage of GW calculation type in `gg.py` is corrected.
 * All variable changes are also corrected in `gg.py`.
 * `simple_benchmark2021.py` is simplified and renamed as `simple_benchmark2021.py`.

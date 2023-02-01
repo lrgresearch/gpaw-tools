@@ -8,6 +8,10 @@ title: Release Notes
 
 ### Development version
 
+* n/a
+
+### Version 23.2.0
+
 * DOS calculation part is changed completely. All calculations for DOS, PDOS and RawPDOS are done with RawPDOS.
 * New variable is added: `DOS_convergence`.
 * The variables used in `asapsolve.py` is also changed. From this version, `asapsolve.py` will use a special Snake_case (first letter of each variable is capitalized) variables for the input file variables usage.Variable that are affected are: *Manualpbc -> Manual_PBC, pbcmanual -> PBC_constraints, PotentialUsed -> OpenKIM_potential, SolveDoubleElementProblem -> Solve_double_element_problem.*

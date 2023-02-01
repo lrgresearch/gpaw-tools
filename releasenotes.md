@@ -8,6 +8,8 @@ title: Release Notes
 
 ### Development version
 
+* DOS calculation part is changed completely. All calculations for DOS, PDOS and RawPDOS are done with RawPDOS.
+* New variables are added: `DOS_convergence` and `Band_num_of_bands`.
 * The variables used in `asapsolve.py` is also changed. From this version, `asapsolve.py` will use a special Snake_case (first letter of each variable is capitalized) variables for the input file variables usage.Variable that are affected are: *Manualpbc -> Manual_PBC, pbcmanual -> PBC_constraints, PotentialUsed -> OpenKIM_potential, SolveDoubleElementProblem -> Solve_double_element_problem.*
 * Correction of the creating output file that writes spacegroup and special points to a wrong folder.
 * Making `do_all_examples.sh` script executable.

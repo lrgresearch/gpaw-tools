@@ -7,17 +7,16 @@ title: Home
 # Welcome to *gpaw-tools*
 {: .fs-9 }
 
-*gpaw-tools* is a collection of python scripts that use ASE and GPAW for performing Density Functional Theory (DFT) calculations. Its aim is to lower the entry barrier and to provide an easy-to-use command line and graphical user interfaces for GPAW. It is mostly written for new DFT users who are running codes on their own PCs or on small group clusters.
+a powerful and user-friendly tool for conducting Density Functional Theory (DFT) and molecular dynamics (MD) calculations. Our goal is to make DFT and MD calculations more accessible and easy to use for individuals and small groups, by providing a simple command-line interface and graphical user interface with using GPAW/ASAP/ASE libraries.
 {: .fs-6 .fw-300 }
 
 [Download now](#download){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/lrgresearch/gpaw-tools){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 `gpaw-tools` have:
-1. A force-field quick optimization script `asapsolve.py` for preliminary calculations using ASAP3/OpenKIM potentials. 
-2. `ciftoase.py` script for transform CIF files to ASE's own Atoms object.
-3. To choose better cut off energy, lattice parameter and k points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`,`optimize_kptsdensity.py` and `optimize_latticeparam.py`.
-4. The main solver script `gpawsolver.py` which can be run in PW (also with GW and EXX) or LCAO mode. It can do structure optimization, Equation of State and elastic tensor calculations, can use several different XCs (also hybird XCs), can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties (RPA and BSE) in a very simple and organized way.
-5. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) which is called `gg.py`.
+1. The main solver script `gpawsolver.py` which can be run in PW or LCAO mode. It can perform structure optimization, equation of state and elastic tensor calculations, use several different XCs (as well as hybrid XCs) for spin-polarized DOS and band structure calculations, electron densities and optical properties (RPA and BSE). In addition to calculations, it can draw DOS and band structures, save all data and figure in an ordered way.
+2. A force-field quick optimization script `asapsolve.py` for MD calculations using ASAP3/OpenKIM potentials. 
+3. To choose better cut off energy, lattice parameter and k-points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`,`optimize_kptsdensity.py` and `optimize_latticeparam.py`.
+4. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) which is called `gg.py`.
 
 More information about [gpaw-tools idea](about.md), [installation](installation.md), [usage](generalusage.md) and [release notes](releasenotes.md) can be found at related pages.
 

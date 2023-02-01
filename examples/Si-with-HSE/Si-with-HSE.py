@@ -47,6 +47,7 @@ Occupation = {'name': 'marzari-vanderbilt', 'width': 0.2}  # Refer to GPAW docs:
 
 DOS_npoints = 301        # Number of points
 DOS_width = 0.2          # Width of Gaussian smearing.  Use 0.0 for linear tetrahedron interpolation
+DOS_convergence = {}  # Convergence items for DOS calculations
 
 Spin_calc = False        # Spin polarized calculation?
 Magmom_per_atom = 1.0    # Magnetic moment per atom

@@ -34,7 +34,7 @@ Relax_cell=[True, True, True, False, False, False]
 
 # ELECTRONIC
 Cut_off_energy = 340 	# eV
-Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
+#Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 Ground_kpts_x = 4 	        # kpoints in x direction
 Ground_kpts_y = 4	 	# kpoints in y direction
 Ground_kpts_z = 4		# kpoints in z direction
@@ -53,6 +53,7 @@ Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https
 
 DOS_npoints = 501        # Number of points
 DOS_width = 0.1          # Width of Gaussian smearing.  Use 0.0 for linear tetrahedron interpolation
+DOS_convergence = {}  # Convergence items for DOS calculations
 
 Spin_calc = False        # Spin polarized calculation?
 Magmom_per_atom = 1.0    # Magnetic moment per atom

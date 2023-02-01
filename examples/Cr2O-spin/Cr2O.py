@@ -43,6 +43,7 @@ Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https
 
 DOS_npoints = 301        # Number of points
 DOS_width = 0.1          # Width of Gaussian smearing.  Use 0.0 for linear tetrahedron interpolation
+DOS_convergence = {}  # Convergence items for DOS calculations
 
 Spin_calc = True        # Spin polarized calculation?
 Magmom_per_atom = 1.0    # Magnetic moment per atom

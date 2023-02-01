@@ -35,13 +35,12 @@ Relax_cell=[True, True, True, False, False, False]
 # ELECTRONIC
 Cut_off_energy = 340 	# eV
 #Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
-Ground_kpts_x = 4 	        # kpoints in x direction
-Ground_kpts_y = 4	 	# kpoints in y direction
-Ground_kpts_z = 4		# kpoints in z direction
+Ground_kpts_x = 5 	        # kpoints in x direction
+Ground_kpts_y = 5	 	# kpoints in y direction
+Ground_kpts_z = 5		# kpoints in z direction
 Gamma = True
 Band_path = 'LGXG'	    # Brillouin zone high symmetry points
 Band_npoints = 40		# Number of points between high symmetry points
-Band_num_of_bands = 8	# Number of bands
 Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 

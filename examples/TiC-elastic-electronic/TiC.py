@@ -31,7 +31,6 @@ Ground_kpts_z = 7				# kpoints in z direction
 Gamma = True
 Band_path = 'LGWXK'	    # Brillouin zone high symmetry points
 Band_npoints = 40		# Number of points between high symmetry points
-Band_num_of_bands = 8	# Number of bands
 Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 

@@ -105,7 +105,6 @@ DOS_convergence = {}             # Convergence items for DOS calculations
 Gamma = True
 Band_path = 'LGL'	    # Brillouin zone high symmetry points
 Band_npoints = 60		# Number of points between high symmetry points
-Band_num_of_bands = 8	# Number of bands
 Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Band_convergence = {'bands':8}   # Convergence items for band calculations
 

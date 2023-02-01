@@ -1295,7 +1295,7 @@ class gg:
         self.labelOpt_calc_type = ttk.Label(self.frameOpt_calc_type)
         self.labelOpt_calc_type.configure(text='Optical Calculation Method')
         self.labelOpt_calc_type.pack(side='left')
-        self.Opt_calc_typettk = ttk.Combobox(self.frameopttype)
+        self.Opt_calc_typettk = ttk.Combobox(self.frameOpt_calc_type)
         self.Opt_calc_typettk.configure(values=('BSE', 'RPA'), state='readonly')
         self.Opt_calc_typettk.pack(side='top')
         self.Opt_calc_typettk.current(0)
@@ -1345,7 +1345,7 @@ class gg:
         self.labelOpt_BSE_min_en.pack(side='left')
         self.Opt_BSE_min_enttk = ttk.Entry(self.frameOpt_BSE_min_en)
         self.Opt_BSE_min_enttk.delete('0', 'end')
-        self.Opt_BSE_min_ennttk.insert('0', '0.0')
+        self.Opt_BSE_min_enttk.insert('0', '0.0')
         self.Opt_BSE_min_enttk.pack(side='top')
         self.frameOpt_BSE_min_en.configure(height='200', width='200')
         self.frameOpt_BSE_min_en.pack(side='top')
@@ -1507,7 +1507,7 @@ class gg:
         self.labelGW_calc_type = ttk.Label(self.frameGW_calc_type)
         self.labelGW_calc_type.configure(text='GW calc type')
         self.labelGW_calc_type.pack(side='left')
-        self.GW_calc_typettk = ttk.Combobox(self.frameGWtype)
+        self.GW_calc_typettk = ttk.Combobox(self.frameGW_calc_type)
         self.GW_calc_typettk.configure(values=('GW0', 'G0W0'), state='readonly')
         self.GW_calc_typettk.pack(side='top')
         self.GW_calc_typettk.current(0)
@@ -1516,7 +1516,7 @@ class gg:
 
         # GW_kpoints_list
         self.frameGW_kpoints_list = ttk.Frame(self.labelGWframe)
-        self.labelGW_kpoints_list = ttk.Label(self.frameGGW_kpoints_list)
+        self.labelGW_kpoints_list = ttk.Label(self.frameGW_kpoints_list)
         self.labelGW_kpoints_list.configure(text='GW K-points change as list [[kix,kiy,kiz],...]')
         self.labelGW_kpoints_list.pack(side='left')
         self.GW_kpoints_listttk = tk.Entry(self.frameGW_kpoints_list)
@@ -1564,15 +1564,15 @@ class gg:
 
         # GW_conduction_band_no
         self.frameGW_conduction_band_no = ttk.Frame(self.labelGWframe)
-        self.labelGW_conduction_band_no = ttk.Label(self.frameGGW_conduction_band_no)
+        self.labelGW_conduction_band_no = ttk.Label(self.frameGW_conduction_band_no)
         self.labelGW_conduction_band_no.configure(text='Conduction band number')
         self.labelGW_conduction_band_no.pack(side='left')
         self.GW_conduction_band_nottk = ttk.Entry(self.frameGW_conduction_band_no)
         self.GW_conduction_band_nottk.delete('0', 'end')
         self.GW_conduction_band_nottk.insert('0', '8')
         self.GW_conduction_band_nottk.pack(side='top')
-        self.frameGWbandCB.configure(height='200', width='200')
-        self.frameGWbandCB.pack(side='top')
+        self.frameGW_conduction_band_no.configure(height='200', width='200')
+        self.frameGW_conduction_band_no.pack(side='top')
 
         # GW_PPA
         self.GW_PPAttk = ttk.Checkbutton(self.labelGWframe)

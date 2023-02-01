@@ -45,10 +45,11 @@ New Release
 -----------
 
 In each new release, the following steps must be completed.
-- Update __version__ variable in `gpawsolve.py` (Approximate place is line 150) as vYY.m.x. Here YY is year and m (or mm) is month, and x is the step number of release for that month. There is no minor or major release.
+- Update __version__ variable in `gpawsolve.py` (Approximate place is line 168) as vYY.m.x. Here YY is year and m (or mm) is month, and x is the step number of release for that month. There is no minor or major release.
+- Update __version__ variable in `asapsolve.py` (Approximate place is line 77) as vYY.m.x. Here YY is year and m (or mm) is month, and x is the step number of release for that month. There is no minor or major release.
 - Click `Draft a new release`on releases page and create a new tag with the version number.
 - Give a general title, give some highlights information, write Release Notes (copy/paste from gh-pages/releasenotes.md webpage).
 - Select `Create a discussion for this release` and then finish release.
-- Update __version__ variable in `gpawsolve.py` as vYY.m.y. Here y= (x+1)b1. For example for x=0 -> y=1b1 for x=1 -> y=2b1 ...etc...
+- Update __version__ variable in `gpawsolve.py` and `asapsolve.py` as vYY.m.y. Here y= (x+1)b1. For example for x=0 -> y=1b1 for x=1 -> y=2b1 ...etc...
 - Update `gh-pages/releasenotes.md`
 - Update `gh-pages/index.md`

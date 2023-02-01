@@ -73,6 +73,8 @@ bulk_configuration = Atoms(
 # -------------------------------------------------------------
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
+# Version
+__version__ = "v23.2.0"
 
 # Start time
 time0 = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
@@ -82,7 +84,7 @@ class RawFormatter(HelpFormatter):
         return "\n".join([textwrap.fill(line, width) for line in textwrap.indent(textwrap.dedent(text), indent).splitlines()])
 
 # Arguments parsing
-parser = ArgumentParser(prog ='quickoptimize.py', description=Description, formatter_class=RawFormatter)
+parser = ArgumentParser(prog ='asapsolve.py', description=Description, formatter_class=RawFormatter)
 
 
 parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
@@ -118,7 +120,7 @@ try:
         try:
             response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest", timeout=5)
             print('-------------------------------------------------------------------------------------------------------')
-            print('\033[95mgpaw-tools:\033[0m This is quickoptimize.py uses ASAP3 '+asap3.__version__+', and ASE '+ase.__version__)
+            print('\033[95mgpaw-tools:\033[0m This is asapsolve.py uses ASAP3 '+asap3.__version__+', and ASE '+ase.__version__)
             print('-------------------------------------------------------------------------------------------------------')
             print('The latest STABLE release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
             print('Download the latest STABLE tarball release at: '+response.json()["tarball_url"])
@@ -126,7 +128,7 @@ try:
             print('Download the latest DEV zipball release at: https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip')
         except (requests.ConnectionError, requests.Timeout) as exception:
             print('-------------------------------------------------------------------------------------------------------')
-            print('gpaw-tools: This is quickoptimize.py uses ASAP3 '+asap3.__version__+', ASE '+ase.__version__)
+            print('gpaw-tools: This is asapsolve.py uses ASAP3 '+asap3.__version__+', ASE '+ase.__version__)
             print('-------------------------------------------------------------------------------------------------------')
             print('No internet connection available.')
         quit()      
@@ -158,9 +160,6 @@ if not os.path.isdir(structpath):
     os.makedirs(structpath, exist_ok=True)
 struct = os.path.join(structpath,struct)
 
-# -------------------------------------------------------------
-# ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
-# -------------------------------------------------------------
 asestruct = bulk_configuration
 
 asestruct.set_calculator(KIM(OpenKIM_potential, options={"ase_neigh": False}))

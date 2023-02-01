@@ -9,23 +9,24 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/lrgresearch/gpaw-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lrgresearch/gpaw-tools/alerts/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/lrgresearch/gpaw-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lrgresearch/gpaw-tools/context:python)
 ## Introduction
-*gpaw-tools* is a collection of python scripts that use ASE and GPAW for performing Density Functional Theory (DFT) calculations. Its aim is to lower the entry barrier and to provide an easy-to-use command line and graphical user interfaces for GPAW. It is mostly written for new DFT users who are running codes on their own PCs or on small group clusters.
+*gpaw-tools* is a powerful and user-friendly tool for conducting Density Functional Theory (DFT) and molecular dynamics (MD) calculations. Our goal is to make DFT and MD calculations more accessible and easy to use for individuals and small groups, by providing a simple command-line interface and graphical user interface.
+
+The *gpaw-tools* package is built on top of the ASE , ASAP3 and GPAW libraries, which are well-established and widely used in the scientific community. It allows users to simulate the properties of materials, optimize structures, investigate chemical reactions and processes, and perform calculations on systems with a large number of atoms. With gpaw-tools, researchers, students, and engineers in a wide range of fields, including materials science, chemistry, physics, and engineering, can easily conduct DFT and MD calculations and explore the electronic structure of complex systems. We are constantly working to improve and expand the capabilities of *gpaw-tools*, and we welcome feedback and contributions from the community.
 
 `gpaw-tools` have:
-1. A force-field quick optimization script `asapsolve.py` for preliminary calculations using ASAP3/OpenKIM potentials. 
-2. `ciftoase.py` script for transform CIF files to ASE's own Atoms object.
-3. To choose better cut off energy, lattice parameter and k points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`, `optimize_kptsdensity.py` and `optimize_latticeparam.py`.
-4. The main solver script `gpawsolver.py` which can be run in PW (also with GW and EXX) or LCAO mode. It can do structure optimization, Equation of State and elastic tensor calculations, can use several different XCs (also hybird XCs), can do spin-polarized calculations, can calculate, draw and save tidily DOS and band structures, can calculate and save all-electron densities and can calculate optical properties (RPA and BSE) in a very simple and organized way.
-5. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) which is called `gg.py`. 
+1. The main solver script `gpawsolver.py` which can be run in PW or LCAO mode. It can perform structure optimization, equation of state and elastic tensor calculations, use several different XCs (as well as hybrid XCs) for spin-polarized DOS and band structure calculations, electron densities and optical properties (RPA and BSE). In addition to calculations, it can draw DOS and band structures, save all data and figure in an ordered way.
+2. A force-field quick optimization script `asapsolve.py` for MD calculations using ASAP3/OpenKIM potentials.
+3. To choose better cut off energy, lattice parameter and k-points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`, `optimize_kptsdensity.py` and `optimize_latticeparam.py`.
+4. A simple Graphical User Interface (GUI) for gpawsolve.py (and also you may say that GUI for GPAW) which is called `gg.py`.
 
 ## Usage
 ### Installation
-When you download `gpaw-tools-main` from GitHub and extract it to a folder you will have a folder structure as:
+When you download zip or tar.gz file from GitHub and extract it to a folder you will have a folder structure as:
 
 ```
 gpaw-tools-main/
 └── benchmarks/
-│   └── simple_benchmark_2021.py
+│   └── simple_benchmark_2023.py
 ├── examples/
 ├── optimizations/
 │   ├── ciftoase.py
@@ -39,14 +40,9 @@ gpaw-tools-main/
 └── gg.py
 └── shrinkgpw.py
 ```
-To make the `asapsolve.py`, `gpawsolve.py` and `gg.py` as system-wide commands, user must include the `gpaw-tools-main` folder to the $PATH variable in the `.bashrc` file. In case of user  downloaded and extracted the `gpaw-tools-main` file to user's home directory, and to make the change permanent, user must need to define the $PATH variable in the shell configuration file `.bashrc` as
+To make the `asapsolve.py`, `gpawsolve.py` and `gg.py` as system-wide commands, user must include the `gpaw-tools-main` folder (your folder name can be different) to the $PATH variable in the `.bashrc` file. In case of user  downloaded and extracted the `gpaw-tools-main` file to user's home directory, and to make the change permanent, user must need to define the $PATH variable in the shell configuration file `.bashrc` as
 
     export PATH="/home/username/gpaw-tools-main:$PATH"
-    
-also you may need to give execute rights to `gpawsolve.py` and `gg.py` to execute these scripts as a command
-
-    cd /home/username/gpaw-tools-main
-    chmod +x gpawsolve.py asapsolve.py shrinkgpw.py gg.py
 
 ### gpawsolve.py
 This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.
@@ -67,8 +63,9 @@ Argument list:
 -d --drawfigures : Draws DOS and band structure figures at the end of calculation.
 -r --restart     : Passing ground calculations and continue with the next required calculation.
 -v --version     : Version information of running code and the latest stable code. Also gives download link.
- ```
-  You can put ASE Atoms object in to your config file and therefore can use it like an input file. As an example please note the example at: `examples\Bulk-aluminum` folder.
+```
+
+You can put ASE Atoms object in to your config file and therefore can use it like an input file. As an example please note the example at: `examples\Bulk-aluminum` folder.
   
  #### As a stand alone script
  * Change the parameters from related lines for each simulation OR create an input file (as you can see in examples) once and use `-i` argument.
@@ -87,7 +84,7 @@ Usage:
 
 or
 
-`$ gpaw -P<core_number> python /path/to/gpawsolve.py <args>`
+`$ gpaw -P<core_number> python /path/to/gpawsolve.py -- <args>`
 
 #### Calculation selector (Not complete, not up-to-date information)
 
@@ -132,7 +129,7 @@ Argument list:
 
 -h --help        : Help
 -v --version     : Version information of running code and the latest stable code. Also gives download link.
- ```
+```
 
 ### optimizations/ciftoase.py
 For `quickoptimize.py` or other optimization scripts, user may need to give ASE Atoms object instead of using a CIF file. This script changes a CIF file information to ASE Atoms object. Because there is a problem in the read method of ASE.io, sometimes it can give a double number of atoms. If the user lives this kind of problem, there is a setting inside the script. User can run the script like:
@@ -144,10 +141,10 @@ Result will be printed to screen and will be saved as `geometryfile.py` in the s
 ### optimizations/optimize_cutoff (and kpoints)(and kptsdensity)(and latticeparam).py
 Users must provide ASE Atoms object and simply insert the object inside these scripts. With the scripts, the user can do convergence tests for cut-off energy, k-points, k-point density and can calculate the energy dependent lattice parameter values. These codes are mainly based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. Scripts can easily called with MPI as:
 
-    gpaw -P <core_number> python optimize_cutoff.py
-    gpaw -P <core_number> python optimize_kpoints.py
-    gpaw -P <core_number> python optimize_kptsdensity.py
-    gpaw -P <core_number> python optimize_latticeparam.py
+    gpaw -P <core_number> python optimize_cutoff.py -- Structure.cif
+    gpaw -P <core_number> python optimize_kpoints.py -- Structure.cif
+    gpaw -P <core_number> python optimize_kptsdensity.py -- Structure.cif
+    gpaw -P <core_number> python optimize_latticeparam.py -- Structure.cif
     
 `optimize_latticeparam.py` can perform simultaneous calculation for lattice parameters a and c. And can also draw 3D contour graph for Energy versus lattice parameters (a and c).
 

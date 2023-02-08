@@ -46,17 +46,13 @@ To make the `asapsolve.py`, `gpawsolve.py` and `gg.py` as system-wide commands, 
 This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.
 
 #### As a command:
-Command line usage: `gpawsolve.py -v -o -r -d -i <inputfile.py> -h -g <geometryfile.cif>`
+Command line usage: `gpawsolve.py -v -r -d -i <inputfile.py> -h -g <geometryfile.cif>`
 
 Argument list:
 ```
 -g, --geometry   : Use a CIF file for geometry
 -i, --input      : Use an input file for variables (input.py) If you do not use this argument, parameters 
                    will be taken from the related lines of gpawsolve.py. Visit "Input File Keywords" webpage for more. 
--o, --outdir     : Save everything to a output directory with naming /inputfile. 
-                   If there is no input file given and Atoms object is used in gpawsolve.py file 
-                   then the directory name will be /gpawsolve. If you change gpawsolve.py name to 
-                   anyname.py then the directory name will be /anyname
 -h --help        : Help
 -d --drawfigures : Draws DOS and band structure figures at the end of calculation.
 -r --restart     : Passing ground calculations and continue with the next required calculation.

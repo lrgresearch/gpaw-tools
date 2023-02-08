@@ -49,7 +49,12 @@ from gpaw.xc.exx import EXX
 from gpaw.dos import DOSCalculator
 import numpy as np
 from numpy import genfromtxt
-from elastic import get_elastic_tensor, get_elementary_deformations
+from elastic import get_elastic_tensor, get_elementary_deformations        
+
+class RawFormatter(HelpFormatter):
+    """To print Description variable with argparse"""
+    def _fill_text(self, text, width, indent):
+        return "\n".join([textwrap.fill(line, width) for line in textwrap.indent(textwrap.dedent(text), indent).splitlines()])
 
 class gpawsolve:
     def __init__(self, struct):
@@ -1225,19 +1230,9 @@ if __name__ == "__main__":
 
     # Version
     __version__ = "v23.2.1b1"
-    
-    # To print Description variable with argparse
-    class RawFormatter(HelpFormatter):
-        def _fill_text(self, text, width, indent):
-            return "\n".join([textwrap.fill(line, width) for line in textwrap.indent(textwrap.dedent(text), indent).splitlines()])
 
     # Arguments parsing
     parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
-
-
-    parser.add_argument(help="""Save everything to a output directory with naming /inputfile. If there is no input file given and
-                        Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
-                        If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
     parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
     parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
     parser.add_argument("-v", "--version", dest="version", action='store_true')

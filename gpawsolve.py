@@ -1235,8 +1235,7 @@ if __name__ == "__main__":
     parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
 
 
-    parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true',
-                        help="""Save everything to a output directory with naming /inputfile. If there is no input file given and
+    parser.add_argument(help="""Save everything to a output directory with naming /inputfile. If there is no input file given and
                         Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
                         If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
     parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
@@ -1256,7 +1255,7 @@ if __name__ == "__main__":
     if args is None:
         exit(0)
 
-    outdir = False
+    outdir = True
     restart = False
     inFile = None
     drawfigs = False
@@ -1274,9 +1273,6 @@ if __name__ == "__main__":
 
         if args.geometryfile :
             inFile = os.path.join(os.getcwd(),args.geometryfile)
-
-        if args.outdir == True:
-            outdir = True
 
         if args.drawfigs == True:
             drawfigs = True
@@ -1320,19 +1316,15 @@ if __name__ == "__main__":
         parprint("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration))
         parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
 
-    # Control if outdir is set or not
-    if outdir is False:
-        #No change is necessary
-        parprint("Output directory is the main directory")
+    # Output directory
+    if Outdirname != '':
+        structpath = os.path.join(os.getcwd(),Outdirname)
     else:
-        if Outdirname != '':
-            structpath = os.path.join(os.getcwd(),Outdirname)
-        else:
-            structpath = os.path.join(os.getcwd(),struct)
+        structpath = os.path.join(os.getcwd(),struct)
 
-        if not os.path.isdir(structpath):
-            os.makedirs(structpath, exist_ok=True)
-        struct = os.path.join(structpath,struct)
+    if not os.path.isdir(structpath):
+        os.makedirs(structpath, exist_ok=True)
+    struct = os.path.join(structpath,struct)
 
     # Start time
     time0 = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))

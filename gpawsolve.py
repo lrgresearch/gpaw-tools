@@ -51,532 +51,382 @@ import numpy as np
 from numpy import genfromtxt
 from elastic import get_elastic_tensor, get_elementary_deformations
 
-# DEFAULT VALUES
-# These values (with bulk configuration) can be used to run this script without using inputfile (py file)
-# and configuration file (cif file).
-# -------------------------------------------------------------
-Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
-# -------------------------------------------------------------
-Geo_optim = True       # Geometric optimization with LFBGS
-Elastic_calc = False    # Elastic calculation
-DOS_calc = False         # DOS calculation
-Band_calc = False        # Band structure calculation
-Density_calc = False    # Calculate the all-electron density?
-Optical_calc = False     # Calculate the optical properties
+class gpawsolve:
+    def __init__(self, struct):
+        global np   
+        self.Mode = Mode
+        self.Geo_optim = Geo_optim
+        self.Elastic_calc = Elastic_calc
+        self.DOS_calc = DOS_calc
+        self.Band_calc = Band_calc
+        self.Density_calc = Density_calc
+        self.Optical_calc = Optical_calc
+        self.Optimizer = Optimizer
+        self.Max_F_tolerance = Max_F_tolerance
+        self.Max_step = Max_step
+        self.Alpha = Alpha
+        self.Damping = Damping
+        self.Fix_symmetry = Fix_symmetry
+        self.Relax_cell = Relax_cell
+        self.Cut_off_energy = Cut_off_energy
+        self.Ground_kpts_x = Ground_kpts_x
+        self.Ground_kpts_y = Ground_kpts_y
+        self.Ground_kpts_z = Ground_kpts_z
+        self.Ground_gpts_dens = Ground_gpts_dens
+        self.Ground_gpts_x = Ground_gpts_x
+        self.Ground_gpts_y = Ground_gpts_y
+        self.Ground_gpts_z = Ground_gpts_z
+        self.Setup_params = Setup_params
+        self.XC_calc = XC_calc
+        self.Ground_convergence = Ground_convergence
+        self.Occupation = Occupation
+        self.Mixer_type = Mixer_type
+        self.Spin_calc = Spin_calc
+        self.Magmom_per_atom = Magmom_per_atom
+        self.DOS_npoints = DOS_npoints
+        self.DOS_width = DOS_width
+        self.DOS_convergence = DOS_convergence
+        self.Gamma = Gamma
+        self.Band_path = Band_path
+        self.Band_npoints = Band_npoints
+        self.Energy_max = Energy_max
+        self.Band_convergence = Band_convergence
+        self.Refine_grid = Refine_grid
+        self.GW_calc_type = GW_calc_type
+        self.GW_kpoints_list = GW_kpoints_list
+        self.GW_truncation = GW_truncation
+        self.GW_cut_off_energy = GW_cut_off_energy
+        self.GW_valence_band_no = GW_valence_band_no
+        self.GW_conudction_band_no = GW_conudction_band_no
+        self.GW_PPA = GW_PPA
+        self.GW_q0_correction = GW_q0_correction
+        self.GW_nblocks_max = GW_nblocks_max
+        self.GW_interpolate_band = GW_interpolate_band
+        self.Opt_calc_type = Opt_calc_type
+        self.Opt_shift_en = Opt_shift_en
+        self.Opt_BSE_valence = Opt_BSE_valence
+        self.Opt_BSE_conduction = Opt_BSE_conduction
+        self.Opt_BSE_min_en = Opt_BSE_min_en
+        self.Opt_BSE_max_en = Opt_BSE_max_en
+        self.Opt_BSE_num_of_data = Opt_BSE_num_of_data
+        self.Opt_num_of_bands = Opt_num_of_bands
+        self.Opt_FD_smearing = Opt_FD_smearing
+        self.Opt_eta = Opt_eta
+        self.Opt_domega0 = Opt_domega0
+        self.Opt_omega2 = Opt_omega2
+        self.Opt_cut_of_energy = Opt_cut_of_energy
+        self.Opt_nblocks = Opt_nblocks
+        self.MPI_cores = MPI_cores
+        self.bulk_configuration = bulk_configuration
+        self.struct = struct
 
-# -------------------------------------------------------------
-# Parameters
-# -------------------------------------------------------------
-# GEOMETRY
-Optimizer = 'QuasiNewton' # QuasiNewton, GPMin, LBFGS or FIRE
-Max_F_tolerance = 0.05 	# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
-Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
-Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
-Damping = 1.0           # LBFGS only: The calculated step is multiplied with this number before added to the positions
-Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
-# Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
-# Example: For a x-y 2D nanosheet only first 2 component will be true
-Relax_cell = [False, False, False, False, False, False]
+    def structurecalc(self, struct):
+        # -------------------------------------------------------------
+        # Step 0 - STRUCTURE
+        # -------------------------------------------------------------
+        with paropen(struct+'-0-Result-Spacegroup-and-SpecialPoints.txt', "w") as fd:
+            print("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()), file=fd)
+            print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
+            print("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()), file=fd)
 
-# GROUND ----------------------
-Cut_off_energy = 340 	# eV
-#Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, Ground_kpts_x,y,z will not be used automatically.
-Ground_kpts_x = 5 	# kpoints in x direction
-Ground_kpts_y = 5	# kpoints in y direction
-Ground_kpts_z = 5	# kpoints in z direction
-Ground_gpts_dens = 0.2     # (for LCAO) Unit is Å. If the user prefers to use this, Ground_gpts_x,y,z will not be used automatically.
-Ground_gpts_x = 8              # grid points in x direction (for LCAO)
-Ground_gpts_y = 8              # grid points in y direction (for LCAO)
-Ground_gpts_z = 8              # grid points in z direction (for LCAO)
-Setup_params = {}            # Can be used like {'N': ':p,6.0'} for Hubbard, can also be used for many corrections.https://wiki.fysik.dtu.dk/gpaw/devel/setups.html#gpaw.setup.Setup For none use {}
-XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
-Ground_convergence = {}   # Convergence items for ground state calculations
-Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
-Mixer_type = MixerSum(0.1, 3, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)
-Spin_calc = False        # Spin polarized calculation?
-Magmom_per_atom = 1.0    # Magnetic moment per atom
-
-# DOS ----------------------
-DOS_npoints = 501                # Number of points
-DOS_width = 0.1                  # Width of Gaussian smearing. Use 0.0 for linear tetrahedron interpolation
-DOS_convergence = {}             # Convergence items for DOS calculations
-
-# BAND ----------------------
-Gamma = True
-Band_path = 'LGL'	    # Brillouin zone high symmetry points
-Band_npoints = 60		# Number of points between high symmetry points
-Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
-Band_convergence = {'bands':8}   # Convergence items for band calculations
-
-# ELECTRON DENSITY ----------------------
-Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
-
-# GW CALCULATION ----------------------
-GW_calc_type = 'GW0'          # GW0 or G0W0
-GW_kpoints_list = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
-GW_truncation = 'None'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
-GW_cut_off_energy = 50   # Cut-off energy
-GW_valence_band_no = 8            # Valence band number
-GW_conudction_band_no = 18           # Conduction band number
-GW_PPA = True            # Plasmon Pole Approximation
-GW_q0_correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
-GW_nblocks_max = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
-GW_interpolate_band = True # Interpolate band
-
-# OPTICAL ----------------------
-Opt_calc_type = 'BSE'         # BSE or RPA
-Opt_shift_en = 0.0          # Shifting of the energy
-Opt_BSE_valence = range(0,3)  # Valence bands that will be used in BSE calculation
-Opt_BSE_conduction = range(4,7) # Conduction bands that will be used in BSE calculation
-Opt_BSE_min_en = 0.0       # Results will be started from this energy (BSE only)
-Opt_BSE_max_en = 20.0      # Results will be ended at this energy (BSE only)
-Opt_BSE_num_of_data = 1001   # Number of data points in BSE  calculation
-Opt_num_of_bands = 8	# Number of bands
-Opt_FD_smearing = 0.05       # Fermi Dirac smearing for optical calculations
-Opt_eta = 0.05             # Eta for Optical calculations
-Opt_domega0 = 0.05         # Domega0 for Optical calculations
-Opt_omega2 = 5.0           # Frequency at which the non-lin freq grid has doubled the spacing
-Opt_cut_of_energy = 100             # Cut-off energy for optical calculations
-Opt_nblocks = 4            # Split matrices in nblocks blocks and distribute them G-vectors
-                        # or frequencies over processes. Also can use world.size
-
-#GENERAL ----------------------
-MPI_cores = 4            # This is for gg.py. Not used in this script.
-
-# -------------------------------------------------------------
-# Bulk Configuration
-# -------------------------------------------------------------
-bulk_configuration = Atoms(
-    [
-    Atom('C', ( 0.0, 0.0, 5.0 )),
-    Atom('C', ( -1.2339999999999995, 2.1373506965399947, 5.0 )),
-    Atom('C', ( 2.4679999999999995, 0.0, 5.0 )),
-    Atom('C', ( 1.234, 2.1373506965399947, 5.0 )),
-    Atom('C', ( 2.468000000230841e-06, 1.424899039459532, 5.0 )),
-    Atom('C', ( -1.2339975319999992, 3.5622497359995267, 5.0 )),
-    Atom('C', ( 2.4680024680000003, 1.424899039459532, 5.0 )),
-    Atom('C', ( 1.234002468000001, 3.5622497359995267, 5.0 )),
-    ],
-    cell=[(4.936, 0.0, 0.0), (-2.467999999999999, 4.274701393079989, 0.0), (0.0, 0.0, 20.0)],
-    pbc=True,
-    )
-
-# -------------------------------------------------------------
-# ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
-# -------------------------------------------------------------
-# Version
-__version__ = "v23.2.1b1"
-
-# Start time
-time0 = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
-# To print Description variable with argparse
-class RawFormatter(HelpFormatter):
-    def _fill_text(self, text, width, indent):
-        return "\n".join([textwrap.fill(line, width) for line in textwrap.indent(textwrap.dedent(text), indent).splitlines()])
-
-# Arguments parsing
-parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
-
-
-parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true',
-                    help="""Save everything to a output directory with naming /inputfile. If there is no input file given and
-                    Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
-                    If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
-parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
-parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
-parser.add_argument("-v", "--version", dest="version", action='store_true')
-parser.add_argument("-r", "--restart", dest="restart", action='store_true')
-parser.add_argument("-d", "--drawfigures", dest="drawfigs", action='store_true', help="Draws DOS and band structure figures at the end of calculation.")
-
-args = None
-
-try:
-    if world.rank == 0:
-        args = parser.parse_args()
-finally:
-    args = broadcast(args, root=0, comm=world)
-
-if args is None:
-    exit(0)
-
-outdir = False
-restart = False
-inFile = None
-drawfigs = False
-configpath = None
-Outdirname = ''
-
-try:
-    if args.inputfile is not None:
-        configpath = os.path.join(os.getcwd(),args.inputfile)
-        sys.path.append(os.getcwd())
-        # Works like from FILE import *
-        conf = __import__(Path(configpath).stem, globals(), locals(), ['*'])
-        for k in dir(conf):
-            locals()[k] = getattr(conf, k)
-
-    if args.geometryfile :
-        inFile = os.path.join(os.getcwd(),args.geometryfile)
-
-    if args.outdir == True:
-        outdir = True
-
-    if args.drawfigs == True:
-        drawfigs = True
-
-    if args.version == True:
-        import gpaw
-        import ase
-        try:
-            response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest", timeout=5)
-            parprint('-------------------------------------------------------------------------------------------------------')
-            parprint('\033[95mgpaw-tools:\033[0m This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', and ASE '+ase.__version__)
-            parprint('-------------------------------------------------------------------------------------------------------')
-            parprint('The latest STABLE release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
-            parprint('Download the latest STABLE tarball release at: '+response.json()["tarball_url"])
-            parprint('Download the latest STABLE zipball release at: '+response.json()["zipball_url"])
-            parprint('Download the latest DEV zipball release at: https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip')
-        except (requests.ConnectionError, requests.Timeout) as exception:
-            parprint('-------------------------------------------------------------------------------------------------------')
-            parprint('gpaw-tools: This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', ASE '+ase.__version__)
-            parprint('-------------------------------------------------------------------------------------------------------')
-            parprint('No internet connection available.')
-        quit()
-    if args.restart == True:
-        restart = True
-
-except getopt.error as err:
-    # output error, and return with an error code
-    parprint (str(err))
-
-# If there is a CIF input, use it. Otherwise use the bulk configuration provided above.
-if inFile is None:
-    if Outdirname !='':
-        struct = Outdirname
-    else:
-        struct = 'results' # All files will get their names from this file
-    parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_global_number_of_atoms()))
-else:
-    struct = Path(inFile).stem
-    bulk_configuration = read(inFile, index='-1')
-    parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
-    parprint("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration))
-    parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
-
-# Control if outdir is set or not
-if outdir is False:
-    #No change is necessary
-    parprint("Output directory is the main directory")
-else:
-    if Outdirname != '':
-        structpath = os.path.join(os.getcwd(),Outdirname)
-    else:
-        structpath = os.path.join(os.getcwd(),struct)
-
-    if not os.path.isdir(structpath):
-        os.makedirs(structpath, exist_ok=True)
-    struct = os.path.join(structpath,struct)
-
-# -------------------------------------------------------------
-# Step 0 - STRUCTURE
-# -------------------------------------------------------------
-with paropen(struct+'-0-Result-Spacegroup-and-SpecialPoints.txt', "w") as fd:
-    print("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()), file=fd)
-    print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
-    print("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()), file=fd)
-
-if Optical_calc == False:
-    # -------------------------------------------------------------
-    # Step 1 - GROUND STATE
-    # -------------------------------------------------------------
-    if Mode == 'PW':
-        if XC_calc in ['B3LYP', 'PBE0']:
-            parprint('\033[91mERROR:\033[0m'+XC_calc+' can be used only in PW-EXX mode...')
-            quit()
-        if Spin_calc == True:
-            numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
-            bulk_configuration.set_initial_magnetic_moments(numm)
-        if restart == False:
-            # Start ground state
-            time11 = time.time()
-            # PW Ground State Calculations
-            parprint("Starting PW ground state calculation...")
-            if True in Relax_cell:
-                if XC_calc in ['GLLBSC', 'GLLBSCM', 'HSE06', 'HSE03']:
-                    parprint("\033[91mERROR:\033[0m Structure optimization LBFGS can not be used with "+XC_calc+" xc.")
-                    parprint("Do manual structure optimization, or do with PBE, then use its final CIF as input.")
-                    parprint("Quiting...")
-                    quit()
-            if XC_calc in ['HSE06', 'HSE03']:
-                parprint('Starting Hybrid XC calculations...')
-                if 'Ground_kpts_density' in globals():
-                    calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
-                            eigensolver=Davidson(niter=1), mixer=Mixer_type,
-                            spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
-                            convergence = Ground_convergence, occupations = Occupation)
+    def groundcalc(self, struct):
+        # -------------------------------------------------------------
+        # Step 1 - GROUND STATE
+        # -------------------------------------------------------------
+        if Mode == 'PW':
+            if XC_calc in ['B3LYP', 'PBE0']:
+                parprint('\033[91mERROR:\033[0m'+XC_calc+' can be used only in PW-EXX mode...')
+                quit()
+            if Spin_calc == True:
+                numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
+                bulk_configuration.set_initial_magnetic_moments(numm)
+            if restart == False:
+                # Start ground state
+                time11 = time.time()
+                # PW Ground State Calculations
+                parprint("Starting PW ground state calculation...")
+                if True in Relax_cell:
+                    if XC_calc in ['GLLBSC', 'GLLBSCM', 'HSE06', 'HSE03']:
+                        parprint("\033[91mERROR:\033[0m Structure optimization LBFGS can not be used with "+XC_calc+" xc.")
+                        parprint("Do manual structure optimization, or do with PBE, then use its final CIF as input.")
+                        parprint("Quiting...")
+                        quit()
+                if XC_calc in ['HSE06', 'HSE03']:
+                    parprint('Starting Hybrid XC calculations...')
+                    if 'Ground_kpts_density' in globals():
+                        calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
+                                eigensolver=Davidson(niter=1), mixer=Mixer_type,
+                                spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                                convergence = Ground_convergence, occupations = Occupation)
+                    else:
+                        calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
+                                eigensolver=Davidson(niter=1), mixer=Mixer_type,
+                                spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
+                                convergence = Ground_convergence, occupations = Occupation)
                 else:
-                    calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
-                            eigensolver=Davidson(niter=1), mixer=Mixer_type,
-                            spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
-                            convergence = Ground_convergence, occupations = Occupation)
+                    parprint('Starting calculations with '+XC_calc+'...')
+                    # Fix the spacegroup in the geometric optimization if wanted
+                    if Fix_symmetry == True:
+                        bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
+                    if 'Ground_kpts_density' in globals():
+                        calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, nbands='200%', setups= Setup_params, parallel={'domain': world.size},
+                                spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
+                                mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
+                                convergence = Ground_convergence, occupations = Occupation)
+                    else:
+                        calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, nbands='200%', setups= Setup_params, parallel={'domain': world.size},
+                                spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
+                                mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
+                                convergence = Ground_convergence, occupations = Occupation)
+                bulk_configuration.calc = calc
+                if Geo_optim == True:
+                    if True in Relax_cell:
+                        uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                        # Optimizer Selection
+                        if Optimizer == 'FIRE':
+                            from ase.optimize.fire import FIRE
+                            relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                        elif  Optimizer == 'LBFGS':
+                            from ase.optimize.lbfgs import LBFGS
+                            relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                        elif  Optimizer == 'GPMin':
+                            from ase.optimize import GPMin
+                            relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
+                        else:
+                            relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                    else:
+                        # Optimizer Selection
+                        if Optimizer == 'FIRE':
+                            from ase.optimize.fire import FIRE
+                            relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                        elif  Optimizer == 'LBFGS':
+                            from ase.optimize.lbfgs import LBFGS
+                            relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                        elif  Optimizer == 'GPMin':
+                            from ase.optimize import GPMin
+                            relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+                        else:
+                            relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                    relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
+                else:
+                    bulk_configuration.set_calculator(calc)
+                    bulk_configuration.get_potential_energy()
+                if Density_calc == True:
+                    #This line makes huge GPW files. Therefore it is better to use this if else
+                    calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+                else:
+                    calc.write(struct+'-1-Result-Ground.gpw')
+                # Writes final configuration as CIF file
+                write_cif(struct+'-Final.cif', bulk_configuration)
             else:
-                parprint('Starting calculations with '+XC_calc+'...')
+                parprint("Passing PW ground state calculation...")
+                # Control the ground state GPW file
+                if not os.path.exists(struct+'-1-Result-Ground.gpw'):
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                    quit()
+
+        elif Mode == 'PW-EXX':
+            if restart == False:
+                # PW Ground State Calculations
+                parprint("Starting PW ground state calculation with PBE...")
                 # Fix the spacegroup in the geometric optimization if wanted
                 if Fix_symmetry == True:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
                 if 'Ground_kpts_density' in globals():
-                    calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, nbands='200%', setups= Setup_params, parallel={'domain': world.size},
-                            spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                            mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
-                            convergence = Ground_convergence, occupations = Occupation)
+                    calc = GPAW(mode=PW(Cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
+                            convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
                 else:
-                    calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, nbands='200%', setups= Setup_params, parallel={'domain': world.size},
-                            spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                            mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
-                            convergence = Ground_convergence, occupations = Occupation)
-            bulk_configuration.calc = calc
-            if Geo_optim == True:
-                if True in Relax_cell:
-                    uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
-                    # Optimizer Selection
-                    if Optimizer == 'FIRE':
-                        from ase.optimize.fire import FIRE
-                        relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Optimizer == 'LBFGS':
-                        from ase.optimize.lbfgs import LBFGS
-                        relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Optimizer == 'GPMin':
-                        from ase.optimize import GPMin
-                        relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
-                    else:
-                        relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                    calc = GPAW(mode=PW(Cut_off_energy), xc='PBE', parallel={'domain': world.size}, 
+                                kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
+                                convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
+                bulk_configuration.calc = calc
+                uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                # Optimizer Selection
+                if Optimizer == 'FIRE':
+                    from ase.optimize.fire import FIRE
+                    relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                elif  Optimizer == 'LBFGS':
+                    from ase.optimize.lbfgs import LBFGS
+                    relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                elif  Optimizer == 'GPMin':
+                    from ase.optimize import GPMin
+                    relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
                 else:
-                    # Optimizer Selection
-                    if Optimizer == 'FIRE':
-                        from ase.optimize.fire import FIRE
-                        relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Optimizer == 'LBFGS':
-                        from ase.optimize.lbfgs import LBFGS
-                        relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    elif  Optimizer == 'GPMin':
-                        from ase.optimize import GPMin
-                        relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
-                    else:
-                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                    relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
                 relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
-            else:
-                bulk_configuration.set_calculator(calc)
-                bulk_configuration.get_potential_energy()
-            if Density_calc == True:
-                #This line makes huge GPW files. Therefore it is better to use this if else
                 calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+                # Writes final configuration as CIF file
+                write_cif(struct+'-Final.cif', bulk_configuration)
+                # Print final spacegroup information
+                parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
             else:
-                calc.write(struct+'-1-Result-Ground.gpw')
-            # Writes final configuration as CIF file
-            write_cif(struct+'-Final.cif', bulk_configuration)
-        else:
-            parprint("Passing PW ground state calculation...")
-            # Control the ground state GPW file
-            if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
-                quit()
-
-    elif Mode == 'PW-EXX':
-        if restart == False:
-            # PW Ground State Calculations
-            parprint("Starting PW ground state calculation with PBE...")
-            # Fix the spacegroup in the geometric optimization if wanted
-            if Fix_symmetry == True:
-                bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-            if 'Ground_kpts_density' in globals():
-                calc = GPAW(mode=PW(Cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
-            else:
-                calc = GPAW(mode=PW(Cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
-            bulk_configuration.calc = calc
-            uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
-            # Optimizer Selection
-            if Optimizer == 'FIRE':
-                from ase.optimize.fire import FIRE
-                relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            elif  Optimizer == 'LBFGS':
-                from ase.optimize.lbfgs import LBFGS
-                relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-            elif  Optimizer == 'GPMin':
-                from ase.optimize import GPMin
-                relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
-            else:
-                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
-            calc.write(struct+'-1-Result-Ground.gpw', mode="all")
-            # Writes final configuration as CIF file
-            write_cif(struct+'-Final.cif', bulk_configuration)
-            # Print final spacegroup information
-            parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
-        else:
-            parprint("Passing PW ground state calculation...")
-            # Control the ground state GPW file
-            if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
-                quit()
-
-        if XC_calc in ['B3LYP', 'PBE0']:
-            parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
-            calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, txt=struct+'-1-Log-EXX_mode.txt')
-            bulk_configuration.calc_exx = calc_exx
-            with paropen(struct+'-1-Result-Ground-EXX_mode.txt', "w") as fd:
-                print('Eigenvalue contributions: ',calc_exx.get_eigenvalue_contributions() , file=fd)
-                if np.isnan(calc_exx.get_exx_energy()):
-                    print ('The EXX and therefore total energy is not be calculated, because we are only', file=fd)
-                    print ('interested in a few eigenvalues for a few k-points.', file=fd)
-                else:
-                    print('EXX Energy: ',calc_exx.get_exx_energy() , file=fd)
-                    print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
-            parprint('\033[94mINFORMATION:\033[0mEXX mode results are only listed at: '+struct+'-1-Result-Ground-EXX_mode.txt')
-            parprint('          Other files (DOS, band, etc...) are the results calculated with PBE.')
-
-    elif Mode == 'PW-GW':
-        if restart == False:
-            # PW Ground State Calculations
-            parprint("Starting PW only ground state calculation for GW calculation...")
-            # Fix the spacegroup in the geometric optimization if wanted
-            if Fix_symmetry == True:
-                bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-            if 'Ground_kpts_density' in globals():
-                calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                        convergence = Ground_convergence,
-                        mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
-            else:
-                calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                        convergence = Ground_convergence,
-                        mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
-            bulk_configuration.calc = calc
-            uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
-            # Optimizer Selection
-            if Optimizer == 'FIRE':
-                from ase.optimize.fire import FIRE
-                relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            elif  Optimizer == 'LBFGS':
-                from ase.optimize.lbfgs import LBFGS
-                relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-            elif  Optimizer == 'GPMin':
-                from ase.optimize import GPMin
-                relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
-            else:
-                relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-            relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
-            bulk_configuration.get_potential_energy()
-            calc.diagonalize_full_hamiltonian()
-            calc.write(struct+'-1-Result-Ground.gpw', mode="all")
-            # Writes final configuration as CIF file
-            write_cif(struct+'-Final.cif', bulk_configuration)
-            # Print final spacegroup information
-            parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
-        else:
-            parprint("Passing ground state calculation for GW calculation...")
-            # Control the ground state GPW file
-            if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
-                quit()
-
-        # We start by setting up a G0W0 calculator object
-        gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GW_valence_band_no, GW_conduction_band_no),
-                  method=GW_calc_type,truncation=GW_truncation, nblocksmax=GW_nblocks_max,
-                  maxiter=5, q0_correction=GW_q0_correction,
-                  mixing=0.5,savepckl=True,
-                  ecut=GW_cut_off_energy, ppa=GW_PPA)
-        parprint("Starting PW ground state calculation with G0W0 approximation...")
-        gw.calculate()
-        results = pickle.load(open(struct+'-1-_results.pckl', 'rb'))
-        with paropen(struct+'-1-BandGap.txt', "w") as fd:
-            print('Quasi particle (QP) energies in eV. Take CB-VB for the bandgap', file=fd)
-            print('To see other energy contributions, use python -mpickle <picklefile>', file=fd)
-            for x in zip(results['qp']):
-                print(*x, sep=", ", file=fd)
-
-    elif Mode == 'LCAO':
-        if Spin_calc == True:
-            numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
-            bulk_configuration.set_initial_magnetic_moments(numm)
-        if restart == False:
-            parprint("Starting LCAO ground state calculation...")
-            # Fix the spacegroup in the geometric optimization if wanted
-            if Fix_symmetry == True:
-                bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-            if 'Ground_gpts_dens' in globals():
-                if 'Ground_kpts_density' in globals():
-                    calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                            convergence = Ground_convergence, h=Ground_gpts_dens, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
-                else:
-                    calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                            convergence = Ground_convergence, h=Ground_gpts_dens, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
-            else:
-                if 'Ground_kpts_density' in globals():
-                    calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                            convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
-                else:
-                    calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                            convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                            mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
-            bulk_configuration.calc = calc
-            if Geo_optim == True:
-                if True in Relax_cell:
-                    #uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
-                    #relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (Relax_cell keyword) is not implemented in LCAO mode.')
+                parprint("Passing PW ground state calculation...")
+                # Control the ground state GPW file
+                if not os.path.exists(struct+'-1-Result-Ground.gpw'):
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
                     quit()
-                else:
-                    # Optimizer Selection
-                    if Optimizer == 'FIRE':
-                        from ase.optimize.fire import FIRE
-                        relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                    elif Optimizer == 'LBFGS':
-                        from ase.optimize.lbfgs import LBFGS
-                        relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                    elif Optimizer == 'GPMin':
-                        from ase.optimize import GPMin
-                        relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
-                    else:
-                        relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
-            else:
-                bulk_configuration.set_calculator(calc)
-                bulk_configuration.get_potential_energy()
-            #relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-            #relax.run(fmax=Max_F_tolerance)  # Consider much tighter fmax!
-            #bulk_configuration.get_potential_energy()
-            if Density_calc == True:
-                #This line makes huge GPW files. Therefore it is better to use this if else
-                calc.write(struct+'-1-Result-Ground.gpw', mode="all")
-            else:
-                calc.write(struct+'-1-Result-Ground.gpw')
-            # Writes final configuration as CIF file
-            write_cif(struct+'-Final.cif', bulk_configuration)
-            # Print final spacegroup information
-            parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
-        else:
-            parprint("Passing LCAO ground state calculation...")
-            # Control the ground state GPW file
-            if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
-                quit()
 
-    elif Mode == 'FD':
-        parprint("\033[91mERROR:\033[0mFD mode is not implemented in gpaw-tools yet...")
-        quit()
-    else:
-        parprint("\033[91mERROR:\033[0mPlease enter correct mode information.")
-        quit()
-    # Finish ground state
-    time12 = time.time()
-    # -------------------------------------------------------------
-    # Step 1.5 - ELASTIC CALCULATION
-    # -------------------------------------------------------------
-    if Elastic_calc == True:
+            if XC_calc in ['B3LYP', 'PBE0']:
+                parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
+                calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, txt=struct+'-1-Log-EXX_mode.txt')
+                bulk_configuration.calc_exx = calc_exx
+                with paropen(struct+'-1-Result-Ground-EXX_mode.txt', "w") as fd:
+                    print('Eigenvalue contributions: ',calc_exx.get_eigenvalue_contributions() , file=fd)
+                    if np.isnan(calc_exx.get_exx_energy()):
+                        print ('The EXX and therefore total energy is not be calculated, because we are only', file=fd)
+                        print ('interested in a few eigenvalues for a few k-points.', file=fd)
+                    else:
+                        print('EXX Energy: ',calc_exx.get_exx_energy() , file=fd)
+                        print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
+                parprint('\033[94mINFORMATION:\033[0mEXX mode results are only listed at: '+struct+'-1-Result-Ground-EXX_mode.txt')
+                parprint('          Other files (DOS, band, etc...) are the results calculated with PBE.')
+
+        elif Mode == 'PW-GW':
+            if restart == False:
+                # PW Ground State Calculations
+                parprint("Starting PW only ground state calculation for GW calculation...")
+                # Fix the spacegroup in the geometric optimization if wanted
+                if Fix_symmetry == True:
+                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
+                if 'Ground_kpts_density' in globals():
+                    calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
+                            convergence = Ground_convergence,
+                            mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
+                else:
+                    calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
+                            convergence = Ground_convergence,
+                            mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
+                bulk_configuration.calc = calc
+                uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                # Optimizer Selection
+                if Optimizer == 'FIRE':
+                    from ase.optimize.fire import FIRE
+                    relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                elif  Optimizer == 'LBFGS':
+                    from ase.optimize.lbfgs import LBFGS
+                    relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                elif  Optimizer == 'GPMin':
+                    from ase.optimize import GPMin
+                    relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
+                else:
+                    relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
+                bulk_configuration.get_potential_energy()
+                calc.diagonalize_full_hamiltonian()
+                calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+                # Writes final configuration as CIF file
+                write_cif(struct+'-Final.cif', bulk_configuration)
+                # Print final spacegroup information
+                parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
+            else:
+                parprint("Passing ground state calculation for GW calculation...")
+                # Control the ground state GPW file
+                if not os.path.exists(struct+'-1-Result-Ground.gpw'):
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                    quit()
+
+            # We start by setting up a G0W0 calculator object
+            gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GW_valence_band_no, GW_conduction_band_no),
+                      method=GW_calc_type,truncation=GW_truncation, nblocksmax=GW_nblocks_max,
+                      maxiter=5, q0_correction=GW_q0_correction,
+                      mixing=0.5,savepckl=True,
+                      ecut=GW_cut_off_energy, ppa=GW_PPA)
+            parprint("Starting PW ground state calculation with G0W0 approximation...")
+            gw.calculate()
+            results = pickle.load(open(struct+'-1-_results.pckl', 'rb'))
+            with paropen(struct+'-1-BandGap.txt', "w") as fd:
+                print('Quasi particle (QP) energies in eV. Take CB-VB for the bandgap', file=fd)
+                print('To see other energy contributions, use python -mpickle <picklefile>', file=fd)
+                for x in zip(results['qp']):
+                    print(*x, sep=", ", file=fd)
+
+        elif Mode == 'LCAO':
+            if Spin_calc == True:
+                numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
+                bulk_configuration.set_initial_magnetic_moments(numm)
+            if restart == False:
+                parprint("Starting LCAO ground state calculation...")
+                # Fix the spacegroup in the geometric optimization if wanted
+                if Fix_symmetry == True:
+                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
+                if 'Ground_gpts_dens' in globals():
+                    if 'Ground_kpts_density' in globals():
+                        calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
+                                convergence = Ground_convergence, h=Ground_gpts_dens, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                    else:
+                        calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
+                                convergence = Ground_convergence, h=Ground_gpts_dens, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                else:
+                    if 'Ground_kpts_density' in globals():
+                        calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
+                                convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                    else:
+                        calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
+                                convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                bulk_configuration.calc = calc
+                if Geo_optim == True:
+                    if True in Relax_cell:
+                        #uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                        #relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                        parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (Relax_cell keyword) is not implemented in LCAO mode.')
+                        quit()
+                    else:
+                        # Optimizer Selection
+                        if Optimizer == 'FIRE':
+                            from ase.optimize.fire import FIRE
+                            relax = FIRE(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                        elif Optimizer == 'LBFGS':
+                            from ase.optimize.lbfgs import LBFGS
+                            relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                        elif Optimizer == 'GPMin':
+                            from ase.optimize import GPMin
+                            relax = GPMin(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+                        else:
+                            relax = QuasiNewton(bulk_configuration, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
+                    relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
+                else:
+                    bulk_configuration.set_calculator(calc)
+                    bulk_configuration.get_potential_energy()
+                #relax = LBFGS(bulk_configuration, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
+                #relax.run(fmax=Max_F_tolerance)  # Consider much tighter fmax!
+                #bulk_configuration.get_potential_energy()
+                if Density_calc == True:
+                    #This line makes huge GPW files. Therefore it is better to use this if else
+                    calc.write(struct+'-1-Result-Ground.gpw', mode="all")
+                else:
+                    calc.write(struct+'-1-Result-Ground.gpw')
+                # Writes final configuration as CIF file
+                write_cif(struct+'-Final.cif', bulk_configuration)
+                # Print final spacegroup information
+                parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
+            else:
+                parprint("Passing LCAO ground state calculation...")
+                # Control the ground state GPW file
+                if not os.path.exists(struct+'-1-Result-Ground.gpw'):
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                    quit()
+
+        elif Mode == 'FD':
+            parprint("\033[91mERROR:\033[0mFD mode is not implemented in gpaw-tools yet...")
+            quit()
+        else:
+            parprint("\033[91mERROR:\033[0mPlease enter correct mode information.")
+            quit()
+        # Finish ground state
+        time12 = time.time()
+        
+        # Write timings of calculation
+        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+            print('Ground state: ', round((time12-time11),2), end="\n", file=f1)
+
+    def elasticcalc(self, struct, drawfigs = False):
+        # -------------------------------------------------------------
+        # Step 1.5 - ELASTIC CALCULATION
+        # -------------------------------------------------------------
         # Start elastic calc
         time151 = time.time()
         parprint('Starting elastic tensor calculations (\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
@@ -605,10 +455,27 @@ if Optical_calc == False:
             print("The general ordering of Cij components is (except triclinic): C11,C22,C33,C12,C13,C23,C44,C55,C66,C16,C26,C36,C45.", file=fd)
         # Finish elastic calc
         time152 = time.time()
-    # -------------------------------------------------------------
-    # Step 2 - DOS CALCULATION
-    # -------------------------------------------------------------
-    if DOS_calc == True:
+        # Write timings of calculation
+        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+            print('Elastic calculation: ', round((time152-time151),2), end="\n", file=f1)
+
+        # Draw or write the figure
+        if drawfigs == True:
+            # Draw graphs only on master node
+            if world.rank == 0:
+                # Elastic
+                eos.plot(struct+'-1.5-Graph-Elastic-EOS.png', show=True)
+        else:
+            # Draw graphs only on master node
+            if world.rank == 0:
+                # Elastic
+                eos.plot(struct+'-1.5-Result-Elastic-EOS.png')
+
+        
+    def doscalc(self, struct, drawfigs = False):        
+        # -------------------------------------------------------------
+        # Step 2 - DOS CALCULATION
+        # -------------------------------------------------------------
         # Start DOS calc
         time21 = time.time()
         parprint("Starting DOS calculation...")
@@ -724,10 +591,50 @@ if Optical_calc == False:
                     print(*x, sep=", ", file=fd)
         # Finish DOS calc
         time22 = time.time()
-    # -------------------------------------------------------------
-    # Step 3 - BAND STRUCTURE CALCULATION
-    # -------------------------------------------------------------
-    if Band_calc == True:
+        # Write timings of calculation
+        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+            print('DOS calculation: ', round((time22-time21),2), end="\n", file=f1)
+
+        # Write or draw figures
+        if drawfigs == True:
+            # Draw graphs only on master node
+            if world.rank == 0:
+                # DOS
+                if Spin_calc == True:
+                    ax = plt.gca()
+                    ax.plot(energies, -1.0*totaldosweightsdown, 'y')
+                    ax.plot(energies, totaldosweightsup, 'b')
+                    ax.set_xlabel('Energy [eV]')
+                    ax.set_ylabel('DOS [1/eV]')
+                else:
+                    ax = plt.gca()
+                    ax.plot(energies, totaldosweights, 'b')
+                    ax.set_xlabel('Energy [eV]')
+                    ax.set_ylabel('DOS [1/eV]')
+                plt.savefig(struct+'-2-Graph-DOS.png')
+                #plt.show()
+        else:
+            # Draw graphs only on master node
+            if world.rank == 0:
+                # DOS
+                if Spin_calc == True:
+                    ax = plt.gca()
+                    ax.plot(energies, -1.0*totaldosweightsdown, 'y')
+                    ax.plot(energies, totaldosweightsup, 'b')
+                    ax.set_xlabel('Energy [eV]')
+                    ax.set_ylabel('DOS [1/eV]')
+                else:
+                    ax = plt.gca()
+                    ax.plot(energies, totaldosweights, 'b')
+                    ax.set_xlabel('Energy [eV]')
+                    ax.set_ylabel('DOS [1/eV]')
+                plt.savefig(struct+'-2-Graph-DOS.png')
+
+    def bandcalc(self, struct, drawfigs = False):  
+        # -------------------------------------------------------------
+        # Step 3 - BAND STRUCTURE CALCULATION
+        # -------------------------------------------------------------
+
         # Start Band calc
         time31 = time.time()
         parprint("Starting band structure calculation...")
@@ -804,10 +711,44 @@ if Optical_calc == False:
                         print (end="\n", file=f)
         # Finish Band calc
         time32 = time.time()
-    # -------------------------------------------------------------
-    # Step 4 - ALL-ELECTRON DENSITY
-    # -------------------------------------------------------------
-    if Density_calc == True:
+        # Write timings of calculation
+        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+            print('Band calculation: ', round((time32-time31),2), end="\n", file=f1)
+
+        # Write or draw figures
+        if drawfigs == True:
+            # Draw graphs only on master node
+            if world.rank == 0:
+                # Band Structure
+                if Mode == 'PW-GW':
+                    f = plt.figure()
+                    plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
+                    plt.xticks(X, GW_kpoints_list, fontsize=8)
+                    plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
+                    plt.tight_layout()
+                    plt.savefig(struct+'-3-Graph-Band.png')
+                    plt.show()
+                else:
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max)
+        else:
+            # Draw graphs only on master node
+            if world.rank == 0:
+                # Band Structure
+                if Mode == 'PW-GW':
+                    f = plt.figure()
+                    plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
+                    plt.xticks(X, GW_kpoints_list, fontsize=8)
+                    plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
+                    plt.tight_layout()
+                    plt.savefig(struct+'-3-Graph-Band.png')
+                    #plt.show()
+                else:
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max)
+
+    def densitycalc(self, struct):  
+        # -------------------------------------------------------------
+        # Step 4 - ALL-ELECTRON DENSITY
+        # -------------------------------------------------------------
         #Start Density calc
         time41 = time.time()
         parprint("Starting All-electron density calculation...")
@@ -821,361 +762,616 @@ if Optical_calc == False:
         write(struct+'-4-Result-All-electron_npseudo.cube', bulk_configuration, data=np * Bohr**3)
         # Finish Density calc
         time42 = time.time()
+        # Write timings of calculation
+        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+            print('Density calculation: ', round((time42-time41),2), end="\n", file=f1)
 
-# -------------------------------------------------------------
-# Step 5 - OPTICAL CALCULATION
-# -------------------------------------------------------------
-if Optical_calc == True:
-    #Start Optical calc
-    time51 = time.time()
-    if Mode == 'PW':
-        parprint("Starting optical calculation...")
-        try:
-            calc = GPAW(struct+'-1-Result-Ground.gpw',
-                    txt=struct+'-5-Log-Optical.txt',
-                    nbands=Opt_num_of_bands,
-                    fixdensity=True,
-                    symmetry='off',
-                    occupations=FermiDirac(Opt_FD_smearing))
-        except FileNotFoundError as err:
-            # output error, and return with an error code
-            parprint('\033[91mERROR:\033[0mOptical computations must be done separately. Please do ground calculations first.')
-            quit()
-    
-        calc.get_potential_energy()
+    def opticalcalc(self, struct):  
+        # -------------------------------------------------------------
+        # Step 5 - OPTICAL CALCULATION
+        # -------------------------------------------------------------
+        #Start Optical calc
+        time51 = time.time()
+        if Mode == 'PW':
+            parprint("Starting optical calculation...")
+            try:
+                calc = GPAW(struct+'-1-Result-Ground.gpw',
+                        txt=struct+'-5-Log-Optical.txt',
+                        nbands=Opt_num_of_bands,
+                        fixdensity=True,
+                        symmetry='off',
+                        occupations=FermiDirac(Opt_FD_smearing))
+            except FileNotFoundError as err:
+                # output error, and return with an error code
+                parprint('\033[91mERROR:\033[0mOptical computations must be done separately. Please do ground calculations first.')
+                quit()
+        
+            calc.get_potential_energy()
 
-        calc.diagonalize_full_hamiltonian(nbands=Opt_num_of_bands)  # diagonalize Hamiltonian
-        calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
+            calc.diagonalize_full_hamiltonian(nbands=Opt_num_of_bands)  # diagonalize Hamiltonian
+            calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
 
-        #from mpi4py import MPI
-        if Opt_calc_type == 'BSE':
-            if Spin_calc == True:
-               parprint('\033[91mERROR:\033[0mBSE calculations can not run with spin dependent data.')
-               quit()
-            parprint('Starting BSE calculations')
-            bse = BSE(calc= struct+'-5-Result-Optical.gpw', ecut=Opt_cut_of_energy,
-                         valence_bands=Opt_BSE_valence,
-                         conduction_bands=Opt_BSE_conduction,
-                         nbands=Opt_num_of_bands,
-                         eshift=Opt_shift_en,
-                         mode='BSE',
-                         write_v=True,
-                         integrate_gamma=0,
-                         txt=struct+'-5-Log-Optical-BSE.txt')
-            
-            # Getting dielectric function spectrum
-            parprint("Starting dielectric function calculation...")
-            # Writing to files
-            bse.get_dielectric_function(direction=0, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
-                                        w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
-                                        filename=struct+'-5-Result-Optical-BSE_dielec_xdirection.csv',
-                                        write_eig=struct+'-5-Result-Optical-BSE_eig_xdirection.dat')
-            bse.get_dielectric_function(direction=1, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
-                                        w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
-                                        filename=struct+'-5-Result-Optical-BSE_dielec_ydirection.csv',
-                                        write_eig=struct+'-5-Result-Optical-BSE_eig_ydirection.dat')
-            bse.get_dielectric_function(direction=2, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
-                                        w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
-                                        filename=struct+'-5-Result-Optical-BSE_dielec_zdirection.csv',
-                                        write_eig=struct+'-5-Result-Optical-BSE_eig_zdirection.dat')
-                                        
-            # Loading dielectric function spectrum to numpy
-            dielec_x = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_xdirection.csv', delimiter=',')
-            dielec_y = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_ydirection.csv', delimiter=',')
-            dielec_z = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_zdirection.csv', delimiter=',')
-            # dielec_x.shape[0] will give us the length of data.
-            # c and h
-            c_opt = 29979245800
-            h_opt = 6.58E-16
-            #c_opt = 1
-            #h_opt = 1
+            #from mpi4py import MPI
+            if Opt_calc_type == 'BSE':
+                if Spin_calc == True:
+                   parprint('\033[91mERROR:\033[0mBSE calculations can not run with spin dependent data.')
+                   quit()
+                parprint('Starting BSE calculations')
+                bse = BSE(calc= struct+'-5-Result-Optical.gpw', ecut=Opt_cut_of_energy,
+                             valence_bands=Opt_BSE_valence,
+                             conduction_bands=Opt_BSE_conduction,
+                             nbands=Opt_num_of_bands,
+                             eshift=Opt_shift_en,
+                             mode='BSE',
+                             write_v=True,
+                             integrate_gamma=0,
+                             txt=struct+'-5-Log-Optical-BSE.txt')
+                
+                # Getting dielectric function spectrum
+                parprint("Starting dielectric function calculation...")
+                # Writing to files
+                bse.get_dielectric_function(direction=0, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
+                                            w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
+                                            filename=struct+'-5-Result-Optical-BSE_dielec_xdirection.csv',
+                                            write_eig=struct+'-5-Result-Optical-BSE_eig_xdirection.dat')
+                bse.get_dielectric_function(direction=1, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
+                                            w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
+                                            filename=struct+'-5-Result-Optical-BSE_dielec_ydirection.csv',
+                                            write_eig=struct+'-5-Result-Optical-BSE_eig_ydirection.dat')
+                bse.get_dielectric_function(direction=2, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
+                                            w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
+                                            filename=struct+'-5-Result-Optical-BSE_dielec_zdirection.csv',
+                                            write_eig=struct+'-5-Result-Optical-BSE_eig_zdirection.dat')
+                                            
+                # Loading dielectric function spectrum to numpy
+                dielec_x = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_xdirection.csv', delimiter=',')
+                dielec_y = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_ydirection.csv', delimiter=',')
+                dielec_z = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_zdirection.csv', delimiter=',')
+                # dielec_x.shape[0] will give us the length of data.
+                # c and h
+                c_opt = 29979245800
+                h_opt = 6.58E-16
+                #c_opt = 1
+                #h_opt = 1
 
-            # Initialize arrays
-            opt_n_bse_x = np.array ([1e-6,]*dielec_x.shape[0])
-            opt_k_bse_x = np.array ([1e-6,]*dielec_x.shape[0])
-            opt_abs_bse_x = np.array([1e-6,]*dielec_x.shape[0])
-            opt_ref_bse_x = np.array([1e-6,]*dielec_x.shape[0])
-            opt_n_bse_y = np.array ([1e-6,]*dielec_y.shape[0])
-            opt_k_bse_y = np.array ([1e-6,]*dielec_y.shape[0])
-            opt_abs_bse_y = np.array([1e-6,]*dielec_y.shape[0])
-            opt_ref_bse_y = np.array([1e-6,]*dielec_y.shape[0])
-            opt_n_bse_z = np.array ([1e-6,]*dielec_z.shape[0])
-            opt_k_bse_z = np.array ([1e-6,]*dielec_z.shape[0])
-            opt_abs_bse_z = np.array([1e-6,]*dielec_z.shape[0])
-            opt_ref_bse_z = np.array([1e-6,]*dielec_z.shape[0])
+                # Initialize arrays
+                opt_n_bse_x = np.array ([1e-6,]*dielec_x.shape[0])
+                opt_k_bse_x = np.array ([1e-6,]*dielec_x.shape[0])
+                opt_abs_bse_x = np.array([1e-6,]*dielec_x.shape[0])
+                opt_ref_bse_x = np.array([1e-6,]*dielec_x.shape[0])
+                opt_n_bse_y = np.array ([1e-6,]*dielec_y.shape[0])
+                opt_k_bse_y = np.array ([1e-6,]*dielec_y.shape[0])
+                opt_abs_bse_y = np.array([1e-6,]*dielec_y.shape[0])
+                opt_ref_bse_y = np.array([1e-6,]*dielec_y.shape[0])
+                opt_n_bse_z = np.array ([1e-6,]*dielec_z.shape[0])
+                opt_k_bse_z = np.array ([1e-6,]*dielec_z.shape[0])
+                opt_abs_bse_z = np.array([1e-6,]*dielec_z.shape[0])
+                opt_ref_bse_z = np.array([1e-6,]*dielec_z.shape[0])
 
-            # Calculation of other optical data
-            for n in range(dielec_x.shape[0]):
-                # x-direction
-                opt_n_bse_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))+dielec_x[n][1])/2.0)
-                opt_k_bse_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))-dielec_x[n][1])/2.0)
-                opt_abs_bse_x[n] = 2*dielec_x[n][0]*opt_k_bse_x[n]/(h_opt*c_opt)
-                opt_ref_bse_x[n] = (np.square(1-opt_n_bse_x[n])+np.square(opt_k_bse_x[n]))/(np.square(1+opt_n_bse_x[n])+np.square(opt_k_bse_x[n]))
-                # y-direction
-                opt_n_bse_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))+dielec_y[n][1])/2.0)
-                opt_k_bse_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))-dielec_y[n][1])/2.0)
-                opt_abs_bse_y[n] = 2*dielec_y[n][0]*opt_k_bse_y[n]/(h_opt*c_opt)
-                opt_ref_bse_y[n] = (np.square(1-opt_n_bse_y[n])+np.square(opt_k_bse_y[n]))/(np.square(1+opt_n_bse_y[n])+np.square(opt_k_bse_y[n]))
-                # z-direction
-                opt_n_bse_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))+dielec_z[n][1])/2.0)
-                opt_k_bse_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))-dielec_z[n][1])/2.0)
-                opt_abs_bse_z[n] = 2*dielec_z[n][0]*opt_k_bse_z[n]/(h_opt*c_opt)
-                opt_ref_bse_z[n] = (np.square(1-opt_n_bse_z[n])+np.square(opt_k_bse_z[n]))/(np.square(1+opt_n_bse_z[n])+np.square(opt_k_bse_z[n]))
-
-            # Saving other data for x-direction
-            with paropen(struct+'-5-Result-Optical-BSE-AllData_xdirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                # Calculation of other optical data
                 for n in range(dielec_x.shape[0]):
-                    print(dielec_x[n][0], dielec_x[n][1], dielec_x[n][2], opt_n_bse_x[n], opt_k_bse_x[n], opt_abs_bse_x[n], opt_ref_bse_x[n], end="\n", file=f1)
-                print (end="\n", file=f1)
+                    # x-direction
+                    opt_n_bse_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))+dielec_x[n][1])/2.0)
+                    opt_k_bse_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))-dielec_x[n][1])/2.0)
+                    opt_abs_bse_x[n] = 2*dielec_x[n][0]*opt_k_bse_x[n]/(h_opt*c_opt)
+                    opt_ref_bse_x[n] = (np.square(1-opt_n_bse_x[n])+np.square(opt_k_bse_x[n]))/(np.square(1+opt_n_bse_x[n])+np.square(opt_k_bse_x[n]))
+                    # y-direction
+                    opt_n_bse_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))+dielec_y[n][1])/2.0)
+                    opt_k_bse_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))-dielec_y[n][1])/2.0)
+                    opt_abs_bse_y[n] = 2*dielec_y[n][0]*opt_k_bse_y[n]/(h_opt*c_opt)
+                    opt_ref_bse_y[n] = (np.square(1-opt_n_bse_y[n])+np.square(opt_k_bse_y[n]))/(np.square(1+opt_n_bse_y[n])+np.square(opt_k_bse_y[n]))
+                    # z-direction
+                    opt_n_bse_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))+dielec_z[n][1])/2.0)
+                    opt_k_bse_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))-dielec_z[n][1])/2.0)
+                    opt_abs_bse_z[n] = 2*dielec_z[n][0]*opt_k_bse_z[n]/(h_opt*c_opt)
+                    opt_ref_bse_z[n] = (np.square(1-opt_n_bse_z[n])+np.square(opt_k_bse_z[n]))/(np.square(1+opt_n_bse_z[n])+np.square(opt_k_bse_z[n]))
 
-            # Saving other data for y-direction
-            with paropen(struct+'-5-Result-Optical-BSE-AllData_ydirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
-                for n in range(dielec_y.shape[0]):
-                    print(dielec_y[n][0], dielec_y[n][1], dielec_y[n][2], opt_n_bse_y[n], opt_k_bse_y[n], opt_abs_bse_y[n], opt_ref_bse_y[n], end="\n", file=f1)
-                print (end="\n", file=f1)
+                # Saving other data for x-direction
+                with paropen(struct+'-5-Result-Optical-BSE-AllData_xdirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_x.shape[0]):
+                        print(dielec_x[n][0], dielec_x[n][1], dielec_x[n][2], opt_n_bse_x[n], opt_k_bse_x[n], opt_abs_bse_x[n], opt_ref_bse_x[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
 
-            # Saving other data for z-direction
-            with paropen(struct+'-5-Result-Optical-BSE-AllData_zdirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
-                for n in range(dielec_z.shape[0]):
-                    print(dielec_z[n][0], dielec_z[n][1], dielec_z[n][2], opt_n_bse_z[n], opt_k_bse_z[n], opt_abs_bse_z[n], opt_ref_bse_z[n], end="\n", file=f1)
-                print (end="\n", file=f1)
+                # Saving other data for y-direction
+                with paropen(struct+'-5-Result-Optical-BSE-AllData_ydirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_y.shape[0]):
+                        print(dielec_y[n][0], dielec_y[n][1], dielec_y[n][2], opt_n_bse_y[n], opt_k_bse_y[n], opt_abs_bse_y[n], opt_ref_bse_y[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
 
-        elif Opt_calc_type == 'RPA':
-            parprint('Starting RPA calculations')
-            df = DielectricFunction(calc=struct+'-5-Result-Optical.gpw',
-                                eta=Opt_eta, nblocks=Opt_nblocks,
-                                omega2=Opt_omega2,
-                                domega0=Opt_domega0,
-                                ecut=Opt_cut_of_energy)
-            # Writing to files as: omega, nlfc.real, nlfc.imag, lfc.real, lfc.imag 
-            # Here lfc is local field correction
-            # Getting dielectric function spectrum
-            parprint("Starting dielectric function calculation...")
-            df.get_dielectric_function( direction='x', 
-                                        filename=struct+'-5-Result-Optical-RPA_dielec_xdirection.csv')
-            df.get_dielectric_function( direction='y',
-                                        filename=struct+'-5-Result-Optical-RPA_dielec_ydirection.csv')
-            df.get_dielectric_function( direction='z',
-                                        filename=struct+'-5-Result-Optical-RPA_dielec_zdirection.csv')
+                # Saving other data for z-direction
+                with paropen(struct+'-5-Result-Optical-BSE-AllData_zdirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_z.shape[0]):
+                        print(dielec_z[n][0], dielec_z[n][1], dielec_z[n][2], opt_n_bse_z[n], opt_k_bse_z[n], opt_abs_bse_z[n], opt_ref_bse_z[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
 
-            # Loading dielectric function spectrum to numpy
-            dielec_x = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_xdirection.csv', delimiter=',')
-            dielec_y = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_ydirection.csv', delimiter=',')
-            dielec_z = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_zdirection.csv', delimiter=',')
-            # dielec_x.shape[0] will give us the length of data.
-            # c and h
-            c_opt = 29979245800
-            h_opt = 6.58E-16
-            #c_opt = 1
-            #h_opt = 1
-            # ---- NLFC ----
-            # Initialize arrays for NLFC
-            opt_n_nlfc_x = np.array ([1e-6,]*dielec_x.shape[0])
-            opt_k_nlfc_x = np.array ([1e-6,]*dielec_x.shape[0])
-            opt_abs_nlfc_x = np.array([1e-6,]*dielec_x.shape[0])
-            opt_ref_nlfc_x = np.array([1e-6,]*dielec_x.shape[0])
-            opt_n_nlfc_y = np.array ([1e-6,]*dielec_y.shape[0])
-            opt_k_nlfc_y = np.array ([1e-6,]*dielec_y.shape[0])
-            opt_abs_nlfc_y = np.array([1e-6,]*dielec_y.shape[0])
-            opt_ref_nlfc_y = np.array([1e-6,]*dielec_y.shape[0])
-            opt_n_nlfc_z = np.array ([1e-6,]*dielec_z.shape[0])
-            opt_k_nlfc_z = np.array ([1e-6,]*dielec_z.shape[0])
-            opt_abs_nlfc_z = np.array([1e-6,]*dielec_z.shape[0])
-            opt_ref_nlfc_z = np.array([1e-6,]*dielec_z.shape[0])
+            elif Opt_calc_type == 'RPA':
+                parprint('Starting RPA calculations')
+                df = DielectricFunction(calc=struct+'-5-Result-Optical.gpw',
+                                    eta=Opt_eta, nblocks=Opt_nblocks,
+                                    omega2=Opt_omega2,
+                                    domega0=Opt_domega0,
+                                    ecut=Opt_cut_of_energy)
+                # Writing to files as: omega, nlfc.real, nlfc.imag, lfc.real, lfc.imag 
+                # Here lfc is local field correction
+                # Getting dielectric function spectrum
+                parprint("Starting dielectric function calculation...")
+                df.get_dielectric_function( direction='x', 
+                                            filename=struct+'-5-Result-Optical-RPA_dielec_xdirection.csv')
+                df.get_dielectric_function( direction='y',
+                                            filename=struct+'-5-Result-Optical-RPA_dielec_ydirection.csv')
+                df.get_dielectric_function( direction='z',
+                                            filename=struct+'-5-Result-Optical-RPA_dielec_zdirection.csv')
 
-            # Calculation of other optical spectrum for NLFC
-            for n in range(dielec_x.shape[0]):
-                # NLFC-x
-                opt_n_nlfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))+dielec_x[n][1])/2.0)
-                opt_k_nlfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))-dielec_x[n][1])/2.0)
-                opt_abs_nlfc_x[n] = 2*dielec_x[n][0]*opt_k_nlfc_x[n]/(h_opt*c_opt)
-                opt_ref_nlfc_x[n] = (np.square(1-opt_n_nlfc_x[n])+np.square(opt_k_nlfc_x[n]))/(np.square(1+opt_n_nlfc_x[n])+np.square(opt_k_nlfc_x[n]))
-                # NLFC-y
-                opt_n_nlfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))+dielec_y[n][1])/2.0)
-                opt_k_nlfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))-dielec_y[n][1])/2.0)
-                opt_abs_nlfc_y[n] = 2*dielec_y[n][0]*opt_k_nlfc_y[n]/(h_opt*c_opt)
-                opt_ref_nlfc_y[n] = (np.square(1-opt_n_nlfc_y[n])+np.square(opt_k_nlfc_y[n]))/(np.square(1+opt_n_nlfc_y[n])+np.square(opt_k_nlfc_y[n]))
-                # NLFC-z
-                opt_n_nlfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))+dielec_z[n][1])/2.0)
-                opt_k_nlfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))-dielec_z[n][1])/2.0)
-                opt_abs_nlfc_z[n] = 2*dielec_z[n][0]*opt_k_nlfc_z[n]/(h_opt*c_opt)
-                opt_ref_nlfc_z[n] = (np.square(1-opt_n_nlfc_z[n])+np.square(opt_k_nlfc_z[n]))/(np.square(1+opt_n_nlfc_z[n])+np.square(opt_k_nlfc_z[n]))
+                # Loading dielectric function spectrum to numpy
+                dielec_x = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_xdirection.csv', delimiter=',')
+                dielec_y = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_ydirection.csv', delimiter=',')
+                dielec_z = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_zdirection.csv', delimiter=',')
+                # dielec_x.shape[0] will give us the length of data.
+                # c and h
+                c_opt = 29979245800
+                h_opt = 6.58E-16
+                #c_opt = 1
+                #h_opt = 1
+                # ---- NLFC ----
+                # Initialize arrays for NLFC
+                opt_n_nlfc_x = np.array ([1e-6,]*dielec_x.shape[0])
+                opt_k_nlfc_x = np.array ([1e-6,]*dielec_x.shape[0])
+                opt_abs_nlfc_x = np.array([1e-6,]*dielec_x.shape[0])
+                opt_ref_nlfc_x = np.array([1e-6,]*dielec_x.shape[0])
+                opt_n_nlfc_y = np.array ([1e-6,]*dielec_y.shape[0])
+                opt_k_nlfc_y = np.array ([1e-6,]*dielec_y.shape[0])
+                opt_abs_nlfc_y = np.array([1e-6,]*dielec_y.shape[0])
+                opt_ref_nlfc_y = np.array([1e-6,]*dielec_y.shape[0])
+                opt_n_nlfc_z = np.array ([1e-6,]*dielec_z.shape[0])
+                opt_k_nlfc_z = np.array ([1e-6,]*dielec_z.shape[0])
+                opt_abs_nlfc_z = np.array([1e-6,]*dielec_z.shape[0])
+                opt_ref_nlfc_z = np.array([1e-6,]*dielec_z.shape[0])
 
-            # Saving NLFC other optical spectrum for x-direction
-            with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_xdirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                # Calculation of other optical spectrum for NLFC
                 for n in range(dielec_x.shape[0]):
-                    print(dielec_x[n][0], dielec_x[n][1], dielec_x[n][2], opt_n_nlfc_x[n], opt_k_nlfc_x[n], opt_abs_nlfc_x[n], opt_ref_nlfc_x[n], end="\n", file=f1)
-                print (end="\n", file=f1)
+                    # NLFC-x
+                    opt_n_nlfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))+dielec_x[n][1])/2.0)
+                    opt_k_nlfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][1])+np.square(dielec_x[n][2]))-dielec_x[n][1])/2.0)
+                    opt_abs_nlfc_x[n] = 2*dielec_x[n][0]*opt_k_nlfc_x[n]/(h_opt*c_opt)
+                    opt_ref_nlfc_x[n] = (np.square(1-opt_n_nlfc_x[n])+np.square(opt_k_nlfc_x[n]))/(np.square(1+opt_n_nlfc_x[n])+np.square(opt_k_nlfc_x[n]))
+                    # NLFC-y
+                    opt_n_nlfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))+dielec_y[n][1])/2.0)
+                    opt_k_nlfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][1])+np.square(dielec_y[n][2]))-dielec_y[n][1])/2.0)
+                    opt_abs_nlfc_y[n] = 2*dielec_y[n][0]*opt_k_nlfc_y[n]/(h_opt*c_opt)
+                    opt_ref_nlfc_y[n] = (np.square(1-opt_n_nlfc_y[n])+np.square(opt_k_nlfc_y[n]))/(np.square(1+opt_n_nlfc_y[n])+np.square(opt_k_nlfc_y[n]))
+                    # NLFC-z
+                    opt_n_nlfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))+dielec_z[n][1])/2.0)
+                    opt_k_nlfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][1])+np.square(dielec_z[n][2]))-dielec_z[n][1])/2.0)
+                    opt_abs_nlfc_z[n] = 2*dielec_z[n][0]*opt_k_nlfc_z[n]/(h_opt*c_opt)
+                    opt_ref_nlfc_z[n] = (np.square(1-opt_n_nlfc_z[n])+np.square(opt_k_nlfc_z[n]))/(np.square(1+opt_n_nlfc_z[n])+np.square(opt_k_nlfc_z[n]))
 
-            # Saving NLFC other optical spectrum for y-direction
-            with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_ydirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
-                for n in range(dielec_y.shape[0]):
-                    print(dielec_y[n][0], dielec_y[n][1], dielec_y[n][2], opt_n_nlfc_y[n], opt_k_nlfc_y[n], opt_abs_nlfc_y[n], opt_ref_nlfc_y[n], end="\n", file=f1)
-                print (end="\n", file=f1)
+                # Saving NLFC other optical spectrum for x-direction
+                with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_xdirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_x.shape[0]):
+                        print(dielec_x[n][0], dielec_x[n][1], dielec_x[n][2], opt_n_nlfc_x[n], opt_k_nlfc_x[n], opt_abs_nlfc_x[n], opt_ref_nlfc_x[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
 
-            # Saving NLFC other optical spectrum for z-direction
-            with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_zdirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
-                for n in range(dielec_z.shape[0]):
-                    print(dielec_z[n][0], dielec_z[n][1], dielec_z[n][2], opt_n_nlfc_z[n], opt_k_nlfc_z[n], opt_abs_nlfc_z[n], opt_ref_nlfc_z[n], end="\n", file=f1)
-                print (end="\n", file=f1)
+                # Saving NLFC other optical spectrum for y-direction
+                with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_ydirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_y.shape[0]):
+                        print(dielec_y[n][0], dielec_y[n][1], dielec_y[n][2], opt_n_nlfc_y[n], opt_k_nlfc_y[n], opt_abs_nlfc_y[n], opt_ref_nlfc_y[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
 
-            # ---- LFC ----
-            # Initialize arrays for LFC
-            opt_n_lfc_x = np.array ([1e-6,]*dielec_x.shape[0])
-            opt_k_lfc_x = np.array ([1e-6,]*dielec_x.shape[0])
-            opt_abs_lfc_x = np.array([1e-6,]*dielec_x.shape[0])
-            opt_ref_lfc_x = np.array([1e-6,]*dielec_x.shape[0])
-            opt_n_lfc_y = np.array ([1e-6,]*dielec_y.shape[0])
-            opt_k_lfc_y = np.array ([1e-6,]*dielec_y.shape[0])
-            opt_abs_lfc_y = np.array([1e-6,]*dielec_y.shape[0])
-            opt_ref_lfc_y = np.array([1e-6,]*dielec_y.shape[0])
-            opt_n_lfc_z = np.array ([1e-6,]*dielec_z.shape[0])
-            opt_k_lfc_z = np.array ([1e-6,]*dielec_z.shape[0])
-            opt_abs_lfc_z = np.array([1e-6,]*dielec_z.shape[0])
-            opt_ref_lfc_z = np.array([1e-6,]*dielec_z.shape[0])
+                # Saving NLFC other optical spectrum for z-direction
+                with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_zdirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_z.shape[0]):
+                        print(dielec_z[n][0], dielec_z[n][1], dielec_z[n][2], opt_n_nlfc_z[n], opt_k_nlfc_z[n], opt_abs_nlfc_z[n], opt_ref_nlfc_z[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
 
-            # Calculation of other optical spectrum for LFC
-            for n in range(dielec_x.shape[0]):
-                # LFC-x
-                opt_n_lfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][3])+np.square(dielec_x[n][4]))+dielec_x[n][3])/2.0)
-                opt_k_lfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][3])+np.square(dielec_x[n][4]))-dielec_x[n][3])/2.0)
-                opt_abs_lfc_x[n] = 2*dielec_x[n][0]*opt_k_nlfc_x[n]/(h_opt*c_opt)
-                opt_ref_lfc_x[n] = (np.square(1-opt_n_lfc_x[n])+np.square(opt_k_lfc_x[n]))/(np.square(1+opt_n_lfc_x[n])+np.square(opt_k_lfc_x[n]))
-                # LFC-y
-                opt_n_lfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][3])+np.square(dielec_y[n][4]))+dielec_y[n][3])/2.0)
-                opt_k_lfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][3])+np.square(dielec_y[n][4]))-dielec_y[n][3])/2.0)
-                opt_abs_lfc_y[n] = 2*dielec_y[n][0]*opt_k_lfc_y[n]/(h_opt*c_opt)
-                opt_ref_lfc_y[n] = (np.square(1-opt_n_lfc_y[n])+np.square(opt_k_lfc_y[n]))/(np.square(1+opt_n_lfc_y[n])+np.square(opt_k_lfc_y[n]))
-                # LFC-z
-                opt_n_lfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][3])+np.square(dielec_z[n][4]))+dielec_z[n][3])/2.0)
-                opt_k_lfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][3])+np.square(dielec_z[n][4]))-dielec_z[n][3])/2.0)
-                opt_abs_lfc_z[n] = 2*dielec_z[n][0]*opt_k_lfc_z[n]/(h_opt*c_opt)
-                opt_ref_lfc_z[n] = (np.square(1-opt_n_lfc_z[n])+np.square(opt_k_lfc_z[n]))/(np.square(1+opt_n_lfc_z[n])+np.square(opt_k_lfc_z[n]))
+                # ---- LFC ----
+                # Initialize arrays for LFC
+                opt_n_lfc_x = np.array ([1e-6,]*dielec_x.shape[0])
+                opt_k_lfc_x = np.array ([1e-6,]*dielec_x.shape[0])
+                opt_abs_lfc_x = np.array([1e-6,]*dielec_x.shape[0])
+                opt_ref_lfc_x = np.array([1e-6,]*dielec_x.shape[0])
+                opt_n_lfc_y = np.array ([1e-6,]*dielec_y.shape[0])
+                opt_k_lfc_y = np.array ([1e-6,]*dielec_y.shape[0])
+                opt_abs_lfc_y = np.array([1e-6,]*dielec_y.shape[0])
+                opt_ref_lfc_y = np.array([1e-6,]*dielec_y.shape[0])
+                opt_n_lfc_z = np.array ([1e-6,]*dielec_z.shape[0])
+                opt_k_lfc_z = np.array ([1e-6,]*dielec_z.shape[0])
+                opt_abs_lfc_z = np.array([1e-6,]*dielec_z.shape[0])
+                opt_ref_lfc_z = np.array([1e-6,]*dielec_z.shape[0])
 
-            # Saving LFC other optical spectrum for x-direction
-            with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_xdirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                # Calculation of other optical spectrum for LFC
                 for n in range(dielec_x.shape[0]):
-                    print(dielec_x[n][0], dielec_x[n][3], dielec_x[n][4], opt_n_lfc_x[n], opt_k_lfc_x[n], opt_abs_lfc_x[n], opt_ref_lfc_x[n], end="\n", file=f1)
-                print (end="\n", file=f1)
+                    # LFC-x
+                    opt_n_lfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][3])+np.square(dielec_x[n][4]))+dielec_x[n][3])/2.0)
+                    opt_k_lfc_x[n] = np.sqrt((np.sqrt(np.square(dielec_x[n][3])+np.square(dielec_x[n][4]))-dielec_x[n][3])/2.0)
+                    opt_abs_lfc_x[n] = 2*dielec_x[n][0]*opt_k_nlfc_x[n]/(h_opt*c_opt)
+                    opt_ref_lfc_x[n] = (np.square(1-opt_n_lfc_x[n])+np.square(opt_k_lfc_x[n]))/(np.square(1+opt_n_lfc_x[n])+np.square(opt_k_lfc_x[n]))
+                    # LFC-y
+                    opt_n_lfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][3])+np.square(dielec_y[n][4]))+dielec_y[n][3])/2.0)
+                    opt_k_lfc_y[n] = np.sqrt((np.sqrt(np.square(dielec_y[n][3])+np.square(dielec_y[n][4]))-dielec_y[n][3])/2.0)
+                    opt_abs_lfc_y[n] = 2*dielec_y[n][0]*opt_k_lfc_y[n]/(h_opt*c_opt)
+                    opt_ref_lfc_y[n] = (np.square(1-opt_n_lfc_y[n])+np.square(opt_k_lfc_y[n]))/(np.square(1+opt_n_lfc_y[n])+np.square(opt_k_lfc_y[n]))
+                    # LFC-z
+                    opt_n_lfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][3])+np.square(dielec_z[n][4]))+dielec_z[n][3])/2.0)
+                    opt_k_lfc_z[n] = np.sqrt((np.sqrt(np.square(dielec_z[n][3])+np.square(dielec_z[n][4]))-dielec_z[n][3])/2.0)
+                    opt_abs_lfc_z[n] = 2*dielec_z[n][0]*opt_k_lfc_z[n]/(h_opt*c_opt)
+                    opt_ref_lfc_z[n] = (np.square(1-opt_n_lfc_z[n])+np.square(opt_k_lfc_z[n]))/(np.square(1+opt_n_lfc_z[n])+np.square(opt_k_lfc_z[n]))
 
-            # Saving LFC other optical spectrum for y-direction
-            with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_ydirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
-                for n in range(dielec_y.shape[0]):
-                    print(dielec_y[n][0], dielec_y[n][3], dielec_y[n][4], opt_n_lfc_y[n], opt_k_lfc_y[n], opt_abs_lfc_y[n], opt_ref_lfc_y[n], end="\n", file=f1)
-                print (end="\n", file=f1)
+                # Saving LFC other optical spectrum for x-direction
+                with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_xdirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_x.shape[0]):
+                        print(dielec_x[n][0], dielec_x[n][3], dielec_x[n][4], opt_n_lfc_x[n], opt_k_lfc_x[n], opt_abs_lfc_x[n], opt_ref_lfc_x[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
 
-            # Saving LFC other optical spectrum for z-direction
-            with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_zdirection.dat', 'w') as f1:
-                print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
-                for n in range(dielec_z.shape[0]):
-                    print(dielec_z[n][0], dielec_z[n][3], dielec_z[n][4], opt_n_lfc_z[n], opt_k_lfc_z[n], opt_abs_lfc_z[n], opt_ref_lfc_z[n], end="\n", file=f1)
-                print (end="\n", file=f1)
-            
+                # Saving LFC other optical spectrum for y-direction
+                with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_ydirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_y.shape[0]):
+                        print(dielec_y[n][0], dielec_y[n][3], dielec_y[n][4], opt_n_lfc_y[n], opt_k_lfc_y[n], opt_abs_lfc_y[n], opt_ref_lfc_y[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
+
+                # Saving LFC other optical spectrum for z-direction
+                with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_zdirection.dat', 'w') as f1:
+                    print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
+                    for n in range(dielec_z.shape[0]):
+                        print(dielec_z[n][0], dielec_z[n][3], dielec_z[n][4], opt_n_lfc_z[n], opt_k_lfc_z[n], opt_abs_lfc_z[n], opt_ref_lfc_z[n], end="\n", file=f1)
+                    print (end="\n", file=f1)
+                
+            else:
+                parprint('\033[91mERROR:\033[0mUnknown optical calculation type.')
+                quit()
+
+        elif Mode == 'LCAO':
+            parprint('\033[91mERROR:\033[0mNot implemented in LCAO mode yet.')
         else:
-            parprint('\033[91mERROR:\033[0mUnknown optical calculation type.')
+            parprint('\033[91mERROR:\033[0mNot implemented in FD mode yet.')
+        # Finish Optical calc
+        time52 = time.time()
+        # Write timings of calculation
+        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+            print('Optical calculation: ', round((time52-time51),2), end="\n", file=f1)
+
+    def figures(self, struct , writefigs = True):
+        # -------------------------------------------------------------
+        # Step Last - DRAWING BAND STRUCTURE AND DOS
+        # -------------------------------------------------------------
+        if writefigs == False:
+            # Draw graphs only on master node
+            if world.rank == 0:
+                # Elastic
+                if Elastic_calc == True:
+                    eos.plot(struct+'-1.5-Graph-Elastic-EOS.png', show=True)
+                # DOS
+                if DOS_calc == True:
+                    if Spin_calc == True:
+                        ax = plt.gca()
+                        ax.plot(energies, -1.0*totaldosweightsdown, 'y')
+                        ax.plot(energies, totaldosweightsup, 'b')
+                        ax.set_xlabel('Energy [eV]')
+                        ax.set_ylabel('DOS [1/eV]')
+                    else:
+                        ax = plt.gca()
+                        ax.plot(energies, totaldosweights, 'b')
+                        ax.set_xlabel('Energy [eV]')
+                        ax.set_ylabel('DOS [1/eV]')
+                    plt.savefig(struct+'-2-Graph-DOS.png')
+                    #plt.show()
+                if Band_calc == True:
+                    # Band Structure
+                    if Mode == 'PW-GW':
+                        f = plt.figure()
+                        plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
+                        plt.xticks(X, GW_kpoints_list, fontsize=8)
+                        plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
+                        plt.tight_layout()
+                        plt.savefig(struct+'-3-Graph-Band.png')
+                        plt.show()
+                    else:
+                        bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max)
+        else:
+            # Draw graphs only on master node
+            if world.rank == 0:
+                # Elastic
+                if Elastic_calc == True:
+                    eos.plot(struct+'-1.5-Result-Elastic-EOS.png')
+                # DOS
+                if DOS_calc == True:
+                    if Spin_calc == True:
+                        ax = plt.gca()
+                        ax.plot(energies, -1.0*totaldosweightsdown, 'y')
+                        ax.plot(energies, totaldosweightsup, 'b')
+                        ax.set_xlabel('Energy [eV]')
+                        ax.set_ylabel('DOS [1/eV]')
+                    else:
+                        ax = plt.gca()
+                        ax.plot(energies, totaldosweights, 'b')
+                        ax.set_xlabel('Energy [eV]')
+                        ax.set_ylabel('DOS [1/eV]')
+                    plt.savefig(struct+'-2-Graph-DOS.png')
+                if Band_calc == True:
+                    # Band Structure
+                    if Mode == 'PW-GW':
+                        f = plt.figure()
+                        plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
+                        plt.xticks(X, GW_kpoints_list, fontsize=8)
+                        plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
+                        plt.tight_layout()
+                        plt.savefig(struct+'-3-Graph-Band.png')
+                        #plt.show()
+                    else:
+                        bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max)
+
+if __name__ == "__main__":
+    #
+    # DEFAULT VALUES
+    # These values (with bulk configuration) can be used to run this script without using inputfile (py file)
+    # and configuration file (cif file).
+    # -------------------------------------------------------------
+    Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+    # -------------------------------------------------------------
+    Geo_optim = True       # Geometric optimization with LFBGS
+    Elastic_calc = False    # Elastic calculation
+    DOS_calc = False         # DOS calculation
+    Band_calc = False        # Band structure calculation
+    Density_calc = False    # Calculate the all-electron density?
+    Optical_calc = False     # Calculate the optical properties
+
+    # -------------------------------------------------------------
+    # Parameters
+    # -------------------------------------------------------------
+    # GEOMETRY
+    Optimizer = 'QuasiNewton' # QuasiNewton, GPMin, LBFGS or FIRE
+    Max_F_tolerance = 0.05 	# Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
+    Max_step = 0.1          # How far is a single atom allowed to move. Default is 0.2 Ang.
+    Alpha = 60.0            # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
+    Damping = 1.0           # LBFGS only: The calculated step is multiplied with this number before added to the positions
+    Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
+    # Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
+    # Example: For a x-y 2D nanosheet only first 2 component will be true
+    Relax_cell = [False, False, False, False, False, False]
+
+    # GROUND ----------------------
+    Cut_off_energy = 340 	# eV
+    #Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, Ground_kpts_x,y,z will not be used automatically.
+    Ground_kpts_x = 5 	# kpoints in x direction
+    Ground_kpts_y = 5	# kpoints in y direction
+    Ground_kpts_z = 5	# kpoints in z direction
+    Ground_gpts_dens = 0.2     # (for LCAO) Unit is Å. If the user prefers to use this, Ground_gpts_x,y,z will not be used automatically.
+    Ground_gpts_x = 8              # grid points in x direction (for LCAO)
+    Ground_gpts_y = 8              # grid points in y direction (for LCAO)
+    Ground_gpts_z = 8              # grid points in z direction (for LCAO)
+    Setup_params = {}            # Can be used like {'N': ':p,6.0'} for Hubbard, can also be used for many corrections.https://wiki.fysik.dtu.dk/gpaw/devel/setups.html#gpaw.setup.Setup For none use {}
+    XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
+    Ground_convergence = {}   # Convergence items for ground state calculations
+    Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
+    Mixer_type = MixerSum(0.1, 3, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)
+    Spin_calc = False        # Spin polarized calculation?
+    Magmom_per_atom = 1.0    # Magnetic moment per atom
+
+    # DOS ----------------------
+    DOS_npoints = 501                # Number of points
+    DOS_width = 0.1                  # Width of Gaussian smearing. Use 0.0 for linear tetrahedron interpolation
+    DOS_convergence = {}             # Convergence items for DOS calculations
+
+    # BAND ----------------------
+    Gamma = True
+    Band_path = 'LGL'	    # Brillouin zone high symmetry points
+    Band_npoints = 60		# Number of points between high symmetry points
+    Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
+    Band_convergence = {'bands':8}   # Convergence items for band calculations
+
+    # ELECTRON DENSITY ----------------------
+    Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
+
+    # GW CALCULATION ----------------------
+    GW_calc_type = 'GW0'          # GW0 or G0W0
+    GW_kpoints_list = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
+    GW_truncation = 'None'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
+    GW_cut_off_energy = 50   # Cut-off energy
+    GW_valence_band_no = 8            # Valence band number
+    GW_conudction_band_no = 18           # Conduction band number
+    GW_PPA = True            # Plasmon Pole Approximation
+    GW_q0_correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
+    GW_nblocks_max = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.
+    GW_interpolate_band = True # Interpolate band
+
+    # OPTICAL ----------------------
+    Opt_calc_type = 'BSE'         # BSE or RPA
+    Opt_shift_en = 0.0          # Shifting of the energy
+    Opt_BSE_valence = range(0,3)  # Valence bands that will be used in BSE calculation
+    Opt_BSE_conduction = range(4,7) # Conduction bands that will be used in BSE calculation
+    Opt_BSE_min_en = 0.0       # Results will be started from this energy (BSE only)
+    Opt_BSE_max_en = 20.0      # Results will be ended at this energy (BSE only)
+    Opt_BSE_num_of_data = 1001   # Number of data points in BSE  calculation
+    Opt_num_of_bands = 8	# Number of bands
+    Opt_FD_smearing = 0.05       # Fermi Dirac smearing for optical calculations
+    Opt_eta = 0.05             # Eta for Optical calculations
+    Opt_domega0 = 0.05         # Domega0 for Optical calculations
+    Opt_omega2 = 5.0           # Frequency at which the non-lin freq grid has doubled the spacing
+    Opt_cut_of_energy = 100             # Cut-off energy for optical calculations
+    Opt_nblocks = 4            # Split matrices in nblocks blocks and distribute them G-vectors
+                            # or frequencies over processes. Also can use world.size
+
+    #GENERAL ----------------------
+    MPI_cores = 4            # This is for gg.py. Not used in this script.
+
+    # -------------------------------------------------------------
+    # Bulk Configuration
+    # -------------------------------------------------------------
+    bulk_configuration = Atoms(
+        [
+        Atom('C', ( 0.0, 0.0, 5.0 )),
+        Atom('C', ( -1.2339999999999995, 2.1373506965399947, 5.0 )),
+        Atom('C', ( 2.4679999999999995, 0.0, 5.0 )),
+        Atom('C', ( 1.234, 2.1373506965399947, 5.0 )),
+        Atom('C', ( 2.468000000230841e-06, 1.424899039459532, 5.0 )),
+        Atom('C', ( -1.2339975319999992, 3.5622497359995267, 5.0 )),
+        Atom('C', ( 2.4680024680000003, 1.424899039459532, 5.0 )),
+        Atom('C', ( 1.234002468000001, 3.5622497359995267, 5.0 )),
+        ],
+        cell=[(4.936, 0.0, 0.0), (-2.467999999999999, 4.274701393079989, 0.0), (0.0, 0.0, 20.0)],
+        pbc=True,
+        )
+
+    # -------------------------------------------------------------
+    # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
+    # -------------------------------------------------------------
+
+    # Version
+    __version__ = "v23.2.1b1"
+    
+    # To print Description variable with argparse
+    class RawFormatter(HelpFormatter):
+        def _fill_text(self, text, width, indent):
+            return "\n".join([textwrap.fill(line, width) for line in textwrap.indent(textwrap.dedent(text), indent).splitlines()])
+
+    # Arguments parsing
+    parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
+
+
+    parser.add_argument("-o", "--outdir", dest = "outdir", action='store_true',
+                        help="""Save everything to a output directory with naming /inputfile. If there is no input file given and
+                        Atoms object is used in gpawsolve.py file then the directory name will be /gpawsolve. 
+                        If you change gpawsolve.py name to anyname.py then the directory name will be /anyname.""")
+    parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
+    parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
+    parser.add_argument("-v", "--version", dest="version", action='store_true')
+    parser.add_argument("-r", "--restart", dest="restart", action='store_true')
+    parser.add_argument("-d", "--drawfigures", dest="drawfigs", action='store_true', help="Draws DOS and band structure figures at the end of calculation.")
+
+    args = None
+
+    try:
+        if world.rank == 0:
+            args = parser.parse_args()
+    finally:
+        args = broadcast(args, root=0, comm=world)
+
+    if args is None:
+        exit(0)
+
+    outdir = False
+    restart = False
+    inFile = None
+    drawfigs = False
+    configpath = None
+    Outdirname = ''
+
+    try:
+        if args.inputfile is not None:
+            configpath = os.path.join(os.getcwd(),args.inputfile)
+            sys.path.append(os.getcwd())
+            # Works like from FILE import *
+            conf = __import__(Path(configpath).stem, globals(), locals(), ['*'])
+            for k in dir(conf):
+                locals()[k] = getattr(conf, k)
+
+        if args.geometryfile :
+            inFile = os.path.join(os.getcwd(),args.geometryfile)
+
+        if args.outdir == True:
+            outdir = True
+
+        if args.drawfigs == True:
+            drawfigs = True
+
+        if args.version == True:
+            import gpaw
+            import ase
+            try:
+                response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest", timeout=5)
+                parprint('-------------------------------------------------------------------------------------------------------')
+                parprint('\033[95mgpaw-tools:\033[0m This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', and ASE '+ase.__version__)
+                parprint('-------------------------------------------------------------------------------------------------------')
+                parprint('The latest STABLE release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
+                parprint('Download the latest STABLE tarball release at: '+response.json()["tarball_url"])
+                parprint('Download the latest STABLE zipball release at: '+response.json()["zipball_url"])
+                parprint('Download the latest DEV zipball release at: https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip')
+            except (requests.ConnectionError, requests.Timeout) as exception:
+                parprint('-------------------------------------------------------------------------------------------------------')
+                parprint('gpaw-tools: This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', ASE '+ase.__version__)
+                parprint('-------------------------------------------------------------------------------------------------------')
+                parprint('No internet connection available.')
             quit()
+        if args.restart == True:
+            restart = True
 
-    elif Mode == 'LCAO':
-        parprint('\033[91mERROR:\033[0mNot implemented in LCAO mode yet.')
+    except getopt.error as err:
+        # output error, and return with an error code
+        parprint (str(err))
+
+    # If there is a CIF input, use it. Otherwise use the bulk configuration provided above.
+    if inFile is None:
+        if Outdirname !='':
+            struct = Outdirname
+        else:
+            struct = 'results' # All files will get their names from this file
+        parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_global_number_of_atoms()))
     else:
-        parprint('\033[91mERROR:\033[0mNot implemented in FD mode yet.')
-    # Finish Optical calc
-    time52 = time.time()
+        struct = Path(inFile).stem
+        bulk_configuration = read(inFile, index='-1')
+        parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
+        parprint("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration))
+        parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
 
-# -------------------------------------------------------------
-# Step 6 - TIME
-# -------------------------------------------------------------
+    # Control if outdir is set or not
+    if outdir is False:
+        #No change is necessary
+        parprint("Output directory is the main directory")
+    else:
+        if Outdirname != '':
+            structpath = os.path.join(os.getcwd(),Outdirname)
+        else:
+            structpath = os.path.join(os.getcwd(),struct)
 
-with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
-    print("gpawsolve.py execution timings (seconds):", end="\n", file=f1)
-    print("Execution started:", time0, end="\n", file=f1)
-    if 'time11' in globals():
-        print('Ground state: ', round((time12-time11),2), end="\n", file=f1)
-    if Elastic_calc == True:
-        print('Elastic calculation: ', round((time152-time151),2), end="\n", file=f1)
-    if DOS_calc == True:
-        print('DOS calculation: ', round((time22-time21),2), end="\n", file=f1)
-    if Band_calc == True:
-        print('Band calculation: ', round((time32-time31),2), end="\n", file=f1)
-    if Density_calc == True:
-        print('Density calculation: ', round((time42-time41),2), end="\n", file=f1)
-    if Optical_calc == True:
-        print('Optical calculation: ', round((time52-time51),2), end="\n", file=f1)
-    print("---------------------------------", end="\n", file=f1)
+        if not os.path.isdir(structpath):
+            os.makedirs(structpath, exist_ok=True)
+        struct = os.path.join(structpath,struct)
 
-# -------------------------------------------------------------
-# Step Last - DRAWING BAND STRUCTURE AND DOS
-# -------------------------------------------------------------
-if drawfigs == True:
-    # Draw graphs only on master node
-    if world.rank == 0:
-        # Elastic
+    # Start time
+    time0 = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
+    # Write timings of calculation
+    with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+        print("gpawsolve.py execution timings (seconds):", end="\n", file=f1)
+        print("Execution started:", time0, end="\n", file=f1)
+    
+    parprint(struct)
+    # Load gpawsolve() class
+    gpawsolver = gpawsolve(struct)
+    
+    # Run structure calculation
+    gpawsolver.structurecalc(struct)
+    
+    if Optical_calc == False:
+        # Run ground state calculation
+        gpawsolver.groundcalc(struct)
+        
         if Elastic_calc == True:
-            eos.plot(struct+'-1.5-Graph-Elastic-EOS.png', show=True)
-        # DOS
+            # Run elastic calculation
+            gpawsolver.elasticcalc(struct, drawfigs = drawfigs)
+            
         if DOS_calc == True:
-            if Spin_calc == True:
-                ax = plt.gca()
-                ax.plot(energies, -1.0*totaldosweightsdown, 'y')
-                ax.plot(energies, totaldosweightsup, 'b')
-                ax.set_xlabel('Energy [eV]')
-                ax.set_ylabel('DOS [1/eV]')
-            else:
-                ax = plt.gca()
-                ax.plot(energies, totaldosweights, 'b')
-                ax.set_xlabel('Energy [eV]')
-                ax.set_ylabel('DOS [1/eV]')
-            plt.savefig(struct+'-2-Graph-DOS.png')
-            #plt.show()
+            # Run DOS calculation
+            gpawsolver.doscalc(struct, drawfigs = drawfigs)
+            
         if Band_calc == True:
-            # Band Structure
-            if Mode == 'PW-GW':
-                f = plt.figure()
-                plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
-                plt.xticks(X, GW_kpoints_list, fontsize=8)
-                plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
-                plt.tight_layout()
-                plt.savefig(struct+'-3-Graph-Band.png')
-                plt.show()
-            else:
-                bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max)
-else:
-    # Draw graphs only on master node
-    if world.rank == 0:
-        # Elastic
-        if Elastic_calc == True:
-            eos.plot(struct+'-1.5-Result-Elastic-EOS.png')
-        # DOS
-        if DOS_calc == True:
-            if Spin_calc == True:
-                ax = plt.gca()
-                ax.plot(energies, -1.0*totaldosweightsdown, 'y')
-                ax.plot(energies, totaldosweightsup, 'b')
-                ax.set_xlabel('Energy [eV]')
-                ax.set_ylabel('DOS [1/eV]')
-            else:
-                ax = plt.gca()
-                ax.plot(energies, totaldosweights, 'b')
-                ax.set_xlabel('Energy [eV]')
-                ax.set_ylabel('DOS [1/eV]')
-            plt.savefig(struct+'-2-Graph-DOS.png')
-        if Band_calc == True:
-            # Band Structure
-            if Mode == 'PW-GW':
-                f = plt.figure()
-                plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
-                plt.xticks(X, GW_kpoints_list, fontsize=8)
-                plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
-                plt.tight_layout()
-                plt.savefig(struct+'-3-Graph-Band.png')
-                #plt.show()
-            else:
-                bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max)
+            # Run band calculation
+            gpawsolver.bandcalc(struct, drawfigs = drawfigs)
+            
+        if Density_calc == True:
+            # Run all-electron density calculation
+            gpawsolver.densitycalc(struct)     
+    else:
+        # Run optical calculation
+        gpawsolver.opticalcalc(struct)
+    
+    # Ending of timings
+    with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+        print("---------------------------------------", end="\n", file=f1)
+

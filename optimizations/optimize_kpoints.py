@@ -30,7 +30,7 @@ if len(sys.argv) > 1:
     bulk_configuration = read(inFile, index='-1')
 
 a, b, c, alpha, beta, gamma = cell_to_cellpar(bulk_configuration.get_cell(), radians=False)
-
+parprint("a:"+str(a)+" , b:"+str(b)+" , c:"+str(c)+" , Alpha:"+str(alpha)+" , Beta:"+str(beta)+" , Gamma:"+str(gamma))
 # Start trying all k-points
 with paropen('OptimizeKPoints_Table-KPoints.txt', 'a') as f:
     f.write('K-point  Total_Energy\n')

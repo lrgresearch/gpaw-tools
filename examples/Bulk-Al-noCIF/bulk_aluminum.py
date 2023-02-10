@@ -22,7 +22,7 @@ Optical_calc = False     # Calculate the optical properties
 # Parameters
 # -------------------------------------------------------------
 # GEOMETRY
-Optimizer = 'QuasiNewton'      # QuasiNewton, GPMin, LBFGS or FIRE
+Optimizer = 'LBFGS'      # QuasiNewton, GPMin, LBFGS or FIRE
 Max_F_tolerance = 0.05 	 # Maximum force tolerance in LBFGS geometry optimization. Unit is eV/Ang.
 Max_step = 0.2    # How far is a single atom allowed to move. Default is 0.2 Ang.
 Alpha = 70.0      # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
@@ -34,7 +34,7 @@ Relax_cell=[True, True, True, False, False, False]
 
 # ELECTRONIC
 Cut_off_energy = 340 	# eV
-#Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
+Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 Ground_kpts_x = 5 	        # kpoints in x direction
 Ground_kpts_y = 5	 	# kpoints in y direction
 Ground_kpts_z = 5		# kpoints in z direction

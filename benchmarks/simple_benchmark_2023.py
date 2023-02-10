@@ -11,7 +11,6 @@ For using all threads provided by Intel Hyperthreading technology:
 from ase import *
 from gpaw import GPAW, PW
 from ase.optimize.lbfgs import LBFGS
-import matplotlib.pyplot as plt
 from ase.dft.dos import DOS
 from pathlib import Path
 

@@ -1103,10 +1103,10 @@ class gpawsolve:
                     # Band Structure
                     if Mode == 'PW-GW':
                         f = plt.figure()
-                        plt.plot(xdata, banddata, '-b', '-r', linewidth=1)
-                        plt.xticks(X, GW_kpoints_list, fontsize=8)
-                        plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
-                        plt.tight_layout()
+                        f.plot(xdata, banddata, '-b', '-r', linewidth=1)
+                        f.xticks(X, GW_kpoints_list, fontsize=8)
+                        f.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
+                        f.tight_layout()
                         plt.savefig(struct+'-3-Graph-Band.png')
                         plt.show()
                     else:

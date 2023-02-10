@@ -244,3 +244,5 @@ After editing ~/.bashrc file quit the current shell session and start a new one 
 
 Congratulations! You installed all necessary files to run *gpaw-tools*. You can continue with our [usage](generalusage.md) page, or continue with the `examples` folder in your `gpaw-tools-main` folder. All examples have README.md files.
 
+NOTE: If you want to back-up your WSL instance, it is a good time. You can make a copy and use this copy on another computer or as a second instance on your computer. Please visit [Run Multiple Instances of the Same Linux Distro on WSL]([https://www.tddft.org/programs/libxc/](https://sungkim11.medium.com/why-you-should-use-multiple-instances-of-same-linux-distro-on-wsl-windows-10-f6f140f8ed88)) for more.
+{: .text-red-200 }

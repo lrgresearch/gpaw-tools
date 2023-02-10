@@ -33,6 +33,7 @@ if len(sys.argv) > 1:
 
 a, b, c, alpha, beta, gamma = cell_to_cellpar(bulk_configuration.get_cell(), radians=False)
 
+parprint("a:"+str(a)+" , b:"+str(b)+" , c:"+str(c)+" , Alpha:"+str(alpha)+" , Beta:"+str(beta)+" , Gamma:"+str(gamma))
 # Start trying all k-density values
 with paropen('OptimizeKPoints_Table-KPointDensity.txt', 'a') as f:
     f.write('K-density  Total_Energy\n')

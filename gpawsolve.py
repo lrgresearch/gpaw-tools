@@ -56,6 +56,38 @@ class RawFormatter(HelpFormatter):
     def _fill_text(self, text, width, indent):
         return "\n".join([textwrap.fill(line, width) for line in textwrap.indent(textwrap.dedent(text), indent).splitlines()])
 
+def struct_from_file(inputfile, geometryfile):
+    """Load variables from parse function"""
+    global bulk_configuration
+    # Works like from FILE import *
+    inputf = __import__(Path(inputfile).stem, globals(), locals(), ['*'])
+    for k in dir(inputf):
+        # Still can not get rid of global variable usage :(
+        globals()[k] = getattr(inputf, k)            
+    # If there is a CIF input, use it. Otherwise use the bulk configuration provided above.
+    if geometryfile is None:
+        if Outdirname !='':
+            struct = Outdirname
+        else:
+            struct = 'results' # All files will get their names from this file
+    else:
+        struct = Path(geometryfile).stem
+        bulk_configuration = read(geometryfile, index='-1')
+        parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
+        parprint("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration))
+        parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
+
+    # Output directory
+    if Outdirname != '':
+        structpath = os.path.join(os.getcwd(),Outdirname)
+    else:
+        structpath = os.path.join(os.getcwd(),struct)
+
+    if not os.path.isdir(structpath):
+        os.makedirs(structpath, exist_ok=True)
+    struct = os.path.join(structpath,struct)
+    return struct
+    
 class gpawsolve:
     def __init__(self, struct):
         global np   
@@ -125,7 +157,7 @@ class gpawsolve:
         self.bulk_configuration = bulk_configuration
         self.struct = struct
 
-    def structurecalc(self, struct):
+    def structurecalc(self):
         # -------------------------------------------------------------
         # Step 0 - STRUCTURE
         # -------------------------------------------------------------
@@ -134,7 +166,7 @@ class gpawsolve:
             print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
             print("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()), file=fd)
 
-    def groundcalc(self, struct):
+    def groundcalc(self):
         # -------------------------------------------------------------
         # Step 1 - GROUND STATE
         # -------------------------------------------------------------
@@ -428,7 +460,7 @@ class gpawsolve:
         with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
             print('Ground state: ', round((time12-time11),2), end="\n", file=f1)
 
-    def elasticcalc(self, struct, drawfigs = False):
+    def elasticcalc(self, drawfigs = False):
         # -------------------------------------------------------------
         # Step 1.5 - ELASTIC CALCULATION
         # -------------------------------------------------------------
@@ -477,7 +509,7 @@ class gpawsolve:
                 eos.plot(struct+'-1.5-Result-Elastic-EOS.png')
 
         
-    def doscalc(self, struct, drawfigs = False):        
+    def doscalc(self, drawfigs = False):        
         # -------------------------------------------------------------
         # Step 2 - DOS CALCULATION
         # -------------------------------------------------------------
@@ -635,7 +667,7 @@ class gpawsolve:
                     ax.set_ylabel('DOS [1/eV]')
                 plt.savefig(struct+'-2-Graph-DOS.png')
 
-    def bandcalc(self, struct, drawfigs = False):  
+    def bandcalc(self, drawfigs = False):  
         # -------------------------------------------------------------
         # Step 3 - BAND STRUCTURE CALCULATION
         # -------------------------------------------------------------
@@ -750,7 +782,7 @@ class gpawsolve:
                 else:
                     bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max)
 
-    def densitycalc(self, struct):  
+    def densitycalc(self):  
         # -------------------------------------------------------------
         # Step 4 - ALL-ELECTRON DENSITY
         # -------------------------------------------------------------
@@ -771,7 +803,7 @@ class gpawsolve:
         with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
             print('Density calculation: ', round((time42-time41),2), end="\n", file=f1)
 
-    def opticalcalc(self, struct):  
+    def opticalcalc(self):  
         # -------------------------------------------------------------
         # Step 5 - OPTICAL CALCULATION
         # -------------------------------------------------------------
@@ -1042,7 +1074,7 @@ class gpawsolve:
         with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
             print('Optical calculation: ', round((time52-time51),2), end="\n", file=f1)
 
-    def figures(self, struct , writefigs = True):
+    def figures(self, writefigs = True):
         # -------------------------------------------------------------
         # Step Last - DRAWING BAND STRUCTURE AND DOS
         # -------------------------------------------------------------
@@ -1231,7 +1263,6 @@ if __name__ == "__main__":
     # Version
     __version__ = "v23.2.1b1"
 
-    # Arguments parsing
     parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
     parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
     parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
@@ -1241,6 +1272,7 @@ if __name__ == "__main__":
 
     args = None
 
+    # Parse arguments
     try:
         if world.rank == 0:
             args = parser.parse_args()
@@ -1248,23 +1280,22 @@ if __name__ == "__main__":
         args = broadcast(args, root=0, comm=world)
 
     if args is None:
+        parprint("No arguments used.")
         exit(0)
 
+    # DEFAULT VALUES
     outdir = True
     restart = False
     inFile = None
     drawfigs = False
     configpath = None
     Outdirname = ''
-
+    
     try:
         if args.inputfile is not None:
             configpath = os.path.join(os.getcwd(),args.inputfile)
             sys.path.append(os.getcwd())
-            # Works like from FILE import *
-            conf = __import__(Path(configpath).stem, globals(), locals(), ['*'])
-            for k in dir(conf):
-                locals()[k] = getattr(conf, k)
+
 
         if args.geometryfile :
             inFile = os.path.join(os.getcwd(),args.geometryfile)
@@ -1297,66 +1328,45 @@ if __name__ == "__main__":
         # output error, and return with an error code
         parprint (str(err))
 
-    # If there is a CIF input, use it. Otherwise use the bulk configuration provided above.
-    if inFile is None:
-        if Outdirname !='':
-            struct = Outdirname
-        else:
-            struct = 'results' # All files will get their names from this file
-        parprint("Number of atoms provided in Atoms object:"+str(bulk_configuration.get_global_number_of_atoms()))
-    else:
-        struct = Path(inFile).stem
-        bulk_configuration = read(inFile, index='-1')
-        parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
-        parprint("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration))
-        parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
-
-    # Output directory
-    if Outdirname != '':
-        structpath = os.path.join(os.getcwd(),Outdirname)
-    else:
-        structpath = os.path.join(os.getcwd(),struct)
-
-    if not os.path.isdir(structpath):
-        os.makedirs(structpath, exist_ok=True)
-    struct = os.path.join(structpath,struct)
-
     # Start time
     time0 = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
+    
+    # Load struct
+    struct = struct_from_file(inputfile = configpath, geometryfile = inFile)
+
     # Write timings of calculation
     with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
         print("gpawsolve.py execution timings (seconds):", end="\n", file=f1)
         print("Execution started:", time0, end="\n", file=f1)
     
-    parprint(struct)
     # Load gpawsolve() class
     gpawsolver = gpawsolve(struct)
     
     # Run structure calculation
-    gpawsolver.structurecalc(struct)
+    gpawsolver.structurecalc()
     
     if Optical_calc == False:
         # Run ground state calculation
-        gpawsolver.groundcalc(struct)
+        gpawsolver.groundcalc()
         
         if Elastic_calc == True:
             # Run elastic calculation
-            gpawsolver.elasticcalc(struct, drawfigs = drawfigs)
+            gpawsolver.elasticcalc(drawfigs = drawfigs)
             
         if DOS_calc == True:
             # Run DOS calculation
-            gpawsolver.doscalc(struct, drawfigs = drawfigs)
+            gpawsolver.doscalc(drawfigs = drawfigs)
             
         if Band_calc == True:
             # Run band calculation
-            gpawsolver.bandcalc(struct, drawfigs = drawfigs)
+            gpawsolver.bandcalc(drawfigs = drawfigs)
             
         if Density_calc == True:
             # Run all-electron density calculation
-            gpawsolver.densitycalc(struct)     
+            gpawsolver.densitycalc()     
     else:
         # Run optical calculation
-        gpawsolver.opticalcalc(struct)
+        gpawsolver.opticalcalc()
     
     # Ending of timings
     with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:

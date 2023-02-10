@@ -170,6 +170,8 @@ class gpawsolve:
         # -------------------------------------------------------------
         # Step 1 - GROUND STATE
         # -------------------------------------------------------------
+        # Start ground state timing
+        time11 = time.time()
         if Mode == 'PW':
             if XC_calc in ['B3LYP', 'PBE0']:
                 parprint('\033[91mERROR:\033[0m'+XC_calc+' can be used only in PW-EXX mode...')
@@ -178,8 +180,6 @@ class gpawsolve:
                 numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
                 bulk_configuration.set_initial_magnetic_moments(numm)
             if restart == False:
-                # Start ground state
-                time11 = time.time()
                 # PW Ground State Calculations
                 parprint("Starting PW ground state calculation...")
                 if True in Relax_cell:
@@ -453,7 +453,7 @@ class gpawsolve:
         else:
             parprint("\033[91mERROR:\033[0mPlease enter correct mode information.")
             quit()
-        # Finish ground state
+        # Finish ground state timing
         time12 = time.time()
         
         # Write timings of calculation

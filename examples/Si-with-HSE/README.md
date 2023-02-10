@@ -6,6 +6,6 @@ Please use proper convergence values and always use HPC for your HSE calculation
 
 You can run this example with:
 
-    mpirun -np 4 gpawsolve.py -o -i Si-with-HSE.py -g Si_mp-149_primitive.cif
+    mpirun -np 4 gpawsolve.py -i Si-with-HSE.py -g Si_mp-149_primitive.cif
 	
 Normally, prior to HSE calculations, you can prefer to do PBE calculations with structure optimization. Then you can continue to use HSE.

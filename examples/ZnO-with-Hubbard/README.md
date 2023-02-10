@@ -6,16 +6,16 @@ Ground, DOS and Band calculations of Wurtzite bulk ZnO. PW with 340 eV cutoff, 5
 
 To run the calculation with MPI on 4 cores please execute the following command in this folder.
 
-    mpirun -np 4 gpawsolve.py -o -i ZnO_withHubbard.py
+    mpirun -np 4 gpawsolve.py -i ZnO_withHubbard.py
 
 or calculation with drawing band and DOS at the end:
 
-	mpirun -np 4 gpawsolve.py -o -d -i ZnO_withHubbard.py
+	mpirun -np 4 gpawsolve.py -d -i ZnO_withHubbard.py
 
-and, if you want to use -o argument like above you must give the name of the directory inside the configuration file like
+and,
 
     Outdirname = 'ZnO-withHubbard-results'
 
 There is also a without Hubbard configuration file to compare:
 
-	mpirun -np 4 gpawsolve.py -o -i ZnO_woHubbard.py
+	mpirun -np 4 gpawsolve.py -i ZnO_woHubbard.py

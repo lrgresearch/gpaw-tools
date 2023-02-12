@@ -1,7 +1,8 @@
 ---
 layout: default
-navigation_weight: 5
+nav_order: 3
 title: Release Notes
+parent: development
 ---
 
 # Release notes

@@ -1,7 +1,8 @@
 ---
 layout: default
-navigation_weight: 6
+nav_order: 2
 title: Input File Keywords
+parent: development
 ---
 # Input File Keywords
 There are two scripts that use input files in gpaw-tools. One of them is the main DFT script `gpawsolve.py`, and other is MD script `asapsolve.py`. You can find the keyword lists of each script below:

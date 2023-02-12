@@ -1,6 +1,6 @@
 ---
 layout: default
-navigation_weight: 2
+nav_order: 1
 title: About
 ---
 

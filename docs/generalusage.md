@@ -1,6 +1,6 @@
 ---
 layout: default
-navigation_weight: 4
+nav_order: 3
 title: General Usage
 ---
 

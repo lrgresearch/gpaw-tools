@@ -5,8 +5,6 @@ title: Conda Installation
 parent: installation
 ---
 
-[Return to Installation Main](installation.md)
-
 # Conda installation
 
 The best and the easiest way to install ASE/GPAW/Elastic system with gpaw-tools is a conda installation. **However, sometimes GPAW can run up to 20 times slower with conda installation. Please keep this in mind.** Download and install the miniconda. You can say ‘yes’ or ‘no’ to initialization after installing it:

@@ -1,6 +1,6 @@
 ---
 layout: default
-navigation_weight: 1
+nav_order: 1
 title: Home
 ---
 

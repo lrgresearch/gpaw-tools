@@ -21,7 +21,7 @@ The `gpaw-tools` package is built on top of the ASE , ASAP3 and GPAW libraries, 
 3. To choose better cut off energy, lattice parameter and k-points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`,`optimize_kptsdensity.py` and `optimize_latticeparam.py`.
 4. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) which is called `gg.py`.
 
-More information about [gpaw-tools idea](about.md), [installation](installation.md), [usage](generalusage.md) and [release notes](releasenotes.md) can be found at related pages.
+More information about [gpaw-tools idea](about.md), [installation](installation/installation.md), [usage](generalusage.md) and [release notes](development/releasenotes.md) can be found at related pages.
 
 ## Download
 
@@ -30,20 +30,20 @@ More information about [gpaw-tools idea](about.md), [installation](installation.
 Latest development release: [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
 
 ## News
-* **[gpaw-tools](releasenotes.md#version-2320)** version 23.2.0 released. It is a version with major changes and it is **incompatible with the previous versions**. Please use input files in example folder to create new input files (February 1, 2023).
+* **[gpaw-tools](development/releasenotes.md#version-2320)** version 23.2.0 released. It is a version with major changes and it is **incompatible with the previous versions**. Please use input files in example folder to create new input files (February 1, 2023).
 * A new oral presentation about *gpaw-tools* is presented at MSNG2022 (September 22, 2022).
 * We had a small deparment-wide hands-on activity about installation and basic usage of ASE, GPAW and gpaw-tools software at Gazi Univ. Dept. of Phys. (August 8, 2022). 
-* **[gpaw-tools](releasenotes.md#version-2270)** version 22.7.0 released (July 12, 2022).
+* **[gpaw-tools](development/releasenotes.md#version-2270)** version 22.7.0 released (July 12, 2022).
 * A new poster presentation about *gpaw-tools* is presented at 2022 Workshop on Recent Developments in Electronic Structure (June 2, 2022).
-* **[gpaw-tools](releasenotes.md#version-2250)** version 22.5.0 released (May 8, 2022).
-* **[gpaw-tools](releasenotes.md#version-2240)** version 22.4.0 released (Apr 7, 2022).
-* **[gpaw-tools](releasenotes.md#version-2230)** version 22.3.0 released (Mar 4, 2022).
+* **[gpaw-tools](development/releasenotes.md#version-2250)** version 22.5.0 released (May 8, 2022).
+* **[gpaw-tools](development/releasenotes.md#version-2240)** version 22.4.0 released (Apr 7, 2022).
+* **[gpaw-tools](development/releasenotes.md#version-2230)** version 22.3.0 released (Mar 4, 2022).
 * Our [paper](https://doi.org/10.1016/j.commatsci.2022.111201) about *gpaw-tools* is published in Computational Material Science.
-* **[gpaw-tools](releasenotes.md#version-21120)** version 21.12.0 released (Dec 2, 2021).
-* **[gpaw-tools](releasenotes.md#version-21110)** version 21.11.0 released (Nov 2, 2021).
-* **[gpaw-tools](releasenotes.md#version-21101)** version 21.10.1 released (Oct 1, 2021).
-* **[gpaw-tools](releasenotes.md#version-21100)** version 21.10.0 released (Oct 1, 2021).
-* **[gpaw-tools](releasenotes.md#version-2190)** version 21.9.0 released (Sep 14, 2021).
+* **[gpaw-tools](development/releasenotes.md#version-21120)** version 21.12.0 released (Dec 2, 2021).
+* **[gpaw-tools](development/releasenotes.md#version-21110)** version 21.11.0 released (Nov 2, 2021).
+* **[gpaw-tools](development/releasenotes.md#version-21101)** version 21.10.1 released (Oct 1, 2021).
+* **[gpaw-tools](development/releasenotes.md#version-21100)** version 21.10.0 released (Oct 1, 2021).
+* **[gpaw-tools](development/releasenotes.md#version-2190)** version 21.9.0 released (Sep 14, 2021).
 
 ## Citing
 Please do not forget that, gpaw-tools is a UI/GUI software. For the main DFT calculations, it uses ASE and GPAW. It also uses Elastic python package for elastic tensor solutions and ASAP with KIM database for interatomic interaction calculations. Therefore, you must know what you use, and cite them properly. Here, the basic citation information of each packages are given. There are many other packages needed to be cited. With GPAW, you may needed to cite LibXC or cite for LCAO, TDDFT, lineer-response calculations. Please visit their pages for many other citation possibilities. 

@@ -7,7 +7,7 @@ title: Home
 # Welcome to *gpaw-tools*
 {: .fs-9 }
 
-`gpaw-tools` is a powerful and user-friendly tool for conducting Density Functional Theory (DFT) and molecular dynamics (MD) calculations. Our goal is to make DFT and MD calculations more accessible and easy to use for individuals and small groups, by providing a simple command-line interface and graphical user interface.
+`gpaw-tools` is a powerful and user-friendly UI/GUI tool for conducting Density Functional Theory (DFT) and molecular dynamics (MD) calculations. Our goal is to make DFT and MD calculations more accessible and easy to use for individuals and small groups, by providing a simple command-line interface and graphical user interface.
 
 {: .fs-6 .fw-300 }
 

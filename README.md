@@ -149,10 +149,10 @@ GPAW has many test scripts for many cases. However, new users may need something
 There are [some example calculations](https://github.com/lrgresearch/gpaw-tools/tree/main/examples) given with different usage scenarios. Please send us more calculations to include in this folder.
 
 ## Input File Keywords
-There are many keywords can be used in input files. You can find more at [here](https://www.lrgresearch.org/gpaw-tools/inputfilekeywords/)
+There are many keywords can be used in input files. You can find more at [here](https://www.lrgresearch.org/gpaw-tools/development/inputfilekeywords/)
 
 ## Release notes
-Release notes are listed at [here](https://www.lrgresearch.org/gpaw-tools/releasenotes/).
+Release notes are listed at [here](https://www.lrgresearch.org/gpaw-tools/development/releasenotes/).
 
 ## Citing
 Please do not forget that, gpaw-tools is a UI/GUI software. For the main DFT calculations, it uses ASE and GPAW. It also uses Elastic python package for elastic tensor solutions and ASAP with KIM database for interatomic interaction calculations. Therefore, you must know what you use, and cite them properly. Here, the basic citation information of each packages are given. There are many other packages needed to be cited. With GPAW, you may needed to cite LibXC or cite for LCAO, TDDFT, lineer-response calculations. Please visit their pages for many other citation possibilities. 

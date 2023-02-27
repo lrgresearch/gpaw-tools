@@ -736,6 +736,39 @@ class gpawsolve:
                         for k2 in range(Band_npoints):
                             print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
                         print (end="\n", file=f2)
+                
+                # Thanks to Andrej Kesely (https://stackoverflow.com/users/10035985/andrej-kesely) for helping the problem of general XYYY writer
+                currentd, all_groupsd = [], []
+                with open(struct+'-3-Result-Band-Down.dat', 'r') as f_in1:
+                    for line in map(str.strip, f_in1):
+                        if line == "" and currentd:
+                            all_groupsd.append(currentd)
+                            currentd = []
+                        else:
+                            currentd.append(line.split(maxsplit=1))
+
+                if currentd:
+                    all_groupsd.append(currentd)
+
+                with paropen(struct+'-3-Result-Band-Down-XYYY.dat', 'w') as f1:
+                    for g in zip(*all_groupsd):
+                        print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f1)
+                
+                currentu, all_groupsu = [], []
+                with open(struct+'-3-Result-Band-Up.dat', 'r') as f_in2:
+                    for line in map(str.strip, f_in2):
+                        if line == "" and currentu:
+                            all_groupsu.append(currentu)
+                            currentu = []
+                        else:
+                            currentu.append(line.split(maxsplit=1))
+
+                if currentu:
+                    all_groupsu.append(currentu)
+
+                with paropen(struct+'-3-Result-Band-Up-XYYY.dat', 'w') as f2:
+                    for g in zip(*all_groupsu):
+                        print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f2)
 
             else:
                 eps_skn = np.array([[calc.get_eigenvalues(k,s)
@@ -746,6 +779,25 @@ class gpawsolve:
                         for k in range(Band_npoints):
                             print(k, eps_skn[0, k, n], end="\n", file=f)
                         print (end="\n", file=f)
+                        
+
+                # Thanks to Andrej Kesely (https://stackoverflow.com/users/10035985/andrej-kesely) for helping the problem of general XYYY writer
+                current, all_groups = [], []
+                with open(struct+'-3-Result-Band.dat', 'r') as f_in:
+                    for line in map(str.strip, f_in):
+                        if line == "" and current:
+                            all_groups.append(current)
+                            current = []
+                        else:
+                            current.append(line.split(maxsplit=1))
+
+                if current:
+                    all_groups.append(current)
+
+                with paropen(struct+'-3-Result-Band-XYYY.dat', 'w') as f1:
+                    for g in zip(*all_groups):
+                        print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f1)
+    
         # Finish Band calc
         time32 = time.time()
         # Write timings of calculation

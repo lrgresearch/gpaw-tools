@@ -9,6 +9,7 @@ parent: development
 
 ### Development version
 
+* Band structure data can be now exported in XYYYY type ASCII file (Thanks to Andrej Kesely). 
 * Fixed some unused imports and local variables.
 * Adding `struct_from_file()` function for future usage.
 * `gpawsolve.py` is not only a Python script anymore. The structure of the `gpawsolve.py` is rewritten. The calculations are related to a class named `gpawsolve`. Also, there are functions related to all possible calculations in this class as: `structurecalc()`, `groundcalc()`, `elasticcalc()`, `doscalc()`, `bandcalc()`, `densitycalc()` and `opticalcalc()`. The structure is still primitive and code is rely mostly on global variables, however it is a start and it will be easy to use when it finished properly.  

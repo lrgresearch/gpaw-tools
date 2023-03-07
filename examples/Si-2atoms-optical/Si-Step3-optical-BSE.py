@@ -13,31 +13,8 @@ Optical_calc = True     # Calculate the optical properties
 # -------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------
-# ELECTRONIC
-Cut_off_energy = 340 	# eV
-#Ground_kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
-Ground_kpts_x = 4 			# kpoints in x direction
-Ground_kpts_y = 4			# kpoints in y direction
-Ground_kpts_z = 4			# kpoints in z direction
-Gamma = True
-Band_path = 'GXWKL'	    # Brillouin zone high symmetry points
-Band_npoints = 40		# Number of points between high symmetry points
-Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
-Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
-
-XC_calc = 'PBE'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
-
-Ground_convergence = {}   # Convergence items for ground state calculations
-Band_convergence = {'bands':8}   # Convergence items for band calculations
-Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
-
-DOS_npoints = 501        # Number of points
-DOS_width = 0.1          # Width of Gaussian smearing. Use 0.0 for linear tetrahedron interpolation
-DOS_convergence = {}  # Convergence items for DOS calculations
 
 Spin_calc = False        # Spin polarized calculation?
-Magmom_per_atom = 1.0    # Magnetic moment per atom
-Refine_grid = 4          # refine grid for all electron density (1, 2 [=default] and 4)
 
 # OPTICAL
 Opt_calc_type = 'BSE'      # BSE or RPA

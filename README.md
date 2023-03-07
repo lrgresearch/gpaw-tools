@@ -12,7 +12,7 @@
 The *gpaw-tools* package is built on top of the ASE , ASAP3 and GPAW libraries, which are well-established and widely used in the scientific community. It allows users to simulate the properties of materials, optimize structures, investigate chemical reactions and processes, and perform calculations on systems with a large number of atoms. With gpaw-tools, researchers, students, and engineers in a wide range of fields, including materials science, chemistry, physics, and engineering, can easily conduct DFT and MD calculations and explore the electronic structure of complex systems. We are constantly working to improve and expand the capabilities of *gpaw-tools*, and we welcome feedback and contributions from the community.
 
 `gpaw-tools` have:
-1. The main solver script `gpawsolver.py` which can be run in PW or LCAO mode. It can perform structure optimization, equation of state and elastic tensor calculations, use several different XCs (as well as hybrid XCs) for spin-polarized DOS and band structure calculations, electron densities and optical properties (RPA and BSE). In addition to calculations, it can draw DOS and band structures, save all data and figure in an ordered way.
+1. The main solver code `gpawsolver.py` which can be run in PW or LCAO mode. It can perform structure optimization, equation of state and elastic tensor calculations, use several different XCs (as well as hybrid XCs) for spin-polarized DOS and band structure calculations, electron densities and optical properties (RPA and BSE). In addition to calculations, it can draw DOS and band structures, save all data and figure in an ordered way.
 2. A force-field quick optimization script `asapsolve.py` for MD calculations using ASAP3/OpenKIM potentials.
 3. To choose better cut off energy, lattice parameter and k-points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`, `optimize_kptsdensity.py` and `optimize_latticeparam.py`.
 4. A simple Graphical User Interface (GUI) for gpawsolve.py (and also you may say that GUI for GPAW) which is called `gg.py`.
@@ -38,15 +38,15 @@ gpaw-tools-main/
 └── gg.py
 └── shrinkgpw.py
 ```
-To make the `asapsolve.py`, `gpawsolve.py` and `gg.py` as system-wide commands, user must include the `gpaw-tools-main` folder (your folder name can be different) to the $PATH variable in the `.bashrc` file. In case of user  downloaded and extracted the `gpaw-tools-main` file to user's home directory, and to make the change permanent, user must need to define the $PATH variable in the shell configuration file `.bashrc` as
+To make the `asapsolve.py`, `gpawsolve.py` and `gg.py` as system-wide commands, user must include the `gpaw-tools` folder (your folder name can be different) to the $PATH variable in the `.bashrc` file. In case of user  downloaded and extracted the `gpaw-tools` file to user's home directory, and to make the change permanent, user must need to define the $PATH variable in the shell configuration file `.bashrc` as
 
-    export PATH="/home/username/gpaw-tools-main:$PATH"
+    export PATH="/home/username/gpaw-tools:$PATH"
 
 ### gpawsolve.py
-This is the main script for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a stand-alone script or as a command.
+This is the main code for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a command.
 
 #### As a command:
-Command line usage: `gpawsolve.py -v -r -d -i <inputfile.py> -h -g <geometryfile.cif>`
+Command line usage: `gpawsolve.py -v -r -d -h -i <inputfile.py> -g <geometryfile.cif>`
 
 Argument list:
 ```
@@ -59,16 +59,7 @@ Argument list:
 -v --version     : Version information of running code and the latest stable code. Also gives download link.
 ```
 
-You can put ASE Atoms object in to your config file and therefore can use it like an input file. As an example please note the example at: `examples\Bulk-aluminum` folder.
-  
- #### As a stand alone script
- * Change the parameters from related lines for each simulation OR create an input file (as you can see in examples) once and use `-i` argument.
- * If you want to use CIF files for structure, use `-g` argument like `gpawsolve.py -g geometryfile.cif`.
- * If you want to use ASE atoms method for structure, just copy/paste your `Atoms` info into the part mentioned with "Bulk Structure".
- * If you have CIF file but want to use Atoms method you can use `CIF-to-ASE/ciftoase.py` to convert your CIF files to ASE Atoms.
- * If you use Atoms method, change the name of `gpawsolve.py` to your simulation name like `graphene7x7-Fe-onsite32.py`. The naming will be used for naming of all output/result files.
- * If you use CIF file as an geometry, name of the input file will be used for naming of all output/result files.
- * **Performance note:** When you want to use `gpawsolve.py` as a script, you can copy `gpawsolve.py` to your working folder where your config file and input file are ready. You must rename `gpawsolve.py` to something else like `gpawsolve1.py` or `gs-graphene.py`, something you like and then you can now run `gpaw -P<core> python gpawsolve1.py <args>` type command. Initializing with gpaw command in your system will give you better parallel computing, therefore shorter computation times. Initialization with gpaw can not be done when `gpawsolve.py` is used as command, because of the structure of initialization of Gpaw, as we know. If you know a solution from the point of view of gpaw-tools, please use issues to discuss or pull request for a solution.
+Instead of using a geometry file, you can put an ASE Atoms object in to your input file for the geometry. As an example please note the example at: `examples\Bulk-aluminum` folder.
  
  #### How to run?
  Change `<core_number>` with core numbers to use. For getting a maximum performance from your PC you can use `total number of cores - 1` or `total RAM/2Gb` as a `<core_number>`. For CPUs supporting hyperthreading, users can use more than one instance of `gpawsolve.py` to achive maximum efficiency. 

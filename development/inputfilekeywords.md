@@ -11,11 +11,11 @@ There are two scripts that use input files in gpaw-tools. One of them is the mai
 
 # `gpawsolve.py` Keyword List
 
-[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPI_cores](inputfilekeywords.md#mpi_cores)
+[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPI_cores](inputfilekeywords.md#mpi_cores), [Energy_min](inputfilekeywords.md#energy_min), [Energy_max](inputfilekeywords.md#energy_max)
 
 [**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Optimizer](inputfilekeywords.md#optimizer), [Max_F_tolerance](inputfilekeywords.md#max_f_tolerance), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [Relax_cell](inputfilekeywords.md#relax_cell)
 
-[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [Cut_off_energy](inputfilekeywords.md#cut_off_energy), [Ground_kpts_density](inputfilekeywords.md#ground_kpts_density), [Ground_kpts_x](inputfilekeywords.md#ground_kpts_x), [Ground_kpts_y](inputfilekeywords.md#ground_kpts_y), [Ground_kpts_z](inputfilekeywords.md#ground_kpts_z), [Ground_gpts_density](inputfilekeywords.md#ground_gpts_density), [Ground_gpts_x](inputfilekeywords.md#ground_gpts_x), [Ground_gpts_y](inputfilekeywords.md#ground_gpts_y), [ground_gpts_z](inputfilekeywords.md#ground_gpts_z), [Gamma](inputfilekeywords.md#gamma), [Band_path](inputfilekeywords.md#band_path), [Band_npoints](inputfilekeywords.md#band_npoints), [Energy_max](inputfilekeywords.md#energy_max), [Setup_params](inputfilekeywords.md#setup_params), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [DOS_convergence](inputfilekeywords.md#dos_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [Refine_grid](inputfilekeywords.md#refine_grid)
+[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [Cut_off_energy](inputfilekeywords.md#cut_off_energy), [Ground_kpts_density](inputfilekeywords.md#ground_kpts_density), [Ground_kpts_x](inputfilekeywords.md#ground_kpts_x), [Ground_kpts_y](inputfilekeywords.md#ground_kpts_y), [Ground_kpts_z](inputfilekeywords.md#ground_kpts_z), [Ground_gpts_density](inputfilekeywords.md#ground_gpts_density), [Ground_gpts_x](inputfilekeywords.md#ground_gpts_x), [Ground_gpts_y](inputfilekeywords.md#ground_gpts_y), [ground_gpts_z](inputfilekeywords.md#ground_gpts_z), [Gamma](inputfilekeywords.md#gamma), [Band_path](inputfilekeywords.md#band_path), [Band_npoints](inputfilekeywords.md#band_npoints), [Setup_params](inputfilekeywords.md#setup_params), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [DOS_convergence](inputfilekeywords.md#dos_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [Refine_grid](inputfilekeywords.md#refine_grid)
 
 [**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GW_calc_type](inputfilekeywords.md#gw_calc_type), [GW_kpoints_list](inputfilekeywords.md#gw_kpoints_list), [GW_truncation](inputfilekeywords.md#gw_truncation), [GW_cut_off_energy](inputfilekeywords.md#gw_cut_off_energy), [GW_valence_band_no](inputfilekeywords.md#gw_valence_band_no), [GW_conduction_band_no](inputfilekeywords.md#gw_conduction_band_no), [GW_PPA](inputfilekeywords.md#GW_PPA), [GW_q0_correction](inputfilekeywords.md#gw_q0_correction), [GW_nblocks_max](inputfilekeywords.md#gw_nblocks_max), [GW_interpolate_band](inputfilekeywords.md#gw_interpolate_band)
 
@@ -170,6 +170,38 @@ NOTE: `gg.py` can run `gpawsolve.py` with only `mpirun -np <corenumber>` command
 #### Example
 MPI_cores = 4
 
+---
+
+### Energy_min
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the minimum energy value for the drawn figures of band structure and DOS. Unit is eV.
+
+#### Default
+-5
+
+#### Example
+Energy_min = -10 # eV
+
+---
+
+
+### Energy_max
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the maximum energy value for the drawn figures of band structure and DOS. Unit is eV.
+
+#### Default
+5
+
+#### Example
+Energy_max = 10 # eV
+
+---
 ## Geometric Optimization Keywords
 ### Optimizer
 #### Keyword type
@@ -472,21 +504,6 @@ This keyword controls the number of points between the first and the last high s
 
 #### Example
 Band_npoints = 50
-
----
-
-### Energy_max
-#### Keyword type
-Integer
-
-#### Description
-This keyword controls the maximum energy value when the software is used with -d (draw) argument. number of points between the first and the last high symmetry points. Unit is eV.
-
-#### Default
-15
-
-#### Example
-Energy_max = 10 # eV
 
 ---
 

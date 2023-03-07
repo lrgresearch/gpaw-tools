@@ -127,6 +127,7 @@ class gpawsolve:
         self.Band_path = Band_path
         self.Band_npoints = Band_npoints
         self.Energy_max = Energy_max
+        self.Energy_min = Energy_min
         self.Band_convergence = Band_convergence
         self.Refine_grid = Refine_grid
         self.GW_calc_type = GW_calc_type
@@ -648,6 +649,7 @@ class gpawsolve:
                     ax.plot(energies, totaldosweights, 'b')
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
+                plt.xlim(Energy_min, Energy_max)
                 plt.savefig(struct+'-2-Graph-DOS.png')
                 #plt.show()
         else:
@@ -665,6 +667,7 @@ class gpawsolve:
                     ax.plot(energies, totaldosweights, 'b')
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
+                plt.xlim(Energy_min, Energy_max)
                 plt.savefig(struct+'-2-Graph-DOS.png')
 
     def bandcalc(self, drawfigs = False):  
@@ -818,7 +821,7 @@ class gpawsolve:
                     plt.savefig(struct+'-3-Graph-Band.png')
                     plt.show()
                 else:
-                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max)
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max, emin=Energy_min)
         else:
             # Draw graphs only on master node
             if world.rank == 0:
@@ -832,7 +835,7 @@ class gpawsolve:
                     plt.savefig(struct+'-3-Graph-Band.png')
                     #plt.show()
                 else:
-                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max)
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max, emin=Energy_min)
 
     def densitycalc(self):  
         # -------------------------------------------------------------
@@ -1182,7 +1185,8 @@ if __name__ == "__main__":
     Gamma = True
     Band_path = 'LGL'	    # Brillouin zone high symmetry points
     Band_npoints = 60		# Number of points between high symmetry points
-    Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
+    Energy_max = 5 		# eV. It is the maximum energy value for band structure and DOS figures.
+    Energy_min = -5     # eV. It is the minimum energy value for band structure and DOS figures.
     Band_convergence = {'bands':8}   # Convergence items for band calculations
 
     # ELECTRON DENSITY ----------------------

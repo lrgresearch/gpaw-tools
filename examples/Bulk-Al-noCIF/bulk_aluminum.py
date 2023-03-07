@@ -41,7 +41,6 @@ Ground_kpts_z = 5		# kpoints in z direction
 Gamma = True
 Band_path = 'LGXG'	    # Brillouin zone high symmetry points
 Band_npoints = 40		# Number of points between high symmetry points
-Energy_max = 15 		# eV. It is the maximum energy value for band structure figure.
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 
 XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
@@ -60,3 +59,5 @@ Refine_grid = 4             # refine grid for all electron density (1, 2 [=defau
 
 #GENERAL
 MPI_cores = 4            # Number of cores in calculation.
+Energy_min = -5 		# eV. It is the minimum energy value for band structure and DOS figures.
+Energy_max = 10  		# eV. It is the maximum energy value for band structure and DOS figures.

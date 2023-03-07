@@ -9,6 +9,8 @@ parent: development
 
 ### Development version
 
+* Save figures in higher dpi.
+* Fix some bugs, add new variable and rearrange some variable in `gg.py`.
 * Add Energy_min variable. Energy_min and Energy_max variables are now working on both band and DOS figures.
 * Remove unnecessary variables in the input file for the examples/Si-2atoms-optical example.
 * Band structure data can be now exported in XYYYY type ASCII file (Thanks to Andrej Kesely). 

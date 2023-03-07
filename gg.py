@@ -392,19 +392,19 @@ class gg:
 
             # DOS number of points
             if 'DOS_npoints' in config.__dict__.keys():
-                self.energy_maxttk.delete('0', 'end')
-                self.energy_maxttk.insert('0', config.DOS_npoints)
+                self.DOS_npointsttk.delete('0', 'end')
+                self.DOS_npointsttk.insert('0', config.DOS_npoints)
             else:
-                self.energy_maxttk.delete('0', 'end')
-                self.energy_maxttk.insert('0', '501')
+                self.DOS_npointsttk.delete('0', 'end')
+                self.DOS_npointsttk.insert('0', '501')
 
             # DOS smearing width
             if 'DOS_width' in config.__dict__.keys():
-                self.energy_maxttk.delete('0', 'end')
-                self.energy_maxttk.insert('0', config.DOS_width)
+                self.DOS_widthttk.delete('0', 'end')
+                self.DOS_widthttk.insert('0', config.DOS_width)
             else:
-                self.energy_maxttk.delete('0', 'end')
-                self.energy_maxttk.insert('0', '0.1')
+                self.DOS_widthttk.delete('0', 'end')
+                self.DOS_widthttk.insert('0', '0.1')
                 
             # DOS_convergence
             if 'DOS_convergence' in config.__dict__.keys():

@@ -315,15 +315,6 @@ class gg:
             else:
                 self.Band_num_of_bandsttk.delete('0', 'end')
                 self.Band_num_of_bandsttk.insert('0', '8')
-
-            # Max energy for figure
-            if 'Energy_max' in config.__dict__.keys():
-                self.Energy_maxttk.delete('0', 'end')
-                self.Energy_maxttk.insert('0', config.Energy_max)
-            else:
-                self.Energy_maxttk.delete('0', 'end')
-                self.Energy_maxttk.insert('0', '15')
-
             
             # Setup parameters
             if 'Setup_params' in config.__dict__.keys():
@@ -674,6 +665,8 @@ class gg:
                 self.Opt_cut_of_energyttk.delete('0', 'end')
                 self.Opt_cut_of_energyttk.insert('0', '100')
 
+            # ----------General------------
+            
             #Core number
             if 'MPI_cores' in config.__dict__.keys():
                 self.MPI_coresttk.delete('0', 'end')
@@ -681,6 +674,22 @@ class gg:
             else:
                 self.MPI_coresttk.delete('0', 'end')
                 self.MPI_coresttk.insert('0', '1')
+                
+            # Max energy for figures
+            if 'Energy_max' in config.__dict__.keys():
+                self.Energy_maxttk.delete('0', 'end')
+                self.Energy_maxttk.insert('0', config.Energy_max)
+            else:
+                self.Energy_maxttk.delete('0', 'end')
+                self.Energy_maxttk.insert('0', '5')
+                
+            # Min energy for figures
+            if 'Energy_min' in config.__dict__.keys():
+                self.Energy_minttk.delete('0', 'end')
+                self.Energy_minttk.insert('0', config.Energy_min)
+            else:
+                self.Energy_minttk.delete('0', 'end')
+                self.Energy_minttk.insert('0', '-5')
             
             # Text for textbox
             self.text1.insert(tk.END, "Configuration loaded, please continue with Input parameters tab \n")
@@ -758,8 +767,6 @@ class gg:
                 print("Band_path = '"+ str(self.Band_pathttk.get())+"'", end="\n", file=f1)
                 # Band_npoints
                 print("Band_npoints = "+ str(self.Band_npointsttk.get()), end="\n", file=f1)
-                # Energy_max
-                print("Energy_max = "+ str(self.Energy_maxttk.get()), end="\n", file=f1)
                 # Setup_params
                 print("Setup_params = "+ str(self.Setup_paramsttk.get()), end="\n", file=f1)
                 # Exchange-Correlation
@@ -874,6 +881,10 @@ class gg:
                 # ------------Other------------
                 # This feature is not used by gpawsolve.py, this is only usable for gg.py
                 print("MPI_cores = "+ str(self.MPI_coresttk.get()), end="\n", file=f1)
+                # Energy_max
+                print("Energy_max = "+ str(self.Energy_maxttk.get()), end="\n", file=f1)
+                # Energy_min
+                print("Energy_min = "+ str(self.Energy_minttk.get()), end="\n", file=f1)
 
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
             if restartvar == True:
@@ -1177,18 +1188,6 @@ class gg:
         self.Band_npointsttk.pack(side='top')
         self.frame11.configure(height='200', width='200')
         self.frame11.pack(side='top')
-
-        # Maximum Energy
-        self.frame12 = ttk.Frame(self.labelframe2)
-        self.label10 = ttk.Label(self.frame12)
-        self.label10.configure(text='Maximum energy in figure')
-        self.label10.pack(side='left')
-        self.Energy_maxttk = ttk.Entry(self.frame12)
-        self.Energy_maxttk.delete('0', 'end')
-        self.Energy_maxttk.insert('0', '10')
-        self.Energy_maxttk.pack(side='top')
-        self.frame12.configure(height='200', width='200')
-        self.frame12.pack(side='top')
 
         # Setup_params
         self.frameSetup_params = ttk.Frame(self.labelframe2)
@@ -1666,6 +1665,30 @@ class gg:
         self.frame13.pack(side='left')
         self.frame4.configure(height='200', width='200')
         self.frame4.pack(side='top')
+        
+        # Maximum Energy
+        self.frameEnergy_max = ttk.Frame(self.labelframe5)
+        self.labelEnergy_max = ttk.Label(self.frameEnergy_max)
+        self.labelEnergy_max.configure(text='Maximum energy in figures')
+        self.labelEnergy_max.pack(side='left')
+        self.Energy_maxttk = ttk.Entry(self.frameEnergy_max)
+        self.Energy_maxttk.delete('0', 'end')
+        self.Energy_maxttk.insert('0', '5')
+        self.Energy_maxttk.pack(side='top')
+        self.frameEnergy_max.configure(height='200', width='200')
+        self.frameEnergy_max.pack(side='top')
+        
+        # Minimum Energy
+        self.frameEnergy_min = ttk.Frame(self.labelframe5)
+        self.labelEnergy_min = ttk.Label(self.frameEnergy_min)
+        self.labelEnergy_min.configure(text='Minimum energy in figures')
+        self.labelEnergy_min.pack(side='left')
+        self.Energy_minttk = ttk.Entry(self.frameEnergy_min)
+        self.Energy_minttk.delete('0', 'end')
+        self.Energy_minttk.insert('0', '-5')
+        self.Energy_minttk.pack(side='top')
+        self.frameEnergy_min.configure(height='200', width='200')
+        self.frameEnergy_min.pack(side='top')
         # End labelframe5 -------------------------------------------
         
         self.notebookUpper.add(self.frame4, state='normal', text='Input Parameters')

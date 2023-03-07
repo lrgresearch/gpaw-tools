@@ -650,7 +650,7 @@ class gpawsolve:
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
                 plt.xlim(Energy_min, Energy_max)
-                plt.savefig(struct+'-2-Graph-DOS.png')
+                plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
                 #plt.show()
         else:
             # Draw graphs only on master node
@@ -668,7 +668,7 @@ class gpawsolve:
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
                 plt.xlim(Energy_min, Energy_max)
-                plt.savefig(struct+'-2-Graph-DOS.png')
+                plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
 
     def bandcalc(self, drawfigs = False):  
         # -------------------------------------------------------------
@@ -818,7 +818,7 @@ class gpawsolve:
                     plt.xticks(X, GW_kpoints_list, fontsize=8)
                     plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
                     plt.tight_layout()
-                    plt.savefig(struct+'-3-Graph-Band.png')
+                    plt.savefig(struct+'-3-Graph-Band.png', dpi=300)
                     plt.show()
                 else:
                     bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max, emin=Energy_min)
@@ -832,7 +832,7 @@ class gpawsolve:
                     plt.xticks(X, GW_kpoints_list, fontsize=8)
                     plt.ylabel('Energy with respect to vacuum (eV)', fontsize=14)
                     plt.tight_layout()
-                    plt.savefig(struct+'-3-Graph-Band.png')
+                    plt.savefig(struct+'-3-Graph-Band.png', dpi=300)
                     #plt.show()
                 else:
                     bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max, emin=Energy_min)

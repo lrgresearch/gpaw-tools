@@ -9,6 +9,8 @@ parent: development
 
 ### Development version
 
+* Add Energy_min variable. Energy_min and Energy_max variables are now working on both band and DOS figures.
+* Remove unnecessary variables in the input file for the examples/Si-2atoms-optical example.
 * Band structure data can be now exported in XYYYY type ASCII file (Thanks to Andrej Kesely). 
 * Fixed some unused imports and local variables.
 * Adding `struct_from_file()` function for future usage.

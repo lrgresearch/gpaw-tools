@@ -105,7 +105,7 @@ Main usage is:
 
 #### Arguments
 
-`asapsolve.py -v -i <inputfile.py> -h -g <geometryfile.cif>`
+`asapsolve.py -v -h -i <inputfile.py> -g <geometryfile.cif>`
 
 Argument list:
 ```

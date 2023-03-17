@@ -19,7 +19,9 @@ Description = f'''
  
  '''
 
-import getopt, sys, os, time
+import sys
+import os
+import time
 import spglib as spg
 import textwrap
 import requests
@@ -38,18 +40,16 @@ from ase.calculators.kim import KIM
 # -------------------------------------------------------------
 
 # Simulation parameters
-
-#More potential can be found from https://openkim.org
 OpenKIM_potential = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
-Temperature = 1 #Kelvin
+Temperature = 1 # Kelvin
 Time = 5 # fs
 Friction = 0.05
 
-Scaled = False #Scaled or cartessian coordinates
+Scaled = False # Scaled or Cartesian coordinates
 Manual_PBC = False # If you need manual constraint axis
 
-# IF Manual_PBC is true then change following:
-PBC_constraints = [True,True,False]
+# If Manual_PBC is true then change following:
+PBC_constraints = [True, True, False]
 
 # If you have double number of elements in your final file
 Solve_double_element_problem = True
@@ -63,13 +63,16 @@ Solve_double_element_problem = True
 
 bulk_configuration = Atoms(
     [
-    Atom('Ge', ( 1.222474e-31, 4.094533468076675e-32, 5.02 )),
-    Atom('Ge', ( -1.9999999993913775e-06, 2.3094022314590417, 4.98 )),
+        Atom('Ge', (1.222474e-31, 4.094533468076675e-32, 5.02)),
+        Atom('Ge', (-1.9999999993913775e-06, 2.3094022314590417, 4.98)),
     ],
-    cell=[(4.0, 0.0, 0.0), (-1.9999999999999991, 3.464101615137755, 0.0), (0.0, 0.0, 20.0)],
+    cell=[
+        (4.0, 0.0, 0.0),
+        (-1.9999999999999991, 3.464101615137755, 0.0),
+        (0.0, 0.0, 20.0)
+    ],
     pbc=True,
-    )
-
+)
 # -------------------------------------------------------------
 # ///////   YOU DO NOT NEED TO CHANGE ANYTHING BELOW    \\\\\\\
 # -------------------------------------------------------------
@@ -95,7 +98,7 @@ args = None
 args = parser.parse_args()
 
 if args is None:
-    print(" Please enter input file (-i) and geometryfile (-g) to execute.")
+    print(" Please enter input file (-i) and geometry file (-g) to execute.")
     exit(0)
 
 outdir = True
@@ -207,19 +210,15 @@ with open(struct+'Results.py', 'w') as f:
         f.write("    pbc=["+str(PBC_constraints[0])+","+str(PBC_constraints[1])+","+str(PBC_constraints[2])+"],\n")
     f.write("    )\n")
 
-# PRINT SCREEEN PART -----------------------------------
-print("Result:")
-with open(struct+'FinalStructure.py', 'r') as f:
-    lines = f.readline()
-    while lines:
-        print(lines)
-        lines = f.readline()
 
-print("    )")
-print("ATTENTION: If you have double number of atoms, it may be caused by ")
-print("           repeating ASE bug https://gitlab.com/ase/ase/-/issues/169 ")
-print("           Please assign Solve_double_element_problem variable as True in this script if necessary.")
+def print_attention_message():
+    print("    )")
+    print("ATTENTION: If you have double number of atoms, it may be caused by ")
+    print("           repeating ASE bug https://gitlab.com/ase/ase/-/issues/169 ")
+    print("           Please assign Solve_double_element_problem variable as True in this script if necessary.")
 
+def export_cif(asestruct, bulk_configuration):
+    write_cif(struct+'-FinalStructure.cif', bulk_configuration)
 
-# CIF export
-write_cif(struct+'-FinalStructure.cif', bulk_configuration)
+print_attention_message()
+export_cif(struct, bulk_configuration)

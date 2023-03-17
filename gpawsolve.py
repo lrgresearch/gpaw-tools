@@ -49,7 +49,8 @@ from gpaw.xc.exx import EXX
 from gpaw.dos import DOSCalculator
 import numpy as np
 from numpy import genfromtxt
-from elastic import get_elastic_tensor, get_elementary_deformations        
+from elastic import get_elastic_tensor, get_elementary_deformations
+
 
 class RawFormatter(HelpFormatter):
     """To print Description variable with argparse"""
@@ -89,6 +90,13 @@ def struct_from_file(inputfile, geometryfile):
     return struct
     
 class gpawsolve:
+    """
+    The gpawsolve class is a high-level interaction script for GPAW calculations.
+    It handles various types of calculations such as ground state, structure optimization,
+    elastic properties, density of states, band structure, density, and optical properties.
+    The class takes input parameters from a configuration file and performs the calculations
+    accordingly.
+    """
     def __init__(self, struct):
         global np   
         self.Mode = Mode
@@ -159,18 +167,33 @@ class gpawsolve:
         self.struct = struct
 
     def structurecalc(self):
+        """
+        This method calculates and writes the spacegroup and special points of the given structure.
+        It reads the bulk configuration from the CIF file and prints the number of atoms, spacegroup,
+        and special points usable for the spacegroup to a text file.
+        """
+
         # -------------------------------------------------------------
         # Step 0 - STRUCTURE
         # -------------------------------------------------------------
+        
         with paropen(struct+'-0-Result-Spacegroup-and-SpecialPoints.txt', "w") as fd:
             print("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()), file=fd)
             print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
             print("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()), file=fd)
 
     def groundcalc(self):
+        """
+        This method performs ground state calculations for the given structure using various settings
+        and parameters specified in the configuration file. It handles different XC functionals,
+        spin calculations, and geometry optimizations. The results are saved in appropriate files,
+        including the final configuration as a CIF file and the ground state results in a GPW file.
+        """
+        
         # -------------------------------------------------------------
         # Step 1 - GROUND STATE
         # -------------------------------------------------------------
+        
         # Start ground state timing
         time11 = time.time()
         if Mode == 'PW':
@@ -462,9 +485,17 @@ class gpawsolve:
             print('Ground state: ', round((time12-time11),2), end="\n", file=f1)
 
     def elasticcalc(self, drawfigs = False):
+        """
+        This method performs elastic property calculations for the given structure using the
+        ground state results. It computes the elastic constants, bulk modulus, shear modulus,
+        and other related properties. The results are saved in appropriate files for further
+        analysis and visualization.
+        """
+
         # -------------------------------------------------------------
         # Step 1.5 - ELASTIC CALCULATION
         # -------------------------------------------------------------
+        
         # Start elastic calc
         time151 = time.time()
         parprint('Starting elastic tensor calculations (\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
@@ -510,10 +541,17 @@ class gpawsolve:
                 eos.plot(struct+'-1.5-Result-Elastic-EOS.png')
 
         
-    def doscalc(self, drawfigs = False):        
+    def doscalc(self, drawfigs = False):     
+        """
+        This method performs density of states (DOS) calculations for the given structure using
+        the ground state results. It computes the DOS for various energy levels and saves the
+        results in appropriate files for further electronic analysis and visualization.
+        """
+
         # -------------------------------------------------------------
         # Step 2 - DOS CALCULATION
         # -------------------------------------------------------------
+        
         # Start DOS calc
         time21 = time.time()
         parprint("Starting DOS calculation...")
@@ -670,7 +708,14 @@ class gpawsolve:
                 plt.xlim(Energy_min, Energy_max)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
 
-    def bandcalc(self, drawfigs = False):  
+    def bandcalc(self, drawfigs = False):
+        """
+        This method performs band structure calculations for the given structure using the
+        ground state results. It computes the electronic band structure along specified
+        k-point paths and saves the results in appropriate files for further analysis
+        and visualization.
+        """
+
         # -------------------------------------------------------------
         # Step 3 - BAND STRUCTURE CALCULATION
         # -------------------------------------------------------------
@@ -837,10 +882,17 @@ class gpawsolve:
                 else:
                     bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max, emin=Energy_min)
 
-    def densitycalc(self):  
+    def densitycalc(self):
+        """
+        This method performs density calculations for the given structure using the
+        ground state results. It computes the electron density distribution and saves
+        the results in appropriate files for further analysis and visualization.
+        """
+
         # -------------------------------------------------------------
         # Step 4 - ALL-ELECTRON DENSITY
         # -------------------------------------------------------------
+        
         #Start Density calc
         time41 = time.time()
         parprint("Starting All-electron density calculation...")
@@ -858,10 +910,18 @@ class gpawsolve:
         with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
             print('Density calculation: ', round((time42-time41),2), end="\n", file=f1)
 
-    def opticalcalc(self):  
+    def opticalcalc(self):
+        """
+        This method performs optical property calculations for the given structure using the
+        ground state results. It computes the dielectric function, absorption spectrum, and
+        other related optical properties. The results are saved in appropriate files for
+        further analysis and visualization.
+        """
+
         # -------------------------------------------------------------
         # Step 5 - OPTICAL CALCULATION
         # -------------------------------------------------------------
+        
         #Start Optical calc
         time51 = time.time()
         if Mode == 'PW':

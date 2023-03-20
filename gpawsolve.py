@@ -481,7 +481,7 @@ class gpawsolve:
         time12 = time.time()
         
         # Write timings of calculation
-        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+        with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('Ground state: ', round((time12-time11),2), end="\n", file=f1)
 
     def elasticcalc(self, drawfigs = False):
@@ -525,7 +525,7 @@ class gpawsolve:
         # Finish elastic calc
         time152 = time.time()
         # Write timings of calculation
-        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+        with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('Elastic calculation: ', round((time152-time151),2), end="\n", file=f1)
 
         # Draw or write the figure
@@ -668,7 +668,7 @@ class gpawsolve:
         # Finish DOS calc
         time22 = time.time()
         # Write timings of calculation
-        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+        with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('DOS calculation: ', round((time22-time21),2), end="\n", file=f1)
 
         # Write or draw figures
@@ -849,7 +849,7 @@ class gpawsolve:
         # Finish Band calc
         time32 = time.time()
         # Write timings of calculation
-        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+        with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('Band calculation: ', round((time32-time31),2), end="\n", file=f1)
 
         # Write or draw figures
@@ -907,9 +907,23 @@ class gpawsolve:
         # Finish Density calc
         time42 = time.time()
         # Write timings of calculation
-        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+        with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('Density calculation: ', round((time42-time41),2), end="\n", file=f1)
 
+    def phononcalc(self):
+        # -------------------------------------------------------------
+        # Step 5 - PHONON CALCULATION
+        # -------------------------------------------------------------
+        
+        time51 = time.time()
+        parprint("There is no phonon calculation procedure yet...")
+
+        time52 = time.time()
+        # Write timings of calculation
+        with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
+            print('Phonon calculation: ', round((time52-time51),2), end="\n", file=f1)
+    
+    
     def opticalcalc(self):
         """
         This method performs optical property calculations for the given structure using the
@@ -919,16 +933,16 @@ class gpawsolve:
         """
 
         # -------------------------------------------------------------
-        # Step 5 - OPTICAL CALCULATION
+        # Step 6 - OPTICAL CALCULATION
         # -------------------------------------------------------------
         
         #Start Optical calc
-        time51 = time.time()
+        time61 = time.time()
         if Mode == 'PW':
             parprint("Starting optical calculation...")
             try:
                 calc = GPAW(struct+'-1-Result-Ground.gpw',
-                        txt=struct+'-5-Log-Optical.txt',
+                        txt=struct+'-6-Log-Optical.txt',
                         nbands=Opt_num_of_bands,
                         fixdensity=True,
                         symmetry='off',
@@ -941,7 +955,7 @@ class gpawsolve:
             calc.get_potential_energy()
 
             calc.diagonalize_full_hamiltonian(nbands=Opt_num_of_bands)  # diagonalize Hamiltonian
-            calc.write(struct+'-5-Result-Optical.gpw', 'all')  # write wavefunctions
+            calc.write(struct+'-6-Result-Optical.gpw', 'all')  # write wavefunctions
 
             #from mpi4py import MPI
             if Opt_calc_type == 'BSE':
@@ -949,7 +963,7 @@ class gpawsolve:
                    parprint('\033[91mERROR:\033[0mBSE calculations can not run with spin dependent data.')
                    quit()
                 parprint('Starting BSE calculations')
-                bse = BSE(calc= struct+'-5-Result-Optical.gpw', ecut=Opt_cut_of_energy,
+                bse = BSE(calc= struct+'-6-Result-Optical.gpw', ecut=Opt_cut_of_energy,
                              valence_bands=Opt_BSE_valence,
                              conduction_bands=Opt_BSE_conduction,
                              nbands=Opt_num_of_bands,
@@ -957,28 +971,28 @@ class gpawsolve:
                              mode='BSE',
                              write_v=True,
                              integrate_gamma=0,
-                             txt=struct+'-5-Log-Optical-BSE.txt')
+                             txt=struct+'-6-Log-Optical-BSE.txt')
                 
                 # Getting dielectric function spectrum
                 parprint("Starting dielectric function calculation...")
                 # Writing to files
                 bse.get_dielectric_function(direction=0, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
                                             w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
-                                            filename=struct+'-5-Result-Optical-BSE_dielec_xdirection.csv',
-                                            write_eig=struct+'-5-Result-Optical-BSE_eig_xdirection.dat')
+                                            filename=struct+'-6-Result-Optical-BSE_dielec_xdirection.csv',
+                                            write_eig=struct+'-6-Result-Optical-BSE_eig_xdirection.dat')
                 bse.get_dielectric_function(direction=1, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
                                             w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
-                                            filename=struct+'-5-Result-Optical-BSE_dielec_ydirection.csv',
-                                            write_eig=struct+'-5-Result-Optical-BSE_eig_ydirection.dat')
+                                            filename=struct+'-6-Result-Optical-BSE_dielec_ydirection.csv',
+                                            write_eig=struct+'-6-Result-Optical-BSE_eig_ydirection.dat')
                 bse.get_dielectric_function(direction=2, q_c = [0.0, 0.0, 0.0], eta=Opt_eta,
                                             w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
-                                            filename=struct+'-5-Result-Optical-BSE_dielec_zdirection.csv',
-                                            write_eig=struct+'-5-Result-Optical-BSE_eig_zdirection.dat')
+                                            filename=struct+'-6-Result-Optical-BSE_dielec_zdirection.csv',
+                                            write_eig=struct+'-6-Result-Optical-BSE_eig_zdirection.dat')
                                             
                 # Loading dielectric function spectrum to numpy
-                dielec_x = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_xdirection.csv', delimiter=',')
-                dielec_y = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_ydirection.csv', delimiter=',')
-                dielec_z = genfromtxt(struct+'-5-Result-Optical-BSE_dielec_zdirection.csv', delimiter=',')
+                dielec_x = genfromtxt(struct+'-6-Result-Optical-BSE_dielec_xdirection.csv', delimiter=',')
+                dielec_y = genfromtxt(struct+'-6-Result-Optical-BSE_dielec_ydirection.csv', delimiter=',')
+                dielec_z = genfromtxt(struct+'-6-Result-Optical-BSE_dielec_zdirection.csv', delimiter=',')
                 # dielec_x.shape[0] will give us the length of data.
                 # c and h
                 c_opt = 29979245800
@@ -1019,21 +1033,21 @@ class gpawsolve:
                     opt_ref_bse_z[n] = (np.square(1-opt_n_bse_z[n])+np.square(opt_k_bse_z[n]))/(np.square(1+opt_n_bse_z[n])+np.square(opt_k_bse_z[n]))
 
                 # Saving other data for x-direction
-                with paropen(struct+'-5-Result-Optical-BSE-AllData_xdirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-BSE-AllData_xdirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_x.shape[0]):
                         print(dielec_x[n][0], dielec_x[n][1], dielec_x[n][2], opt_n_bse_x[n], opt_k_bse_x[n], opt_abs_bse_x[n], opt_ref_bse_x[n], end="\n", file=f1)
                     print (end="\n", file=f1)
 
                 # Saving other data for y-direction
-                with paropen(struct+'-5-Result-Optical-BSE-AllData_ydirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-BSE-AllData_ydirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_y.shape[0]):
                         print(dielec_y[n][0], dielec_y[n][1], dielec_y[n][2], opt_n_bse_y[n], opt_k_bse_y[n], opt_abs_bse_y[n], opt_ref_bse_y[n], end="\n", file=f1)
                     print (end="\n", file=f1)
 
                 # Saving other data for z-direction
-                with paropen(struct+'-5-Result-Optical-BSE-AllData_zdirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-BSE-AllData_zdirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_z.shape[0]):
                         print(dielec_z[n][0], dielec_z[n][1], dielec_z[n][2], opt_n_bse_z[n], opt_k_bse_z[n], opt_abs_bse_z[n], opt_ref_bse_z[n], end="\n", file=f1)
@@ -1041,7 +1055,7 @@ class gpawsolve:
 
             elif Opt_calc_type == 'RPA':
                 parprint('Starting RPA calculations')
-                df = DielectricFunction(calc=struct+'-5-Result-Optical.gpw',
+                df = DielectricFunction(calc=struct+'-6-Result-Optical.gpw',
                                     eta=Opt_eta, nblocks=Opt_nblocks,
                                     omega2=Opt_omega2,
                                     domega0=Opt_domega0,
@@ -1051,16 +1065,16 @@ class gpawsolve:
                 # Getting dielectric function spectrum
                 parprint("Starting dielectric function calculation...")
                 df.get_dielectric_function( direction='x', 
-                                            filename=struct+'-5-Result-Optical-RPA_dielec_xdirection.csv')
+                                            filename=struct+'-6-Result-Optical-RPA_dielec_xdirection.csv')
                 df.get_dielectric_function( direction='y',
-                                            filename=struct+'-5-Result-Optical-RPA_dielec_ydirection.csv')
+                                            filename=struct+'-6-Result-Optical-RPA_dielec_ydirection.csv')
                 df.get_dielectric_function( direction='z',
-                                            filename=struct+'-5-Result-Optical-RPA_dielec_zdirection.csv')
+                                            filename=struct+'-6-Result-Optical-RPA_dielec_zdirection.csv')
 
                 # Loading dielectric function spectrum to numpy
-                dielec_x = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_xdirection.csv', delimiter=',')
-                dielec_y = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_ydirection.csv', delimiter=',')
-                dielec_z = genfromtxt(struct+'-5-Result-Optical-RPA_dielec_zdirection.csv', delimiter=',')
+                dielec_x = genfromtxt(struct+'-6-Result-Optical-RPA_dielec_xdirection.csv', delimiter=',')
+                dielec_y = genfromtxt(struct+'-6-Result-Optical-RPA_dielec_ydirection.csv', delimiter=',')
+                dielec_z = genfromtxt(struct+'-6-Result-Optical-RPA_dielec_zdirection.csv', delimiter=',')
                 # dielec_x.shape[0] will give us the length of data.
                 # c and h
                 c_opt = 29979245800
@@ -1101,21 +1115,21 @@ class gpawsolve:
                     opt_ref_nlfc_z[n] = (np.square(1-opt_n_nlfc_z[n])+np.square(opt_k_nlfc_z[n]))/(np.square(1+opt_n_nlfc_z[n])+np.square(opt_k_nlfc_z[n]))
 
                 # Saving NLFC other optical spectrum for x-direction
-                with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_xdirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-RPA-NLFC-AllData_xdirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_x.shape[0]):
                         print(dielec_x[n][0], dielec_x[n][1], dielec_x[n][2], opt_n_nlfc_x[n], opt_k_nlfc_x[n], opt_abs_nlfc_x[n], opt_ref_nlfc_x[n], end="\n", file=f1)
                     print (end="\n", file=f1)
 
                 # Saving NLFC other optical spectrum for y-direction
-                with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_ydirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-RPA-NLFC-AllData_ydirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_y.shape[0]):
                         print(dielec_y[n][0], dielec_y[n][1], dielec_y[n][2], opt_n_nlfc_y[n], opt_k_nlfc_y[n], opt_abs_nlfc_y[n], opt_ref_nlfc_y[n], end="\n", file=f1)
                     print (end="\n", file=f1)
 
                 # Saving NLFC other optical spectrum for z-direction
-                with paropen(struct+'-5-Result-Optical-RPA-NLFC-AllData_zdirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-RPA-NLFC-AllData_zdirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_z.shape[0]):
                         print(dielec_z[n][0], dielec_z[n][1], dielec_z[n][2], opt_n_nlfc_z[n], opt_k_nlfc_z[n], opt_abs_nlfc_z[n], opt_ref_nlfc_z[n], end="\n", file=f1)
@@ -1155,21 +1169,21 @@ class gpawsolve:
                     opt_ref_lfc_z[n] = (np.square(1-opt_n_lfc_z[n])+np.square(opt_k_lfc_z[n]))/(np.square(1+opt_n_lfc_z[n])+np.square(opt_k_lfc_z[n]))
 
                 # Saving LFC other optical spectrum for x-direction
-                with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_xdirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-RPA-LFC-AllData_xdirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_x.shape[0]):
                         print(dielec_x[n][0], dielec_x[n][3], dielec_x[n][4], opt_n_lfc_x[n], opt_k_lfc_x[n], opt_abs_lfc_x[n], opt_ref_lfc_x[n], end="\n", file=f1)
                     print (end="\n", file=f1)
 
                 # Saving LFC other optical spectrum for y-direction
-                with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_ydirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-RPA-LFC-AllData_ydirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_y.shape[0]):
                         print(dielec_y[n][0], dielec_y[n][3], dielec_y[n][4], opt_n_lfc_y[n], opt_k_lfc_y[n], opt_abs_lfc_y[n], opt_ref_lfc_y[n], end="\n", file=f1)
                     print (end="\n", file=f1)
 
                 # Saving LFC other optical spectrum for z-direction
-                with paropen(struct+'-5-Result-Optical-RPA-LFC-AllData_zdirection.dat', 'w') as f1:
+                with paropen(struct+'-6-Result-Optical-RPA-LFC-AllData_zdirection.dat', 'w') as f1:
                     print("Energy(eV) Eps_real Eps_img Refractive_Index Extinction_Index Absorption(1/cm) Reflectivity", end="\n", file=f1)
                     for n in range(dielec_z.shape[0]):
                         print(dielec_z[n][0], dielec_z[n][3], dielec_z[n][4], opt_n_lfc_z[n], opt_k_lfc_z[n], opt_abs_lfc_z[n], opt_ref_lfc_z[n], end="\n", file=f1)
@@ -1184,10 +1198,10 @@ class gpawsolve:
         else:
             parprint('\033[91mERROR:\033[0mNot implemented in FD mode yet.')
         # Finish Optical calc
-        time52 = time.time()
+        time62 = time.time()
         # Write timings of calculation
-        with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
-            print('Optical calculation: ', round((time52-time51),2), end="\n", file=f1)
+        with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
+            print('Optical calculation: ', round((time62-time61),2), end="\n", file=f1)
 
 if __name__ == "__main__":
     #
@@ -1202,6 +1216,7 @@ if __name__ == "__main__":
     DOS_calc = False         # DOS calculation
     Band_calc = False        # Band structure calculation
     Density_calc = False    # Calculate the all-electron density?
+    Phonon_calc = False     # Phonon calculations
     Optical_calc = False     # Calculate the optical properties
 
     # -------------------------------------------------------------
@@ -1252,6 +1267,9 @@ if __name__ == "__main__":
     # ELECTRON DENSITY ----------------------
     Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
+    # PHONON -------------------------
+    
+    
     # GW CALCULATION ----------------------
     GW_calc_type = 'GW0'          # GW0 or G0W0
     GW_kpoints_list = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
@@ -1354,17 +1372,17 @@ if __name__ == "__main__":
             import ase
             try:
                 response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest", timeout=5)
-                parprint('-------------------------------------------------------------------------------------------------------')
+                parprint('---------------------------------------------------------------------------------------')
                 parprint('\033[95mgpaw-tools:\033[0m This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', and ASE '+ase.__version__)
-                parprint('-------------------------------------------------------------------------------------------------------')
+                parprint('---------------------------------------------------------------------------------------')
                 parprint('The latest STABLE release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
                 parprint('Download the latest STABLE tarball release at: '+response.json()["tarball_url"])
                 parprint('Download the latest STABLE zipball release at: '+response.json()["zipball_url"])
                 parprint('Download the latest DEV zipball release at: https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip')
             except (requests.ConnectionError, requests.Timeout) as exception:
-                parprint('-------------------------------------------------------------------------------------------------------')
+                parprint('---------------------------------------------------------------------------------------')
                 parprint('gpaw-tools: This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', ASE '+ase.__version__)
-                parprint('-------------------------------------------------------------------------------------------------------')
+                parprint('---------------------------------------------------------------------------------------')
                 parprint('No internet connection available.')
             quit()
         if args.restart == True:
@@ -1381,7 +1399,7 @@ if __name__ == "__main__":
     struct = struct_from_file(inputfile = configpath, geometryfile = inFile)
 
     # Write timings of calculation
-    with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+    with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
         print("gpawsolve.py execution timings (seconds):", end="\n", file=f1)
         print("Execution started:", time0, end="\n", file=f1)
     
@@ -1409,12 +1427,16 @@ if __name__ == "__main__":
             
         if Density_calc == True:
             # Run all-electron density calculation
-            gpawsolver.densitycalc()     
+            gpawsolver.densitycalc()    
+            
+        if Phonon_calc == True:
+            # Run phonon calculation
+            gpawsolver.phononcalc()  
     else:
         # Run optical calculation
         gpawsolver.opticalcalc()
     
     # Ending of timings
-    with paropen(struct+'-6-Result-Log-Timings.txt', 'a') as f1:
+    with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
         print("---------------------------------------", end="\n", file=f1)
 

@@ -1569,6 +1569,7 @@ if __name__ == "__main__":
                 parprint("\033[91mERROR:\033[0m Unexpected error while using -e argument.")
                 parprint("-e works only with Intel CPUs after Sandy Bridge generation. Do not use with AMD CPUs")
                 parprint("You also need to install pymongo and pandas libraries.")
+                parprint("If you got permission error, try: sudo chmod -R a+r /sys/class/powercap/intel-rapl")
                 parprint("More information about the error:")
                 parprint(sys.exc_info()[0])
                 quit()
@@ -1653,7 +1654,6 @@ if __name__ == "__main__":
     if args.energymeas == True:
         # Ending of energy consumption measuring.
         meter.end()
-        energyresult = meter.result(label='gpawsolve')
         with paropen(struct+'-8-Result-Log-Energyconsumption.txt', 'a') as f1:
-            print(energyresult, end="\n", file=f1)
+            print(meter.result, end="\n", file=f1)
 

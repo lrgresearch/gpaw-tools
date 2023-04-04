@@ -1532,7 +1532,7 @@ if __name__ == "__main__":
 
     if args is None:
         parprint("No arguments used.")
-        exit(0)
+        quit()
 
     # DEFAULT VALUES
     outdir = True
@@ -1576,7 +1576,7 @@ if __name__ == "__main__":
         if args.restart == True:
             parprint('ATTENTION: -r, --restart argument is depreceted. It was just passing the ground calculations not restarting anything.')
             parprint('New argument for passing the ground state calculations is -p or -passground.')
-            exit(0)   
+            quit()   
         
         if args.passground == True:
             passground = True

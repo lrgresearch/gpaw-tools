@@ -1517,6 +1517,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")
     parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
     parser.add_argument("-v", "--version", dest="version", action='store_true')
+    parser.add_argument("-e", "--energy", dest="energymeas", action='store_true')
     parser.add_argument("-r", "--restart", dest="restart", action='store_true')
     parser.add_argument("-p", "--passground", dest="passground", action='store_true')
     parser.add_argument("-d", "--drawfigures", dest="drawfigs", action='store_true', help="Draws DOS and band structure figures at the end of calculation.")
@@ -1538,6 +1539,7 @@ if __name__ == "__main__":
     outdir = True
     restart = False
     passground = False
+    energymeas = False
     inFile = None
     drawfigs = False
     configpath = None
@@ -1554,7 +1556,22 @@ if __name__ == "__main__":
 
         if args.drawfigs == True:
             drawfigs = True
-
+            
+        if args.energymeas == True:
+            try:
+                import pyRAPL
+                energymeas = True
+                # Start energy consumption calculation.
+                pyRAPL.setup()
+                meter = pyRAPL.Measurement('gpawsolve')
+                meter.begin()
+            except:
+                parprint("\033[91mERROR:\033[0m Unexpected error while using -e argument.")
+                parprint("-e works only with Intel CPUs after Sandy Bridge generation. Do not use with AMD CPUs")
+                parprint("You also need to install pymongo and pandas libraries.")
+                parprint("More information about the error:")
+                parprint(sys.exc_info()[0])
+                quit()
         if args.version == True:
             import gpaw
             import ase
@@ -1632,4 +1649,11 @@ if __name__ == "__main__":
     # Ending of timings
     with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
         print("---------------------------------------", end="\n", file=f1)
+    
+    if args.energymeas == True:
+        # Ending of energy consumption measuring.
+        meter.end()
+        energyresult = meter.result(label='gpawsolve')
+        with paropen(struct+'-8-Result-Log-Energyconsumption.txt', 'a') as f1:
+            print(energyresult, end="\n", file=f1)
 

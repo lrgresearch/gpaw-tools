@@ -215,7 +215,7 @@ class gpawsolve:
             if Spin_calc == True:
                 numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
                 bulk_configuration.set_initial_magnetic_moments(numm)
-            if restart == False:
+            if passground == False:
                 # PW Ground State Calculations
                 parprint("Starting PW ground state calculation...")
                 if True in Relax_cell:
@@ -295,11 +295,11 @@ class gpawsolve:
                 parprint("Passing PW ground state calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
                     quit()
 
         elif Mode == 'PW-EXX':
-            if restart == False:
+            if passground == False:
                 # PW Ground State Calculations
                 parprint("Starting PW ground state calculation with PBE...")
                 # Fix the spacegroup in the geometric optimization if wanted
@@ -336,7 +336,7 @@ class gpawsolve:
                 parprint("Passing PW ground state calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
                     quit()
 
             if XC_calc in ['B3LYP', 'PBE0']:
@@ -355,7 +355,7 @@ class gpawsolve:
                 parprint('          Other files (DOS, band, etc...) are the results calculated with PBE.')
 
         elif Mode == 'PW-GW':
-            if restart == False:
+            if passground == False:
                 # PW Ground State Calculations
                 parprint("Starting PW only ground state calculation for GW calculation...")
                 # Fix the spacegroup in the geometric optimization if wanted
@@ -395,7 +395,7 @@ class gpawsolve:
                 parprint("Passing ground state calculation for GW calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
                     quit()
 
             # We start by setting up a G0W0 calculator object
@@ -417,7 +417,7 @@ class gpawsolve:
             if Spin_calc == True:
                 numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
                 bulk_configuration.set_initial_magnetic_moments(numm)
-            if restart == False:
+            if passground == False:
                 parprint("Starting LCAO ground state calculation...")
                 # Fix the spacegroup in the geometric optimization if wanted
                 if Fix_symmetry == True:
@@ -480,7 +480,7 @@ class gpawsolve:
                 parprint("Passing LCAO ground state calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in restart mode. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
                     quit()
 
         elif Mode == 'FD':
@@ -1518,6 +1518,7 @@ if __name__ == "__main__":
     parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
     parser.add_argument("-v", "--version", dest="version", action='store_true')
     parser.add_argument("-r", "--restart", dest="restart", action='store_true')
+    parser.add_argument("-p", "--passground", dest="passground", action='store_true')
     parser.add_argument("-d", "--drawfigures", dest="drawfigs", action='store_true', help="Draws DOS and band structure figures at the end of calculation.")
 
     args = None
@@ -1536,6 +1537,7 @@ if __name__ == "__main__":
     # DEFAULT VALUES
     outdir = True
     restart = False
+    passground = False
     inFile = None
     drawfigs = False
     configpath = None
@@ -1572,7 +1574,12 @@ if __name__ == "__main__":
                 parprint('No internet connection available.')
             quit()
         if args.restart == True:
-            restart = True
+            parprint('ATTENTION: -r, --restart argument is depreceted. It was just passing the ground calculations not restarting anything.')
+            parprint('New argument for passing the ground state calculations is -p or -passground.')
+            exit(0)   
+        
+        if args.passground == True:
+            passground = True
 
     except getopt.error as err:
         # output error, and return with an error code

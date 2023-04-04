@@ -9,6 +9,7 @@ parent: development
 
 ### Development version
 
+* Basic phonon calculation feature with Phonopy! (Thanks to Michael Lamparski for his help and MIT licensed code that he shared.)
 * Save figures in higher dpi.
 * Fix some bugs, add new variable and rearrange some variable in `gg.py`.
 * Add Energy_min variable. Energy_min and Energy_max variables are now working on both band and DOS figures.

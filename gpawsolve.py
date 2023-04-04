@@ -1650,10 +1650,15 @@ if __name__ == "__main__":
     # Ending of timings
     with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
         print("---------------------------------------", end="\n", file=f1)
-    
+
     if args.energymeas == True:
         # Ending of energy consumption measuring.
         meter.end()
+        energyresult=meter.result
         with paropen(struct+'-8-Result-Log-Energyconsumption.txt', 'a') as f1:
-            print(meter.result, end="\n", file=f1)
+            print("Energy measurement:-----------------------------------------", end="\n", file=f1)
+            print(1e-6*energyresult.duration," Computation time in seconds", end="\n", file=f1)
+            print(1e-6*sum(energyresult.pkg)," CPU energy consumption in Joules", end="\n", file=f1)
+            print(1e-6*sum(energyresult.dram)," DRAM energy consumption in Joules", end="\n", file=f1)
+            print(2.77777778e-7*(1e-6*sum(energyresult.dram)+1e-6*sum(energyresult.pkg))," Total energy consumption in kWh", end="\n", file=f1)
 

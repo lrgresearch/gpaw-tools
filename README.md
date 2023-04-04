@@ -50,13 +50,15 @@ Command line usage: `gpawsolve.py -v -r -d -h -i <inputfile.py> -g <geometryfile
 
 Argument list:
 ```
--g, --geometry   : Use a CIF file for geometry
--i, --input      : Use an input file for variables (input.py) If you do not use this argument, parameters 
-                   will be taken from the related lines of gpawsolve.py. Visit "Input File Keywords" webpage for more. 
--h --help        : Help
--d --drawfigures : Draws DOS and band structure figures at the end of calculation.
--r --restart     : Passing ground calculations and continue with the next required calculation.
--v --version     : Version information of running code and the latest stable code. Also gives download link.
+-g, --geometry    : Use a CIF file for geometry
+-i, --input       : Use an input file for variables (input.py) If you do not use this argument, parameters 
+                    will be taken from the related lines of gpawsolve.py. Visit "Input File Keywords" webpage for more.
+-e, --energymeas  : Energy consumption measurement. This feature only works with Intel CPUs after Sandy Bridge generation.
+                    Results will be written in a file at results folder (as kWh!).
+-h, --help        : Help
+-d, --drawfigures : Draws DOS and band structure figures at the end of calculation.
+-p, --passground     : Passing ground calculations and continue with the next required calculation.
+-v, --version     : Version information of running code and the latest stable code. Also gives download link.
 ```
 
 Instead of using a geometry file, you can put an ASE Atoms object in to your input file for the geometry. As an example please note the example at: `examples\Bulk-aluminum` folder.

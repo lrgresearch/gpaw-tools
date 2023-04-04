@@ -22,7 +22,7 @@ Description = f'''
  *: Just some ground state energy calculations.
 '''
 
-import getopt, sys, os, time
+import getopt, sys, os, time, shutil
 import textwrap
 import requests
 import pickle
@@ -50,7 +50,10 @@ from gpaw.dos import DOSCalculator
 import numpy as np
 from numpy import genfromtxt
 from elastic import get_elastic_tensor, get_elementary_deformations
-
+from phonopy import Phonopy
+from phonopy.structure.atoms import PhonopyAtoms
+from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
+import phonopy
 
 class RawFormatter(HelpFormatter):
     """To print Description variable with argparse"""
@@ -138,6 +141,15 @@ class gpawsolve:
         self.Energy_min = Energy_min
         self.Band_convergence = Band_convergence
         self.Refine_grid = Refine_grid
+        self.Phonon_PW_cutoff = Phonon_PW_cutoff
+        self.Phonon_kpts_x = Phonon_kpts_x
+        self.Phonon_kpts_y = Phonon_kpts_y
+        self.Phonon_kpts_z = Phonon_kpts_z
+        self.Phonon_supercell = Phonon_supercell
+        self.Phonon_displacement = Phonon_displacement
+        self.Phonon_path = Phonon_path
+        self.Phonon_npoints = Phonon_npoints
+        self.Phonon_acoustic_sum_rule = Phonon_acoustic_sum_rule
         self.GW_calc_type = GW_calc_type
         self.GW_kpoints_list = GW_kpoints_list
         self.GW_truncation = GW_truncation
@@ -911,18 +923,103 @@ class gpawsolve:
             print('Density calculation: ', round((time42-time41),2), end="\n", file=f1)
 
     def phononcalc(self):
+        """
+        This method performs a phonon calculation for the given structure using the ground state results. 
+        It generates atomic displacements, computes force constants, and calculates phonon dispersion and phonon DOS.
+        The results are saved as PNG file for now.
+        """
         # -------------------------------------------------------------
         # Step 5 - PHONON CALCULATION
         # -------------------------------------------------------------
         
         time51 = time.time()
-        parprint("There is no phonon calculation procedure yet...")
+        parprint("Starting phonon calculation.(\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)")
+        
+        calc = GPAW(struct+'-1-Result-Ground.gpw')
+        bulk_configuration.calc = calc
+    
+        # Pre-process
+        bulk_configuration_ph = convert_atoms_to_phonopy(bulk_configuration)
+        phonon = Phonopy(bulk_configuration_ph, Phonon_supercell, log_level=1)
+        phonon.generate_displacements(distance=Phonon_displacement)
+        with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+            print("[Phonopy] Atomic displacements:", end="\n", file=f2)
+            disps = phonon.get_displacements()
+            for d in disps:
+                print("[Phonopy] %d %s" % (d[0], d[1:]), end="\n", file=f2)
+
+        # FIX THIS PART
+        calc = GPAW(mode=PW(Phonon_PW_cutoff),
+               kpts={'size': (Phonon_kpts_x, Phonon_kpts_y, Phonon_kpts_z)}, txt=struct+'-5-Log-Phonon-GPAW.txt')
+        
+        bulk_configuration.calc = calc
+        
+        path = get_band_path(bulk_configuration, Phonon_path, Phonon_npoints)
+
+        phonon_path = struct+'5-Results-force-constants.npy'
+        sum_rule=Phonon_acoustic_sum_rule
+
+        if os.path.exists(phonon_path):
+            with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+                print('Reading FCs from {!r}'.format(phonon_path), end="\n", file=f2)
+            phonon.force_constants = np.load(phonon_path)
+
+        else:
+            with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+                print('Computing FCs',end="\n", file=f2)
+                #os.makedirs('force-sets', exist_ok=True)
+            supercells = list(phonon.get_supercells_with_displacements())
+            fnames = [struct+'5-Results-sc-{:04}.npy'.format(i) for i in range(len(supercells))]
+            set_of_forces = [
+                load_or_compute_force(fname, calc, supercell)
+                for (fname, supercell) in zip(fnames, supercells)
+            ]
+            with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+                print('Building FC matrix', end="\n", file=f2)
+            phonon.produce_force_constants(forces=set_of_forces, calculate_full_force_constants=False)
+            if sum_rule:
+                phonon.symmetrize_force_constants()
+            with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+                print('Writing FCs to {!r}'.format(phonon_path), end="\n", file=f2)
+            np.save(phonon_path, phonon.get_force_constants())
+            #shutil.rmtree('force-sets')
+
+        with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+            print('', end="\n", file=f2)
+            print("[Phonopy] Phonon frequencies at Gamma:", end="\n", file=f2)
+            for i, freq in enumerate(phonon.get_frequencies((0, 0, 0))):
+                print("[Phonopy] %3d: %10.5f THz" %  (i + 1, freq), end="\n", file=f2) # THz
+
+            # DOS
+            phonon.set_mesh([21, 21, 21])
+            phonon.set_total_DOS(tetrahedron_method=True)
+            print('', end="\n", file=f2)
+            print("[Phonopy] Phonon DOS:", end="\n", file=f2)
+            for omega, dos in np.array(phonon.get_total_DOS()).T:
+                print("%15.7f%15.7f" % (omega, dos), end="\n", file=f2)
+
+        qpoints, labels, connections = path
+        phonon.run_band_structure(qpoints, path_connections=connections, labels=labels)
+
+        # without DOS
+        # fig = phonon.plot_band_structure()
+        
+        # with DOS
+        phonon.run_mesh([20, 20, 20])
+        phonon.run_total_dos()
+        fig = phonon.plot_band_structure_and_dos()
+
+        # with PDOS
+        # phonon.run_mesh([20, 20, 20], with_eigenvectors=True, is_mesh_symmetry=False)
+        # fig = phonon.plot_band_structure_and_dos(pdoc_indices=[[0], [1]])
+
+        fig.savefig(struct+'-5-Result-Phonon.png', dpi=300)
 
         time52 = time.time()
         # Write timings of calculation
         with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('Phonon calculation: ', round((time52-time51),2), end="\n", file=f1)
-    
+            
     
     def opticalcalc(self):
         """
@@ -1203,6 +1300,87 @@ class gpawsolve:
         with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('Optical calculation: ', round((time62-time61),2), end="\n", file=f1)
 
+# Phonon related functions
+# The remaining functions related to phonon calculations in this file are MIT-licensed by (C) 2020 Michael Lamparski
+
+def get_band_path(atoms, path_str, npoints, path_frac=None, labels=None):
+    from ase.dft.kpoints import bandpath
+
+    atoms = convert_atoms_to_ase(atoms)
+    if path_str is None:
+        path_str = atoms.get_cell().bandpath().path
+
+    # Commas are part of ase's supported syntax, but we'll take care of them
+    # ourselves to make it easier to get things the way phonopy wants them
+    if path_frac is None:
+        path_frac = []
+        for substr in path_str.split(','):
+            path = bandpath(substr, atoms.get_cell()[...], npoints=1)
+            path_frac.append(path.kpts)
+
+    if labels is None:
+        labels = []
+        for substr in path_str.split(','):
+            path = bandpath(substr, atoms.get_cell()[...], npoints=1)
+
+            _, _, substr_labels = path.get_linear_kpoint_axis()
+            labels.extend(['$\\Gamma$' if s == 'G' else s for s in substr_labels])
+
+    qpoints, connections = get_band_qpoints_and_path_connections(path_frac, npoints=npoints)
+    return qpoints, labels, connections
+
+def run_gpaw_all(calc, phonon):
+    return [ run_gpaw(calc, supercell) for supercell in phonon.get_supercells_with_displacements() ]
+
+def run_gpaw(calc, cell):
+    cell = convert_atoms_to_ase(cell)
+    cell.set_calculator(calc)
+    forces = cell.get_forces()
+    drift_force = forces.sum(axis=0)
+    with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+        print(("[Phonopy] Drift force:" + "%11.5f" * 3) % tuple(drift_force), end="\n", file=f2)
+    # Simple translational invariance
+    for force in forces:
+        force -= drift_force / forces.shape[0]
+    return forces
+
+#--------------------------------------------------------------------
+
+
+def load_or_compute_force(path, calc, atoms):
+    if os.path.exists(path):
+        with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+            print('Reading {!r}'.format(path), end="\n", file=f2)
+        return np.load(path)
+
+    else:
+        with paropen(struct+'-5-Log-Phonon-Phonopy.txt', 'a') as f2:
+            print('Computing {!r}'.format(path), end="\n", file=f2)
+        force_set = run_gpaw(calc, atoms)
+        np.save(path, force_set)
+        return force_set
+
+#--------------------------------------------------------------------
+
+def convert_atoms_to_ase(atoms):
+    return Atoms(
+        symbols=atoms.get_chemical_symbols(),
+        scaled_positions=atoms.get_scaled_positions(),
+        cell=atoms.get_cell(),
+        pbc=True
+    )
+
+def convert_atoms_to_phonopy(atoms):
+    return PhonopyAtoms(
+        symbols=atoms.get_chemical_symbols(),
+        scaled_positions=atoms.get_scaled_positions(),
+        cell=atoms.get_cell(),
+        pbc=True
+    )
+
+
+# End of phonon related functions------------------------------
+
 if __name__ == "__main__":
     #
     # DEFAULT VALUES
@@ -1268,7 +1446,15 @@ if __name__ == "__main__":
     Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
 
     # PHONON -------------------------
-    
+    Phonon_PW_cutoff = 400
+    Phonon_kpts_x = 3
+    Phonon_kpts_y = 3
+    Phonon_kpts_z = 3
+    Phonon_supercell = np.diag([2, 2, 2])
+    Phonon_displacement = 1e-3
+    Phonon_path = 'LGL'	    # Brillouin zone high symmetry points
+    Phonon_npoints = 60		# Number of points between high symmetry points
+    Phonon_acoustic_sum_rule = True
     
     # GW CALCULATION ----------------------
     GW_calc_type = 'GW0'          # GW0 or G0W0

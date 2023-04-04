@@ -52,5 +52,10 @@ echo "Adding: Rocksalt TiC"
 cd ../TiC-elastic-electronic
 tsp mpirun -np $CORENUMBER gpawsolve.py -i TiC.py -g TiC_mp-631_primitive-Final.cif
 
+# Phonon dispersion of Aluminum
+echo "Adding: Phonon dispersion of bulk Aluminum"
+cd ../Al-phonon
+tsp mpirun -np $CORENUMBER gpawsolve.py -i Al-phonon.py -g Al_mp-134_primitive.cif
+
 # Finish
 echo "All calculations except the HSE calculation are added. Due to consuming to much time, please run HSE example seperately."

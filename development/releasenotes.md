@@ -9,6 +9,9 @@ parent: development
 
 ### Development version
 
+* Energy consumption measurement with -e argument. This feature only works with Intel CPUs after Sandy Bridge generation. Results are given in kWh!
+* Restart -r, --restart argument is now depreceted. There is nothing to be restarted. Only passing the ground state calculation.
+* New argument for passing ground state calculations: -p, --passground.
 * Basic phonon dispersion calculation feature with Phonopy! At least it works for bulk Al. It is not very mature so please keep this in mind. (Thanks to Michael Lamparski for his help and MIT licensed code that he shared.)
 * Save figures in higher dpi.
 * Fix some bugs, add new variable and rearrange some variable in `gg.py`.

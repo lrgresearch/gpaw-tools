@@ -15,6 +15,10 @@ Before, starting to installation of `gpaw-tools`, we need to install `spglib` an
     pip3 install spglib docutils elastic
     pip3 install requests
 
+If you want to use energy consumption measurement feauture, install:
+
+    pip3 install pyrapl pymondo pandas
+
 Also, lastly, it is good to use a job queue system when you have many inputs to run. GPAW / gpaw-tools can be run with task managers like SLURM. However, if you use your GPAW / gpaw-tools system on your local server/workstation, using Task Spooler is a good idea. It only works on one server for one user. It makes a queue, and run your commands in order. To install tsp command to your Ubuntu system, use:
 
     sudo apt install task-spooler

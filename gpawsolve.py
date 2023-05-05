@@ -1576,10 +1576,12 @@ if __name__ == "__main__":
         if args.version == True:
             import gpaw
             import ase
+            import phonopy
             try:
                 response = requests.get("https://api.github.com/repos/lrgresearch/gpaw-tools/releases/latest", timeout=5)
                 parprint('---------------------------------------------------------------------------------------')
-                parprint('\033[95mgpaw-tools:\033[0m This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', and ASE '+ase.__version__)
+                parprint('\033[95mgpaw-tools:\033[0m Version information: '+str(__version__))
+                parprint('  uses GPAW '+gpaw.__version__+', ASE '+ase.__version__+' and PHONOPY '+phonopy.__version__)
                 parprint('---------------------------------------------------------------------------------------')
                 parprint('The latest STABLE release was '+response.json()["tag_name"]+', which is published at '+response.json()["published_at"])
                 parprint('Download the latest STABLE tarball release at: '+response.json()["tarball_url"])
@@ -1587,7 +1589,8 @@ if __name__ == "__main__":
                 parprint('Download the latest DEV zipball release at: https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip')
             except (requests.ConnectionError, requests.Timeout) as exception:
                 parprint('---------------------------------------------------------------------------------------')
-                parprint('gpaw-tools: This is '+str(__version__)+' uses GPAW '+gpaw.__version__+', ASE '+ase.__version__)
+                parprint('\033[95mgpaw-tools:\033[0m Version information: '+str(__version__))
+                parprint('  uses GPAW '+gpaw.__version__+', ASE '+ase.__version__+' and PHONOPY '+phonopy.__version__)
                 parprint('---------------------------------------------------------------------------------------')
                 parprint('No internet connection available.')
             quit()

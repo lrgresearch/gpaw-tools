@@ -27,6 +27,7 @@ class gg:
         global Geo_optim, Elastic_calcvar, DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar
         global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar, Fix_symmetryvar
         global GW_PPAvar, GW_q0_correctionvar, GW_nblocks_maxvar, Struct, StructLoaded, GW_interpolate_bandvar
+        global Phonon_calcvar, Phonon_acoustic_sum_rulevar
         
         url = 'https://www.lrgresearch.org/gpaw-tools/'
         
@@ -138,6 +139,15 @@ class gg:
                     Density_calcvar.set(False)
             else:
                 Density_calcvar.set(False)
+                
+            # Phonon calculation
+            if 'Phonon_calc' in config.__dict__.keys():
+                if config.Phonon_calc == True:
+                    Phonon_calcvar.set(True)
+                else:
+                    Phonon_calcvar.set(False)
+            else:
+                Phonon_calcvar.set(False)
 
             # Optical calculation
             if 'Optical_calc' in config.__dict__.keys():
@@ -439,8 +449,78 @@ class gg:
                 self.Refine_gridttk.insert('0', config.Refine_grid)
             else:
                 self.Refine_gridttk.delete('0', 'end')
-                self.Refine_gridttk.insert('0', '2')        
-
+                self.Refine_gridttk.insert('0', '2')    
+                
+            # ---------Phonon Parameters--------
+            
+            # Phonon cut-off energy
+            if 'Phonon_PW_cutoff' in config.__dict__.keys():
+                self.Phonon_PW_cutoffttk.delete('0', 'end')
+                self.Phonon_PW_cutoffttk.insert('0', config.Phonon_PW_cutoff)
+            else:
+                self.Phonon_PW_cutoffttk.delete('0', 'end')
+                self.Phonon_PW_cutoffttk.insert('0', '400')
+                
+            # Phonon K-points
+            if 'Phonon_kpts_x' in config.__dict__.keys():
+                self.Phonon_kpts_xttk.delete('0', 'end')
+                self.Phonon_kpts_xttk.insert('0', config.Phonon_kpts_x)
+                self.Phonon_kpts_yttk.delete('0', 'end')
+                self.Phonon_kpts_yttk.insert('0', config.Phonon_kpts_y)
+                self.Phonon_kpts_zttk.delete('0', 'end')
+                self.Phonon_kpts_zttk.insert('0', config.Phonon_kpts_z)
+            else:
+                self.Phonon_kpts_xttk.delete('0', 'end')
+                self.Phonon_kpts_xttk.insert('0', '3')
+                self.Phonon_kpts_yttk.delete('0', 'end')
+                self.Phonon_kpts_yttk.insert('0', '3')
+                self.Phonon_kpts_zttk.delete('0', 'end')
+                self.Phonon_kpts_zttk.insert('0', '3')
+             
+            # Phonon supercell
+            if 'Phonon_supercell' in config.__dict__.keys():
+                self.Phonon_supercellttk.delete('0', 'end')
+                if hasattr(config, 'Phonon_supercell'):
+                    self.Phonon_supercellttk.insert('0', str(config.Phonon_supercell.tolist()))
+                else:
+                    self.Phonon_supercellttk.insert('0', '[2,2,2]')
+            else:
+                self.Phonon_supercellttk.delete('0', 'end')
+                self.Phonon_supercellttk.insert('0', '[2,2,2]')
+                
+            # Phonon displacement
+            if 'Phonon_displacement' in config.__dict__.keys():
+                self.Phonon_displacementttk.delete('0', 'end')
+                self.Phonon_displacementttk.insert('0', config.Phonon_displacement)
+            else:
+                self.Phonon_displacementttk.delete('0', 'end')
+                self.Phonon_displacementttk.insert('0', '400')
+            
+            # Phonon band dispersion path
+            if 'Phonon_path' in config.__dict__.keys():
+                self.Phonon_pathttk.delete('0', 'end')
+                self.Phonon_pathttk.insert('0', config.Phonon_path)
+            else:
+                self.Phonon_pathttk.delete('0', 'end')
+                self.Phonon_pathttk.insert('0', 'GLG')
+            
+            # Number of points between high symmetry points
+            if 'Phonon_npoints' in config.__dict__.keys():
+                self.Phonon_npointsttk.delete('0', 'end')
+                self.Phonon_npointsttk.insert('0', config.Phonon_npoints)
+            else:
+                self.Phonon_npointsttk.delete('0', 'end')
+                self.Phonon_npointsttk.insert('0', '60')
+            
+            # Acoustic sum rule for phonon calculation
+            if 'Phonon_acoustic_sum_rule' in config.__dict__.keys():
+                if config.Phonon_acoustic_sum_rule == True:
+                    Phonon_acoustic_sum_rulevar.set(True)
+                else:
+                    Phonon_acoustic_sum_rulevar.set(False)
+            else:
+                Phonon_acoustic_sum_rulevar.set(False)
+            
             # ---------GW Parameters---------
             
             # GW calculation type
@@ -723,6 +803,8 @@ class gg:
                 print("Band_calc = "+ str(Band_calcvar.get()), end="\n", file=f1)
                 # Density_calc
                 print("Density_calc = "+ str(Density_calcvar.get()), end="\n", file=f1)
+                # Phonon_calc
+                print("Phonon_calc = "+ str(Phonon_calcvar.get()), end="\n", file=f1)
                 # Optical_calc
                 print("Optical_calc = "+ str(Optical_calcvar.get()), end="\n", file=f1)
                 # ---------Geometry------------
@@ -806,7 +888,23 @@ class gg:
                 print("Magmom_per_atom = "+ str(self.Magmom_per_atomttk.get()), end="\n", file=f1)
                 # Refine grid
                 print("Refine_grid = "+ str(self.Refine_gridttk.get()), end="\n", file=f1)
-                
+                # ---------Phonon------------
+                # Cut_off_energy
+                print("Phonon_PW_cutoff = "+ str(self.Phonon_PW_cutoffttk.get()), end="\n", file=f1)
+                # K-points
+                print("Phonon_kpts_x = "+ str(self.Phonon_kpts_xttk.get()), end="\n", file=f1)
+                print("Phonon_kpts_y = "+ str(self.Phonon_kpts_yttk.get()), end="\n", file=f1)
+                print("Phonon_kpts_z = "+ str(self.Phonon_kpts_zttk.get()), end="\n", file=f1)
+                # Supercell
+                print("Phonon_supercell = np.diag("+ str(self.Phonon_supercellttk.get())+")", end="\n", file=f1)
+                # Displacement
+                print("Phonon_displacement = "+ str(self.Phonon_displacementttk.get()), end="\n", file=f1)
+                # Dispersion path
+                print("Phonon_path = "+ str(self.Phonon_pathttk.get()), end="\n", file=f1)
+                # Number of points
+                print("Phonon_npoints = "+ str(self.Phonon_npointsttk.get()), end="\n", file=f1)
+                # Acoustic sum rule
+                print("Phonon_acoustic_sum_rule = "+ str(Phonon_acoustic_sum_rulevar.get()), end="\n", file=f1)
                 # ---------GW Parameters------------
                 # GW calculation type
                 if self.GW_calc_typettk.get() == 'GW0':
@@ -888,9 +986,9 @@ class gg:
 
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
             if restartvar == True:
-                gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -o -r -d -i '+str(configname)+' -g '+str(textfilenamepath)
+                gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -p -d -i '+str(configname)+' -g '+str(textfilenamepath)
             else:
-                gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -o -d -i '+str(configname)+' -g '+str(textfilenamepath)
+                gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -d -i '+str(configname)+' -g '+str(textfilenamepath)
             proc = subprocess.Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
 
@@ -1003,6 +1101,12 @@ class gg:
         Density_calcvar = BooleanVar()
         self.Density_calcttk.configure(variable = Density_calcvar, onvalue=True, offvalue=False,text='All-Electron Density Calculation')
         self.Density_calcttk.pack(side='top')
+        
+        # Density_calc
+        self.Phonon_calcttk = ttk.Checkbutton(self.labelframe1)
+        Phonon_calcvar = BooleanVar()
+        self.Phonon_calcttk.configure(variable = Phonon_calcvar, onvalue=True, offvalue=False,text='Phonon Calculation')
+        self.Phonon_calcttk.pack(side='top')
         
         # Optical_calc
         self.Optical_calcttk = ttk.Checkbutton(self.labelframe1)
@@ -1332,7 +1436,7 @@ class gg:
         self.labelframe2.configure(height='200', text='Electronic Calculation Parameters', width='200')
         self.labelframe2.pack(side='left')
         # End labelframe2 ------------------------------------------
-        
+                
         # labelframe3: Optical Calculation Parameters --------------
         self.labelframe3 = ttk.Labelframe(self.frame5)
 
@@ -1509,7 +1613,106 @@ class gg:
         self.frame5.configure(height='200', width='200')
         self.frame5.pack(side='top')
         # End labelframe3 ------------------------------------------
+
+        # Phononframe: Phonon Calculation Parameters --------------
+        self.Phononframe = ttk.Labelframe(self.frame5)
+
+        # Phonon_PW_cutoff
+        self.framePhonon_PW_cutoff = ttk.Frame(self.Phononframe)
+        self.labelPhonon_PW_cutoff = ttk.Label(self.framePhonon_PW_cutoff)
+        self.labelPhonon_PW_cutoff.configure(text='Cut-off en.for phonon')
+        self.labelPhonon_PW_cutoff.pack(side='left')
+        self.Phonon_PW_cutoffttk = ttk.Entry(self.framePhonon_PW_cutoff)
+        self.Phonon_PW_cutoffttk.delete('0', 'end')
+        self.Phonon_PW_cutoffttk.insert('0', '100')
+        self.Phonon_PW_cutoffttk.pack(side='top')
+        self.framePhonon_PW_cutoff.configure(height='200', width='200')
+        self.framePhonon_PW_cutoff.pack(side='top')
         
+        # Phonon K-points
+        self.framePhononkpoints = ttk.Frame(self.Phononframe)
+        self.labelPhononkpoints = ttk.Label(self.framePhononkpoints)
+        self.labelPhononkpoints.configure(text='K-points (x,y,z)')
+        self.labelPhononkpoints.pack(side='left')
+        self.Phonon_kpts_xttk = ttk.Entry(self.framePhononkpoints)
+        self.Phonon_kpts_xttk.configure(width='4')
+        self.Phonon_kpts_xttk.delete('0', 'end')
+        self.Phonon_kpts_xttk.insert('0', '3')
+        self.Phonon_kpts_xttk.pack(side='left')
+        self.Phonon_kpts_yttk = ttk.Entry(self.framePhononkpoints)
+        self.Phonon_kpts_yttk.configure(width='4')
+        self.Phonon_kpts_yttk.delete('0', 'end')
+        self.Phonon_kpts_yttk.insert('0', '3')
+        self.Phonon_kpts_yttk.pack(side='left')
+        self.Phonon_kpts_zttk = ttk.Entry(self.framePhononkpoints)
+        self.Phonon_kpts_zttk.configure(width='4')
+        self.Phonon_kpts_zttk.delete('0', 'end')
+        self.Phonon_kpts_zttk.insert('0', '3')
+        self.Phonon_kpts_zttk.pack(side='top')
+        self.framePhononkpoints.configure(height='200', width='200')
+        self.framePhononkpoints.pack(side='top')
+        
+        # Phonon_supercell
+        self.framePhonon_supercell = ttk.Frame(self.Phononframe)
+        self.labelPhonon_supercell = ttk.Label(self.framePhonon_supercell)
+        self.labelPhonon_supercell.configure(text='Supercell [x,y,z]')
+        self.labelPhonon_supercell.pack(side='left')
+        self.Phonon_supercellttk = tk.Entry(self.framePhonon_supercell)
+        self.Phonon_supercellttk.delete('0', 'end')
+        self.Phonon_supercellttk.insert('0', '[3,3,3]')
+        self.Phonon_supercellttk.pack(side='top')
+        self.framePhonon_supercell.configure(height='200', width='200')
+        self.framePhonon_supercell.pack(side='top')
+        
+        # Phonon_displacement
+        self.framePhonon_displacement = ttk.Frame(self.Phononframe)
+        self.labelPhonon_displacement= ttk.Label(self.framePhonon_displacement)
+        self.labelPhonon_displacement.configure(text='Displacement')
+        self.labelPhonon_displacement.pack(side='left')
+        self.Phonon_displacementttk = ttk.Entry(self.framePhonon_displacement)
+        self.Phonon_displacementttk.delete('0', 'end')
+        self.Phonon_displacementttk.insert('0', '1e-3')
+        self.Phonon_displacementttk.pack(side='top')
+        self.framePhonon_displacement.configure(height='200', width='200')
+        self.framePhonon_displacement.pack(side='top')
+        
+        # Phonon_path
+        self.framePhonon_path = ttk.Frame(self.Phononframe)
+        self.labelPhonon_path = ttk.Label(self.framePhonon_path)
+        self.labelPhonon_path.configure(text='Dispersion path')
+        self.labelPhonon_path.pack(side='left')
+        self.Phonon_pathttk = ttk.Entry(self.framePhonon_path)
+        self.Phonon_pathttk.delete('0', 'end')
+        self.Phonon_pathttk.insert('0', 'LGL')
+        self.Phonon_pathttk.pack(side='top')
+        self.framePhonon_path.configure(height='200', width='200')
+        self.framePhonon_path.pack(side='top')
+        
+        # Phonon_npoints
+        self.framePhonon_npoints = ttk.Frame(self.Phononframe)
+        self.labelPhonon_npoints = ttk.Label(self.framePhonon_npoints)
+        self.labelPhonon_npoints.configure(text='Number of points')
+        self.labelPhonon_npoints.pack(side='left')
+        self.Phonon_npointsttk = ttk.Entry(self.framePhonon_npoints)
+        self.Phonon_npointsttk.delete('0', 'end')
+        self.Phonon_npointsttk.insert('0', '60')
+        self.Phonon_npointsttk.pack(side='top')
+        self.framePhonon_npoints.configure(height='200', width='200')
+        self.framePhonon_npoints.pack(side='top')
+        
+        # Acoustic_sum_rule
+        self.frameAcoustic_sum_rule = ttk.Frame(self.Phononframe)
+        self.Acoustic_sum_rulettk = ttk.Checkbutton(self.frameAcoustic_sum_rule)
+        Acoustic_sum_rulevar = BooleanVar()
+        self.Acoustic_sum_rulettk.configure(variable = Acoustic_sum_rulevar, onvalue=True, offvalue=False, text='Acoustic sum rule')
+        self.Acoustic_sum_rulettk.pack(side='top')
+        self.frameAcoustic_sum_rule.configure(height='200', width='200')
+        self.frameAcoustic_sum_rule.pack(side='top')
+        
+        self.Phononframe.configure(height='200', text='Phonon Calculation Parameters', width='200')
+        self.Phononframe.pack(side='left')
+        # End Phononframe ------------------------------------------
+
         # labelframe4: Frame for Cell relaxation ----------------------
         self.frame13 = ttk.Frame(self.frame4)
         self.labelframe4 = ttk.Labelframe(self.frame13)
@@ -1751,7 +1954,7 @@ For licensing information, please refer to LICENSE file.'''
         self.frame24.configure(height='200', width='1200')
         self.frame24.pack(side='top')
         self.notebookUpper.add(self.frame24, text='About')
-        self.notebookUpper.configure(height='600', width='1200')
+        self.notebookUpper.configure(height='700', width='1500')
         self.notebookUpper.pack(fill='x', side='top')
         
         # Message log
@@ -1762,12 +1965,12 @@ For licensing information, please refer to LICENSE file.'''
         self.text1.insert('0.0', _text_)
         self.text1.pack(side='top')
         self.notebookBottom.add(self.text1, text='Message Log')
-        self.notebookBottom.configure(height='100', width='1200')
+        self.notebookBottom.configure(height='100', width='1500')
         self.notebookBottom.pack(fill='x', side='top')
-        self.frame2.configure(height='800', width='1200')
+        self.frame2.configure(height='1000', width='1500')
         self.frame2.pack(fill='both', side='top')
         self.gg_png = tk.PhotoImage(file=os.path.join(PROJECT_PATH,'gui_files/gpaw-tools.png'))
-        self.toplevel1.configure(height='800', width='1200')
+        self.toplevel1.configure(height='1000', width='1500')
         self.toplevel1.iconphoto(True, self.gg_png)
         self.toplevel1.resizable(False, False)
         self.toplevel1.title('gpaw-tools GUI')

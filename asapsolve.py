@@ -173,7 +173,7 @@ print("")
 print("Energy per atom:")
 print("  %15s %15s %15s" % ("Pot. energy", "Kin. energy", "Total energy"))
 
-for i in range(25):
+for _ in range(25):
     dyn.run(10)
     epot = asestruct.get_potential_energy()/len(asestruct)
     ekin = asestruct.get_kinetic_energy()/len(asestruct)

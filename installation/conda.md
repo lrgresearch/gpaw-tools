@@ -25,8 +25,9 @@ Now, we can create an environment (here ‘gpaw-env’ name is used. You can use
 
 Then, install GPAW and Elastic packages
 
-    $ conda install -c conda-forge gpaw elastic requests
+    $ conda install -c conda-forge gpaw elastic requests phonopy
     
+**NOTE: For the energy consumption measurement feature, you can install mongo and pandas packages with conda. However, you must install only pyRAPL with pip in the next step. This workflow and the energy consumption measurement feature is not tested on conda yet. Please submit a better installation solution in this page. Thanks.**
 
 Lastly, [download and install gpaw-tools](https://www.lrgresearch.org/gpaw-tools/installation/#4-installation-of-gpaw-tools).
 

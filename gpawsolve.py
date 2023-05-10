@@ -1536,7 +1536,6 @@ if __name__ == "__main__":
         quit()
 
     # DEFAULT VALUES
-    outdir = True
     restart = False
     passground = False
     energymeas = False

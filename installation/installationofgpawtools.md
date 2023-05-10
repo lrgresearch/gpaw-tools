@@ -9,13 +9,16 @@ parent: installation
 
 After installing ASE, GPAW, ASAP, KIM and other necessary packages, you can proceed with the installation of *gpaw-tools*.
 
-Before, starting to installation of `gpaw-tools`, we need to install `spglib` and `elastic` packages and their dependencies. If you used conda to install previous packages, you do not need to run the following commands (If you try to run these two command as a single command you may have receive an error).
+Before, we need to install `setuptools_scm` seperately. Otherwise it can give an error.
 
-    pip3 install setuptools_scm
-    pip3 install spglib docutils elastic
-    pip3 install requests
+     pip3 install setuptools_scm
+ 
+Then, starting to installation of `gpaw-tools`, we need to install `spglib`, `docutils`, `requests`, `elastic` and `phonopy` packages and their dependencies. If you used conda to install previous packages, you do not need to run the following commands (If you try to run these two command as a single command you may have receive an error).
 
-If you want to use energy consumption measurement feauture, install:
+   
+    pip3 install spglib docutils elastic requests phonopy
+
+If you want to use energy consumption measurement feature, install:
 
     pip3 install pyrapl pymondo pandas
 

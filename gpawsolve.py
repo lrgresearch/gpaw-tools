@@ -749,9 +749,14 @@ class gpawsolve:
                 if currentd:
                     all_groupsd.append(currentd)
 
-                with paropen(struct+'-3-Result-Band-Down-XYYY.dat', 'w') as f1:
-                    for g in zip(*all_groupsd):
-                        print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f1)
+                try:
+                    with paropen(struct+'-3-Result-Band-Down-XYYY.dat', 'w') as f1:
+                        for g in zip(*all_groupsd):
+                            print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f1)
+                except Exception as e:
+                    print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted spin down Band file. Mostly, the file is created without any problem.")
+                    print(e)
+                    pass  # Continue execution after encountering an exception
                 
                 currentu, all_groupsu = [], []
                 with open(struct+'-3-Result-Band-Up.dat', 'r') as f_in2:
@@ -764,10 +769,14 @@ class gpawsolve:
 
                 if currentu:
                     all_groupsu.append(currentu)
-
-                with paropen(struct+'-3-Result-Band-Up-XYYY.dat', 'w') as f2:
-                    for g in zip(*all_groupsu):
-                        print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f2)
+                try:
+                    with paropen(struct+'-3-Result-Band-Up-XYYY.dat', 'w') as f2:
+                        for g in zip(*all_groupsu):
+                            print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f2)
+                except Exception as e:
+                    print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted spin up Band file. Mostly, the file is created without any problem.")
+                    print(e)
+                    pass  # Continue execution after encountering an exception
 
             else:
                 eps_skn = np.array([[calc.get_eigenvalues(k,s)
@@ -792,10 +801,14 @@ class gpawsolve:
 
                 if current:
                     all_groups.append(current)
-
-                with paropen(struct+'-3-Result-Band-XYYY.dat', 'w') as f1:
-                    for g in zip(*all_groups):
-                        print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f1)
+                try:
+                    with paropen(struct+'-3-Result-Band-XYYY.dat', 'w') as f1:
+                        for g in zip(*all_groups):
+                            print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f1)
+                except Exception as e:
+                    print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted Band file. Mostly, the file is created without any problem.")
+                    print(e)
+                    pass  # Continue execution after encountering an exception
     
         # Finish Band calc
         time32 = time.time()

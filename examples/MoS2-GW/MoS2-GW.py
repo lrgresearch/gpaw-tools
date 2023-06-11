@@ -1,7 +1,7 @@
 import numpy as np
 
 # -------------------------------------------------------------
-Mode = 'PW-GW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW-GW'             # Use PW, PW-GW, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 Geo_optim = False       # Geometric optimization with LFBGS
 Elastic_calc = False    # Elastic calculation
@@ -35,7 +35,7 @@ Band_path = 'GKG'	    # Brillouin zone high symmetry points
 Band_npoints = 40		# Number of points between high symmetry points
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 
-XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
+XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0, EXX, B3LYP
 
 
 Ground_convergence = {}   # Convergence items for ground state calculations

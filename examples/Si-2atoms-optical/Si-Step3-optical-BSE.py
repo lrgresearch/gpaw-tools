@@ -1,7 +1,7 @@
 Outdirname = 'Si-results'
 
 # -------------------------------------------------------------
-Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW'             # Use PW, PW-GW, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 Geo_optim = False       # Geometric optimization with LFBGS
 Elastic_calc = False    # Elastic calculation

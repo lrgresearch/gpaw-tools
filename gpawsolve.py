@@ -694,7 +694,7 @@ class gpawsolve:
                 print ('Fermi Level: ', ef, end="\n", file=f)
 
         else:
-            if XC_calc in ['HSE06', 'HSE03']:
+            if XC_calc in ['HSE06', 'HSE03','B3LYP', 'PBE0','EXX']:
                 calc = GPAW(struct+'-1-Result-Ground.gpw',
                         parallel={'band': 1, 'kpt': 1}, 
                         txt=struct+'-3-Log-Band.txt',
@@ -1361,7 +1361,7 @@ if __name__ == "__main__":
     Ground_gpts_y = 8              # grid points in y direction (for LCAO)
     Ground_gpts_z = 8              # grid points in z direction (for LCAO)
     Setup_params = {}            # Can be used like {'N': ':p,6.0'} for Hubbard, can also be used for many corrections.https://wiki.fysik.dtu.dk/gpaw/devel/setups.html#gpaw.setup.Setup For none use {}
-    XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
+    XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0, EXX, B3LYP
     Ground_convergence = {}   # Convergence items for ground state calculations
     Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
     Mixer_type = MixerSum(0.1, 3, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)

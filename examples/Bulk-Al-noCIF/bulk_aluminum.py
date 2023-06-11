@@ -9,7 +9,7 @@ bulk_configuration = Atoms('Al',
                                  pbc=True)
 
 # -------------------------------------------------------------
-Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
+Mode = 'PW'             # Use PW, PW-GW, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
 Geo_optim = True       # Geometric optimization with LFBGS
 Elastic_calc = False    # Elastic calculation
@@ -33,7 +33,7 @@ Fix_symmetry = False    # True for preserving the spacegroup symmetry during opt
 Relax_cell=[True, True, True, False, False, False]
 
 # ELECTRONIC
-Cut_off_energy = 340 	# eV
+Cut_off_energy = 600 	# eV
 Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 Ground_kpts_x = 5 	        # kpoints in x direction
 Ground_kpts_y = 5	 	# kpoints in y direction
@@ -43,7 +43,7 @@ Band_path = 'LGXG'	    # Brillouin zone high symmetry points
 Band_npoints = 40		# Number of points between high symmetry points
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 
-XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0(for PW-EXX)
+XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0, EXX, B3LYP
 
 Ground_convergence = {}   # Convergence items for ground state calculations
 Band_convergence = {'bands':8}   # Convergence items for band calculations

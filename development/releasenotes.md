@@ -9,6 +9,7 @@ parent: development
 
 ### Development version
 
+* Updated some calculation default values in both `gpawsolve.py` and `gg.py`.
 * Small corrections are done to EXX related parts, XYYY formatted band result data output, optical RPA calculation, ...etc...
 * Using DielectricFunction with frequencies.
 * PW-EXX mode is removed. EXX can be used directly under PW.

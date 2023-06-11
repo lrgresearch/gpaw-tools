@@ -214,7 +214,7 @@ class gpawsolve:
                 # PW Ground State Calculations
                 parprint("Starting PW ground state calculation...")
                 if True in Relax_cell:
-                    if XC_calc in ['GLLBSC', 'GLLBSCM', 'HSE06', 'HSE03']:
+                    if XC_calc in ['GLLBSC', 'GLLBSCM', 'HSE06', 'HSE03','B3LYP', 'PBE0','EXX']:
                         parprint("\033[91mERROR:\033[0m Structure optimization LBFGS can not be used with "+XC_calc+" xc.")
                         parprint("Do manual structure optimization, or do with PBE, then use its final CIF as input.")
                         parprint("Quiting...")

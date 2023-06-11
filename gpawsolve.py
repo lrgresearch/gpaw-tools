@@ -17,8 +17,7 @@ Description = f'''
  |   PW   | GLLBSC / M      | No               | Yes  | Yes    | Yes     | Yes | No    | Yes  | Yes     | Yes     |
  |   PW   | HSE03, HSE06    | No               | Yes  | Yes    | n/a     | Yes | No    | No   | No      | No      |
  | PW-G0W0| Local and LibXC | No               | No   | Yes    | No      | No  | No    | Some | No      | No      |
- | PW-EXX*| B3LYP, PBE0     | Yes (with PBE)   | No   | Yes    | No      | No  | No    | No   | No      | No      |
- |  LCAO  | Local and LibXC | Yes              | Yes  | Yes    | Yes     | Yes | Yes   | Yes  | Yes     | No      |
+ |  LCAO  | Local and LibXC | No              | Yes  | Yes    | Yes     | Yes | Yes   | Yes  | Yes     | No      |
  *: Just some ground state energy calculations.
 '''
 
@@ -45,7 +44,6 @@ from gpaw.response.df import DielectricFunction
 from gpaw.response.bse import BSE
 from gpaw.response.g0w0 import G0W0
 from gpaw.response.gw_bands import GWBands
-from gpaw.xc.exx import EXX
 from gpaw.dos import DOSCalculator
 import numpy as np
 from numpy import genfromtxt
@@ -209,9 +207,6 @@ class gpawsolve:
         # Start ground state timing
         time11 = time.time()
         if Mode == 'PW':
-            if XC_calc in ['B3LYP', 'PBE0']:
-                parprint('\033[91mERROR:\033[0m'+XC_calc+' can be used only in PW-EXX mode...')
-                quit()
             if Spin_calc == True:
                 numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
                 bulk_configuration.set_initial_magnetic_moments(numm)
@@ -224,7 +219,7 @@ class gpawsolve:
                         parprint("Do manual structure optimization, or do with PBE, then use its final CIF as input.")
                         parprint("Quiting...")
                         quit()
-                if XC_calc in ['HSE06', 'HSE03']:
+                if XC_calc in ['HSE06', 'HSE03','B3LYP', 'PBE0','EXX']:
                     parprint('Starting Hybrid XC calculations...')
                     if 'Ground_kpts_density' in globals():
                         calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
@@ -297,62 +292,6 @@ class gpawsolve:
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
                     parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
                     quit()
-
-        elif Mode == 'PW-EXX':
-            if passground == False:
-                # PW Ground State Calculations
-                parprint("Starting PW ground state calculation with PBE...")
-                # Fix the spacegroup in the geometric optimization if wanted
-                if Fix_symmetry == True:
-                    bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-                if 'Ground_kpts_density' in globals():
-                    calc = GPAW(mode=PW(Cut_off_energy), xc='PBE', parallel={'domain': world.size}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                            convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
-                else:
-                    calc = GPAW(mode=PW(Cut_off_energy), xc='PBE', parallel={'domain': world.size}, 
-                                kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                                convergence = Ground_convergence, mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
-                bulk_configuration.calc = calc
-                uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
-                # Optimizer Selection
-                if Optimizer == 'FIRE':
-                    from ase.optimize.fire import FIRE
-                    relax = FIRE(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                elif  Optimizer == 'LBFGS':
-                    from ase.optimize.lbfgs import LBFGS
-                    relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
-                elif  Optimizer == 'GPMin':
-                    from ase.optimize import GPMin
-                    relax = GPMin(uf, trajectory=struct+'-1-Result-Ground.traj')
-                else:
-                    relax = QuasiNewton(uf, maxstep=Max_step, trajectory=struct+'-1-Result-Ground.traj')
-                relax.run(fmax=Max_F_tolerance)  # Consider tighter fmax!
-                calc.write(struct+'-1-Result-Ground.gpw', mode="all")
-                # Writes final configuration as CIF file
-                write_cif(struct+'-Final.cif', bulk_configuration)
-                # Print final spacegroup information
-                parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
-            else:
-                parprint("Passing PW ground state calculation...")
-                # Control the ground state GPW file
-                if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
-                    quit()
-
-            if XC_calc in ['B3LYP', 'PBE0']:
-                parprint('Starting PW EXX ground state calculation with '+XC_calc+' ...')
-                calc_exx = EXX(struct+'-1-Result-Ground.gpw', xc=XC_calc, txt=struct+'-1-Log-EXX_mode.txt')
-                bulk_configuration.calc_exx = calc_exx
-                with paropen(struct+'-1-Result-Ground-EXX_mode.txt', "w") as fd:
-                    print('Eigenvalue contributions: ',calc_exx.get_eigenvalue_contributions() , file=fd)
-                    if np.isnan(calc_exx.get_exx_energy()):
-                        print ('The EXX and therefore total energy is not be calculated, because we are only', file=fd)
-                        print ('interested in a few eigenvalues for a few k-points.', file=fd)
-                    else:
-                        print('EXX Energy: ',calc_exx.get_exx_energy() , file=fd)
-                        print('Total Energy: ',calc_exx.get_total_energy() , file=fd)
-                parprint('\033[94mINFORMATION:\033[0mEXX mode results are only listed at: '+struct+'-1-Result-Ground-EXX_mode.txt')
-                parprint('          Other files (DOS, band, etc...) are the results calculated with PBE.')
 
         elif Mode == 'PW-GW':
             if passground == False:

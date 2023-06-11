@@ -517,7 +517,7 @@ class gpawsolve:
 
             # RAW PDOS for spin down
             parprint("Calculating and saving Raw PDOS for spin down...")
-            rawdos = DOSCalculator.from_calculator(struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=True)
+            rawdos = DOSCalculator.from_calculator(filename=struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=True)
             energies = rawdos.get_energies(npoints=DOS_npoints)
             totaldosweightsdown = [0.0] * DOS_npoints
             
@@ -1104,10 +1104,9 @@ class gpawsolve:
 
             elif Opt_calc_type == 'RPA':
                 parprint('Starting RPA calculations')
-                df = DielectricFunction(calc=struct+'-6-Result-Optical.gpw',
+                df = DielectricFunction(calc=struct+'-6-Result-Optical.gpw', 
+                                    frequencies={'type': 'nonlinear', 'domega0': Opt_domega0, 'omega2': Opt_omega2},
                                     eta=Opt_eta, nblocks=Opt_nblocks,
-                                    omega2=Opt_omega2,
-                                    domega0=Opt_domega0,
                                     ecut=Opt_cut_of_energy)
                 # Writing to files as: omega, nlfc.real, nlfc.imag, lfc.real, lfc.imag 
                 # Here lfc is local field correction

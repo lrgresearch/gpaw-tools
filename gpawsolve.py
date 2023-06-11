@@ -1388,7 +1388,7 @@ if __name__ == "__main__":
     # BAND ----------------------
     Gamma = True
     Band_path = 'LGL'	    # Brillouin zone high symmetry points
-    Band_npoints = 60		# Number of points between high symmetry points
+    Band_npoints = 61		# Number of points between high symmetry points
     Energy_max = 5 		# eV. It is the maximum energy value for band structure and DOS figures.
     Energy_min = -5     # eV. It is the minimum energy value for band structure and DOS figures.
     Band_convergence = {'bands':8}   # Convergence items for band calculations
@@ -1404,7 +1404,7 @@ if __name__ == "__main__":
     Phonon_supercell = np.diag([2, 2, 2])
     Phonon_displacement = 1e-3
     Phonon_path = 'LGL'	    # Brillouin zone high symmetry points
-    Phonon_npoints = 60		# Number of points between high symmetry points
+    Phonon_npoints = 61		# Number of points between high symmetry points
     Phonon_acoustic_sum_rule = True
     
     # GW CALCULATION ----------------------
@@ -1433,7 +1433,7 @@ if __name__ == "__main__":
     Opt_domega0 = 0.05         # Domega0 for Optical calculations
     Opt_omega2 = 5.0           # Frequency at which the non-lin freq grid has doubled the spacing
     Opt_cut_of_energy = 100             # Cut-off energy for optical calculations
-    Opt_nblocks = 4            # Split matrices in nblocks blocks and distribute them G-vectors
+    Opt_nblocks = world.size            # Split matrices in nblocks blocks and distribute them G-vectors
                             # or frequencies over processes. Also can use world.size
 
     #GENERAL ----------------------

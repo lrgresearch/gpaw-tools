@@ -9,6 +9,10 @@ parent: development
 
 ### Development version
 
+* Small corrections are done to EXX related parts, XYYY formatted band result data output, optical RPA calculation, ...etc...
+* Using DielectricFunction with frequencies.
+* PW-EXX mode is removed. EXX can be used directly under PW.
+* Mostly, no need to use `outdir` variable. However, still can be used.
 * Phonon calculation feature is added to `gg.py`.
 * Phonopy version information can be viewed when used -v argument.
 * Energy consumption measurement with -e argument. This feature only works with Intel CPUs after Sandy Bridge generation. Results are given in kWh!

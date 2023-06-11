@@ -316,7 +316,7 @@ class gg:
                 self.Band_npointsttk.insert('0', config.Band_npoints)
             else:
                 self.Band_npointsttk.delete('0', 'end')
-                self.Band_npointsttk.insert('0', '40')
+                self.Band_npointsttk.insert('0', '61')
                 
             # Number of bands
             if 'Band_num_of_bands' in config.__dict__.keys():
@@ -510,7 +510,7 @@ class gg:
                 self.Phonon_npointsttk.insert('0', config.Phonon_npoints)
             else:
                 self.Phonon_npointsttk.delete('0', 'end')
-                self.Phonon_npointsttk.insert('0', '60')
+                self.Phonon_npointsttk.insert('0', '61')
             
             # Acoustic sum rule for phonon calculation
             if 'Phonon_acoustic_sum_rule' in config.__dict__.keys():
@@ -1288,7 +1288,7 @@ class gg:
         self.label9.pack(side='left')
         self.Band_npointsttk = ttk.Entry(self.frame11)
         self.Band_npointsttk.delete('0', 'end')
-        self.Band_npointsttk.insert('0', '40')
+        self.Band_npointsttk.insert('0', '61')
         self.Band_npointsttk.pack(side='top')
         self.frame11.configure(height='200', width='200')
         self.frame11.pack(side='top')
@@ -1695,7 +1695,7 @@ class gg:
         self.labelPhonon_npoints.pack(side='left')
         self.Phonon_npointsttk = ttk.Entry(self.framePhonon_npoints)
         self.Phonon_npointsttk.delete('0', 'end')
-        self.Phonon_npointsttk.insert('0', '60')
+        self.Phonon_npointsttk.insert('0', '61')
         self.Phonon_npointsttk.pack(side='top')
         self.framePhonon_npoints.configure(height='200', width='200')
         self.framePhonon_npoints.pack(side='top')

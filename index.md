@@ -63,7 +63,7 @@ And for `gpaw-tools` usage, please use the following citation:
 
 * S.B. Lisesivdin, B. Sarikavak-Lisesivdin "[gpaw-tools – higher-level user interaction scripts for GPAW calculations and interatomic potential based structure optimization](https://doi.org/10.1016/j.commatsci.2022.111201)" Comput. Mater. Sci. 204, 111201 (2022).
 
-There are many other packages needed to be cited. With GPAW, you may needed to cite LibXC or cite for LCAO, TDDFT, lineer-response calculations. Please visit their pages for many other citation possibilities. For more you can visit [https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase], [https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw], [https://openkim.org/how-to-cite/].
+There are many other packages needed to be cited. With GPAW, you may needed to cite LibXC or cite for LCAO, TDDFT, lineer-response calculations. Please visit their pages for many other citation possibilities. For more you can visit [https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase](https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase), [https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw](https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw), and [https://openkim.org/how-to-cite/](https://openkim.org/how-to-cite/).
 
 ## Licensing
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).

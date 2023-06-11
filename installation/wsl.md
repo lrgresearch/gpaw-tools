@@ -124,13 +124,19 @@ Use `gpaw info` to see information about installation. However, PAW-datasets are
 
 ## Installation of ASAP and KIM for Quick Optimization
 
-For quick optimization, we need simple interatomic modelling. For this, we need ASAP3 for ASE, then we must install KIM with OpenKIM models and kimpy libraries.
+For quick optimization, we need simple interatomic modelling. For this, we need [ASAP3](https://wiki.fysik.dtu.dk/asap/) for ASE, then we must use [KIM](https://openkim.org/kim-api/) with [OpenKIM](https://openkim.org/) models and [kimpy](https://github.com/openkim/kimpy) libraries.
 
     pip install --upgrade --user ase asap3
     sudo add-apt-repository ppa:openkim/latest
     sudo apt-get update
     sudo apt-get install libkim-api-dev openkim-models libkim-api2 pkg-config
     pip3 install kimpy
+    
+ ## Installation of Phonopy
+ 
+ For the phonon calculations, we need to install [Phonopy](https://phonopy.github.io/phonopy/). BTW, `gpawsolve.py` will not be executed without phonopy installation. Therefore, you must install this.
+ 
+     pip3 install --upgrade --user phonopy
 
 Then you can continue on [installation of gpaw-tools](installationofgpawtools.md).
 

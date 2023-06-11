@@ -17,6 +17,8 @@ There are two scripts that use input files in gpaw-tools. One of them is the mai
 
 [**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [Cut_off_energy](inputfilekeywords.md#cut_off_energy), [Ground_kpts_density](inputfilekeywords.md#ground_kpts_density), [Ground_kpts_x](inputfilekeywords.md#ground_kpts_x), [Ground_kpts_y](inputfilekeywords.md#ground_kpts_y), [Ground_kpts_z](inputfilekeywords.md#ground_kpts_z), [Ground_gpts_density](inputfilekeywords.md#ground_gpts_density), [Ground_gpts_x](inputfilekeywords.md#ground_gpts_x), [Ground_gpts_y](inputfilekeywords.md#ground_gpts_y), [ground_gpts_z](inputfilekeywords.md#ground_gpts_z), [Gamma](inputfilekeywords.md#gamma), [Band_path](inputfilekeywords.md#band_path), [Band_npoints](inputfilekeywords.md#band_npoints), [Setup_params](inputfilekeywords.md#setup_params), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [DOS_convergence](inputfilekeywords.md#dos_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [Refine_grid](inputfilekeywords.md#refine_grid)
 
+[**Phonon Calculations Keywords:**](inputfilekeywords.md#phonon-calculations-keywords) [Phonon_PW_cutoff](inputfilekeywords.md#phonon_pw_cutoff), [Phonon_kpts_x](inputfilekeywords.md#phonon_kpts_x), [Phonon_kpts_y](inputfilekeywords.md#phonon_kpts_y), [Phonon_kpts_z](inputfilekeywords.md#phonon_kpts_z), [Phonon_supercell](inputfilekeywords.md#phonon_supercell), [Phonon_displacement](inputfilekeywords.md#pfhonon_displacement), [Phonon_path](inputfilekeywords.md#phonon_path), [Phonon_npoints](inputfilekeywords.md#phonon_npoints), [Phonon_acoustic_sum_rule](inputfilekeywords.md#phonon_acoustic_sum_rule)
+
 [**GW Calculations Keywords:**](inputfilekeywords.md#gw-calculations-keywords) [GW_calc_type](inputfilekeywords.md#gw_calc_type), [GW_kpoints_list](inputfilekeywords.md#gw_kpoints_list), [GW_truncation](inputfilekeywords.md#gw_truncation), [GW_cut_off_energy](inputfilekeywords.md#gw_cut_off_energy), [GW_valence_band_no](inputfilekeywords.md#gw_valence_band_no), [GW_conduction_band_no](inputfilekeywords.md#gw_conduction_band_no), [GW_PPA](inputfilekeywords.md#GW_PPA), [GW_q0_correction](inputfilekeywords.md#gw_q0_correction), [GW_nblocks_max](inputfilekeywords.md#gw_nblocks_max), [GW_interpolate_band](inputfilekeywords.md#gw_interpolate_band)
 
 [**Optical Calculations Keywords:**](inputfilekeywords.md#optical-calculations-keywords) [Opt_calc_type](inputfilekeywords.md#opt_calc_type), [Opt_shift_en](inputfilekeywords.md#opt_shift_en), [Opt_BSE_valence](inputfilekeywords.md#opt_bse_valence), [Opt_BSE_conduction](inputfilekeywords.md#opt_bse_conduction), [Opt_BSE_min_en](inputfilekeywords.md#opt_bse_min_en), [Opt_BSE_max_en](inputfilekeywords.md#opt_bse_max_en), [Opt_BSE_num_of_data](inputfilekeywords.md#opt_bse_num_of_data), [Opt_num_of_bands](inputfilekeywords.md#opt_num_of_bands), [Opt_FD_smearing](inputfilekeywords.md#opt_fd_smearing), [Opt_eta](inputfilekeywords.md#opt_eta), [Opt_domega0](inputfilekeywords.md#opt_domega0), [Opt_omega2](inputfilekeywords.md#opt_omega2), [Opt_cut_of_energy](inputfilekeywords.md#opt_cut_of_energy), [Opt_nblocks](inputfilekeywords.md#opt_nblocks)
@@ -34,7 +36,6 @@ This keyword controls the running mode of the GPAW. Available options are:
 
 * PW
 * PW-GW
-* EXX
 * LCAO
 * FD
 
@@ -500,10 +501,10 @@ Integer
 This keyword controls the number of points between the first and the last high symmetry points. 
 
 #### Default
-60
+61
 
 #### Example
-Band_npoints = 50
+Band_npoints = 51
 
 ---
 
@@ -536,8 +537,8 @@ This keyword controls the which exchange-correlation functional is used in the c
 * RPBE
 * HSE03 (-)
 * HSE06 (-)
-* B3LYP (can be used only with PW-EXX)
-* PBE0  (can be used only with PW-EXX)
+* B3LYP
+* PBE0
 
 (-): whichstrain keyword must be [False, False, False, False, False, False]
 
@@ -714,6 +715,123 @@ This keyword controls the value of magnetic moment of each atom. Please do not f
 
 #### Example
 Magmom_per_atom = 1.0
+
+## Phonon Calculations Keywords
+### Phonon_PW_cutoff 
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the cut-off energy in phonon calculations. Unit is eV.
+
+#### Default
+400
+
+#### Example
+Phonon_PW_cutoff = 350 #eV
+
+### Phonon_kpts_x
+#### Keyword type
+Integer
+
+##### Description
+This keyword controls the number of k-points in x-direction for the phonon calculations.
+
+#### Default
+3
+
+#### Example
+Phonon_kpts_x = 5
+
+### Phonon_kpts_y
+#### Keyword type
+Integer
+
+##### Description
+This keyword controls the number of k-points in y-direction for the phonon calculations.
+
+#### Default
+3
+
+#### Example
+Phonon_kpts_y = 5
+
+### Phonon_kpts_z
+#### Keyword type
+Integer
+
+##### Description
+This keyword controls the number of k-points in z-direction for the phonon calculations.
+
+#### Default
+3
+
+#### Example
+Phonon_kpts_z = 5
+
+### Phonon_supercell
+#### Keyword type
+NumPy Array
+
+#### Description
+This keyword represents the supercell that will be used in the phonon calculations.
+
+#### Default
+np.diag([2, 2, 2])
+
+#### Example
+Phonon_supercell = np.diag([3, 2, 2]) # 3 units in x direction and 2 units in y and z directions.
+
+### Phonon_displacement
+#### Keyword type
+Float
+
+#### Description 
+The displacements to be introduced to the supercell. Unit is Angstrom.
+
+#### Default
+1e-3
+
+#### Example
+Phonon_displacement = 5e-3 # Angstrom
+
+### Phonon_path
+#### Keyword type
+String
+
+##### Description
+This keyword controls the band path for phonon calculations
+
+#### Default
+LGL
+
+#### Example
+Phonon_path = 'XGLG'
+
+### Phonon_npoints
+#### Keyword type
+Integer
+
+#### Description
+This keyword controls the number of points between high symmetry points for the phonon calculations.
+
+#### Default
+61
+
+#### Example 
+Phonon_npoints = 301
+
+### Phonon_acoustic_sum_rule
+#### Keyword type
+Boolean
+#### Description
+This keyword controls the acoustic sum rule will be applied or not in the phonon calculations.
+
+#### Default
+True
+
+# Example
+Phonon_acoustic_sum_rule = True
 
 ## GW Calculations Keywords
 ### GW_calc_type

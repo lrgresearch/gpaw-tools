@@ -4,6 +4,8 @@ nav_order: 1
 title: Home
 ---
 
+![Image](../assets/images/banner.png)
+
 # Welcome to *gpaw-tools*
 {: .fs-9 }
 

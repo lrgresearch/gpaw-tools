@@ -44,7 +44,7 @@ Band_convergence = {'bands':8}   # Convergence items for band calculations
 Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
 
 DOS_npoints = 501        # Number of points
-DOS_width = 0.1          # Width of Gaussian smearing.  Use 0.0 for linear tetrahedron interpolation
+DOS_width = 0.0          # Width of Gaussian smearing.  Use 0.0 for linear tetrahedron interpolation
 DOS_convergence = {}  # Convergence items for DOS calculations
 
 Spin_calc = False        # Spin polarized calculation?

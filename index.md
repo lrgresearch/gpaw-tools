@@ -13,11 +13,11 @@ title: Home
 
 [Download now](#download){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/lrgresearch/gpaw-tools){: .btn .fs-5 .mb-4 .mb-md-0 }
 
-The `gpaw-tools` package is built on top of the ASE , ASAP3 and GPAW libraries, which are well-established and widely used in the scientific community. It allows users to simulate the properties of materials, optimize structures, investigate chemical reactions and processes, and perform calculations on systems with a large number of atoms. With `gpaw-tools`, researchers, students, and engineers in a wide range of fields, including materials science, chemistry, physics, and engineering, can easily conduct DFT and MD calculations and explore the electronic structure of complex systems. We are constantly working to improve and expand the capabilities of `gpaw-tools`, and we welcome feedback and contributions from the community.
+The `gpaw-tools` package is built on top of the ASE, ASAP3, KIM-API, PHONOPY and GPAW libraries, which are well-established and widely used in the scientific community. It allows users to simulate the properties of materials, optimize structures, investigate chemical reactions and processes, and perform calculations on systems with a large number of atoms. With `gpaw-tools`, researchers, students, and engineers in a wide range of fields, including materials science, chemistry, physics, and engineering, can easily conduct DFT and MD calculations and explore the electronic, optical and phonon structure of material systems. We are constantly working to improve and expand the capabilities of `gpaw-tools`, and we welcome feedback and contributions from the community.
 
 `gpaw-tools` have:
-1. The main solver script `gpawsolver.py` which can be run in PW or LCAO mode. It can perform structure optimization, equation of state and elastic tensor calculations, use several different XCs (as well as hybrid XCs) for spin-polarized DOS and band structure calculations, electron densities and optical properties (RPA and BSE). In addition to calculations, it can draw DOS and band structures, save all data and figure in an ordered way.
-2. A force-field quick optimization script `asapsolve.py` for MD calculations using ASAP3/OpenKIM potentials. 
+1. The main solver script `gpawsolver.py` which can be run in PW or LCAO mode. It can perform structure optimization, equation of state and elastic tensor calculations, use several different XCs (as well as hybrid XCs) for spin-polarized DOS and band structure calculations, electron densities, phonon calculations and optical properties (RPA and BSE). In addition to calculations, it can draw DOS and band structures, save all data and figure in an ordered way.
+2. A force-field quick optimization script `asapsolve.py` for MD calculations using ASAP3 and OpenKIM potentials. 
 3. To choose better cut off energy, lattice parameter and k-points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`,`optimize_kptsdensity.py` and `optimize_latticeparam.py`.
 4. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) which is called `gg.py`.
 
@@ -50,12 +50,15 @@ Please do not forget that, gpaw-tools is a UI/GUI software. For the main DFT cal
 
 * **ASE** : Ask Hjorth Larsen et al. "[The Atomic Simulation Environment—A Python library for working with atoms](https://doi.org/10.1088/1361-648X/aa680e)" J. Phys.: Condens. Matter Vol. 29 273002, 2017.
 * **GPAW**: J. J. Mortensen, L. B. Hansen, and K. W. Jacobsen "[Real-space grid implementation of the projector augmented wave method](https://doi.org/10.1103/PhysRevB.71.035109)" Phys. Rev. B 71, 035109 (2005) and J. Enkovaara, C. Rostgaard, J. J. Mortensen et al. "[Electronic structure calculations with GPAW: a real-space implementation of the projector augmented-wave method](https://doi.org/10.1088/0953-8984/22/25/253202)" J. Phys.: Condens. Matter 22, 253202 (2010) [OTHER POSSIBLE CITATION](https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw)
-* **KIM** : E. B. Tadmor, R. S. Elliott, J. P. Sethna, R. E. Miller and C. A. Becker "The Potential of Atomistic Simulations and the Knowledgebase of Interatomic Models" JOM, 63, 17 (2011). doi:10.1007/s11837-011-0102-6. [OTHER POSSIBLE CITATION](https://openkim.org/how-to-cite/)
+* **KIM** : E. B. Tadmor, R. S. Elliott, J. P. Sethna, R. E. Miller and C. A. Becker "[The Potential of Atomistic Simulations and the Knowledgebase of Interatomic Models](https://doi.org/10.1007/s11837-011-0102-6)" JOM, 63, 17 (2011).
 * **Elastic**: P.T. Jochym, K. Parlinski and M. Sternik "[TiC lattice dynamics from ab initio calculations](https://doi.org/10.1007/s100510050823)", European Physical Journal B; 10, 9 (1999).
+* **Phonopy**: A. Togo "[First-principles Phonon Calculations with Phonopy and Phono3py](https://doi.org/10.7566/JPSJ.92.012001)", Journal of the Physical Society of Japan, 92(1), 012001 (2023).
 
 And for `gpaw-tools` usage, please use the following citation:
 
 * S.B. Lisesivdin, B. Sarikavak-Lisesivdin "[gpaw-tools – higher-level user interaction scripts for GPAW calculations and interatomic potential based structure optimization](https://doi.org/10.1016/j.commatsci.2022.111201)" Comput. Mater. Sci. 204, 111201 (2022).
+
+There may be other citation possibilities for your usage. For more you can visit [https://wiki.fysik.dtu.dk/ase/faq.html], [https://wiki.fysik.dtu.dk/gpaw/faq.html], [https://openkim.org/how-to-cite/].
 
 ## Licensing
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).

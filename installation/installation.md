@@ -13,11 +13,11 @@ This installation notes are based on installations on Linux operating system. He
 Required softwares for successfully running *gpaw-tools* software:
 
 * Linux Operating system (can be independently installed, virtually installed or installed as WSL distro under Windows Operating system)
-* Python 3.6 or above (with PIP and TK packages)
+* Python 3.7 or above (with PIP and TK packages)
 * Atomic Simulation Environment (ASE) (will automatically install to NumPy, SciPy, Matplotlib packages)
 * GPAW
 * BLAS, LibXC, MPI, LibKIM, OpenKIM and ScaLAPACK packages
-* Some other Python packages like Elastic, spglib, kimpy, ASAP3.
+* Some other Python packages like Elastic, spglib, kimpy, ASAP3, Phonopy.
 
 Installation information of these necessary software for different systems: 
 

@@ -42,10 +42,10 @@ Add the following line at the end of your ``~/.bashrc`` file.
 
 After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command). 
 
-IMPORTANT NOTE FOR GPAW 23.6.0: The version 23.6.0 of GPAW has an error when you want to make DOS calculations. There is a line missing in `gpaw/dos.py` file. It is already fixed in development version, however, if you are using PIP to install gpaw, you will have this error. You can add that line with a single command. You must run this command only ONCE.{: .text-red-200 }
+IMPORTANT NOTE FOR GPAW 23.6.0: The version 23.6.0 of GPAW has an error when you want to make DOS calculations. There is a line missing in `gpaw/dos.py` file. It is already fixed in development version, however, if you are using PIP to install gpaw, you will have this error. You can add that line with a single command. You must run this command only ONCE.
+{: .text-red-200 }
 
     sed -i "166i\ \ \ \ \ \ \ \ from gpaw.calculator import GPAW" "$(python -m site --user-site)/gpaw/dos.py"
     
- 
 Congratulations! You installed all necessary files to run *gpaw-tools*. You can continue with our [usage](generalusage.md) page, or continue with the `examples` folder in your `gpaw-tools-main` folder. All examples have README.md files.
 

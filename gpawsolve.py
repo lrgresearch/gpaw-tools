@@ -52,6 +52,7 @@ from phonopy import Phonopy
 from phonopy.structure.atoms import PhonopyAtoms
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 import phonopy
+import pandas as pd
 
 class RawFormatter(HelpFormatter):
     """To print Description variable with argparse"""
@@ -538,7 +539,7 @@ class gpawsolve:
         calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-2-Log-DOS.txt', convergence = DOS_convergence, occupations = Occupation)
         
         chem_sym = bulk_configuration.get_chemical_symbols()
-        #ef = calc.get_fermi_level()
+        ef = calc.get_fermi_level()
 
         if Spin_calc == True:
             #Spin down
@@ -656,17 +657,23 @@ class gpawsolve:
             if world.rank == 0:
                 # DOS
                 if Spin_calc == True:
+                    downf = pd.read_csv(struct+'-2-Result-DOS-Down.csv', header=None)
+                    upf = pd.read_csv(struct+'-2-Result-DOS-Up.csv', header=None)
+                    downf[0]=downf[0]+ef
+                    upf[0]=upf[0]+ef
                     ax = plt.gca()
-                    ax.plot(energies, -1.0*totaldosweightsdown, 'y')
-                    ax.plot(energies, totaldosweightsup, 'b')
+                    ax.plot(downf[0], -1.0*downf[1], 'y')
+                    ax.plot(upf[0], upf[1], 'b')
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
                 else:
+                    dosf = pd.read_csv(struct+'-2-Result-DOS.csv', header=None)
+                    dosf[0]=dosf[0]+ef
                     ax = plt.gca()
-                    ax.plot(energies, totaldosweights, 'b')
+                    ax.plot(dosf[0], dosf[1], 'b')
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
-                plt.xlim(Energy_min, Energy_max)
+                plt.xlim(Energy_min+ef, Energy_max+ef)
                 autoscale_y(ax)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
                 #plt.show()
@@ -675,17 +682,23 @@ class gpawsolve:
             if world.rank == 0:
                 # DOS
                 if Spin_calc == True:
+                    downf = pd.read_csv(struct+'-2-Result-DOS-Down.csv', header=None)
+                    upf = pd.read_csv(struct+'-2-Result-DOS-Up.csv', header=None)
+                    downf[0]=downf[0]+ef
+                    upf[0]=upf[0]+ef
                     ax = plt.gca()
-                    ax.plot(energies, -1.0*totaldosweightsdown, 'y')
-                    ax.plot(energies, totaldosweightsup, 'b')
+                    ax.plot(downf[0], -1.0*downf[1], 'y')
+                    ax.plot(upf[0], upf[1], 'b')
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
                 else:
+                    dosf = pd.read_csv(struct+'-2-Result-DOS.csv', header=None)
+                    dosf[0]=dosf[0]+ef
                     ax = plt.gca()
-                    ax.plot(energies, totaldosweights, 'b')
+                    ax.plot(dosf[0], dosf[1], 'b')
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
-                plt.xlim(Energy_min, Energy_max)
+                plt.xlim(Energy_min+ef, Energy_max+ef)
                 autoscale_y(ax)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
 
@@ -860,7 +873,7 @@ class gpawsolve:
                     plt.savefig(struct+'-3-Graph-Band.png', dpi=300)
                     plt.show()
                 else:
-                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max, emin=Energy_min)
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference)
         else:
             # Draw graphs only on master node
             if world.rank == 0:
@@ -874,7 +887,7 @@ class gpawsolve:
                     plt.savefig(struct+'-3-Graph-Band.png', dpi=300)
                     #plt.show()
                 else:
-                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max, emin=Energy_min)
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference)
 
     def densitycalc(self):
         """

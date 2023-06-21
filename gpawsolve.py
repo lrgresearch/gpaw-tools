@@ -6,7 +6,7 @@ More information: $ gpawsolve.py -h
 '''
 
 Description = f'''
- Usage: 
+ Usage:
  $ mpirun -np <corenumbers> gpawsolve.py <args>
  -------------------------------------------------------------
  Calculation selector
@@ -17,7 +17,7 @@ Description = f'''
  |   PW   | GLLBSC / M      | No               | Yes  | Yes    | Yes     | Yes | No    | Yes  | Yes     | Yes     |
  |   PW   | HSE03, HSE06    | No               | Yes  | Yes    | n/a     | Yes | No    | No   | No      | No      |
  | PW-G0W0| Local and LibXC | No               | No   | Yes    | No      | No  | No    | Some | No      | No      |
- |  LCAO  | Local and LibXC | No              | Yes  | Yes    | Yes     | Yes | Yes   | Yes  | Yes     | No      |
+ |  LCAO  | Local and LibXC | No               | Yes  | Yes    | Yes     | Yes | Yes   | Yes  | Yes     | No      |
  *: Just some ground state energy calculations.
 '''
 
@@ -66,7 +66,7 @@ def struct_from_file(inputfile, geometryfile):
     inputf = __import__(Path(inputfile).stem, globals(), locals(), ['*'])
     for k in dir(inputf):
         # Still can not get rid of global variable usage :(
-        globals()[k] = getattr(inputf, k)            
+        globals()[k] = getattr(inputf, k)
     # If there is a CIF input, use it. Otherwise use the bulk configuration provided above.
     if geometryfile is None:
         if Outdirname !='':
@@ -127,7 +127,7 @@ class gpawsolve:
     accordingly.
     """
     def __init__(self, struct):
-        global np   
+        global np
         self.Mode = Mode
         self.Geo_optim = Geo_optim
         self.Elastic_calc = Elastic_calc
@@ -215,7 +215,7 @@ class gpawsolve:
         # -------------------------------------------------------------
         # Step 0 - STRUCTURE
         # -------------------------------------------------------------
-        
+
         with paropen(struct+'-0-Result-Spacegroup-and-SpecialPoints.txt', "w") as fd:
             print("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()), file=fd)
             print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
@@ -228,11 +228,11 @@ class gpawsolve:
         spin calculations, and geometry optimizations. The results are saved in appropriate files,
         including the final configuration as a CIF file and the ground state results in a GPW file.
         """
-        
+
         # -------------------------------------------------------------
         # Step 1 - GROUND STATE
         # -------------------------------------------------------------
-        
+
         # Start ground state timing
         time11 = time.time()
         if Mode == 'PW':
@@ -459,7 +459,7 @@ class gpawsolve:
             quit()
         # Finish ground state timing
         time12 = time.time()
-        
+
         # Write timings of calculation
         with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('Ground state: ', round((time12-time11),2), end="\n", file=f1)
@@ -475,7 +475,7 @@ class gpawsolve:
         # -------------------------------------------------------------
         # Step 1.5 - ELASTIC CALCULATION
         # -------------------------------------------------------------
-        
+
         # Start elastic calc
         time151 = time.time()
         parprint('Starting elastic tensor calculations (\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
@@ -520,8 +520,7 @@ class gpawsolve:
                 # Elastic
                 eos.plot(struct+'-1.5-Result-Elastic-EOS.png')
 
-        
-    def doscalc(self, drawfigs = False):     
+    def doscalc(self, drawfigs = False):
         """
         This method performs density of states (DOS) calculations for the given structure using
         the ground state results. It computes the DOS for various energy levels and saves the
@@ -531,13 +530,13 @@ class gpawsolve:
         # -------------------------------------------------------------
         # Step 2 - DOS CALCULATION
         # -------------------------------------------------------------
-        
+
         # Start DOS calc
         time21 = time.time()
         parprint("Starting DOS calculation...")
-        
+
         calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-2-Log-DOS.txt', convergence = DOS_convergence, occupations = Occupation)
-        
+
         chem_sym = bulk_configuration.get_chemical_symbols()
         ef = calc.get_fermi_level()
 
@@ -549,7 +548,7 @@ class gpawsolve:
             rawdos = DOSCalculator.from_calculator(filename=struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=True)
             energies = rawdos.get_energies(npoints=DOS_npoints)
             totaldosweightsdown = [0.0] * DOS_npoints
-            
+
             # Writing RawPDOS
             with paropen(struct+'-2-Result-RawPDOS-Down.csv', "w") as fd:
                 print("Energy, s-total, p-total, px, py, pz, d-total, dxy, dyz, d3z2_r2, dzx, dx2_y2, f-total, TOTAL", file=fd)
@@ -571,7 +570,7 @@ class gpawsolve:
                     totaldosweightsdown = totaldosweightsdown + dosspdf
                     for x in zip(energies, pdoss, pdosp, pdospx, pdospy, pdospz, pdosd, pdosdxy, pdosdyz, pdosd3z2_r2, pdosdzx, pdosdx2_y2, pdosf, dosspdf):
                         print(*x, sep=", ", file=fd)
-            
+
             # Writing DOS
             with paropen(struct+'-2-Result-DOS-Down.csv', "w") as fd:
                 for x in zip(energies, totaldosweightsdown):
@@ -583,7 +582,7 @@ class gpawsolve:
             rawdos = DOSCalculator.from_calculator(struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=True)
             energies = rawdos.get_energies(npoints=DOS_npoints)
             totaldosweightsup = [0.0] * DOS_npoints
-            
+
             #Writing RawPDOS
             with paropen(struct+'-2-Result-RawPDOS-Up.csv', "w") as fd:
                 print("Energy, s-total, p-total, px, py, pz, d-total, dxy, dyz, d3z2_r2, dzx, dx2_y2, f-total, TOTAL", file=fd)
@@ -605,7 +604,7 @@ class gpawsolve:
                     totaldosweightsup = totaldosweightsup + dosspdf
                     for x in zip(energies, pdoss, pdosp, pdospx, pdospy, pdospz, pdosd, pdosdxy, pdosdyz, pdosd3z2_r2, pdosdzx, pdosdx2_y2, pdosf, dosspdf):
                         print(*x, sep=", ", file=fd)
-                        
+
             # Writing DOS
             with paropen(struct+'-2-Result-DOS-Up.csv', "w") as fd:
                 for x in zip(energies, totaldosweightsup):
@@ -613,12 +612,12 @@ class gpawsolve:
 
         else:
 
-            # RAW PDOS  
+            # RAW PDOS
             parprint("Calculating and saving Raw PDOS...")
             rawdos = DOSCalculator.from_calculator(struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=True)
             energies = rawdos.get_energies(npoints=DOS_npoints)
             totaldosweights = [0.0] * DOS_npoints
-            
+
             # Writing RawPDOS
             with paropen(struct+'-2-Result-RawPDOS.csv', "w") as fd:
                 print("Energy, s-total, p-total, px, py, pz, d-total, dxy, dyz, d3z2_r2, dzx, dx2_y2, f-total, TOTAL", file=fd)
@@ -743,7 +742,7 @@ class gpawsolve:
                         txt=struct+'-3-Log-Band.txt',
                         symmetry='off', occupations = Occupation,
                         kpts={'path': Band_path, 'npoints': Band_npoints}, convergence=Band_convergence)
-                
+
             else:
                 calc = GPAW(struct+'-1-Result-Ground.gpw',
                         txt=struct+'-3-Log-Band.txt',
@@ -778,7 +777,7 @@ class gpawsolve:
                         for k2 in range(Band_npoints):
                             print(k2, eps_skn[1, k2, n2], end="\n", file=f2)
                         print (end="\n", file=f2)
-                
+
                 # Thanks to Andrej Kesely (https://stackoverflow.com/users/10035985/andrej-kesely) for helping the problem of general XYYY writer
                 currentd, all_groupsd = [], []
                 with open(struct+'-3-Result-Band-Down.dat', 'r') as f_in1:
@@ -800,7 +799,7 @@ class gpawsolve:
                     print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted spin down Band file. Mostly, the file is created without any problem.")
                     print(e)
                     pass  # Continue execution after encountering an exception
-                
+
                 currentu, all_groupsu = [], []
                 with open(struct+'-3-Result-Band-Up.dat', 'r') as f_in2:
                     for line in map(str.strip, f_in2):
@@ -830,7 +829,6 @@ class gpawsolve:
                         for k in range(Band_npoints):
                             print(k, eps_skn[0, k, n], end="\n", file=f)
                         print (end="\n", file=f)
-                        
 
                 # Thanks to Andrej Kesely (https://stackoverflow.com/users/10035985/andrej-kesely) for helping the problem of general XYYY writer
                 current, all_groups = [], []
@@ -852,7 +850,7 @@ class gpawsolve:
                     print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted Band file. Mostly, the file is created without any problem.")
                     print(e)
                     pass  # Continue execution after encountering an exception
-    
+
         # Finish Band calc
         time32 = time.time()
         # Write timings of calculation
@@ -899,7 +897,7 @@ class gpawsolve:
         # -------------------------------------------------------------
         # Step 4 - ALL-ELECTRON DENSITY
         # -------------------------------------------------------------
-        
+
         #Start Density calc
         time41 = time.time()
         parprint("Starting All-electron density calculation...")
@@ -907,7 +905,7 @@ class gpawsolve:
         bulk_configuration.calc = calc
         np = calc.get_pseudo_density()
         n = calc.get_all_electron_density(gridrefinement=Refine_grid)
-        
+
         # Writing pseudo and all electron densities to cube file with Bohr unit
         write(struct+'-4-Result-All-electron_nall.cube', bulk_configuration, data=n * Bohr**3)
         write(struct+'-4-Result-All-electron_npseudo.cube', bulk_configuration, data=np * Bohr**3)
@@ -926,13 +924,13 @@ class gpawsolve:
         # -------------------------------------------------------------
         # Step 5 - PHONON CALCULATION
         # -------------------------------------------------------------
-        
+
         time51 = time.time()
         parprint("Starting phonon calculation.(\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)")
-        
+
         calc = GPAW(struct+'-1-Result-Ground.gpw')
         bulk_configuration.calc = calc
-    
+
         # Pre-process
         bulk_configuration_ph = convert_atoms_to_phonopy(bulk_configuration)
         phonon = Phonopy(bulk_configuration_ph, Phonon_supercell, log_level=1)
@@ -946,9 +944,9 @@ class gpawsolve:
         # FIX THIS PART
         calc = GPAW(mode=PW(Phonon_PW_cutoff),
                kpts={'size': (Phonon_kpts_x, Phonon_kpts_y, Phonon_kpts_z)}, txt=struct+'-5-Log-Phonon-GPAW.txt')
-        
+
         bulk_configuration.calc = calc
-        
+
         path = get_band_path(bulk_configuration, Phonon_path, Phonon_npoints)
 
         phonon_path = struct+'5-Results-force-constants.npy'
@@ -998,7 +996,7 @@ class gpawsolve:
 
         # without DOS
         # fig = phonon.plot_band_structure()
-        
+
         # with DOS
         phonon.run_mesh([20, 20, 20])
         phonon.run_total_dos()
@@ -1014,8 +1012,7 @@ class gpawsolve:
         # Write timings of calculation
         with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
             print('Phonon calculation: ', round((time52-time51),2), end="\n", file=f1)
-            
-    
+
     def opticalcalc(self):
         """
         This method performs optical property calculations for the given structure using the
@@ -1027,7 +1024,7 @@ class gpawsolve:
         # -------------------------------------------------------------
         # Step 6 - OPTICAL CALCULATION
         # -------------------------------------------------------------
-        
+
         #Start Optical calc
         time61 = time.time()
         if Mode == 'PW':
@@ -1043,7 +1040,7 @@ class gpawsolve:
                 # output error, and return with an error code
                 parprint('\033[91mERROR:\033[0mOptical computations must be done separately. Please do ground calculations first.')
                 quit()
-        
+
             calc.get_potential_energy()
 
             calc.diagonalize_full_hamiltonian(nbands=Opt_num_of_bands)  # diagonalize Hamiltonian
@@ -1064,7 +1061,7 @@ class gpawsolve:
                              write_v=True,
                              integrate_gamma=0,
                              txt=struct+'-6-Log-Optical-BSE.txt')
-                
+
                 # Getting dielectric function spectrum
                 parprint("Starting dielectric function calculation...")
                 # Writing to files
@@ -1080,7 +1077,7 @@ class gpawsolve:
                                             w_w=np.linspace(Opt_BSE_min_en, Opt_BSE_max_en, Opt_BSE_num_of_data),
                                             filename=struct+'-6-Result-Optical-BSE_dielec_zdirection.csv',
                                             write_eig=struct+'-6-Result-Optical-BSE_eig_zdirection.dat')
-                                            
+
                 # Loading dielectric function spectrum to numpy
                 dielec_x = genfromtxt(struct+'-6-Result-Optical-BSE_dielec_xdirection.csv', delimiter=',')
                 dielec_y = genfromtxt(struct+'-6-Result-Optical-BSE_dielec_ydirection.csv', delimiter=',')
@@ -1279,7 +1276,7 @@ class gpawsolve:
                     for n in range(dielec_z.shape[0]):
                         print(dielec_z[n][0], dielec_z[n][3], dielec_z[n][4], opt_n_lfc_z[n], opt_k_lfc_z[n], opt_abs_lfc_z[n], opt_ref_lfc_z[n], end="\n", file=f1)
                     print (end="\n", file=f1)
-                
+
             else:
                 parprint('\033[91mERROR:\033[0mUnknown optical calculation type.')
                 quit()
@@ -1449,7 +1446,7 @@ if __name__ == "__main__":
     Phonon_path = 'LGL'	    # Brillouin zone high symmetry points
     Phonon_npoints = 61		# Number of points between high symmetry points
     Phonon_acoustic_sum_rule = True
-    
+
     # GW CALCULATION ----------------------
     GW_calc_type = 'GW0'          # GW0 or G0W0
     GW_kpoints_list = np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]]) #Kpoints list
@@ -1537,7 +1534,7 @@ if __name__ == "__main__":
     drawfigs = False
     configpath = None
     Outdirname = ''
-    
+
     try:
         if args.inputfile is not None:
             configpath = os.path.join(os.getcwd(),args.inputfile)
@@ -1549,7 +1546,7 @@ if __name__ == "__main__":
 
         if args.drawfigs == True:
             drawfigs = True
-            
+
         if args.energymeas == True:
             try:
                 import pyRAPL
@@ -1590,8 +1587,8 @@ if __name__ == "__main__":
         if args.restart == True:
             parprint('ATTENTION: -r, --restart argument is depreceted. It was just passing the ground calculations not restarting anything.')
             parprint('New argument for passing the ground state calculations is -p or -passground.')
-            quit()   
-        
+            quit()
+
         if args.passground == True:
             passground = True
 
@@ -1601,7 +1598,7 @@ if __name__ == "__main__":
 
     # Start time
     time0 = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
-    
+
     # Load struct
     struct = struct_from_file(inputfile = configpath, geometryfile = inFile)
 
@@ -1609,40 +1606,40 @@ if __name__ == "__main__":
     with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
         print("gpawsolve.py execution timings (seconds):", end="\n", file=f1)
         print("Execution started:", time0, end="\n", file=f1)
-    
+
     # Load gpawsolve() class
     gpawsolver = gpawsolve(struct)
-    
+
     # Run structure calculation
     gpawsolver.structurecalc()
-    
+
     if Optical_calc == False:
         # Run ground state calculation
         gpawsolver.groundcalc()
-        
+
         if Elastic_calc == True:
             # Run elastic calculation
             gpawsolver.elasticcalc(drawfigs = drawfigs)
-            
+
         if DOS_calc == True:
             # Run DOS calculation
             gpawsolver.doscalc(drawfigs = drawfigs)
-            
+
         if Band_calc == True:
             # Run band calculation
             gpawsolver.bandcalc(drawfigs = drawfigs)
-            
+
         if Density_calc == True:
             # Run all-electron density calculation
             gpawsolver.densitycalc()    
-            
+
         if Phonon_calc == True:
             # Run phonon calculation
             gpawsolver.phononcalc()  
     else:
         # Run optical calculation
         gpawsolver.opticalcalc()
-    
+
     # Ending of timings
     with paropen(struct+'-7-Result-Log-Timings.txt', 'a') as f1:
         print("---------------------------------------", end="\n", file=f1)

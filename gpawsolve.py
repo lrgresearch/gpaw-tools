@@ -89,7 +89,34 @@ def struct_from_file(inputfile, geometryfile):
         os.makedirs(structpath, exist_ok=True)
     struct = os.path.join(structpath,struct)
     return struct
-    
+
+def autoscale_y(ax,margin=0.1):
+    """This function rescales the y-axis based on the data that is visible given the current xlim of the axis.
+    ax -- a matplotlib axes object
+    margin -- the fraction of the total height of the y-data to pad the upper and lower ylims"""
+
+    import numpy as np
+
+    def get_bottom_top(line):
+        xd = line.get_xdata()
+        yd = line.get_ydata()
+        lo,hi = ax.get_xlim()
+        y_displayed = yd[((xd>lo) & (xd<hi))]
+        h = np.max(y_displayed) - np.min(y_displayed)
+        bot = np.min(y_displayed)-margin*h
+        top = np.max(y_displayed)+margin*h
+        return bot,top
+
+    lines = ax.get_lines()
+    bot,top = np.inf, -np.inf
+
+    for line in lines:
+        new_bot, new_top = get_bottom_top(line)
+        if new_bot < bot: bot = new_bot
+        if new_top > top: top = new_top
+
+    ax.set_ylim(bot,top)
+
 class gpawsolve:
     """
     The gpawsolve class is a high-level interaction script for GPAW calculations.
@@ -640,6 +667,7 @@ class gpawsolve:
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
                 plt.xlim(Energy_min, Energy_max)
+                autoscale_y(ax)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
                 #plt.show()
         else:
@@ -658,6 +686,7 @@ class gpawsolve:
                     ax.set_xlabel('Energy [eV]')
                     ax.set_ylabel('DOS [1/eV]')
                 plt.xlim(Energy_min, Energy_max)
+                autoscale_y(ax)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
 
     def bandcalc(self, drawfigs = False):

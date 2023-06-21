@@ -992,7 +992,7 @@ class gpawsolve:
             try:
                 calc = GPAW(struct+'-1-Result-Ground.gpw',
                         txt=struct+'-6-Log-Optical.txt',
-                        nbands=Opt_num_of_bands,
+                        nbands=Opt_num_of_bands,parallel={'domain': 1, 'kpt':1 },
                         fixdensity=True,
                         symmetry='off',
                         occupations=FermiDirac(Opt_FD_smearing))

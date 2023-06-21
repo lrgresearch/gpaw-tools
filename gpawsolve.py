@@ -1365,11 +1365,11 @@ if __name__ == "__main__":
 
     # GROUND ----------------------
     Cut_off_energy = 340 	# eV
-    #Ground_kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, Ground_kpts_x,y,z will not be used automatically.
+    Ground_kpts_density = None     # pts per Å^-1  If the user prefers to use this, Ground_kpts_x,y,z will not be used automatically.
     Ground_kpts_x = 5 	# kpoints in x direction
     Ground_kpts_y = 5	# kpoints in y direction
     Ground_kpts_z = 5	# kpoints in z direction
-    #Ground_gpts_density = 0.2     # (for LCAO) Unit is Å. If the user prefers to use this, Ground_gpts_x,y,z will not be used automatically.
+    Ground_gpts_density = None     # (for LCAO) Unit is Å. If the user prefers to use this, Ground_gpts_x,y,z will not be used automatically.
     Ground_gpts_x = 8              # grid points in x direction (for LCAO)
     Ground_gpts_y = 8              # grid points in y direction (for LCAO)
     Ground_gpts_z = 8              # grid points in z direction (for LCAO)
@@ -1414,7 +1414,7 @@ if __name__ == "__main__":
     GW_truncation = 'None'     # Can be None, '2D', '1D', '0D' or 'wigner-seitz'
     GW_cut_off_energy = 50   # Cut-off energy
     GW_valence_band_no = 8            # Valence band number
-    GW_conudction_band_no = 18           # Conduction band number
+    GW_conduction_band_no = 18           # Conduction band number
     GW_PPA = True            # Plasmon Pole Approximation
     GW_q0_correction = True   # Analytic correction to the q=0 contribution applicable to 2D systems.
     GW_nblocks_max = True         # Cuts chi0 into as many blocks to reduce mem. req. as much as possible.

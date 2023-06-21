@@ -24,7 +24,7 @@ Relax_cell=[False, False, False, False, False, False]
 
 # ELECTRONIC
 Cut_off_energy = 340 	# eV
-Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
+Ground_kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 Ground_kpts_x = 3			    # kpoints in x direction
 Ground_kpts_y = 3				# kpoints in y direction
 Ground_kpts_z = 3				# kpoints in z direction

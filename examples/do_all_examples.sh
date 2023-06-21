@@ -6,9 +6,9 @@ SCRIPT=`realpath $0`
 SCRIPTPATH=`dirname $SCRIPT`
 # Examples
 # Bulk-Al-noCIF -------------------
-echo "Adding: Bulk-Al-noCIF"
-cd ./Bulk-Al-noCIF
-tsp mpirun -np $CORENUMBER gpawsolve.py -i bulk_aluminum.py
+echo "Adding: Bulk-GaAs-noCIF"
+cd ./Bulk-GaAs-noCIF
+tsp mpirun -np $CORENUMBER gpawsolve.py -i bulk_gaas.py
 
 # Cr2O-spin -------------------
 echo "Adding: Cr2O-spin"

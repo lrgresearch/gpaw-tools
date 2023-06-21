@@ -6,7 +6,7 @@ There are some example calculations given with different usage scenarios. Please
 
 | Name              | Notes  | 
 | ----------------- | ------ |
-| Bulk-Al-noCIF     | Ground, DOS and Band calculations of bulk Aluminum with PW. Positions are given with Atom object.          |
+| Bulk-GaAs-noCIF   | Ground, DOS and Band calculations of bulk GaAs with PW. Positions are given with Atom object.          |
 | Cr2O-spin         |Spin-dependent electronic properties of CrO2 |
 | Graphene-LCAO     | Pristine graphene and graphene with defect with LCAO. Uses single config for two calculations. |
 | MoS2-GW           | GW Approximation calculation for MoS2 |

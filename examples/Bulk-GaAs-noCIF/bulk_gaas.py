@@ -1,12 +1,17 @@
-from ase import Atoms
+from ase import Atoms,Atom
 
-Outdirname = 'bulk-aluminum-results'
+Outdirname = 'bulk-gaas-results'
 
-bulk_configuration = Atoms('Al',
-                            cell=[[0, 2.025, 2.025],
-                                 [2.025, 0, 2.025],
-                                 [2.025, 2.025, 0]],
-                                 pbc=True)
+bulk_configuration = Atoms(
+    [
+    Atom('Ga', ( 0.0, 0.0, 0.0 )),
+    Atom('As', ( 2.033, 1.174, 0.830 ))
+    ],
+    cell=[(4.066, 0.0, 0.0),
+          (2.033, 3.521, 0.0),
+          (2.033, 1.174, 3.320)],
+    pbc=True,
+    )
 
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
@@ -27,14 +32,14 @@ Max_F_tolerance = 0.05 	 # Maximum force tolerance in LBFGS geometry optimizatio
 Max_step = 0.2    # How far is a single atom allowed to move. Default is 0.2 Ang.
 Alpha = 70.0      # LBFGS only: Initial guess for the Hessian (curvature of energy surface)
 Damping = 1.0     # LBFGS only: The calculated step is multiplied with this number before added to the positions
-Fix_symmetry = False    # True for preserving the spacegroup symmetry during optimisation
+Fix_symmetry = True    # True for preserving the spacegroup symmetry during optimisation
 # Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
 Relax_cell=[True, True, True, False, False, False]
 
 # ELECTRONIC
-Cut_off_energy = 600 	# eV
-Ground_kpts_dens = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
+Cut_off_energy = 300 	# eV
+Ground_kpts_density = 2.5     # pts per Å^-1  If the user prefers to use this, kpts_x,y,z will not be used automatically.
 Ground_kpts_x = 5 	        # kpoints in x direction
 Ground_kpts_y = 5	 	# kpoints in y direction
 Ground_kpts_z = 5		# kpoints in z direction
@@ -46,7 +51,7 @@ Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
 XC_calc = 'LDA'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0, EXX, B3LYP
 
 Ground_convergence = {}   # Convergence items for ground state calculations
-Band_convergence = {'bands':8}   # Convergence items for band calculations
+Band_convergence = {'bands':8,}   # Convergence items for band calculations
 Occupation = {'name': 'fermi-dirac', 'width': 0.05}  # Refer to GPAW docs: https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#occupation-numbers
 
 DOS_npoints = 501        # Number of points

@@ -115,10 +115,11 @@ class gpawsolve:
         self.Fix_symmetry = Fix_symmetry
         self.Relax_cell = Relax_cell
         self.Cut_off_energy = Cut_off_energy
+        self.Ground_kpts_density = Ground_kpts_density
         self.Ground_kpts_x = Ground_kpts_x
         self.Ground_kpts_y = Ground_kpts_y
         self.Ground_kpts_z = Ground_kpts_z
-        self.Ground_gpts_dens = Ground_gpts_dens
+        self.Ground_gpts_density = Ground_gpts_density
         self.Ground_gpts_x = Ground_gpts_x
         self.Ground_gpts_y = Ground_gpts_y
         self.Ground_gpts_z = Ground_gpts_z
@@ -153,7 +154,7 @@ class gpawsolve:
         self.GW_truncation = GW_truncation
         self.GW_cut_off_energy = GW_cut_off_energy
         self.GW_valence_band_no = GW_valence_band_no
-        self.GW_conudction_band_no = GW_conudction_band_no
+        self.GW_conduction_band_no = GW_conduction_band_no
         self.GW_PPA = GW_PPA
         self.GW_q0_correction = GW_q0_correction
         self.GW_nblocks_max = GW_nblocks_max
@@ -361,14 +362,14 @@ class gpawsolve:
                 # Fix the spacegroup in the geometric optimization if wanted
                 if Fix_symmetry == True:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-                if 'Ground_gpts_dens' in globals():
+                if 'Ground_gpts_density' in globals():
                     if 'Ground_kpts_density' in globals():
                         calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                                convergence = Ground_convergence, h=Ground_gpts_dens, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                                convergence = Ground_convergence, h=Ground_gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                                 mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
                     else:
                         calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                                convergence = Ground_convergence, h=Ground_gpts_dens, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
+                                convergence = Ground_convergence, h=Ground_gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                                 mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
                 else:
                     if 'Ground_kpts_density' in globals():

@@ -25,9 +25,9 @@ class gg:
 
     def __init__(self, master=None):
         global Geo_optim, Elastic_calcvar, DOS_calcvar, Band_calcvar, Density_calcvar, Optical_calcvar, Spin_calcvar
-        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, restartvar, Gammavar, Fix_symmetryvar
+        global EpsXvar, EpsYvar, EpsZvar, ShearYZvar, ShearXZvar, ShearXYvar, Gammavar, Fix_symmetryvar
         global GW_PPAvar, GW_q0_correctionvar, GW_nblocks_maxvar, Struct, StructLoaded, GW_interpolate_bandvar
-        global Phonon_calcvar, Phonon_acoustic_sum_rulevar
+        global Ground_calcvar, Phonon_calcvar, Phonon_acoustic_sum_rulevar
         
         url = 'https://www.lrgresearch.org/gpaw-tools/'
         
@@ -94,6 +94,15 @@ class gg:
                     self.Modettk.current(0)
             else:
                 self.Modettk.current(0)
+
+            # Ground state calculation
+            if 'Ground_calc' in config.__dict__.keys():
+                if config.Ground_calc == True:
+                    Ground_calcvar.set(True)
+                else:
+                    Ground_calcvar.set(False)
+            else:
+                Ground_calcvar.set(False)
 
             # Geometric Optimization   
             if 'Geo_optim' in config.__dict__.keys():
@@ -793,6 +802,8 @@ class gg:
                     print("Mode = 'FD'", end="\n", file=f1)
                 else:
                     print("Mode = 'PW'", end="\n", file=f1)
+                # Ground_calc
+                print("Ground_calc = "+ str(Ground_calcvar.get()), end="\n", file=f1)
                 # Geo_optim
                 print("Geo_optim = "+ str(Geo_optimvar.get()), end="\n", file=f1)
                 # Elastic_calc
@@ -985,10 +996,7 @@ class gg:
                 print("Energy_min = "+ str(self.Energy_minttk.get()), end="\n", file=f1)
 
             # Running the gpawsolve.py. Firstly, let's define a command, then proceed it.
-            if restartvar == True:
-                gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -p -d -i '+str(configname)+' -g '+str(textfilenamepath)
-            else:
-                gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -d -i '+str(configname)+' -g '+str(textfilenamepath)
+            gpawcommand = 'mpirun -np '+str(self.MPI_coresttk.get())+' gpawsolve.py -d -i '+str(configname)+' -g '+str(textfilenamepath)
             proc = subprocess.Popen(split(gpawcommand), shell=False, stdout = subprocess.PIPE)
             self.text1.insert(tk.END, "Command executed: "+gpawcommand+" \n")
 
@@ -1072,6 +1080,12 @@ class gg:
         self.frame6.configure(height='200', width='200')
         self.frame6.pack(side='top')
         
+        # Ground_calc
+        self.Ground_calcttk = ttk.Checkbutton(self.labelframe1)
+        Ground_calcvar = BooleanVar()
+        self.Ground_calcttk.configure(state='normal', variable = Ground_calcvar, onvalue=True, offvalue=False, takefocus=False, text='Ground State Calculation')
+        self.Ground_calcttk.pack(side='top')
+        
         # Geo_optim
         self.Geo_optimttk = ttk.Checkbutton(self.labelframe1)
         Geo_optimvar = BooleanVar()
@@ -1102,7 +1116,7 @@ class gg:
         self.Density_calcttk.configure(variable = Density_calcvar, onvalue=True, offvalue=False,text='All-Electron Density Calculation')
         self.Density_calcttk.pack(side='top')
         
-        # Density_calc
+        # Phonon_calc
         self.Phonon_calcttk = ttk.Checkbutton(self.labelframe1)
         Phonon_calcvar = BooleanVar()
         self.Phonon_calcttk.configure(variable = Phonon_calcvar, onvalue=True, offvalue=False,text='Phonon Calculation')
@@ -1855,13 +1869,7 @@ class gg:
         
         # labelframe5: Other Parameters ---------------------------
         self.labelframe5 = ttk.Labelframe(self.frame13)
-
-        # Restart calculation
-        self.restartttk = ttk.Checkbutton(self.labelframe5)
-        restartvar = BooleanVar()
-        self.restartttk.configure(variable = restartvar, onvalue=True, offvalue=False, text='Restart calculation from file')
-        self.restartttk.pack(side='top')
-        
+     
         self.labelframe5.configure(height='200', text='General options', width='200')
         self.labelframe5.pack(side='top')
         self.frame13.configure(height='200', width='200')

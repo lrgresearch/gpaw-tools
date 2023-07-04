@@ -8,34 +8,34 @@ parent: installation
 # Installation on WSL
 
 ## Installation on a Windows 10 system (with WSL1)
-This installation note is explaining how to install WSL1 and other required tools to study gpaw-tools on a Windows 10 system. WSLg is coming on default at Windows 11 and installation note for Windows 11 is explaining similar things but using WSLg. If you are using Windows 11, please continue from here.
+This installation note is explaining how to install WSL1 and other required tools to study gpaw-tools on a Windows 10 system. WSLg is coming on default at Windows 11 and the installation note for Windows 11 is explaining similar things but using WSLg. If you are using Windows 11, please continue from here.
 We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
 
 ### WSL Version Control
-[After activating the WSL](https://www.windowscentral.com/install-windows-subsystem-linux-windows-10), and installing an Ubuntu system for Microsoft Store application, we need to control the WSL version of Linux distribution installed in your system. Open Powershell and type:
+[After activating the WSL](https://www.windowscentral.com/install-windows-subsystem-linux-windows-10), and installing an Ubuntu system for the Microsoft Store application, we need to control the WSL version of Linux distribution installed in your system. Open Powershell and type:
 
     wsl --list --verbose 
 
-Result will be something like:
+The result will be something like:
 
     NAME            STATE           VERSION
     Ubuntu-20.04    Running         1
 
-Your WSL distribution version must be "1", not "2". If it is not, change the WSL distribution version with command:
+Your WSL distribution version must be "1", not "2". If it is not, change the WSL distribution version with the command:
 
     wsl --set-version Ubuntu-20.04 1
 
-### Update, upgrade and XWindows
+### Update, upgrade, and XWindows
 Open Ubuntu, finish the installation of it, then update your Linux system with:
 
     sudo apt update
     sudo apt upgrade
     
-To use a X server on windows, firstly you need to install few files (not necessary if you do not use matplotlib features.)
+To use an X server on Windows, firstly you need to install a few files (not necessary if you do not use matplotlib features.)
 
     sudo apt install libglu1-mesa-dev freeglut3 freeglut3-dev mesa-common-dev
 
-You also need to install [XMing](https://sourceforge.net/projects/xming/) on Windows. In new WSL installations, the following line must be added to `~/.bashrc` file. You can use nano editor to do this:
+You also need to install [XMing](https://sourceforge.net/projects/xming/) on Windows. In new WSL installations, the following line must be added to `~/.bashrc` file. You can use the nano editor to do this:
 
     nano ~/.bashrc
 
@@ -44,10 +44,10 @@ and add these lines at the end of the file
     export LIBGL_ALWAYS_INDIRECT=0
     export DISPLAY=localhost:0.0
 
-After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command).
+After editing the ~/.bashrc file quit the current shell session and start a new one (or you can use the `source ~/.bashrc` command).
 
 ## Installation on a Windows 11 system (with WSL2 and WSLg)
-This installation note is explaining how to install WSLg and other required tools to study gpaw-tools on a Windows 11 system. WSL2 is coming on default at Windows 11. With WSLg you will not need to install xming to your windows system and Ubuntu packages libglu1-mesa-dev freeglut3 freeglut3-dev mesa-common-dev to your system.
+This installation note is explaining how to install WSLg and other required tools to study gpaw-tools on a Windows 11 system. WSL2 is coming on default at Windows 11. With WSLg you will not need to install XMing to your Windows system and Ubuntu packages libglu1-mesa-dev freeglut3 freeglut3-dev mesa-common-dev to your system.
 We are suggesting Ubuntu 20.04 LTS version for *gpaw-tools* studies.
 
 Open Ubuntu, finish the installation of it, then update your Linux system with:
@@ -58,22 +58,22 @@ Open Ubuntu, finish the installation of it, then update your Linux system with:
 You do not need to install X server on your Windows to use with WSLg. 
 
 ### WSL2 memory problem
-By default the WSL2 will consume up to 50% of the total system memory upto 8GB at max. However, it is possible to configure an upper limit for the memory and swap usage. Firstly, you must create a .wslconfig file in your Windows related home directory (C:\Users\<user>). And for 14GB RAM and 32 GB Swap, add following information to that file:
+By default, the WSL2 will consume up to 50% of the total system memory up to 8GB at max. However, it is possible to configure an upper limit for the memory and swap usage. Firstly, you must create a .wslconfig file in your Windows-related home directory (C:\Users\<user>). And for 14GB RAM and 32 GB Swap, add the following information to that file:
 
     [wsl2]
     memory=14GB
     swap=32GB
 
-Then, open powershell or terminal and run:
+Then, open Powershell or terminal and run:
 
     wsl --shutdown
 
-Then, you can continue with new RAM-Swap settings.
+Then, you can continue with the new RAM-Swap settings.
     
 ## Installation of ASE and GPAW
-After preparing your Linux system, you must have `ase` and `gpaw` codes on your computer. You can find more information about installation of [ASE](https://wiki.fysik.dtu.dk/ase/install.html) and [GPAW](https://wiki.fysik.dtu.dk/gpaw/install.html) from their related sites.
+After preparing your Linux system, you must have `ase` and `gpaw` codes on your computer. You can find more information about the installation of [ASE](https://wiki.fysik.dtu.dk/ase/install.html) and [GPAW](https://wiki.fysik.dtu.dk/gpaw/install.html) from their related sites.
 
-You need Tk library for GUI, unzip for file unzipping and for further package installations, we need PIP installer
+You need the Tk library for GUI, unzip for file unzipping, and for further package installations, we need a PIP installer
 
     sudo apt install python3-tk python3-pip unzip python-is-python3
 
@@ -94,7 +94,7 @@ Add the following line at the end of your ``~/.bashrc`` file.
     export PATH=/home/YOURUSERNAME/.local/bin:$PATH
     
 
-After editing ~/.bashrc file quit the current shell session and start a new one (or you can use `source ~/.bashrc` command). Then continue,
+After editing the ~/.bashrc file quit the current shell session and start a new one (or you can use the `source ~/.bashrc` command). Then continue,
 
     sudo apt install python3-dev libopenblas-dev libxc-dev libscalapack-mpi-dev libfftw3-dev
 
@@ -116,6 +116,9 @@ NOTE: If the user wants to use exchange correlations listed in [libxc library](h
 Then install gpaw
 
     pip3 install --upgrade --user gpaw
+
+NOTE: If the user wants to use gpaw-tools version 23.2.0, GPAW version 22.8.0 must be used. The above command will be `pip3 install --upgrade --user gpaw==22.8.0`
+{: .text-red-200 }
 
 Use `gpaw info` to see information about installation. However, PAW-datasets are not installed yet. To install it, firstly create a directory under `~/.gpaw` then install PAW datasets
 

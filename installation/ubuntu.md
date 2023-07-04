@@ -61,6 +61,9 @@ Then install gpaw
 
     pip3 install --upgrade --user gpaw
 
+NOTE: If the user wants to use gpaw-tools version 23.2.0, GPAW version 22.8.0 must be used. The above command will be `pip3 install --upgrade --user gpaw==22.8.0`
+{: .text-red-200 }
+
 Use `gpaw info` to see information about installation. However, PAW-datasets are not installed yet. To install it, firstly create a directory under `~/.gpaw` then install PAW datasets
 
     mkdir ~/.gpaw/gpaw-setups

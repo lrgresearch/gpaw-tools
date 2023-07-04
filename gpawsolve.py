@@ -319,7 +319,7 @@ class gpawsolve:
                 parprint("Passing PW ground state calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc == True\033[0m line in your input file. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc = True\033[0m line in your input file. Quiting.')
                     quit()
 
         elif Mode == 'PW-GW':
@@ -363,7 +363,7 @@ class gpawsolve:
                 parprint("Passing ground state calculation for GW calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc == True\033[0m line in your input file. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc = True\033[0m line in your input file. Quiting.')
                     quit()
 
             # We start by setting up a G0W0 calculator object
@@ -448,7 +448,7 @@ class gpawsolve:
                 parprint("Passing LCAO ground state calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc == True\033[0m line in your input file. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc = True\033[0m line in your input file. Quiting.')
                     quit()
 
         elif Mode == 'FD':

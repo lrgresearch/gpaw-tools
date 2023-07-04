@@ -7,6 +7,7 @@ bulk_configuration = bulk('ZnO', 'wurtzite', a=3.25, c=5.2)
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
+Ground_calc = True     # Ground state calculations
 Geo_optim = True       # Geometric optimization with LFBGS
 Elastic_calc = False    # Elastic calculation
 DOS_calc = True         # DOS calculation

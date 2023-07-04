@@ -4,11 +4,6 @@ from ase.parallel import world
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
-Geo_optim = False       # Geometric optimization with LFBGS
-Elastic_calc = False    # Elastic calculation
-DOS_calc = False         # DOS calculation
-Band_calc = False        # Band structure calculation
-Density_calc = False    # Calculate the all-electron density?
 Optical_calc = True     # Calculate the optical properties
 
 # -------------------------------------------------------------

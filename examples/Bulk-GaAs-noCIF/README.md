@@ -4,7 +4,7 @@
 
 Ground, DOS and Band calculations of Bulk GaAs. PW with 300 eV cutoff, 2.5 kpoint per Angstrom k-point density. The important thing is that the positions are given with Atom object. To run the calculation with MPI on 4 cores please execute the following command in this folder.
 
-    mpirun -np 4 gpawsolve.py -i bulk_aluminum.py
+    mpirun -np 4 gpawsolve.py -i bulk_gaas.py
 	
 When you use Atoms object inside configuration file, please note that you must add
 

@@ -239,7 +239,7 @@ class gpawsolve:
             if Spin_calc == True:
                 numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
                 bulk_configuration.set_initial_magnetic_moments(numm)
-            if passground == False:
+            if Ground_calc == True:
                 # PW Ground State Calculations
                 parprint("Starting PW ground state calculation...")
                 if True in Relax_cell:
@@ -251,13 +251,13 @@ class gpawsolve:
                 if XC_calc in ['HSE06', 'HSE03','B3LYP', 'PBE0','EXX']:
                     parprint('Starting Hybrid XC calculations...')
                     if 'Ground_kpts_density' in globals():
-                        calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
-                                eigensolver=Davidson(niter=1), mixer=Mixer_type,
+                        calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%',
+                                parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), mixer=Mixer_type,
                                 spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                                 convergence = Ground_convergence, occupations = Occupation)
                     else:
-                        calc = GPAW(mode=PW(Cut_off_energy), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', parallel={'band': 1, 'kpt': 1},
-                                eigensolver=Davidson(niter=1), mixer=Mixer_type,
+                        calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', 
+                                parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), mixer=Mixer_type,
                                 spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                                 convergence = Ground_convergence, occupations = Occupation)
                 else:
@@ -319,11 +319,11 @@ class gpawsolve:
                 parprint("Passing PW ground state calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc == True\033[0m line in your input file. Quiting.')
                     quit()
 
         elif Mode == 'PW-GW':
-            if passground == False:
+            if Ground_calc == True:
                 # PW Ground State Calculations
                 parprint("Starting PW only ground state calculation for GW calculation...")
                 # Fix the spacegroup in the geometric optimization if wanted
@@ -363,7 +363,7 @@ class gpawsolve:
                 parprint("Passing ground state calculation for GW calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc == True\033[0m line in your input file. Quiting.')
                     quit()
 
             # We start by setting up a G0W0 calculator object
@@ -385,7 +385,7 @@ class gpawsolve:
             if Spin_calc == True:
                 numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
                 bulk_configuration.set_initial_magnetic_moments(numm)
-            if passground == False:
+            if Ground_calc == True:
                 parprint("Starting LCAO ground state calculation...")
                 # Fix the spacegroup in the geometric optimization if wanted
                 if Fix_symmetry == True:
@@ -448,7 +448,7 @@ class gpawsolve:
                 parprint("Passing LCAO ground state calculation...")
                 # Control the ground state GPW file
                 if not os.path.exists(struct+'-1-Result-Ground.gpw'):
-                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in passing mode. Quiting.')
+                    parprint('\033[91mERROR:\033[0m'+struct+'-1-Result-Ground.gpw file can not be found. It is needed in other calculations. Firstly, finish the ground state calculation. You must have \033[95mGround_calc == True\033[0m line in your input file. Quiting.')
                     quit()
 
         elif Mode == 'FD':
@@ -1059,8 +1059,7 @@ class gpawsolve:
                              eshift=Opt_shift_en,
                              mode='BSE',
                              write_v=True,
-                             integrate_gamma=0,
-                             txt=struct+'-6-Log-Optical-BSE.txt')
+                             integrate_gamma=0)
 
                 # Getting dielectric function spectrum
                 parprint("Starting dielectric function calculation...")
@@ -1380,7 +1379,8 @@ if __name__ == "__main__":
     # -------------------------------------------------------------
     Mode = 'PW'             # Use PW, PW-GW, PW-EXX, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
     # -------------------------------------------------------------
-    Geo_optim = True       # Geometric optimization with LFBGS
+    Ground_calc = False     # Ground state calculations
+    Geo_optim = False       # Geometric optimization with LFBGS
     Elastic_calc = False    # Elastic calculation
     DOS_calc = False         # DOS calculation
     Band_calc = False        # Band structure calculation
@@ -1509,8 +1509,7 @@ if __name__ == "__main__":
     parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
     parser.add_argument("-v", "--version", dest="version", action='store_true')
     parser.add_argument("-e", "--energy", dest="energymeas", action='store_true')
-    parser.add_argument("-r", "--restart", dest="restart", action='store_true')
-    parser.add_argument("-p", "--passground", dest="passground", action='store_true')
+    parser.add_argument("-r", "--restart", dest="restart", action='store_true', help="Deprecated argument for ground state passing. Use Ground_calc instead.")
     parser.add_argument("-d", "--drawfigures", dest="drawfigs", action='store_true', help="Draws DOS and band structure figures at the end of calculation.")
 
     args = None
@@ -1528,7 +1527,6 @@ if __name__ == "__main__":
 
     # DEFAULT VALUES
     restart = False
-    passground = False
     energymeas = False
     inFile = None
     drawfigs = False
@@ -1586,11 +1584,9 @@ if __name__ == "__main__":
             quit()
         if args.restart == True:
             parprint('ATTENTION: -r, --restart argument is depreceted. It was just passing the ground calculations not restarting anything.')
-            parprint('New argument for passing the ground state calculations is -p or -passground.')
+            parprint('Use Ground_calc == False for passing the ground calculations.')
             quit()
 
-        if args.passground == True:
-            passground = True
 
     except getopt.error as err:
         # output error, and return with an error code

@@ -8,17 +8,26 @@ parent: development
 # Release notes
 
 ### Development version
+* n/a
 
+### Version 23.7.0
+
+* Using dtype as default for PW calculations.
+* Drawn DOS and Band figures are aligned with respect to Fermi energy level.
+* Implementing autoscale in y-direction for DOS graphs.
+* Correcting all possible errors due to gpts and kpts density usage.
+* Lowering memory consumption in optical calculations.
+* Some examples are changed (Tetrahedron method is used in CrO2 calculations, Bulk-Al calculations are now Bulk-GaAs).
+* Using world.size for nblocks in optical RPA calc.
 * Updated some calculation default values in both `gpawsolve.py` and `gg.py`.
-* Small corrections are done to EXX related parts, XYYY formatted band result data output, optical RPA calculation, ...etc...
-* Using DielectricFunction with frequencies.
+* Small corrections are done to EXX-related parts, XYYY formatted band result data output, optical RPA calculation, ...etc...
+* Using `DielectricFunction` with frequencies.
 * PW-EXX mode is removed. EXX can be used directly under PW.
 * Mostly, no need to use `outdir` variable. However, still can be used.
 * Phonon calculation feature is added to `gg.py`.
-* Phonopy version information can be viewed when used -v argument.
+* Phonopy version information can be viewed when using -v argument.
 * Energy consumption measurement with -e argument. This feature only works with Intel CPUs after Sandy Bridge generation. Results are given in kWh!
-* Restart -r, --restart argument is now depreceted. There is nothing to be restarted. Only passing the ground state calculation.
-* New argument for passing ground state calculations: -p, --passground.
+* Restart -r, --restart argument is now depreceted. There is nothing to be restarted. Instead of -r argument, the new keyword `Ground_calc` is introduced.
 * Basic phonon dispersion calculation feature with Phonopy! At least it works for bulk Al. It is not very mature so please keep this in mind. (Thanks to Michael Lamparski for his help and MIT licensed code that he shared.)
 * Save figures in higher dpi.
 * Fix some bugs, add new variable and rearrange some variable in `gg.py`.

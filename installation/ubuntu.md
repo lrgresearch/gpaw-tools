@@ -75,12 +75,7 @@ For quick optimization, we need simple interatomic modelling. For this, we need 
     sudo apt-get update
     sudo apt-get install libkim-api-dev openkim-models libkim-api2 pkg-config
     pip3 install kimpy
-    
- ## Installation of Phonopy
- 
- For the phonon calculations, we need to install [Phonopy](https://phonopy.github.io/phonopy/). BTW, `gpawsolve.py` will not be executed without phonopy installation. Therefore, you must install this.
- 
-     pip3 install --upgrade --user phonopy
+
      
 Then you can continue on [installation of gpaw-tools](installationofgpawtools.md)
 

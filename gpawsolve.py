@@ -266,13 +266,13 @@ class gpawsolve:
                     if Fix_symmetry == True:
                         bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
                     if 'Ground_kpts_density' in globals():
-                        calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, nbands='200%', setups= Setup_params, parallel={'domain': world.size},
-                                spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
+                        calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc=XC_calc, nbands='200%', setups= Setup_params, 
+                                parallel={'domain': world.size}, spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                                 mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                                 convergence = Ground_convergence, occupations = Occupation)
                     else:
-                        calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, nbands='200%', setups= Setup_params, parallel={'domain': world.size},
-                                spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
+                        calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc=XC_calc, nbands='200%', setups= Setup_params, 
+                                parallel={'domain': world.size}, spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
                                 mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
                                 convergence = Ground_convergence, occupations = Occupation)
                 bulk_configuration.calc = calc

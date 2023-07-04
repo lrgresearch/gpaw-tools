@@ -24,7 +24,7 @@ You need to install many packages to run `gpaw-tools` successfully. Please refer
 ### gpawsolve.py
 This is the main code for easy and ordered PW/LCAO Calculations with ASE/GPAW. It can run as a command.
 
-Command line usage: `gpawsolve.py -v -e -p -d -h -i <inputfile.py> -g <geometryfile.cif>`
+Command line usage: `gpawsolve.py -v -e -d -h -i <inputfile.py> -g <geometryfile.cif>`
 
 Argument list:
 ```

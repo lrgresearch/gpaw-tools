@@ -75,7 +75,7 @@ calc.write(struct+'-GROUND-Result.gpw')
 # -------------------------------------------------------------
 # Step 2 - DOS CALCULATION
 # -------------------------------------------------------------
-calc = GPAW(struct+'-GROUND-Result-Ground.gpw', txt=struct+'-DOS-Log.txt')
+calc = GPAW(struct+'-GROUND-Result.gpw', txt=struct+'-DOS-Log.txt')
 #energies, weights = calc.get_dos(npts=800, width=0)
 dos = DOS(calc, npts=500, width=0)
 energies = dos.get_energies()

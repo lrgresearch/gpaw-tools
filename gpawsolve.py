@@ -479,7 +479,7 @@ class gpawsolve:
         # Start elastic calc
         time151 = time.time()
         parprint('Starting elastic tensor calculations (\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
-        calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-1.5-Log-Elastic.txt')
+        calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-1.5-Log-Elastic.txt').fixed_density()
         # Getting space group from SPGlib
         parprint('Spacegroup:',spg.get_spacegroup(bulk_configuration))
         # Calculating equation of state
@@ -535,7 +535,7 @@ class gpawsolve:
         time21 = time.time()
         parprint("Starting DOS calculation...")
 
-        calc = GPAW(struct+'-1-Result-Ground.gpw', fixdensity=True, txt=struct+'-2-Log-DOS.txt', convergence = DOS_convergence, occupations = Occupation)
+        calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt', convergence = DOS_convergence, occupations = Occupation).fixed_density()
 
         chem_sym = bulk_configuration.get_chemical_symbols()
         ef = calc.get_fermi_level()
@@ -716,7 +716,7 @@ class gpawsolve:
         # Start Band calc
         time31 = time.time()
         parprint("Starting band structure calculation...")
-        if Mode == 'PW-GW':      
+        if Mode == 'PW-GW':
             GW = GWBands(calc=struct+'-1-Result-Ground.gpw', fixdensity=True,
                  gw_file=struct+'-1-_results.pckl',kpoints=GW_kpoints_list)
 
@@ -745,11 +745,8 @@ class gpawsolve:
 
             else:
                 calc = GPAW(struct+'-1-Result-Ground.gpw',
-                        txt=struct+'-3-Log-Band.txt',
-                        fixdensity=True,
-                        symmetry='off', occupations = Occupation,
-                        kpts={'path': Band_path, 'npoints': Band_npoints},
-                        convergence=Band_convergence)
+                        txt=struct+'-3-Log-Band.txt', occupations = Occupation,
+                        convergence=Band_convergence).fixed_density(kpts={'path': Band_path, 'npoints': Band_npoints}, symmetry='off')
 
             calc.get_potential_energy()
             bs = calc.band_structure()

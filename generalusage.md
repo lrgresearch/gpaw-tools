@@ -30,16 +30,17 @@ Command line usage: `gpawsolve.py -v -e -d -h -i <inputfile.py> -g <geometryfile
 
 Argument list:
 ```
--g, --geometry   : Use a CIF file for geometry
--i, --input      : Use an input file for variables (input.py) If you do not use this argument, parameters 
-                   will be taken from the related lines of gpawsolve.py. Visit the "Input File Keywords" webpage for more. 
--e, --energymeas  : Energy consumption measurement. This feature only works with Intel CPUs after the Sandy Bridge generation. Results will be written in a file in the results folder (in kWh!).
--h --help        : Help
--d --drawfigures : Draws DOS and band structure figures at the end of the calculation.
--v --version     : Version information of running code and the latest stable code. It also gives a download link.
+-g, --geometry    : Use a CIF file for geometry
+-i, --input       : Use an input file for variables (input.py) If you do not use this argument, parameters 
+                    will be taken from the related lines of gpawsolve.py. Visit the "Input File Keywords" webpage for more. 
+-e, --energymeas  : Energy consumption measurement. This feature only works with Intel CPUs after the Sandy Bridge generation.
+                    Results will be written in a file in the results folder (in kWh!).
+-h --help         : Help
+-d --drawfigures  : Draws DOS and band structure figures at the end of the calculation.
+-v --version      : Version information of running code and the latest stable code. It also gives a download link.
  ```
  
- You can put the ASE Atoms object into your config file and therefore can use it like an input file. As an example please note the example at: `examples\Bulk-aluminum` folder.
+ You can put the ASE Atoms object into your config file and therefore can use it like an input file. As an example please note the example in: `examples\Bulk-GaAs-noCIF` folder.
  
 ### How to run?
 Change `<core_number>` with core numbers to use. For getting maximum performance from your PC you can use `total number of cores - 1` or `total RAM/2Gb` as a `<core_number>`. For CPUs supporting hyperthreading, users can use more than one instance of `gpawsolve.py` to achieve maximum efficiency. 
@@ -64,7 +65,7 @@ or
 *: Just some ground state energy calculations for PBE0 and HSE06.
 
 ## gg.py
-Basic DFT calculations can be done graphically with the script `gg.py`. This script is behaving as a GUI to run `gpawsolve.py` script. To execute the GUI, type simply:
+Basic DFT calculations can be done graphically with the script `gg.py`. This script behaves as a GUI to run the `gpawsolve.py` script. To execute the GUI, type simply:
   gg.py
 
 ## asapsolve.py
@@ -105,7 +106,7 @@ There are some example calculations given with different usage scenarios in the 
 
 | Name              | Notes  | 
 | ----------------- | ------ |
-| Bulk-GaAs-noCIF     | Ground, DOS, and Band calculations of Bulk GaAs with PW. Positions are given with Atom object.          |
+| Bulk-GaAs-noCIF   | Ground, DOS, and Band calculations of Bulk GaAs with PW. Positions are given with Atom object.          |
 | Cr2O-spin         |Spin-dependent electronic properties of CrO2 |
 | Graphene-LCAO     | Pristine graphene and graphene with a defect with LCAO. Uses a single config for two calculations. |
 | MoS2-GW           | GW Approximation calculation for MoS2 |

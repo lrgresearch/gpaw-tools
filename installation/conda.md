@@ -30,7 +30,7 @@ Then, install GPAW and Elastic packages
 NOTE: For the energy consumption measurement feature, you can install mongo and pandas packages with conda. However, you must install only pyRAPL with pip in the next step. This workflow and the energy consumption measurement feature is not tested on conda yet. Please submit a better installation solution in this page. Thanks.
 {: .text-red-200 }
 
-NOTE: If the user wants to use gpaw-tools version 23.2.0, GPAW version 22.8.0 must be used. The above command will be `conda install -c conda-forge gpaw=22.8.0 elastic requests`
+NOTE: If the user wants to use gpaw-tools versions before 23.7.0, GPAW version 22.8.0 must be used. The above command will be `conda install -c conda-forge gpaw=22.8.0 elastic requests`
 {: .text-red-200 }
 
 Lastly, [download and install gpaw-tools](https://www.lrgresearch.org/gpaw-tools/installation/#4-installation-of-gpaw-tools).

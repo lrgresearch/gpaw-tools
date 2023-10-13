@@ -250,7 +250,7 @@ class gpawsolve:
                         quit()
                 if XC_calc in ['HSE06', 'HSE03','B3LYP', 'PBE0','EXX']:
                     parprint('Starting Hybrid XC calculations...')
-                    if 'Ground_kpts_density' in globals():
+                    if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                         calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%',
                                 parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), mixer=Mixer_type,
                                 spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
@@ -265,7 +265,7 @@ class gpawsolve:
                     # Fix the spacegroup in the geometric optimization if wanted
                     if Fix_symmetry == True:
                         bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-                    if 'Ground_kpts_density' in globals():
+                    if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                         calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc=XC_calc, nbands='200%', setups= Setup_params, 
                                 parallel={'domain': world.size}, spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                                 mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
@@ -329,7 +329,7 @@ class gpawsolve:
                 # Fix the spacegroup in the geometric optimization if wanted
                 if Fix_symmetry == True:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-                if 'Ground_kpts_density' in globals():
+                if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                     calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                             convergence = Ground_convergence,
                             mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
@@ -390,8 +390,8 @@ class gpawsolve:
                 # Fix the spacegroup in the geometric optimization if wanted
                 if Fix_symmetry == True:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
-                if 'Ground_gpts_density' in globals():
-                    if 'Ground_kpts_density' in globals():
+                if 'Ground_gpts_density' in globals() and Ground_gpts_density is not None:
+                    if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                         calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                                 convergence = Ground_convergence, h=Ground_gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                                 mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
@@ -400,7 +400,7 @@ class gpawsolve:
                                 convergence = Ground_convergence, h=Ground_gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                                 mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
                 else:
-                    if 'Ground_kpts_density' in globals():
+                    if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                         calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                                 convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
                                 mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})

@@ -1599,7 +1599,7 @@ if __name__ == "__main__":
         )
 
     # Version
-    __version__ = "v23.7.1b1"
+    __version__ = "v23.10.0"
 
     parser = ArgumentParser(prog ='gpawtools.py', description=Description, formatter_class=RawFormatter)
     parser.add_argument("-i", "--input", dest = "inputfile", help="Use input file for calculation variables (also you can insert geometry)")

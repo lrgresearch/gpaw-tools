@@ -479,7 +479,7 @@ class gpawsolve:
         # Start elastic calc
         time151 = time.time()
         parprint('Starting elastic tensor calculations (\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
-        calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-1.5-Log-Elastic.txt').fixed_density()
+        calc = GPAW(struct+'-1-Result-Ground.gpw').fixed_density(txt=struct+'-1.5-Log-Elastic.txt')
         # Getting space group from SPGlib
         parprint('Spacegroup:',spg.get_spacegroup(bulk_configuration))
         # Calculating equation of state
@@ -535,7 +535,7 @@ class gpawsolve:
         time21 = time.time()
         parprint("Starting DOS calculation...")
 
-        calc = GPAW(struct+'-1-Result-Ground.gpw', txt=struct+'-2-Log-DOS.txt', convergence = DOS_convergence, occupations = Occupation).fixed_density()
+        calc = GPAW(struct+'-1-Result-Ground.gpw', convergence = DOS_convergence, occupations = Occupation).fixed_density(txt=struct+'-2-Log-DOS.txt')
 
         chem_sym = bulk_configuration.get_chemical_symbols()
         ef = calc.get_fermi_level()
@@ -849,9 +849,8 @@ class gpawsolve:
                         kpts={'path': Band_path, 'npoints': Band_npoints}, convergence=Band_convergence)
 
             else:
-                calc = GPAW(struct+'-1-Result-Ground.gpw',
-                        txt=struct+'-3-Log-Band.txt', occupations = Occupation,
-                        convergence=Band_convergence).fixed_density(kpts={'path': Band_path, 'npoints': Band_npoints}, symmetry='off')
+                calc = GPAW(struct+'-1-Result-Ground.gpw', occupations = Occupation,
+                        convergence=Band_convergence).fixed_density(kpts={'path': Band_path, 'npoints': Band_npoints}, txt=struct+'-3-Log-Band.txt', symmetry='off')
 
             calc.get_potential_energy()
             bs = calc.band_structure()

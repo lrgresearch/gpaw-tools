@@ -9,8 +9,6 @@ When you download `gpaw-tools` from GitHub and extract it to a folder you will h
 
 ```
 gpaw-tools/
-└── benchmarks/
-│   └── simple_benchmark_2023.py
 ├── examples/
 ├── optimizations/
 │   ├── ciftoase.py
@@ -36,7 +34,7 @@ Argument list:
 -g, --geometry   : Use a CIF file for geometry
 -i, --input      : Use an input file for variables (input.py) If you do not use this argument, parameters 
                    will be taken from the related lines of gpawsolve.py. Visit the "Input File Keywords" webpage for more. 
-e, --energymeas  : Energy consumption measurement. This feature only works with Intel CPUs after the Sandy Bridge generation. Results will be written in a file in the results folder (in kWh!).
+-e, --energymeas  : Energy consumption measurement. This feature only works with Intel CPUs after the Sandy Bridge generation. Results will be written in a file in the results folder (in kWh!).
 -h --help        : Help
 -d --drawfigures : Draws DOS and band structure figures at the end of the calculation.
 -v --version     : Version information of running code and the latest stable code. It also gives a download link.
@@ -92,13 +90,6 @@ Argument list:
 -v --version     : Version information of running code and the latest stable code. It also gives a download link.
  ```
  
-## optimizations/ciftoase.py
-For `quickoptimize.py` or other optimization scripts, the user may need to give ASE Atoms object instead of using a CIF file. This script changes a CIF file information to ASE Atoms object. Because there is a problem in the read method of ASE.io, sometimes it can give a wrong number of atoms. If the user lives this kind of problem, there is a setting inside the script. Users can run the script like:
-
-    python ciftoase.py <geometryfile.cif>
-
-The result will be printed on the screen and will be saved as `geometryfile.py` in the same folder.
-
 ## optimizations/optimize_cutoff (and kpoints)(and latticeparam).py
 Users must provide an ASE Atoms object and simply insert the object inside these scripts. With the scripts, the user can do convergence tests for cut-off energy, and k-points and can calculate the energy-dependent lattice parameter values. These codes are mainly based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. Scripts can easily be called with MPI:
 
@@ -107,9 +98,6 @@ Users must provide an ASE Atoms object and simply insert the object inside these
     gpaw -P <core_number> python optimize_latticeparam.py
 
 `optimize_latticeparam.py` can perform simultaneous calculations for lattice parameters a and c. And can also draw a 3D contour graph for Energy versus lattice parameters (a and c).
-
-## benchmarks/
-GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single-file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcome.
 
 ## examples/
 There are some example calculations given with different usage scenarios in the code. Please send us more calculations to include.

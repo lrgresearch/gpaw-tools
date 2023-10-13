@@ -23,15 +23,16 @@ The `gpaw-tools` package is built on top of the ASE, ASAP3, KIM-API, PHONOPY, an
 3. To choose better cut-off energy, lattice parameter, and k-points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`,`optimize_kptsdensity.py` and `optimize_latticeparam.py`.
 4. A simple Graphical User Interface (GUI) for `gpawsolve.py` (and also you may say that GUI for GPAW) is called `gg.py`.
 
-More information about [gpaw-tools idea](about.md), [installation](installation/installation.md), [usage](generalusage.md) and [release notes](development/releasenotes.md) can be found at related pages.
+More information about [gpaw-tools idea](about.md), [installation](installation/installation.md), [usage](generalusage.md), and [release notes](development/releasenotes.md) can be found at related pages.
 
 ## Download
 
-**Latest stable release: v23.7.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v23.7.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v23.7.0.zip)**
+**Latest stable release: v23.10.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v23.10.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v23.10.0.zip)**
 
 Latest development release: [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
 
 ## News
+* **[gpaw-tools](development/releasenotes.md#version-23100)** version 23.10.0 released (October 13, 2023).
 * **[gpaw-tools](development/releasenotes.md#version-2370)** version 23.7.0 released. It is a version with major changes and **you need to add a new keyword `Ground_calc` to your old input files**. Please use the input files in the example folder to create new input files. There are many new features in this version: Phonon calculations, energy consumption measurement, and more. Please refer to [release notes](development/releasenotes.md#version-2370). (July 4, 2023)
 * **[gpaw-tools](development/releasenotes.md#version-2320)** version 23.2.0 released. It is a version with major changes and it is **incompatible with the previous versions**. Please use the input files in the example folder to create new input files (February 1, 2023).
 * A new oral presentation about *gpaw-tools* is presented at MSNG2022 (September 22, 2022).
@@ -49,7 +50,7 @@ Latest development release: [download (tar.gz)](https://github.com/lrgresearch/g
 * **[gpaw-tools](development/releasenotes.md#version-2190)** version 21.9.0 released (Sep 14, 2021).
 
 ## Citing
-Please do not forget that, gpaw-tools is UI/GUI software. For the main DFT calculations, it uses ASE and GPAW. It also uses the Elastic python package for elastic tensor solutions and ASAP with the KIM database for interatomic interaction calculations and Phonopy for phonon calculations. Therefore, you must know what you use, and cite them properly. Here, the basic citation information of each package is given.
+Please do not forget that gpaw-tools is UI/GUI software. For the main DFT calculations, it uses ASE and GPAW. It also uses the Elastic python package for elastic tensor solutions and ASAP with the KIM database for interatomic interaction calculations and Phonopy for phonon calculations. Therefore, you must know what you use, and cite them properly. Here, the basic citation information of each package is given.
 
 ### ASE 
 * Ask Hjorth Larsen et al. "[The Atomic Simulation Environment—A Python library for working with atoms](https://doi.org/10.1088/1361-648X/aa680e)" J. Phys.: Condens. Matter Vol. 29 273002, 2017.
@@ -66,7 +67,7 @@ And for `gpaw-tools` usage, please use the following citation:
 
 * S.B. Lisesivdin, B. Sarikavak-Lisesivdin "[gpaw-tools – higher-level user interaction scripts for GPAW calculations and interatomic potential based structure optimization](https://doi.org/10.1016/j.commatsci.2022.111201)" Comput. Mater. Sci. 204, 111201 (2022).
 
-There are many other packages needed to be cited. With GPAW, you may need to cite LibXC or cite for LCAO, TDDFT, and linear-response calculations. Please visit their pages for many other citation possibilities. For more you can visit [https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase](https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase), [https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw](https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw), and [https://openkim.org/how-to-cite/](https://openkim.org/how-to-cite/).
+There are many other packages that need to be cited. With GPAW, you may need to cite LibXC or cite for LCAO, TDDFT, and linear-response calculations. Please visit their pages for many other citation possibilities. For more you can visit [https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase](https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase), [https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw](https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw), and [https://openkim.org/how-to-cite/](https://openkim.org/how-to-cite/).
 
 ## Licensing
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).

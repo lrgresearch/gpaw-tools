@@ -8,7 +8,17 @@ parent: development
 # Release notes
 
 ### Development version
-* n/a
+*n/a
+
+### Version 23.10.0
+
+* Better -v (version info) message.
+* Implementing `GPAW.fixed_density()` method corrections for elastic, DOS, and band calculations.
+* No need for a general benchmark script.
+* Correcting log behavior
+* Better total and each atom's PDOS handling. They are written in separate files.
+* No need to use ciftoase.py anymore
+* Fixing `Ground_kpts_density` and `Ground_gpts_density` usage sourced DOS calculation error.
 
 ### Version 23.7.0
 

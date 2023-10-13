@@ -9,10 +9,10 @@
 ## Introduction
 *gpaw-tools* is a powerful and user-friendly UI/GUI tool for conducting Density Functional Theory (DFT) and molecular dynamics (MD) calculations. Our goal is to make DFT and MD calculations more accessible and easy to use for individuals and small groups, by providing a simple command-line interface and graphical user interface.
 
-The *gpaw-tools* package is built on top of the ASE, ASAP3, KIM-API, PHONOPY, and GPAW libraries, which are well-established and widely used in the scientific community. It allows users to simulate the properties of materials, optimize structures, investigate chemical reactions and processes, and perform calculations on systems with a large number of atoms. With gpaw-tools, researchers, students, and engineers in a wide range of fields, including materials science, chemistry, physics, and engineering, can easily conduct DFT and MD calculations and explore the electronic, optical and phonon structure of material systems. We are constantly working to improve and expand the capabilities of *gpaw-tools*, and we welcome feedback and contributions from the community.
+The *gpaw-tools* package is built on top of the ASE, ASAP3, KIM-API, PHONOPY, and GPAW libraries, which are well-established and widely used in the scientific community. It allows users to simulate the properties of materials, optimize structures, investigate chemical reactions and processes, and perform calculations on systems with a large number of atoms. With gpaw-tools, researchers, students, and engineers in a wide range of fields, including materials science, chemistry, physics, and engineering, can easily conduct DFT and MD calculations and explore the electronic, optical, and phonon structure of material systems. We are constantly working to improve and expand the capabilities of *gpaw-tools*, and we welcome feedback and contributions from the community.
 
 `gpaw-tools` have:
-1. The main solver code `gpawsolver.py` can run in PW or LCAO mode. It can perform structure optimization, equation of state and elastic tensor calculations, use several different XCs (as well as hybrid XCs) for spin-polarized DOS and band structure calculations, electron densities, phonon calculations, and optical properties (RPA and BSE). In addition to calculations, it can draw DOS and band structures, save all data and figure in an ordered way.
+1. The main solver code `gpawsolver.py` can run in PW or LCAO mode. It can perform structure optimization, equation of state and elastic tensor calculations, use several different XCs (as well as hybrid XCs) for spin-polarized DOS and band structure calculations, electron densities, phonon calculations, and optical properties (RPA and BSE). In addition to calculations, it can draw DOS and band structures, save all data, and figure in an ordered way.
 2. A force-field quick optimization script `asapsolve.py` for MD calculations using ASAP3 with OpenKIM potentials.
 3. To choose better cut-off energy, lattice parameter, and k-points, there are 4 scripts called `optimize_cutoff.py`, `optimize_kpoints.py`, `optimize_kptsdensity.py`, and `optimize_latticeparam.py`.
 4. A simple Graphical User Interface (GUI) for gpawsolve.py (and also you may say that GUI for GPAW) which is called `gg.py`.
@@ -89,13 +89,6 @@ Argument list:
 -v --version     : Version information of running code and the latest stable code. It also gives a download link.
 ```
 
-### optimizations/ciftoase.py
-For `quickoptimize.py` or other optimization scripts, the user may need to give ASE Atoms object instead of using a CIF file. This script changes a CIF file information to ASE Atoms object. Because there is a problem in the read method of ASE.io, sometimes it can give a wrong number of atoms. If the user lives this kind of problem, there is a setting inside the script. Users can run the script like:
-
-    python ciftoase.py <geometryfile.cif>
-
-The result will be printed on the screen and will be saved as `geometryfile.py` in the same folder.
-
 ### optimizations/optimize_cutoff (and kpoints)(and kptsdensity)(and latticeparam).py
 Users must provide an ASE Atoms object and simply insert the object inside these scripts. With the scripts, the user can do convergence tests for cut-off energy, k-points, and k-point density and can calculate the energy-dependent lattice parameter values. These codes are mainly based on Prof. J. Kortus, R. Wirnata's Electr. Structure & Properties of Solids course notes and GPAW's tutorials. Scripts can easily be called with MPI:
 
@@ -136,7 +129,7 @@ And for `gpaw-tools` usage, please use the following citation:
 
 * S.B. Lisesivdin, B. Sarikavak-Lisesivdin "[gpaw-tools – higher-level user interaction scripts for GPAW calculations and interatomic potential based structure optimization](https://doi.org/10.1016/j.commatsci.2022.111201)" Comput. Mater. Sci. 204, 111201 (2022).
 
-There are many other packages needed to be cited. With GPAW, you may need to cite LibXC or cite for LCAO, TDDFT, and linear-response calculations. Please visit their pages for many other citation possibilities. For more you can visit [https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase](https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase), [https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw](https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw), and [https://openkim.org/how-to-cite/](https://openkim.org/how-to-cite/).
+There are many other packages that need to be cited. With GPAW, you may need to cite LibXC or cite for LCAO, TDDFT, and linear-response calculations. Please visit their pages for many other citation possibilities. For more you can visit [https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase](https://wiki.fysik.dtu.dk/ase/faq.html#how-should-i-cite-ase), [https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw](https://wiki.fysik.dtu.dk/gpaw/faq.html#citation-how-should-i-cite-gpaw), and [https://openkim.org/how-to-cite/](https://openkim.org/how-to-cite/).
 
 ## Licensing
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).

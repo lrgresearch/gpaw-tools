@@ -11,7 +11,6 @@ When you download `gpaw-tools` from GitHub and extract it to a folder you will h
 gpaw-tools/
 ├── examples/
 ├── optimizations/
-│   ├── ciftoase.py
 │   ├── optimize_cutoff.py
 │   ├── optimize_kpoints.py
 │   ├── optimize_kptsdensity.py

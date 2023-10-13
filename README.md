@@ -99,9 +99,6 @@ Users must provide an ASE Atoms object and simply insert the object inside these
     
 `optimize_latticeparam.py` can perform simultaneous calculation for lattice parameters a and c. And can also draw 3D contour graph for Energy versus lattice parameters (a and c).
 
-### benchmarks/
-GPAW has many test scripts for many cases. However, new users may need something easy to run and compare. Some very easy single-file test scripts will be listed [here](https://github.com/lrgresearch/gpaw-tools/tree/main/benchmarks) with some hardware benchmark information. Your timings are always welcome.
-
 ## examples/
 There are [some example calculations](https://github.com/lrgresearch/gpaw-tools/tree/main/examples) given with different usage scenarios. Please send us more calculations to include in this folder.
 

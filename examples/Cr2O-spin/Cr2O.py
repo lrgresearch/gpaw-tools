@@ -6,7 +6,7 @@ Geo_optim = False       # Geometric optimization with LFBGS
 Elastic_calc = False    # Elastic calculation
 DOS_calc = True         # DOS calculation
 Band_calc = True        # Band structure calculation
-Density_calc = False    # Calculate the all-electron density?
+Density_calc = True    # Calculate the all-electron density?
 Optical_calc = False     # Calculate the optical properties
 
 # -------------------------------------------------------------

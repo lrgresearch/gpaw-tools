@@ -1630,7 +1630,6 @@ if __name__ == "__main__":
     parser.add_argument("-g", "--geometry",dest ="geometryfile", help="Use CIF file for geometry")
     parser.add_argument("-v", "--version", dest="version", action='store_true')
     parser.add_argument("-e", "--energy", dest="energymeas", action='store_true')
-    parser.add_argument("-r", "--restart", dest="restart", action='store_true', help="Deprecated argument for ground state passing. Use Ground_calc instead.")
     parser.add_argument("-d", "--drawfigures", dest="drawfigs", action='store_true', help="Draws DOS and band structure figures at the end of calculation.")
 
     args = None
@@ -1647,7 +1646,6 @@ if __name__ == "__main__":
         quit()
 
     # DEFAULT VALUES
-    restart = False
     energymeas = False
     inFile = None
     drawfigs = False
@@ -1705,10 +1703,6 @@ if __name__ == "__main__":
                 parprint('  uses GPAW '+gpaw.__version__+', ASE '+ase.__version__+' and PHONOPY '+phonopy.__version__)
                 parprint('-----------------------------------------------------------------------------')
                 parprint('No internet connection available.')
-            quit()
-        if args.restart == True:
-            parprint('ATTENTION: -r, --restart argument is depreceted. It was just passing the ground calculations not restarting anything.')
-            parprint('Use Ground_calc == False for passing the ground calculations.')
             quit()
 
 

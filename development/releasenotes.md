@@ -11,6 +11,7 @@ parent: development
 
 * Calculate spin-dependent charge densities and zeta = (up-down)/(up+down) to CUBE files for both all-electron and pseudo densities.
 * The Cr2O example is changed to show new spin-dependent charge density calculations.
+* Deprecated argument -r (restart) is removed.
 
 ### Version 23.10.0
 

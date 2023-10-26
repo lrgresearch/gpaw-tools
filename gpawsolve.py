@@ -45,6 +45,7 @@ from gpaw.response.bse import BSE
 from gpaw.response.g0w0 import G0W0
 from gpaw.response.gw_bands import GWBands
 from gpaw.dos import DOSCalculator
+from gpaw.utilities.dos import raw_orbital_LDOS
 import numpy as np
 from numpy import genfromtxt
 from elastic import get_elastic_tensor, get_elementary_deformations
@@ -951,7 +952,19 @@ class gpawsolve:
                     print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted Band file. Mostly, the file is created without any problem.")
                     print(e)
                     pass  # Continue execution after encountering an exception
-
+                
+                # Projected Band
+                Projected_band = False
+                if Projected_band == True:                
+                    with paropen(struct+'-3-Result-ProjectedBand.dat', 'w') as f3:
+                        for i in range(len(sym_ang_mom_i)):
+                            print('----------------------'+sym_ang_mom_i[i]+'---------------------------', end="\n", file=f3)
+                            for n in range(Band_num_of_bands):
+                                for k in range(Band_npoints):
+                                    print(k, projector_weight_skni[0, k, n, i], end="\n", file=f3)
+                                print (end="\n", file=f3)
+                    
+                
         # Finish Band calc
         time32 = time.time()
         # Write timings of calculation
@@ -1495,6 +1508,62 @@ def convert_atoms_to_phonopy(atoms):
 
 
 # End of phonon related functions------------------------------
+
+# Projected Band Structure related functions-------------------
+
+def projected_weights(calc):
+    ns = calc.get_number_of_spins()
+    atom_num = calc.atoms.get_atomic_numbers()
+    atoms = calc.atoms
+    
+    # Defining the atoms and angular momentum to project onto.
+    lan = range(58, 72)
+    act = range(90, 104)
+    atom_num = np.asarray(atom_num)
+    ang_mom_a = {}
+    atoms = Atoms(numbers=atom_num)
+    magnetic_elements = {'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn',
+                'Y', 'Zr', 'Nb', 'Mo', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In',
+                'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl'}
+
+    for a, (z, magn) in enumerate(zip(atom_num, magnetic_elements)):
+        if z in lan or z in act:
+            ang_mom_a[a] = 'spdf'
+        else:
+            ang_mom_a[a] = 'spd' if magn else 'sp'
+
+    # For each unique atom
+    a_x = [a for a in ang_mom_a for ang_mom in ang_mom_a[a]]
+    ang_mom_x = [ang_mom for a in ang_mom_a for ang_mom in ang_mom_a[a]]
+
+    # Get i index for each unique symbol
+    sym_ang_mom_i = []
+    i_x = []
+    for a, ang_mom in zip(a_x, ang_mom_x):
+        symbol = atoms.symbols[a]
+        sym_ang_mom = '.'.join([str(symbol), str(ang_mom)])
+        if sym_ang_mom in sym_ang_mom_i:
+            i = sym_ang_mom_i.index(sym_ang_mom)
+        else:
+            i = len(sym_ang_mom_i)
+            sym_ang_mom_i.append(sym_ang_mom)
+        i_x.append(i)
+
+    nk, nb = len(calc.get_ibz_k_points()), calc.get_number_of_bands()
+    projector_weight_skni = np.zeros((ns, nk, nb, len(sym_ang_mom_i)))
+    ali_x = [(a, ang_mom, i) for (a, ang_mom, i) in zip(a_x, ang_mom_x, i_x)]
+    
+    for _, (a, ang_mom, i) in enumerate(ali_x):
+        # Extract weights
+        for s in range(ns):
+            __, weights = raw_orbital_LDOS(calc, a, s, ang_mom)
+            projector_weight_kn = weights.reshape((nk, nb))
+            projector_weight_kn /= calc.wfs.kd.weight_k[:, np.newaxis]
+            projector_weight_skni[s, :, :, i] += projector_weight_kn
+
+    return projector_weight_skni, sym_ang_mom_i
+
+# End of Projected Band Structure related functions----------------
 
 if __name__ == "__main__":
     #

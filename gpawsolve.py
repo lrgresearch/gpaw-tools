@@ -535,18 +535,26 @@ class gpawsolve:
         # Start DOS calc
         time21 = time.time()
         parprint("Starting DOS calculation...")
-
-        calc = GPAW(struct+'-1-Result-Ground.gpw', convergence = DOS_convergence, occupations = Occupation).fixed_density(txt=struct+'-2-Log-DOS.txt')
-
+        if XC_calc in ['HSE06', 'HSE03','B3LYP', 'PBE0','EXX']:
+            parprint('Passing DOS NSCF calculations...')
+            calc = GPAW().read(filename=struct+'-1-Result-Ground.gpw')
+            ef=0.0 # Can not find the use get_fermi_level() 
+        else:
+            calc = GPAW(struct+'-1-Result-Ground.gpw').fixed_density(txt=struct+'-2-Log-DOS.txt', convergence = DOS_convergence, occupations = Occupation)
+            ef = calc.get_fermi_level()
+        
         chem_sym = bulk_configuration.get_chemical_symbols()
-        ef = calc.get_fermi_level()
+        
 
         if Spin_calc == True:
             #Spin down
 
             # RAW PDOS for spin down
             parprint("Calculating and saving Raw PDOS for spin down...")
-            rawdos = DOSCalculator.from_calculator(filename=struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=True)
+            if ef==0.0:
+                rawdos = DOSCalculator.from_calculator(filename=struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=True)
+            else:
+                rawdos = DOSCalculator.from_calculator(filename=struct+'-1-Result-Ground.gpw',soc=False, theta=0.0, phi=0.0, shift_fermi_level=False)
             energies = rawdos.get_energies(npoints=DOS_npoints)
             # Weights
             pdossweightsdown = [0.0] * DOS_npoints
@@ -842,20 +850,21 @@ class gpawsolve:
                 print ('Fermi Level: ', ef, end="\n", file=f)
 
         else:
+                        
             if XC_calc in ['HSE06', 'HSE03','B3LYP', 'PBE0','EXX']:
-                calc = GPAW(struct+'-1-Result-Ground.gpw',
-                        parallel={'band': 1, 'kpt': 1}, 
-                        txt=struct+'-3-Log-Band.txt',
-                        symmetry='off', occupations = Occupation,
-                        kpts={'path': Band_path, 'npoints': Band_npoints}, convergence=Band_convergence)
+                calc = GPAW(struct+'-1-Result-Ground.gpw', symmetry='off',kpts={'path': Band_path, 'npoints': Band_npoints},
+                          parallel={'band':1, 'kpt':1}, occupations = Occupation,
+                          txt=struct+'-3-Log-Band.txt', convergence=Band_convergence)
+                ef=0.0
 
             else:
-                calc = GPAW(struct+'-1-Result-Ground.gpw', occupations = Occupation,
-                        convergence=Band_convergence).fixed_density(kpts={'path': Band_path, 'npoints': Band_npoints}, txt=struct+'-3-Log-Band.txt', symmetry='off')
+                calc = GPAW(struct+'-1-Result-Ground.gpw').fixed_density(kpts={'path': Band_path, 'npoints': Band_npoints},
+                          txt=struct+'-3-Log-Band.txt', symmetry='off', occupations = Occupation, convergence=Band_convergence)
+                ef = calc.get_fermi_level()
 
             calc.get_potential_energy()
             bs = calc.band_structure()
-            ef = calc.get_fermi_level()
+            
             Band_num_of_bands = calc.get_number_of_bands()
             parprint('Num of bands:'+str(Band_num_of_bands))
 

@@ -492,7 +492,7 @@ class gpawsolve:
         parprint('Spacegroup:',spg.get_spacegroup(bulk_configuration))
         # Calculating equation of state
         parprint('Calculating equation of state...')
-        eos = calculate_eos(bulk_configuration, trajectory=struct+'-1-Result-Ground.traj')
+        eos = calculate_eos(bulk_configuration, trajectory=struct+'-1.5-Result-Elastic.traj')
         v, e, B = eos.fit()
         # Calculating elastic tensor
         parprint('Calculating elastic tensor...')

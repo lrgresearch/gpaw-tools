@@ -204,8 +204,13 @@ class gpawsolve:
         self.Opt_cut_of_energy = Opt_cut_of_energy
         self.Opt_nblocks = Opt_nblocks
         self.MPI_cores = MPI_cores
+        self.Localization = Localization
         self.bulk_configuration = bulk_configuration
         self.struct = struct
+        self.dos_xlabel = dos_xlabel
+        self.dos_ylabel = dos_ylabel
+        self.band_ylabel = band_ylabel
+        
 
     def structurecalc(self):
         """
@@ -784,15 +789,15 @@ class gpawsolve:
                     ax = plt.gca()
                     ax.plot(downf[0], -1.0*downf[1], 'y')
                     ax.plot(upf[0], upf[1], 'b')
-                    ax.set_xlabel('Energy [eV]')
-                    ax.set_ylabel('DOS [/eV]')
+                    ax.set_xlabel(dos_xlabel[Localization])
+                    ax.set_ylabel(dos_ylabel[Localization])
                 else:
                     dosf = pd.read_csv(struct+'-2-Result-DOS.csv', header=None)
                     dosf[0]=dosf[0]+ef
                     ax = plt.gca()
                     ax.plot(dosf[0], dosf[1], 'b')
-                    ax.set_xlabel('Energy [eV]')
-                    ax.set_ylabel('DOS [1/eV]')
+                    ax.set_xlabel(dos_xlabel[Localization])
+                    ax.set_ylabel(dos_ylabel[Localization])
                 plt.xlim(Energy_min+ef, Energy_max+ef)
                 autoscale_y(ax)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
@@ -809,15 +814,15 @@ class gpawsolve:
                     ax = plt.gca()
                     ax.plot(downf[0], -1.0*downf[1], 'y')
                     ax.plot(upf[0], upf[1], 'b')
-                    ax.set_xlabel('Energy [eV]')
-                    ax.set_ylabel('DOS [1/eV]')
+                    ax.set_xlabel(dos_xlabel[Localization])
+                    ax.set_ylabel(dos_ylabel[Localization])
                 else:
                     dosf = pd.read_csv(struct+'-2-Result-DOS.csv', header=None)
                     dosf[0]=dosf[0]+ef
                     ax = plt.gca()
                     ax.plot(dosf[0], dosf[1], 'b')
-                    ax.set_xlabel('Energy [eV]')
-                    ax.set_ylabel('DOS [1/eV]')
+                    ax.set_xlabel(dos_xlabel[Localization])
+                    ax.set_ylabel(dos_ylabel[Localization])
                 plt.xlim(Energy_min+ef, Energy_max+ef)
                 autoscale_y(ax)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
@@ -1001,7 +1006,7 @@ class gpawsolve:
                     plt.savefig(struct+'-3-Graph-Band.png', dpi=300)
                     plt.show()
                 else:
-                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference)
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference, ylabel=band_ylabel[Localization])
         else:
             # Draw graphs only on master node
             if world.rank == 0:
@@ -1015,7 +1020,7 @@ class gpawsolve:
                     plt.savefig(struct+'-3-Graph-Band.png', dpi=300)
                     #plt.show()
                 else:
-                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference)
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference, ylabel=band_ylabel[Localization])
 
     def densitycalc(self):
         """
@@ -1689,6 +1694,7 @@ if __name__ == "__main__":
 
     #GENERAL ----------------------
     MPI_cores = 4            # This is for gg.py. Not used in this script.
+    Localization = "en_UK"
 
     # -------------------------------------------------------------
     # Default Bulk Configuration
@@ -1707,7 +1713,25 @@ if __name__ == "__main__":
         cell=[(4.936, 0.0, 0.0), (-2.467999999999999, 4.274701393079989, 0.0), (0.0, 0.0, 20.0)],
         pbc=True,
         )
+    # ------------------ Localization Tables. You can add your language below --------------------------
+    dos_xlabel = dict(en_UK='', tr_TR='')
+    dos_ylabel = dict(en_UK='', tr_TR='')
+    band_ylabel = dict(en_UK='', tr_TR='')
+    
+    # ENGLISH (en_UK) - by S.B. Lisesivdin
+    ## Figures
+    dos_xlabel["en_UK"]='Energy [eV]'
+    dos_ylabel["en_UK"]='DOS [1/eV]'
+    band_ylabel["en_UK"]='Energy [eV]'
 
+    # TURKISH (tr_TR) - by S.B. Lisesivdin
+    ## Figures
+    dos_xlabel["tr_TR"]='Enerji [eV]'
+    dos_ylabel["tr_TR"]='Durum Yoğunluğu [1/eV]'
+    band_ylabel["tr_TR"]='Enerji [eV]'
+    
+    # ------------------ End of Localization Tables --------------------------
+    
     # Version
     __version__ = "v23.10.1b1"
 

@@ -37,6 +37,7 @@ Fix_symmetry = True    # True for preserving the spacegroup symmetry during opti
 # Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
 Relax_cell=[True, True, True, False, False, False]
+Hydrostatic_pressure=0.0 #GPa
 
 # ELECTRONIC
 Cut_off_energy = 300 	# eV
@@ -67,3 +68,4 @@ Refine_grid = 4             # refine grid for all electron density (1, 2 [=defau
 MPI_cores = 4            # Number of cores in calculation.
 Energy_min = -5 		# eV. It is the minimum energy value for band structure and DOS figures.
 Energy_max = 10  		# eV. It is the maximum energy value for band structure and DOS figures.
+# Localization = "tr_TR"

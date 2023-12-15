@@ -28,6 +28,7 @@ Fix_symmetry = True    # True for preserving the spacegroup symmetry during opti
 # Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
 # Example: For a x-y 2D nanosheet only first 2 component will be true
 Relax_cell = [True, True, True, False, False, False]
+Hydrostatic_pressure=0.0 #GPa
 
 # ELECTRONIC
 Cut_off_energy = 340 	# eV

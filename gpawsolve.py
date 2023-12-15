@@ -143,6 +143,7 @@ class gpawsolve:
         self.Damping = Damping
         self.Fix_symmetry = Fix_symmetry
         self.Relax_cell = Relax_cell
+        self.Hydrostatic_pressure = Hydrostatic_pressure
         self.Cut_off_energy = Cut_off_energy
         self.Ground_kpts_density = Ground_kpts_density
         self.Ground_kpts_x = Ground_kpts_x
@@ -279,7 +280,10 @@ class gpawsolve:
                 bulk_configuration.calc = calc
                 if Geo_optim == True:
                     if True in Relax_cell:
-                        uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                        if Hydrostatic_pressure > 0.0:
+                            uf = ExpCellFilter(bulk_configuration, mask=Relax_cell, hydrostatic_strain=True, scalar_pressure=Hydrostatic_pressure)
+                        else:
+                            uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
                         # Optimizer Selection
                         if Optimizer == 'FIRE':
                             from ase.optimize.fire import FIRE
@@ -339,7 +343,10 @@ class gpawsolve:
                             convergence = Ground_convergence,
                             mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
                 bulk_configuration.calc = calc
-                uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                if Hydrostatic_pressure > 0.0:
+                    uf = ExpCellFilter(bulk_configuration, mask=Relax_cell, hydrostatic_strain=True, scalar_pressure=Hydrostatic_pressure)
+                else:
+                    uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
                 # Optimizer Selection
                 if Optimizer == 'FIRE':
                     from ase.optimize.fire import FIRE
@@ -1604,6 +1611,7 @@ if __name__ == "__main__":
     # Which components of strain will be relaxed: EpsX, EpsY, EpsZ, ShearYZ, ShearXZ, ShearXY
     # Example: For a x-y 2D nanosheet only first 2 component will be true
     Relax_cell = [False, False, False, False, False, False]
+    Hydrostatic_pressure = 0.0 # GPa
 
     # GROUND ----------------------
     Cut_off_energy = 340 	# eV

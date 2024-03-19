@@ -23,6 +23,14 @@ tsp mpirun -np $CORENUMBER gpawsolve.py -i graphene.py -g graphene4x4.cif
 echo "Step 2: Graphene with defect"
 tsp mpirun -np $CORENUMBER gpawsolve.py -i graphene.py -g graphene4x4withdefect.cif
 
+# Graphene-charged -------------
+echo "Adding: Graphene-charged"
+cd ../Graphene-charged
+echo "Step 1: Neutral defected graphene"
+tsp mpirun -np $CORENUMBER gpawsolve.py -i graphene-neutral.py -g graphene4x4withdefect.cif
+echo "Step 2: Charged defected Graphene"
+tsp mpirun -np $CORENUMBER gpawsolve.py -i graphene-charged.py -g graphene4x4withdefect.cif
+
 # Not working after GPAW 22.1.0, needs future fix.
 # MoS2-GW -------------------
 #echo "Adding: MoS2-GW"

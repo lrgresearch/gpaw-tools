@@ -458,7 +458,15 @@ class gg:
                 self.Refine_gridttk.insert('0', config.Refine_grid)
             else:
                 self.Refine_gridttk.delete('0', 'end')
-                self.Refine_gridttk.insert('0', '2')    
+                self.Refine_gridttk.insert('0', '2')
+            
+            # Total charge
+            if 'Total_charge' in config.__dict__.keys():
+                self.Total_chargettk.delete('0', 'end')
+                self.Total_chargettk.insert('0', config.Magmom_per_atom)
+            else:
+                self.Total_chargettk.delete('0', 'end')
+                self.Total_chargettk.insert('0', '0.0')
                 
             # ---------Phonon Parameters--------
             
@@ -899,6 +907,8 @@ class gg:
                 print("Magmom_per_atom = "+ str(self.Magmom_per_atomttk.get()), end="\n", file=f1)
                 # Refine grid
                 print("Refine_grid = "+ str(self.Refine_gridttk.get()), end="\n", file=f1)
+                # Total_charge
+                print("Total_charge = "+ str(self.Total_chargettk.get()), end="\n", file=f1)
                 # ---------Phonon------------
                 # Cut_off_energy
                 print("Phonon_PW_cutoff = "+ str(self.Phonon_PW_cutoffttk.get()), end="\n", file=f1)
@@ -1449,6 +1459,18 @@ class gg:
         self.frame16.pack(side='top')
         self.labelframe2.configure(height='200', text='Electronic Calculation Parameters', width='200')
         self.labelframe2.pack(side='left')
+        
+        # Total_charge
+        self.frameTotal_charge = ttk.Frame(self.labelframe2)
+        self.labelTotal_charge = ttk.Label(self.frameTotal_charge)
+        self.labelTotal_charge.configure(text='Total charge')
+        self.labelTotal_charge.pack(side='left')
+        self.Total_chargettk = ttk.Entry(self.frameTotal_charge)
+        self.Total_chargettk.delete('0', 'end')
+        self.Total_chargettk.insert('0', '0.0')
+        self.Total_chargettk.pack(side='top')
+        self.frameTotal_charge.configure(height='200', width='200')
+        self.frameTotal_charge.pack(side='top')
         # End labelframe2 ------------------------------------------
                 
         # labelframe3: Optical Calculation Parameters --------------

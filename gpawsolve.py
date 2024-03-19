@@ -259,12 +259,12 @@ class gpawsolve:
                     parprint('Starting Hybrid XC calculations...')
                     if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                         calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%',
-                                parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), mixer=Mixer_type,
+                                parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), mixer=Mixer_type, charge=Total_charge,
                                 spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                                 convergence = Ground_convergence, occupations = Occupation)
                     else:
                         calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc={'name': XC_calc, 'backend': 'pw'}, nbands='200%', 
-                                parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), mixer=Mixer_type,
+                                parallel={'band': 1, 'kpt': 1}, eigensolver=Davidson(niter=1), mixer=Mixer_type, charge=Total_charge,
                                 spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma}, txt=struct+'-1-Log-Ground.txt',
                                 convergence = Ground_convergence, occupations = Occupation)
                 else:
@@ -275,12 +275,12 @@ class gpawsolve:
                     if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                         calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc=XC_calc, nbands='200%', setups= Setup_params, 
                                 parallel={'domain': world.size}, spinpol=Spin_calc, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                                mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
+                                mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt', charge=Total_charge,
                                 convergence = Ground_convergence, occupations = Occupation)
                     else:
                         calc = GPAW(mode=PW(ecut=Cut_off_energy, force_complex_dtype=True), xc=XC_calc, nbands='200%', setups= Setup_params, 
                                 parallel={'domain': world.size}, spinpol=Spin_calc, kpts={'size': (Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                                mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt',
+                                mixer=Mixer_type, txt=struct+'-1-Log-Ground.txt', charge=Total_charge,
                                 convergence = Ground_convergence, occupations = Occupation)
                 bulk_configuration.calc = calc
                 if Geo_optim == True:
@@ -341,11 +341,11 @@ class gpawsolve:
                     bulk_configuration.set_constraint(FixSymmetry(bulk_configuration))
                 if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                     calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
-                            convergence = Ground_convergence,
+                            convergence = Ground_convergence, charge=Total_charge,
                             mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
                 else:
                     calc = GPAW(mode=PW(Cut_off_energy), xc=XC_calc, parallel={'domain': 1}, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
-                            convergence = Ground_convergence,
+                            convergence = Ground_convergence, charge=Total_charge,
                             mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
                 bulk_configuration.calc = calc
                 if Hydrostatic_pressure > 0.0:
@@ -382,7 +382,7 @@ class gpawsolve:
             # We start by setting up a G0W0 calculator object
             gw = G0W0(struct+'-1-Result-Ground.gpw', filename=struct+'-1-', bands=(GW_valence_band_no, GW_conduction_band_no),
                       method=GW_calc_type,truncation=GW_truncation, nblocksmax=GW_nblocks_max,
-                      maxiter=5, q0_correction=GW_q0_correction,
+                      maxiter=5, q0_correction=GW_q0_correction, charge=Total_charge,
                       mixing=0.5,savepckl=True,
                       ecut=GW_cut_off_energy, ppa=GW_PPA)
             parprint("Starting PW ground state calculation with G0W0 approximation...")
@@ -407,20 +407,20 @@ class gpawsolve:
                     if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                         calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                                 convergence = Ground_convergence, h=Ground_gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size}, charge=Total_charge)
                     else:
                         calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
                                 convergence = Ground_convergence, h=Ground_gpts_density, spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size}, charge=Total_charge)
                 else:
                     if 'Ground_kpts_density' in globals() and Ground_kpts_density is not None:
                         calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'density': Ground_kpts_density, 'gamma': Gamma},
                                 convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size}, charge=Total_charge)
                     else:
                         calc = GPAW(mode='lcao', basis='dzp', setups= Setup_params, kpts={'size':(Ground_kpts_x, Ground_kpts_y, Ground_kpts_z), 'gamma': Gamma},
                                 convergence = Ground_convergence, gpts=(Ground_gpts_x, Ground_gpts_y, Ground_gpts_z), spinpol=Spin_calc, txt=struct+'-1-Log-Ground.txt',
-                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size})
+                                mixer=Mixer_type, occupations = Occupation, parallel={'domain': world.size}, charge=Total_charge)
                 bulk_configuration.calc = calc
                 if Geo_optim == True:
                     if True in Relax_cell:
@@ -1635,6 +1635,7 @@ if __name__ == "__main__":
     Mixer_type = MixerSum(0.1, 3, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)
     Spin_calc = False        # Spin polarized calculation?
     Magmom_per_atom = 1.0    # Magnetic moment per atom
+    Total_charge = 0.0       # Total charge. Normally 0.0 for a neutral system.
 
     # DOS ----------------------
     DOS_npoints = 501                # Number of points

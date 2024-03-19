@@ -5,7 +5,7 @@ title: Input File Keywords
 parent: development
 ---
 # Input File Keywords
-There are two scripts that use input files in gpaw-tools. One of them is the main DFT script `gpawsolve.py`, and other is MD script `asapsolve.py`. You can find the keyword lists of each script below:
+Two scripts use input files in gpaw-tools. One of them is the main DFT script `gpawsolve.py`, and the other is the MD script `asapsolve.py`. You can find the keyword lists of each script below:
 * [**gpawsolve.py Keyword List**](inputfilekeywords.md#gpawsolvepy-keyword-list)
 * [**asapsolve.py Keyword List**](inputfilekeywords.md#asapsolvepy-keyword-list)
 
@@ -57,7 +57,7 @@ This keyword controls the execution of geometric optimization. Available options
 * True
 * False
 
-User can implement a filter for optimization of supercell and atoms with keyword `whichstrain`. More information about [whichstrain](inputfilekeywords.md#whichstrain).
+Users can implement a filter for the optimization of supercells and atoms with the keyword `Relax_cell`. More information about [whichstrain](inputfilekeywords.md#whichstrain).
 
 #### Default
 True
@@ -72,7 +72,7 @@ Geo_optim = False
 Logical
 
 #### Description
-This keyword controls the performing of Elastic calculations or not. Available options are:
+This keyword controls whether or not the Elastic calculations are performed. Available options are:
 
 * True
 * False
@@ -90,7 +90,7 @@ Elastic_calc = True
 Logical
 
 #### Description
-This keyword controls the performing of DOS calculations or not. Available options are:
+This keyword controls whether or not the DOS calculations are performed. Available options are:
 
 * True
 * False
@@ -108,7 +108,7 @@ DOS_calc = True
 Logical
 
 #### Description
-This keyword controls the performing of Band calculations or not. Available options are:
+This keyword controls whether or not the Band calculations are performed. Available options are:
 
 * True
 * False
@@ -126,7 +126,7 @@ Band_calc = False
 Logical
 
 #### Description
-This keyword controls the performing of electron density calculations or not. Available options are:
+This keyword controls whether or not electron density calculations are performed. Available options are:
 
 * True
 * False
@@ -144,7 +144,7 @@ Density_calc = True
 Logical
 
 #### Description
-This keyword controls the performing of optical calculations or not. Must be used independently from DOS_calc, Band_calc and Density_calc. Please visit examples directory for the example usage. Available options are:
+This keyword controls whether or not the optical calculations are performed. It must be used independently from DOS_calc, Band_calc, and Density_calc. Please visit the examples directory for the example usage. Available options are:
 
 * True
 * False
@@ -162,8 +162,8 @@ Optical_calc = False
 Integer
 
 #### Description
-This keyword controls the number of cores used in calculation. This parameter is not used with `gpawsolve.py`. It is only needed for the `gg.py`.
-NOTE: `gg.py` can run `gpawsolve.py` with only `mpirun -np <corenumber>` command. Therefore, for CPUs with hyperthreading support, you can run only the half of your thread number. In the future, `gg.py` will have an option for threads. Please control this variable in future.
+This keyword controls the number of cores used in the calculation. This parameter is not used with `gpawsolve.py`. It is only needed for the `gg.py`.
+NOTE: `gg.py` can run `gpawsolve.py` with only the `mpirun -np <corenumber>` command. Therefore, you can run only half of your thread number for CPUs with hyperthreading support. In the future, `gg.py` will have an option for threads. Please control this variable in the future.
 
 #### Default
 4
@@ -178,7 +178,7 @@ MPI_cores = 4
 Integer
 
 #### Description
-This keyword controls the minimum energy value for the drawn figures of band structure and DOS. Unit is eV.
+This keyword controls the minimum energy value for the drawn figures of band structure and DOS. The unit is eV.
 
 #### Default
 -5
@@ -194,7 +194,7 @@ Energy_min = -10 # eV
 Integer
 
 #### Description
-This keyword controls the maximum energy value for the drawn figures of band structure and DOS. Unit is eV.
+This keyword controls the maximum energy value for the drawn figures of band structure and DOS. The unit is eV.
 
 #### Default
 5
@@ -226,7 +226,7 @@ Optimizer = 'FIRE'
 Float
 
 #### Description
-This keyword controls the maximum force tolerance in BFGS type geometry optimization. Unit is eV/Ang.
+This keyword controls the maximum force tolerance in BFGS-type geometry optimization. Unit is eV/Ang.
 
 #### Default
 0.05
@@ -240,7 +240,7 @@ Max_F_tolerance = 0.05 # eV/Ang
 Float
 
 #### Description
-This keyword controls how far a single atom allowed to move. Default is 0.2 Ang.
+This keyword controls how far a single atom is allowed to move. The default is 0.2 Ang.
 
 #### Default
 0.2
@@ -268,7 +268,7 @@ Alpha = 70.0
 Float
 
 #### Description
-The calculated step is multiplied by this number before being added to the positions
+The calculated step is multiplied by this number before being added to the positions.
 
 #### Default
 1.0
@@ -345,7 +345,7 @@ Cut_off_energy = 500 # eV
 Float
 
 #### Description
-This keyword controls kpoint density. It is deactivated normally. Monkhorst-Pack mesh is used with `Ground_kpts_x`, `Ground_kpts_y` and `Ground_kpts_z` variables. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_x`, `Ground_kpts_y` and `Ground_kpts_z` variables will be ignored automatically. Unit is pts per Å^-1.
+This keyword controls k-point density. It is deactivated normally. The Monkhorst-Pack mesh is used with the `Ground_kpts_x`, `Ground_kpts_y`, and `Ground_kpts_z` variables. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_x`, `Ground_kpts_y`, and `Ground_kpts_z` variables will be ignored automatically. The unit is pts per Å^-1.
 
 #### Default
 Not used in default.
@@ -360,7 +360,7 @@ Ground_kpts_density = 2.5     # pts per Å^-1
 Integer
 
 #### Description
-This keyword controls the number of kpoints in x direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_x` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of k-points in the x direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_x` variable will be ignored automatically. The unit is the number of points.
 
 #### Default
 5
@@ -375,7 +375,7 @@ Ground_kpts_x = 5
 Integer
 
 #### Description
-This keyword controls the number of kpoints in y direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_y` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of k-points in the y direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_y` variable will be ignored automatically. The unit is the number of points.
 
 #### Default
 5
@@ -390,7 +390,7 @@ Ground_kpts_y = 5
 Integer
 
 #### Description
-This keyword controls the number of kpoints in z direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_z` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of k-points in the z-direction. If `Ground_kpts_density` is included in an input file, the `Ground_kpts_z` variable will be ignored automatically. The unit is the number of points.
 
 #### Default
 5
@@ -405,7 +405,7 @@ Ground_kpts_z = 5
 Float
 
 #### Description
-This keyword controls gpoint density (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_x`, `Ground_gpts_y` and `Ground_gpts_z` variables will be ignored automatically. Unit is pts per Å.
+This keyword controls g-point density (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_x`, `Ground_gpts_y`, and `Ground_gpts_z` variables will be ignored automatically. The unit is pts per Å.
 
 #### Default
 0.2.
@@ -420,7 +420,7 @@ Ground_gpts_density = 0.2     # pts per Å^-1
 Integer
 
 #### Description
-This keyword controls the number of grid points in x direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_x` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of grid points in the x direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_x` variable will be ignored automatically. The unit is the number of points.
 
 #### Default
 8
@@ -435,7 +435,7 @@ Ground_gpts_x = 8
 Integer
 
 #### Description
-This keyword controls the number of grid points in y direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_y` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of grid points in the y direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_y` variable will be ignored automatically. Unit is the number of points.
 
 #### Default
 8
@@ -450,7 +450,7 @@ Ground_gpts_y = 8
 Integer
 
 #### Description
-This keyword controls the number of grid points in z direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_z` variable will be ignored automatically. Unit is number of points.
+This keyword controls the number of grid points in the z direction (LCAO only). If `Ground_gpts_density` is included in an input file, the `Ground_gpts_z` variable will be ignored automatically. The unit is the number of points.
 
 #### Default
 8
@@ -483,7 +483,7 @@ Gamma = False
 String
 
 #### Description
-This keyword controls the path of high-symmetry points in band structure diagram. Use 'G' for Gamma point. 
+This keyword controls the path of high-symmetry points in the band structure diagram. Use 'G' for the Gamma point. 
 
 #### Default
 'LGL'
@@ -513,7 +513,7 @@ Band_npoints = 51
 Python dictionary
 
 #### Description
-This keyword controls the implementation of setup parameter on the related orbitals of related elements. For none use {}. More information can be found [here](https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#manual-setups).Unit is eV.
+This keyword controls the implementation of setup parameters on the related orbitals of related elements. For none, use {}. More information can be found [here](https://wiki.fysik.dtu.dk/gpaw/documentation/basic.html#manual-setups). The unit is eV.
 
 #### Default
 {}
@@ -528,7 +528,7 @@ Setup_params = {'N': ':p,6.0'} # eV
 String
 
 #### Description
-This keyword controls the which exchange-correlation functional is used in the calculation.Available options are:
+This keyword controls the which exchange-correlation functional is used in the calculation. Available options are:
 
 * LDA
 * PBE
@@ -556,7 +556,7 @@ XC_calc = 'PBE'
 Python dictionary
 
 #### Description
-This keyword controls the convergence parameters for the ground-state calculations. For default use {}.
+This keyword controls the convergence parameters for the ground-state calculations. For default, use {}.
 
 #### Default
 {'energy': 0.0005,  # eV / electron
@@ -624,14 +624,14 @@ Occupations = {'name': 'marzari-vanderbilt', 'width': 0.2}
 Python import
 
 #### Description
-This keyword controls a number of density mixing posibilities. Detailed information can be found on [GPAW's webpage about density mixing](https://wiki.fysik.dtu.dk/gpaw/documentation/densitymix/densitymix.html).
+This keyword controls a number of density mixing possibilities. Detailed information can be found on [GPAW's webpage about density mixing](https://wiki.fysik.dtu.dk/gpaw/documentation/densitymix/densitymix.html).
 
 You can use
 * Mixer()
 * MixerSum()
 * MixerDif()
 
-You need to import these modules in the input file like:
+You need to import these modules in the input file:
 
     from gpaw import Mixer
     
@@ -643,7 +643,7 @@ or
 
     from gpaw import MixerDif
     
-The values of mixer modules corresponds (beta, nmaxold, weight). If you have convergence problems, you can try  (0.02, 5, 100) and (0.05, 5, 50)
+The values of mixer modules correspond (beta, nmaxold, weight). If you have convergence problems, you can try  (0.02, 5, 100) and (0.05, 5, 50)
 
 #### Default
 MixerSum(0.1,3,50)
@@ -688,12 +688,12 @@ DOS_width = 0.0 #Using tetrahedron interpolation
 Logical
 
 #### Description
-This keyword controls the inclusion of spin based calculations. Please do not forget to set `Magmom_per_atom` variable. Available options are:
+This keyword controls the inclusion of spin-based calculations. Please do not forget to set the `Magmom_per_atom` variable. Available options are:
 
 * True
 * False
 
-Because GPAW is using libxc, there are many exchange-correlation functionals available to use. However, the above functionals are used and tested successfully with gpaw-tools. Please try other possible functionals, make us know, send us input files.
+Because GPAW uses libxc, many exchange-correlation functionals are available. However, the above functionals are used and tested successfully with gpaw-tools. Please try other possible functionals, let us know, and send us input files.
 
 #### Default
 False
@@ -750,7 +750,7 @@ Phonon_PW_cutoff = 350 #eV
 Integer
 
 ##### Description
-This keyword controls the number of k-points in x-direction for the phonon calculations.
+This keyword controls the number of k-points in the x-direction for the phonon calculations.
 
 #### Default
 3
@@ -763,7 +763,7 @@ Phonon_kpts_x = 5
 Integer
 
 ##### Description
-This keyword controls the number of k-points in y-direction for the phonon calculations.
+This keyword controls the number of k-points in the y-direction for the phonon calculations.
 
 #### Default
 3
@@ -776,7 +776,7 @@ Phonon_kpts_y = 5
 Integer
 
 ##### Description
-This keyword controls the number of k-points in z-direction for the phonon calculations.
+This keyword controls the number of k-points in the z-direction for the phonon calculations.
 
 #### Default
 3
@@ -802,7 +802,7 @@ Phonon_supercell = np.diag([3, 2, 2]) # 3 units in x direction and 2 units in y 
 Float
 
 #### Description 
-The displacements to be introduced to the supercell. Unit is Angstrom.
+The displacements are to be introduced to the supercell. The unit is Angstrom.
 
 #### Default
 1e-3
@@ -840,7 +840,7 @@ Phonon_npoints = 301
 #### Keyword type
 Boolean
 #### Description
-This keyword controls the acoustic sum rule will be applied or not in the phonon calculations.
+This keyword controls whether the acoustic sum rule will be applied or not in the phonon calculations.
 
 #### Default
 True
@@ -854,7 +854,7 @@ Phonon_acoustic_sum_rule = True
 String
 
 #### Description
-This keyword controls the type GW calculation. Available options are:
+This keyword controls the type of GW calculation. Available options are:
 
 * GW0
 * G0W0
@@ -872,7 +872,7 @@ GW_calc_type = 'GW0'
 NumPy Array
 
 #### Description
-This keyword represents the kpoint coordinates for the GW calculation.
+This keyword represents the k-point coordinates for the GW calculation.
 
 #### Default
 np.array([[0.0, 0.0, 0.0], [1 / 3, 1 / 3, 0], [0.0, 0.0, 0.0]])
@@ -908,7 +908,7 @@ GW_truncation = '2D'
 Integer
 
 #### Description
-This keyword controls the cut off energy value for the GW calculations. Unit is eV.
+This keyword controls the cut-off energy value for the GW calculations. The unit is eV.
 
 #### Default
 50 eV
@@ -926,7 +926,7 @@ Integer
 This keyword controls the number of the band for the valence band for GW calculations.
 
 #### Default
-8 (Default value is not a general value. Please find correct band for your calculation.)
+8 (Default value is not a general value. Please find the correct band for your calculation.)
 
 #### Example
 GW_valence_band_no = 8
@@ -941,7 +941,7 @@ Integer
 This keyword controls the number of the band for the conduction band for GW calculations.
 
 #### Default
-18 (Default value is not a general value. Please find correct band for your calculation.)
+18 (Default value is not a general value. Please find the correct band for your calculation.)
 
 #### Example
 GW_conduction_band_no = 18
@@ -983,7 +983,7 @@ GW_q0_correction = True
 Logical
 
 #### Description
-This keyword controls the behaviour of cutting chi0 into as many blocks to reduce memory requirement as much as possible.
+This keyword controls the behavior of cutting chi0 into as many blocks as possible to reduce the memory requirement as much as possible.
 
 #### Default
 True
@@ -998,7 +998,7 @@ GW_nblocks_max = True
 Logical
 
 #### Description
-This keyword controls the behaviour of drawing the band with interpolating the values between the points.
+This keyword controls the behavior of drawing the band by interpolating the values between the points.
 
 #### Default
 True
@@ -1027,7 +1027,7 @@ Opt_calc_type = 'BSE'
 Float
 
 #### Description
-This keyword add a shifting to energy values. Unit is eV. Works on BSE calculations only!
+This keyword adds a shift to energy values. Unit is eV. Works on BSE calculations only!
 
 #### Default
 0.0
@@ -1042,7 +1042,7 @@ Opt_shift_en = 1.0 #eV
 Sequence of integers
 
 #### Description
-This keyword shows the valence bands that will be used in BSE calculation.
+This keyword shows the valence bands that will be used in the BSE calculation.
 
 #### Default
 range(0,3)
@@ -1057,7 +1057,7 @@ Opt_BSE_valence = range(120,124)
 Sequence of integers
 
 #### Description
-This keyword shows the conduction bands that will be used in BSE calculation.
+This keyword shows the conduction bands that will be used in the BSE calculation.
 
 #### Default
 range(4,7)
@@ -1072,7 +1072,7 @@ Opt_BSE_conduction = range(124,128)
 Float
 
 #### Description
-This keyword shows the starting energy value of result data that will be used in BSE calculation.
+This keyword shows the starting energy value of the result data that will be used in the BSE calculation.
 
 #### Default
 0.0
@@ -1087,7 +1087,7 @@ Opt_BSE_min_en = 0.0
 Float
 
 #### Description
-This keyword shows the ending energy value of result data that will be used in BSE calculation.
+This keyword shows the ending energy value of the result data that will be used in the BSE calculation.
 
 #### Default
 20.0
@@ -1102,7 +1102,7 @@ Opt_BSE_max_en = 10.0
 Integer
 
 #### Description
-This keyword shows the number of data points in BSE calculation.
+This keyword shows the number of data points in the BSE calculation.
 
 #### Default
 1001
@@ -1162,7 +1162,7 @@ Opt_eta = 0.1
 Float
 
 #### Description
-This keyword controls the  [Δω0 parameter](https://wiki.fysik.dtu.dk/gpaw/tutorialsexercises/opticalresponse/dielectric_response/dielectric_response.html) for non-linear frequency grid used in dielectric function calculations. Unit is eV.
+This keyword controls the [Δω0 parameter](https://wiki.fysik.dtu.dk/gpaw/tutorialsexercises/opticalresponse/dielectric_response/dielectric_response.html) for the non-linear frequency grid used in the dielectric function calculations. Unit is eV.
 
 #### Default
 0.1 eV
@@ -1177,7 +1177,7 @@ Opt_domega0 = 0.05 # eV
 Float
 
 #### Description
-This keyword controls the  [ω2 parameter](https://wiki.fysik.dtu.dk/gpaw/tutorialsexercises/opticalresponse/dielectric_response/dielectric_response.html) for non-linear frequency grid used in dielectric function calculations. Unit is eV.
+This keyword controls the  [ω2 parameter](https://wiki.fysik.dtu.dk/gpaw/tutorialsexercises/opticalresponse/dielectric_response/dielectric_response.html) for the non-linear frequency grid used in dielectric function calculations. The unit is eV.
 
 #### Default
 10.0 eV
@@ -1192,7 +1192,7 @@ Opt_omega2 = 2.0 # eV
 Float
 
 #### Description
-This keyword controls the planewave energy cutoff in dielectric function calculations. Determines the size of dielectric matrix. Unit is eV.
+This keyword controls the plane-wave energy cutoff in dielectric function calculations. It also determines the size of the dielectric matrix. The unit is eV.
 
 #### Default
 10.0 eV
@@ -1207,7 +1207,7 @@ Opt_cut_of_energy = 20.0 # eV
 Integer
 
 #### Description
-This keyword controls the split matrices in nblocks blocks and distribute them G-vectors or frequencies over processes.
+This keyword controls the split matrices in blocks and distributes them G-vectors or frequencies over processes.
 
 #### Default
 4
@@ -1243,7 +1243,7 @@ OpenKIM_potential = 'LJ_ElliottAkerson_2015_Universal__MO_959249795837_003'
 Integer
 
 #### Description
-This keyword controls the temperature used in the calculation. Unit is Kelvin.
+This keyword controls the temperature used in the calculation. The unit is Kelvin.
 
 #### Default
 1
@@ -1258,7 +1258,7 @@ Temperature = 300 #K
 Float
 
 #### Description
-This keyword controls the timestep used in the calculation. Unit is femtosecond
+This keyword controls the timestep used in the calculation. The unit is femtosecond.
 
 #### Default
 5
@@ -1303,7 +1303,7 @@ Scaled = True
 Boolean
 
 #### Description
-This keyword controls the usage manual constraint axis in the calculation. If it used as True, [PBC_constraints](inputfilekeywords.md#pbc_constraints) keyword must be used.
+This keyword controls the usage manual constraint axis in the calculation. If it is used as True, the [PBC_constraints](inputfilekeywords.md#pbc_constraints) keyword must be used.
 
 #### Default
 False
@@ -1315,10 +1315,10 @@ Manual_PBC = True
 
 ### PBC_constraints
 #### Keyword type
-Python List of Logical values
+Python List of Logical Values
 
 #### Description
-This keyword controls the which components of axes will be constrained. Here:
+This keyword controls which components of axes will be constrained. Here:
 
 * True = constrained
 * False = not constrained
@@ -1344,7 +1344,7 @@ PBC_constraints = [True, False, False]
 Boolean
 
 #### Description
-This keyword is used for a possible problem. If you have double number of elements in your final file, please use this keyword as `True`.
+This keyword is used for a possible problem. If you have double the number of elements in your final file, please use this keyword as `True`.
 
 #### Default
 True

@@ -15,7 +15,7 @@ There are two scripts that use input files in gpaw-tools. One of them is the mai
 
 [**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Optimizer](inputfilekeywords.md#optimizer), [Max_F_tolerance](inputfilekeywords.md#max_f_tolerance), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [Relax_cell](inputfilekeywords.md#relax_cell)
 
-[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [Cut_off_energy](inputfilekeywords.md#cut_off_energy), [Ground_kpts_density](inputfilekeywords.md#ground_kpts_density), [Ground_kpts_x](inputfilekeywords.md#ground_kpts_x), [Ground_kpts_y](inputfilekeywords.md#ground_kpts_y), [Ground_kpts_z](inputfilekeywords.md#ground_kpts_z), [Ground_gpts_density](inputfilekeywords.md#ground_gpts_density), [Ground_gpts_x](inputfilekeywords.md#ground_gpts_x), [Ground_gpts_y](inputfilekeywords.md#ground_gpts_y), [ground_gpts_z](inputfilekeywords.md#ground_gpts_z), [Gamma](inputfilekeywords.md#gamma), [Band_path](inputfilekeywords.md#band_path), [Band_npoints](inputfilekeywords.md#band_npoints), [Setup_params](inputfilekeywords.md#setup_params), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [DOS_convergence](inputfilekeywords.md#dos_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [Refine_grid](inputfilekeywords.md#refine_grid)
+[**Electronic Calculations Keywords:**](inputfilekeywords.md#electronic-calculations-keywords) [Cut_off_energy](inputfilekeywords.md#cut_off_energy), [Ground_kpts_density](inputfilekeywords.md#ground_kpts_density), [Ground_kpts_x](inputfilekeywords.md#ground_kpts_x), [Ground_kpts_y](inputfilekeywords.md#ground_kpts_y), [Ground_kpts_z](inputfilekeywords.md#ground_kpts_z), [Ground_gpts_density](inputfilekeywords.md#ground_gpts_density), [Ground_gpts_x](inputfilekeywords.md#ground_gpts_x), [Ground_gpts_y](inputfilekeywords.md#ground_gpts_y), [ground_gpts_z](inputfilekeywords.md#ground_gpts_z), [Gamma](inputfilekeywords.md#gamma), [Band_path](inputfilekeywords.md#band_path), [Band_npoints](inputfilekeywords.md#band_npoints), [Setup_params](inputfilekeywords.md#setup_params), [XC_calc](inputfilekeywords.md#xc_calc), [Ground_convergence](inputfilekeywords.md#ground_convergence), [Band_convergence](inputfilekeywords.md#band_convergence), [DOS_convergence](inputfilekeywords.md#dos_convergence), [Occupations](inputfilekeywords.md#occupations), [Mixer_type](inputfilekeywords.md#mixer_type) [DOS_npoints](inputfilekeywords.md#dos_npoints), [DOS_width](inputfilekeywords.md#dos_width), [Spin_calc](inputfilekeywords.md#spin_calc), [Magmom_per_atom](inputfilekeywords.md#magmom_per_atom), [Refine_grid](inputfilekeywords.md#refine_grid), [Total_charge](inputfilekeywords.md#total_charge)
 
 [**Phonon Calculations Keywords:**](inputfilekeywords.md#phonon-calculations-keywords) [Phonon_PW_cutoff](inputfilekeywords.md#phonon_pw_cutoff), [Phonon_kpts_x](inputfilekeywords.md#phonon_kpts_x), [Phonon_kpts_y](inputfilekeywords.md#phonon_kpts_y), [Phonon_kpts_z](inputfilekeywords.md#phonon_kpts_z), [Phonon_supercell](inputfilekeywords.md#phonon_supercell), [Phonon_displacement](inputfilekeywords.md#pfhonon_displacement), [Phonon_path](inputfilekeywords.md#phonon_path), [Phonon_npoints](inputfilekeywords.md#phonon_npoints), [Phonon_acoustic_sum_rule](inputfilekeywords.md#phonon_acoustic_sum_rule)
 
@@ -268,7 +268,7 @@ Alpha = 70.0
 Float
 
 #### Description
-The calculated step is multiplied with this number before added to the positions
+The calculated step is multiplied by this number before being added to the positions
 
 #### Default
 1.0
@@ -282,7 +282,7 @@ Damping = 1.0
 Logical
 
 #### Description
-This keyword controls the preserving the spacegroup symmetry during optimisation. Available options are:
+This keyword controls the preserving of the spacegroup symmetry during optimization. Available options are:
 
 * True
 * False
@@ -297,15 +297,15 @@ Fix_symmetry = True
 
 ### Relax_cell
 #### Keyword type
-Python List of Logical values
+Python List of Logical Values
 
 #### Description
-This keyword controls the hich components of strain will be relaxed. There are six independent components indicating the strain are relaxed or not. Here:
+This keyword controls which components of strain will be relaxed. Six independent components indicate whether the strain is relaxed or not. Here:
 
 * True = relax to zero
 * False = fixed
 
-And these six independent components are in order:
+These six independent components are in order:
 
 * EpsilonX
 * EpsilonY
@@ -321,7 +321,7 @@ And these six independent components are in order:
 [False, False, False, False, False, False]
 
 #### Example
-Relax_cell = [True, True, False, False, False, False] #For a x-y 2D nanosheet only first 2 component will be true
+Relax_cell = [True, True, False, False, False, False] #For an x-y 2D nanosheet, only the first 2 components will be true
 
 ---
 ## Electronic Calculations Keywords
@@ -330,7 +330,7 @@ Relax_cell = [True, True, False, False, False, False] #For a x-y 2D nanosheet on
 Integer
 
 #### Description
-This keyword controls the plane wave cut off energy value. Unit is eV. Can be used in PW mode.
+This keyword controls the plane wave cut-off energy value. The unit is eV. It can be used in PW mode.
 
 #### Default
 340 eV
@@ -540,9 +540,9 @@ This keyword controls the which exchange-correlation functional is used in the c
 * B3LYP
 * PBE0
 
-(-): whichstrain keyword must be [False, False, False, False, False, False]
+(-): Relax_cell keyword must be [False, False, False, False, False, False]
 
-Because GPAW is using libxc, there are many exchange-correlation functionals available to use. However, the above functionals are used and tested successfully with gpaw-tools. Please try other possible functionals, make us know, send us input files.
+Because GPAW uses libxc, many exchange-correlation functionals are available. However, the above functionals are used and tested successfully with gpaw-tools. Please try other possible functionals, let us know, and send us input files.
 
 #### Default
 LDA
@@ -708,10 +708,25 @@ Spin_calc = True
 Float
 
 #### Description
-This keyword controls the value of magnetic moment of each atom. Please do not forget to set `Spin_calc` variable to `True`. Unit is μB.
+This keyword controls the value of the magnetic moment of each atom. Please do not forget to set the `Spin_calc` variable to `True`. The unit is μB.
 
 #### Default
 1.0
+
+#### Example
+Magmom_per_atom = 1.0
+
+---
+
+### Total_charge
+#### Keyword type
+Float
+
+#### Description
+This keyword controls the value of the total charge of the investigated system. The unit is the electron charge. It can be given as positive and negative.
+
+#### Default
+0.0
 
 #### Example
 Magmom_per_atom = 1.0
@@ -722,7 +737,7 @@ Magmom_per_atom = 1.0
 Integer
 
 #### Description
-This keyword controls the cut-off energy in phonon calculations. Unit is eV.
+This keyword controls the cut-off energy in phonon calculations. The unit is eV.
 
 #### Default
 400

@@ -48,6 +48,7 @@ DOS_convergence = {}  # Convergence items for DOS calculations
 Spin_calc = True        # Spin polarized calculation?
 Magmom_per_atom = 1.0    # Magnetic moment per atom
 Refine_grid = 4             # refine grid for all electron density (1, 2 [=default] and 4)
+Total_charge = 0.0       # Total charge. Normally 0.0 for a neutral system.
 
 #GENERAL
 MPI_cores = 4            # Number of cores in calculation.

@@ -37,6 +37,7 @@ Gamma = True
 Band_path = 'LGXWK'	    # Brillouin zone high symmetry points
 Band_npoints = 40		# Number of points between high symmetry points
 Setup_params = {}            # Can be used like {'N': ':p,6.0'}, for none use {}
+Total_charge = 0.0       # Total charge. Normally 0.0 for a neutral system.
 
 XC_calc = 'PBE'         # Exchange-Correlation, choose one: LDA, PBE, GLLBSCM, HSE06, HSE03, revPBE, RPBE, PBE0, EXX, B3LYP
 

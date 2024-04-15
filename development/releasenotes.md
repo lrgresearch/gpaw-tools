@@ -9,10 +9,18 @@ parent: development
 
 ### Development version
 
+* `Magmom_single_atom` keyword is added.
+* A new example, `Graphene-charged,` is added.
+* `Total_charge` variable is added to `gpawsolve.py` and `gg.py` and examples.
+* A simple language localization for DOS and Band graphics.
+* Save the trajectory of Elastic Calculations separately.
+*  `Hydrostatic_pressure` keyword is added. 
+* More information about executing the input files has been added to the example files.
+* A fix for hybrid calculations. Hybrid calculations will work only for GPAW versions >= 23.10.0
 * Calculate spin-dependent charge densities and zeta = (up-down)/(up+down) to CUBE files for both all-electron and pseudo densities.
 * The Cr2O example is changed to show new spin-dependent charge density calculations.
 * Deprecated argument -r (restart) is removed.
-* A base for future projected band structure calculations (not activated for now).
+* A base for future projected band structure calculations (not activated now).
 
 ### Version 23.10.0
 

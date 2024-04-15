@@ -160,6 +160,7 @@ class gpawsolve:
         self.Mixer_type = Mixer_type
         self.Spin_calc = Spin_calc
         self.Magmom_per_atom = Magmom_per_atom
+        self.Magmom_single_atom = Magmom_single_atom
         self.DOS_npoints = DOS_npoints
         self.DOS_width = DOS_width
         self.DOS_convergence = DOS_convergence
@@ -244,7 +245,11 @@ class gpawsolve:
         time11 = time.time()
         if Mode == 'PW':
             if Spin_calc == True:
-                numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
+                if 'Magmom_single_atom' in globals() and Magmom_single_atom is not None:
+                    numm = [0.0]*bulk_configuration.get_global_number_of_atoms()
+                    numm[Magmom_single_atom[0]] = Magmom_single_atom[1]
+                else:
+                    numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
                 bulk_configuration.set_initial_magnetic_moments(numm)
             if Ground_calc == True:
                 # PW Ground State Calculations
@@ -396,7 +401,11 @@ class gpawsolve:
 
         elif Mode == 'LCAO':
             if Spin_calc == True:
-                numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
+                if 'Magmom_single_atom' in globals() and Magmom_single_atom is not None:
+                    numm = [0.0]*bulk_configuration.get_global_number_of_atoms()
+                    numm[Magmom_single_atom[0]] = Magmom_single_atom[1]
+                else:
+                    numm = [Magmom_per_atom]*bulk_configuration.get_global_number_of_atoms()
                 bulk_configuration.set_initial_magnetic_moments(numm)
             if Ground_calc == True:
                 parprint("Starting LCAO ground state calculation...")
@@ -1635,6 +1644,7 @@ if __name__ == "__main__":
     Mixer_type = MixerSum(0.1, 3, 50) # MixerSum(beta,nmaxold, weight) default:(0.1,3,50), you can try (0.02, 5, 100) and (0.05, 5, 50)
     Spin_calc = False        # Spin polarized calculation?
     Magmom_per_atom = 1.0    # Magnetic moment per atom
+    Magmom_single_atom = None # Magnetic moment for a single atom [atom_no, magmom]
     Total_charge = 0.0       # Total charge. Normally 0.0 for a neutral system.
 
     # DOS ----------------------

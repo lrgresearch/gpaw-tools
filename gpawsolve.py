@@ -205,7 +205,7 @@ class gpawsolve:
         self.Opt_cut_of_energy = Opt_cut_of_energy
         self.Opt_nblocks = Opt_nblocks
         self.MPI_cores = MPI_cores
-        self.Localization = Localization
+        self.Localisation = Localisation
         self.bulk_configuration = bulk_configuration
         self.struct = struct
         self.dos_xlabel = dos_xlabel
@@ -798,15 +798,15 @@ class gpawsolve:
                     ax = plt.gca()
                     ax.plot(downf[0], -1.0*downf[1], 'y')
                     ax.plot(upf[0], upf[1], 'b')
-                    ax.set_xlabel(dos_xlabel[Localization])
-                    ax.set_ylabel(dos_ylabel[Localization])
+                    ax.set_xlabel(dos_xlabel[Localisation])
+                    ax.set_ylabel(dos_ylabel[Localisation])
                 else:
                     dosf = pd.read_csv(struct+'-2-Result-DOS.csv', header=None)
                     dosf[0]=dosf[0]+ef
                     ax = plt.gca()
                     ax.plot(dosf[0], dosf[1], 'b')
-                    ax.set_xlabel(dos_xlabel[Localization])
-                    ax.set_ylabel(dos_ylabel[Localization])
+                    ax.set_xlabel(dos_xlabel[Localisation])
+                    ax.set_ylabel(dos_ylabel[Localisation])
                 plt.xlim(Energy_min+ef, Energy_max+ef)
                 autoscale_y(ax)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
@@ -823,15 +823,15 @@ class gpawsolve:
                     ax = plt.gca()
                     ax.plot(downf[0], -1.0*downf[1], 'y')
                     ax.plot(upf[0], upf[1], 'b')
-                    ax.set_xlabel(dos_xlabel[Localization])
-                    ax.set_ylabel(dos_ylabel[Localization])
+                    ax.set_xlabel(dos_xlabel[Localisation])
+                    ax.set_ylabel(dos_ylabel[Localisation])
                 else:
                     dosf = pd.read_csv(struct+'-2-Result-DOS.csv', header=None)
                     dosf[0]=dosf[0]+ef
                     ax = plt.gca()
                     ax.plot(dosf[0], dosf[1], 'b')
-                    ax.set_xlabel(dos_xlabel[Localization])
-                    ax.set_ylabel(dos_ylabel[Localization])
+                    ax.set_xlabel(dos_xlabel[Localisation])
+                    ax.set_ylabel(dos_ylabel[Localisation])
                 plt.xlim(Energy_min+ef, Energy_max+ef)
                 autoscale_y(ax)
                 plt.savefig(struct+'-2-Graph-DOS.png', dpi=300)
@@ -1015,7 +1015,7 @@ class gpawsolve:
                     plt.savefig(struct+'-3-Graph-Band.png', dpi=300)
                     plt.show()
                 else:
-                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference, ylabel=band_ylabel[Localization])
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=True, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference, ylabel=band_ylabel[Localisation])
         else:
             # Draw graphs only on master node
             if world.rank == 0:
@@ -1029,7 +1029,7 @@ class gpawsolve:
                     plt.savefig(struct+'-3-Graph-Band.png', dpi=300)
                     #plt.show()
                 else:
-                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference, ylabel=band_ylabel[Localization])
+                    bs.plot(filename=struct+'-3-Graph-Band.png', show=False, emax=Energy_max + bs.reference, emin=Energy_min + bs.reference, ylabel=band_ylabel[Localisation])
 
     def densitycalc(self):
         """

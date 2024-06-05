@@ -9,13 +9,14 @@ parent: development
 
 ### Development version
 
+* The localisation feature now includes English, Turkish, German, French, Russian, Chinese, Korean, and Japanese.
 * Some misleading warning messages are fixed.
 * ASE's `FrechetCellFilter` is now used instead of `ExpCellFilter`. However, this update does not concern back compatibility. Users must use > ASE 3.23 and >GPAW 24.6 after this. 
 * `nbands` value is added to LCAO calculations.
 * `Magmom_single_atom` keyword is added.
 * A new example, `Graphene-charged,` is added.
 * `Total_charge` variable is added to `gpawsolve.py` and `gg.py` and examples.
-* A simple language localization for DOS and Band graphics.
+* A simple language localisation for DOS and Band graphics. `Localisation` keyword is added to all examples
 * Save the trajectory of Elastic Calculations separately.
 *  `Hydrostatic_pressure` keyword is added. 
 * More information about executing the input files has been added to the example files.

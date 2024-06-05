@@ -30,3 +30,4 @@ Opt_nblocks = 4            # Split matrices in nblocks blocks and distribute the
 
 #GENERAL
 MPI_cores = 4            # Number of cores in calculation.
+Localisation = "en_UK"  # Localisation setting for figures. en_UK is default.

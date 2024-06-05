@@ -69,4 +69,4 @@ Total_charge = 0.0       # Total charge. Normally 0.0 for a neutral system.
 MPI_cores = 4            # Number of cores in calculation.
 Energy_min = -5 		# eV. It is the minimum energy value for band structure and DOS figures.
 Energy_max = 10  		# eV. It is the maximum energy value for band structure and DOS figures.
-# Localization = "tr_TR"
+# Localisation = "tr_TR" # Localisation setting for figures. en_UK is default.

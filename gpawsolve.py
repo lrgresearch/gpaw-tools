@@ -36,8 +36,8 @@ from ase.io import read, write
 from ase.eos import calculate_eos
 from ase.units import Bohr, GPa, kJ
 import matplotlib.pyplot as plt
-from ase.constraints import ExpCellFilter
-from ase.spacegroup.symmetrize import FixSymmetry
+from ase.constraints import FixSymmetry
+from ase.filters import FrechetCellFilter
 from ase.io.cif import write_cif
 from pathlib import Path
 from gpaw.response.df import DielectricFunction
@@ -291,9 +291,9 @@ class gpawsolve:
                 if Geo_optim == True:
                     if True in Relax_cell:
                         if Hydrostatic_pressure > 0.0:
-                            uf = ExpCellFilter(bulk_configuration, mask=Relax_cell, hydrostatic_strain=True, scalar_pressure=Hydrostatic_pressure)
+                            uf = FrechetCellFilter(bulk_configuration, mask=Relax_cell, hydrostatic_strain=True, scalar_pressure=Hydrostatic_pressure)
                         else:
-                            uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                            uf = FrechetCellFilter(bulk_configuration, mask=Relax_cell)
                         # Optimizer Selection
                         if Optimizer == 'FIRE':
                             from ase.optimize.fire import FIRE
@@ -354,9 +354,9 @@ class gpawsolve:
                             mixer=Mixer_type, occupations = Occupation, txt=struct+'-1-Log-Ground.txt')
                 bulk_configuration.calc = calc
                 if Hydrostatic_pressure > 0.0:
-                    uf = ExpCellFilter(bulk_configuration, mask=Relax_cell, hydrostatic_strain=True, scalar_pressure=Hydrostatic_pressure)
+                    uf = FrechetCellFilter(bulk_configuration, mask=Relax_cell, hydrostatic_strain=True, scalar_pressure=Hydrostatic_pressure)
                 else:
-                    uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                    uf = FrechetCellFilter(bulk_configuration, mask=Relax_cell)
                 # Optimizer Selection
                 if Optimizer == 'FIRE':
                     from ase.optimize.fire import FIRE
@@ -433,7 +433,7 @@ class gpawsolve:
                 bulk_configuration.calc = calc
                 if Geo_optim == True:
                     if True in Relax_cell:
-                        #uf = ExpCellFilter(bulk_configuration, mask=Relax_cell)
+                        #uf = FrechetCellFilter(bulk_configuration, mask=Relax_cell)
                         #relax = LBFGS(uf, maxstep=Max_step, alpha=Alpha, damping=Damping, trajectory=struct+'-1-Result-Ground.traj')
                         parprint('\033[91mERROR:\033[0mModifying supercell and atom positions with a filter (Relax_cell keyword) is not implemented in LCAO mode.')
                         quit()

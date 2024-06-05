@@ -928,7 +928,7 @@ class gpawsolve:
                         for g in zip(*all_groupsd):
                             print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f1)
                 except Exception as e:
-                    print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted spin down Band file. Mostly, the file is created without any problem.")
+                    print("\033[93mWARNING:\033[0m A problem occurred during writing XYYY formatted spin down Band file. Mostly, the file is created without any problem.")
                     print(e)
                     pass  # Continue execution after encountering an exception
 
@@ -948,7 +948,7 @@ class gpawsolve:
                         for g in zip(*all_groupsu):
                             print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f2)
                 except Exception as e:
-                    print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted spin up Band file. Mostly, the file is created without any problem.")
+                    print("\033[93mWARNING:\033[0m A problem occurred during writing XYYY formatted spin up Band file. Mostly, the file is created without any problem.")
                     print(e)
                     pass  # Continue execution after encountering an exception
 
@@ -979,7 +979,7 @@ class gpawsolve:
                         for g in zip(*all_groups):
                             print('{} {} {}'.format(g[0][0], g[0][1], ' '.join(v for _, v in g[1:])), file=f1)
                 except Exception as e:
-                    print("\033[93mWARNING:\033[0m An error occurred during writing XYYY formatted Band file. Mostly, the file is created without any problem.")
+                    print("\033[93mWARNING:\033[0m A problem occurred during writing XYYY formatted Band file. Mostly, the file is created without any problem.")
                     print(e)
                     pass  # Continue execution after encountering an exception
                 

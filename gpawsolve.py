@@ -1725,9 +1725,9 @@ if __name__ == "__main__":
         pbc=True,
         )
     # ------------------ Localisation Tables. You can add your language below --------------------------
-    dos_xlabel = dict(en_UK='', tr_TR='')
-    dos_ylabel = dict(en_UK='', tr_TR='')
-    band_ylabel = dict(en_UK='', tr_TR='')
+    dos_xlabel = dict(en_UK='', tr_TR='', de_DE='', fr_FR='', ru_RU='', zh_CN='', ko_KR='', ja_JP='')
+    dos_ylabel = dict(en_UK='', tr_TR='', de_DE='', fr_FR='', ru_RU='', zh_CN='', ko_KR='', ja_JP='')
+    band_ylabel = dict(en_UK='', tr_TR='', de_DE='', fr_FR='', ru_RU='', zh_CN='', ko_KR='', ja_JP='')
     
     # ENGLISH (en_UK) - by S.B. Lisesivdin
     ## Figures
@@ -1741,6 +1741,42 @@ if __name__ == "__main__":
     dos_ylabel["tr_TR"]='Durum Yoğunluğu [1/eV]'
     band_ylabel["tr_TR"]='Enerji [eV]'
     
+    # GERMAN (de_DE) - created with AI
+    ## Figures
+    dos_xlabel["de_DE"]='Energie [eV]'
+    dos_ylabel["de_DE"]='Zustandsdichte [1/eV]'
+    band_ylabel["de_DE"]='Energie [eV]'
+
+    # FRENCH (fr_FR) - created with AI
+    ## Figures
+    dos_xlabel["fr_FR"]='Énergie [eV]'
+    dos_ylabel["fr_FR"]='DOS [1/eV]'
+    band_ylabel["fr_FR"]='Énergie [eV]'
+
+    # RUSSIAN (ru_RU) - created with AI
+    ## Figures
+    dos_xlabel["ru_RU"]='Энергия [эВ]'
+    dos_ylabel["ru_RU"]='Плотность состояний [1/эВ]'
+    band_ylabel["ru_RU"]='Энергия [эВ]'
+
+    # CHINESE (zh_CN) - created with AI
+    ## Figures
+    dos_xlabel["zh_CN"]='能量 [eV]'
+    dos_ylabel["zh_CN"]='态密度 [1/eV]'
+    band_ylabel["zh_CN"]='能量 [eV]'
+
+    # KOREAN (ko_KR) - created with AI
+    ## Figures
+    dos_xlabel["ko_KR"]='에너지 [eV]'
+    dos_ylabel["ko_KR"]='상태 밀도 [1/eV]'
+    band_ylabel["ko_KR"]='에너지 [eV]'
+
+    # JAPANESE (ja_JP) - created with AI
+    ## Figures
+    dos_xlabel["ja_JP"]='エネルギー [eV]'
+    dos_ylabel["ja_JP"]='状態密度 [1/eV]'
+    band_ylabel["ja_JP"]='エネルギー [eV]'
+        
     # ------------------ End of Localisation Tables --------------------------
     
     # Version

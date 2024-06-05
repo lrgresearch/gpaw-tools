@@ -1705,7 +1705,7 @@ if __name__ == "__main__":
 
     #GENERAL ----------------------
     MPI_cores = 4            # This is for gg.py. Not used in this script.
-    Localization = "en_UK"
+    Localisation = "en_UK"
 
     # -------------------------------------------------------------
     # Default Bulk Configuration
@@ -1724,7 +1724,7 @@ if __name__ == "__main__":
         cell=[(4.936, 0.0, 0.0), (-2.467999999999999, 4.274701393079989, 0.0), (0.0, 0.0, 20.0)],
         pbc=True,
         )
-    # ------------------ Localization Tables. You can add your language below --------------------------
+    # ------------------ Localisation Tables. You can add your language below --------------------------
     dos_xlabel = dict(en_UK='', tr_TR='')
     dos_ylabel = dict(en_UK='', tr_TR='')
     band_ylabel = dict(en_UK='', tr_TR='')
@@ -1741,7 +1741,7 @@ if __name__ == "__main__":
     dos_ylabel["tr_TR"]='Durum Yoğunluğu [1/eV]'
     band_ylabel["tr_TR"]='Enerji [eV]'
     
-    # ------------------ End of Localization Tables --------------------------
+    # ------------------ End of Localisation Tables --------------------------
     
     # Version
     __version__ = "v23.10.1b1"

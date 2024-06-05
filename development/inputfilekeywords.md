@@ -11,7 +11,7 @@ Two scripts use input files in gpaw-tools. One of them is the main DFT script `g
 
 # `gpawsolve.py` Keyword List
 
-[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPI_cores](inputfilekeywords.md#mpi_cores), [Energy_min](inputfilekeywords.md#energy_min), [Energy_max](inputfilekeywords.md#energy_max)
+[**General Keywords:**](inputfilekeywords.md#general-keywords) [Mode](inputfilekeywords.md#mode), [Geo_optim](inputfilekeywords.md#geo_optim), [Elastic_calc](inputfilekeywords.md#elastic_calc), [DOS_calc](inputfilekeywords.md#dos_calc), [Band_calc](inputfilekeywords.md#band_calc), [Density_calc](inputfilekeywords.md#density_calc), [Optical_calc](inputfilekeywords.md#optical_calc), [MPI_cores](inputfilekeywords.md#mpi_cores), [Energy_min](inputfilekeywords.md#energy_min), [Energy_max](inputfilekeywords.md#energy_max), [Localisation](inputfilekeywords.md#localisation)
 
 [**Geometric Optimization Keywords:**](inputfilekeywords.md#geometric-optimization-keywords) [Optimizer](inputfilekeywords.md#optimizer), [Max_F_tolerance](inputfilekeywords.md#max_f_tolerance), [Max_step](inputfilekeywords.md#max_step), [Alpha](inputfilekeywords.md#alpha), [Damping](inputfilekeywords.md#damping), [Fix_symmetry](inputfilekeywords.md#fix_symmetry), [Relax_cell](inputfilekeywords.md#relax_cell)
 
@@ -203,6 +203,22 @@ This keyword controls the maximum energy value for the drawn figures of band str
 Energy_max = 10 # eV
 
 ---
+
+### Localisation
+#### Keyword type
+String
+
+#### Description
+This keyword controls the language used in figures. English, Turkish, German, French, Russian, Chinese, Korean, and Japanese are supported for now
+
+#### Default
+en_UK
+
+#### Example
+Localisation = "tr_TR"
+
+---
+
 ## Geometric Optimization Keywords
 ### Optimizer
 #### Keyword type

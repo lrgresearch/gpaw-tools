@@ -9,6 +9,9 @@ parent: development
 
 ### Development version
 
+* Some misleading warning messages are fixed.
+* ASE's `FrechetCellFilter` is now used instead of `ExpCellFilter`. However, this update does not concern back compatibility. Users must use > ASE 3.23 and >GPAW 24.6 after this. 
+* `nbands` value is added to LCAO calculations.
 * `Magmom_single_atom` keyword is added.
 * A new example, `Graphene-charged,` is added.
 * `Total_charge` variable is added to `gpawsolve.py` and `gg.py` and examples.

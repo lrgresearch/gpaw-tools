@@ -9,6 +9,10 @@ parent: development
 
 ### Development version
 
+* n/a
+
+### Version 24.6.0
+
 * The localisation feature now includes English, Turkish, German, French, Russian, Chinese, Korean, and Japanese.
 * Some misleading warning messages are fixed.
 * ASE's `FrechetCellFilter` is now used instead of `ExpCellFilter`. However, this update does not concern back compatibility. Users must use > ASE 3.23 and >GPAW 24.6 after this. 

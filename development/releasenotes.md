@@ -11,6 +11,11 @@ parent: development
 
 * n/a
 
+### Version 24.6.1
+
+* Because the SPGlib dropped the ASE type Atoms object after their version 2.2.0, gpawsolve.py gives an error. From now on, the get_spacegroup() function call will be maintained by ASE. Because of this change, gpawsolve.py no more requires `spglib` package.
+* CONTRIBUTING.md file is updated.
+
 ### Version 24.6.0
 
 * The localisation feature now includes English, Turkish, German, French, Russian, Chinese, Korean, and Japanese.

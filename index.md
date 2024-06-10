@@ -27,17 +27,18 @@ More information about [gpaw-tools idea](about.md), [installation](installation/
 
 ## Download
 
-**Latest stable release: v24.6.0 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v24.6.0.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v24.6.0.zip)**
+**Latest stable release: v24.6.1 [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v24.6.1.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/tags/v24.6.1.zip)**
 
 Latest development release: [download (tar.gz)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.tar.gz), [download (zip)](https://github.com/lrgresearch/gpaw-tools/archive/refs/heads/main.zip)
 
 ## News
+* **[gpaw-tools](development/releasenotes.md#version-2461)** version 24.6.1 released. This is a quick-fix release. Because SPGlib dropped the ASE type Atoms object after version 2.2.0, `gpawsolve.py` started to give an error. ASE will maintain the `get_spacegroup()` function call from now on. With this change, `gpawsolve.py` no longer requires the `spglib` package.
 * **[gpaw-tools](development/releasenotes.md#version-2460)** version 24.6.0 released. This version only works with newer versions of > ASE 3.23.0 and GPAW 24.6.0 (June 5, 2024).
 * **[gpaw-tools](development/releasenotes.md#version-23100)** version 23.10.0 released (October 13, 2023).
-* **[gpaw-tools](development/releasenotes.md#version-2370)** version 23.7.0 released. It is a version with major changes, and **you need to add a new keyword `Ground_calc` to your old input files**. Please use the input files in the example folder to create new input files. This version has many new features: Phonon calculations, energy consumption measurement, and more. Please refer to [release notes](development/releasenotes.md#version-2370). (July 4, 2023)
+* **[gpaw-tools](development/releasenotes.md#version-2370)** version 23.7.0 released. It is a version with major changes, and **you need to add a new keyword `Ground_calc` to your old input files**. Please use the input files in the example folder to create new input files. This version has many new features: Phonon calculations, energy consumption measurement, etc. Please refer to [release notes](development/releasenotes.md#version-2370). (July 4, 2023)
 * **[gpaw-tools](development/releasenotes.md#version-2320)** version 23.2.0 released. It is a version with major changes that is **incompatible with the previous versions**. Please use the input files in the example folder to create new input files (February 1, 2023).
 * A new oral presentation about *gpaw-tools* is presented at MSNG2022 (September 22, 2022).
-* We had a small department-wide hands-on activity about the installation and basic usage of ASE, GPAW, and gpaw-tools software at Gazi University's Department of Physics (August 8, 2022). 
+* We had a small department-wide hands-on activity about installing and using ASE, GPAW, and gpaw-tools software at Gazi University's Department of Physics (August 8, 2022). 
 * **[gpaw-tools](development/releasenotes.md#version-2270)** version 22.7.0 released (July 12, 2022).
 * A new poster presentation about *gpaw-tools* will be presented at the 2022 Workshop on Recent Developments in Electronic Structure (June 2, 2022).
 * **[gpaw-tools](development/releasenotes.md#version-2250)** version 22.5.0 released (May 8, 2022).

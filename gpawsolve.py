@@ -25,9 +25,9 @@ import getopt, sys, os, time, shutil
 import textwrap
 import requests
 import pickle
-import spglib as spg
 from argparse import ArgumentParser, HelpFormatter
 from ase import *
+from ase.spacegroup import get_spacegroup
 from ase.dft.kpoints import get_special_points
 from ase.parallel import paropen, world, parprint, broadcast
 from gpaw import GPAW, PW, Davidson, FermiDirac, MixerSum, MixerDif, Mixer
@@ -78,7 +78,7 @@ def struct_from_file(inputfile, geometryfile):
         struct = Path(geometryfile).stem
         bulk_configuration = read(geometryfile, index='-1')
         parprint("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()))
-        parprint("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration))
+        parprint("Spacegroup of CIF file:",get_spacegroup(bulk_configuration, symprec=1e-2))
         parprint("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()))
 
     # Output directory
@@ -226,7 +226,7 @@ class gpawsolve:
 
         with paropen(struct+'-0-Result-Spacegroup-and-SpecialPoints.txt', "w") as fd:
             print("Number of atoms imported from CIF file:"+str(bulk_configuration.get_global_number_of_atoms()), file=fd)
-            print("Spacegroup of CIF file (from SPGlib):",spg.get_spacegroup(bulk_configuration), file=fd)
+            print("Spacegroup of CIF file:",get_spacegroup(bulk_configuration, symprec=1e-2), file=fd)
             print("Special Points usable for this spacegroup:",get_special_points(bulk_configuration.get_cell()), file=fd)
 
     def groundcalc(self):
@@ -376,7 +376,7 @@ class gpawsolve:
                 # Writes final configuration as CIF file
                 write_cif(struct+'-Final.cif', bulk_configuration)
                 # Print final spacegroup information
-                parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
+                parprint("Final Spacegroup:",get_spacegroup(bulk_configuration, symprec=1e-2))
             else:
                 parprint("Passing ground state calculation for GW calculation...")
                 # Control the ground state GPW file
@@ -465,7 +465,7 @@ class gpawsolve:
                 # Writes final configuration as CIF file
                 write_cif(struct+'-Final.cif', bulk_configuration)
                 # Print final spacegroup information
-                parprint("Final Spacegroup (SPGlib):",spg.get_spacegroup(bulk_configuration))
+                parprint("Final Spacegroup:",get_spacegroup(bulk_configuration, symprec=1e-2))
             else:
                 parprint("Passing LCAO ground state calculation...")
                 # Control the ground state GPW file
@@ -502,8 +502,8 @@ class gpawsolve:
         time151 = time.time()
         parprint('Starting elastic tensor calculations (\033[93mWARNING:\033[0mNOT TESTED FEATURE, PLEASE CONTROL THE RESULTS)...')
         calc = GPAW(struct+'-1-Result-Ground.gpw').fixed_density(txt=struct+'-1.5-Log-Elastic.txt')
-        # Getting space group from SPGlib
-        parprint('Spacegroup:',spg.get_spacegroup(bulk_configuration))
+        # Getting space group
+        parprint("Spacegroup:",get_spacegroup(bulk_configuration, symprec=1e-2))
         # Calculating equation of state
         parprint('Calculating equation of state...')
         eos = calculate_eos(bulk_configuration, trajectory=struct+'-1.5-Result-Elastic.traj')
@@ -518,7 +518,7 @@ class gpawsolve:
             print("Elastic constants: Standart elasticity theory calculated by -Elastic- library", file=fd)
             print("Ref: European Physical Journal B; 15, 2 (2000) 265-268", file=fd)
             print("-----------------------------------------------------------------------------", file=fd)
-            print("Spacegroup: "+str(spg.get_spacegroup(bulk_configuration)), file=fd)
+            print("Spacegroup: "+str(get_spacegroup(bulk_configuration, symprec=1e-2)), file=fd)
             print("B (GPa): "+str(B / kJ * 1.0e24), file=fd)
             print("e (eV): "+str(e), file=fd)
             print("v (Ang^3): "+str(v), file=fd)

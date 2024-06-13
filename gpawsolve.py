@@ -1198,10 +1198,8 @@ class gpawsolve:
         if Mode == 'PW':
             parprint("Starting optical calculation...")
             try:
-                calc = GPAW(struct+'-1-Result-Ground.gpw',
-                        txt=struct+'-6-Log-Optical.txt',
-                        nbands=Opt_num_of_bands,parallel={'domain': 1, 'kpt':1 },
-                        fixdensity=True,
+                calc = GPAW(struct+'-1-Result-Ground.gpw').fixed_density(txt=struct+'-6-Log-Optical.txt',
+                        nbands=Opt_num_of_bands,parallel={'domain': 1, 'kpt': 1 },
                         symmetry='off',
                         occupations=FermiDirac(Opt_FD_smearing))
             except FileNotFoundError as err:

@@ -1561,7 +1561,7 @@ def projected_weights(calc):
             ang_mom_a[a] = 'spd' if magn else 'sp'
 
     # For each unique atom
-    a_x = [a for a in ang_mom_a for ang_mom in ang_mom_a[a]]
+    a_x = [a for a in ang_mom_a for _ in ang_mom_a[a]]
     ang_mom_x = [ang_mom for a in ang_mom_a for ang_mom in ang_mom_a[a]]
 
     # Get i index for each unique symbol

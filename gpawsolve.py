@@ -54,6 +54,8 @@ from phonopy.structure.atoms import PhonopyAtoms
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 import phonopy
 import pandas as pd
+import warnings
+warnings.filterwarnings('ignore')
 
 class RawFormatter(HelpFormatter):
     """To print Description variable with argparse"""

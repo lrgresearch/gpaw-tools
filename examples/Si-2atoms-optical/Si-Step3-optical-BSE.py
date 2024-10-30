@@ -1,5 +1,5 @@
 Outdirname = 'Si-results'
-
+from ase.parallel import world
 # -------------------------------------------------------------
 Mode = 'PW'             # Use PW, PW-GW, LCAO, FD  (PW is more accurate, LCAO is quicker mostly.)
 # -------------------------------------------------------------
@@ -25,7 +25,7 @@ Opt_eta = 0.05             # Eta for Optical calculations
 Opt_domega0 = 0.05         # Domega0 for Optical calculations
 Opt_omega2 = 5.0           # Frequency at which the non-lin freq grid has doubled the spacing
 Opt_cut_of_energy = 100    # Cut-off energy for optical calculations
-Opt_nblocks = 4            # Split matrices in nblocks blocks and distribute them G-vectors
+Opt_nblocks = world.size   # Split matrices in nblocks blocks and distribute them G-vectors
                            # or frequencies over processes or can use world.size
 
 #GENERAL

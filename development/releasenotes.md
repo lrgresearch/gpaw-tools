@@ -9,7 +9,7 @@ parent: development
 
 ### Development version
 
-* n/a
+* A basic installation script for Ubuntu systems is added. Just run it in the first place.
 
 ### Version 24.6.1
 
